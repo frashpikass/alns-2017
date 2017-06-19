@@ -62,6 +62,9 @@ public class Orienteering
      */
     protected InstanceCTOPWSS instance;
     
+    protected List<GRBConstr> constraint8;
+    protected List<List<GRBVar>> constraint8Variables;
+    
     /**
      * Hash of the instance file
      */
@@ -181,6 +184,9 @@ public class Orienteering
         this.timeLimit=timeLimit;
         this.numThreads=numThreads;
         this.heuristicConstraints = new ArrayList<>();
+        
+        this.constraint8 = new ArrayList<>();
+        this.constraint8Variables = new ArrayList<>();
         
         // Go for preprocessing, since serialization of gurobi objects won't work
         if(reload) instancePreprocessing(logname, modelPath, timeLimit, numThreads);
@@ -517,10 +523,20 @@ public class Orienteering
             for(int i=firstNodeID; i<instance.getNum_nodes(); i++){
                 for(int j=firstNodeID; j<instance.getNum_nodes(); j++){
                     GRBLinExpr expr8 = new GRBLinExpr();
+                    List<GRBVar> localConstr8Var = new ArrayList<>();
                     for(int v=0; v<instance.getNum_vehicles(); v++){
                         expr8.addTerm(instance.getTmax(), x[v][i][j]);
+                        localConstr8Var.add(x[v][i][j]);
                     }
-                    model.addConstr(z[i][j], GRB.LESS_EQUAL, expr8, "c8_arc("+i+","+j+")");
+                    
+                    // Add the constraint to the model and save it for later use
+                    // This is one constraint for every z[i][j]
+                    this.constraint8.add(model.addConstr(z[i][j], GRB.LESS_EQUAL, expr8, "c8_arc("+i+","+j+")"));
+
+                    // Save the list of variables used by constraint8
+                    this.constraint8Variables.add(localConstr8Var);
+                    // This will needed in some heuristic methods later, such as
+                    // repairBackToFeasibility
                 }
             }
             

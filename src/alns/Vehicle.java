@@ -53,5 +53,22 @@ public class Vehicle {
     boolean canServe(Node n) {
         return this.skills.contains(n.getService());
     }
+    
+    /**
+     * Returns true if this vehicle can fulfill at least one service required by the specified cluster.
+     * @param c the cluster to check if it can be served by this vehicle
+     * @return true if this vehicle can serve the cluster.
+     */
+    boolean canServe(Cluster c){
+        boolean ret = false;
+        
+        for(int service : c.getServices()){
+            if(this.skills.contains(service)){
+                ret = true;
+                break;
+            } 
+        }
+        return ret;
+    }
 
 }

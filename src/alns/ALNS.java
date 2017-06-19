@@ -563,6 +563,31 @@ public class ALNS extends Orienteering{
     }
     
     /**
+     * Removes the first q clusters with the least profit/cost ratio.
+     * @param inputSolution the solution to repair
+     * @param q number of clusters to remove
+     * @return the repaired solution
+     */
+    private List<Cluster> repairWorstRemoval(List<Cluster> inputSolution, int q){
+        // Initialize the output
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Sort the clusters in the input solution
+        output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
+        
+        // Remove q clusters from the solution, following the imposed ordering
+        int i = 0;
+        for(Cluster c : inputSolution){
+            output.remove(c);
+            i++;
+            if(i>=q) break;
+        }
+        
+        // Return the repaired input
+        return output;
+    }
+    
+    /**
      * This is a special repair heuristic to bring back an eventual infeasible solution into feasibility.
      * It operates by removing the minimum number of low gain clusters when their
      * total cost is more than or equal the difference between the maximum cost for the solution (Tmax)
@@ -573,7 +598,7 @@ public class ALNS extends Orienteering{
     private List<Cluster> repairBackToFeasibility(List<Cluster> inputSolution) throws Exception{
         // TODO:
         // 0. Check feasibility. If infeasible goto 1, else goto 9
-        // 1. Bring model to a feasible status by relaxing the constraint on z and Tmax
+        // 1. Compute the IIS model so that we can retrieve some information on z and Tmax
         // 2. Look at how much into infeasibility we are, so get the maxZ
         // 3. Compute costDifference = maxZ-Tmax
         // 4. Sort inputSolution clusters by increasing profit
@@ -583,15 +608,57 @@ public class ALNS extends Orienteering{
         // 8. Goto 0
         // 9. Return the new feasible solution
         
+        GRBModel feasibilityRelaxation = new GRBModel(model);
+        
         List<Cluster> output = new ArrayList<>(inputSolution);
-        boolean isFeasible = testSolution(inputSolution, true);
+        boolean isFeasible = testSolution(output, true);
         // 0. Check feasibility
         while(!isFeasible){
-            // 1. Compute the IIS model so that we can retrieve some information
-            model.
+            // 1. Compute the feasibilityRelaxation so that we can retrieve some information on z and Tmax
+            feasibilityRelaxation.feasRelax(segmentSize, isFeasible, y, HEURISTIC_SCORES, HEURISTIC_SCORES, grbcs, HEURISTIC_SCORES);
             
-            model.feasibility();
+            // Find the maximum value for z
+            double maxZ = -1;
+            double maxI = -1;
+            double maxJ = -1;
+            double tempZ;
+            for(int i=0;i<instance.getNum_nodes();i++){
+                for(int j=0; j<instance.getNum_nodes();j++){
+                    tempZ = z[i][j].get(GRB.DoubleAttr.X);
+                    if(tempZ>maxZ){
+                        maxI=i;
+                        maxJ=j;
+                        maxZ=tempZ;
+                    }
+                }
+            }
+            
+            // 3. Compute costDifference = maxZ-Tmax
+            double costDifference = maxZ-instance.getTmax();
+            
+            // 4. Sort inputSolution clusters by increasing profit
+            output.sort(Cluster.PROFIT_COMPARATOR);
+            
+            // 5. Sort inputSolution clusters by increasing service time (cost)
+            output.sort(Cluster.COST_COMPARATOR);
+            
+            // 6. Get the first cluster from sorted inputSolution with cost >= costDifference
+            Cluster toRemove = null;
+            for(Cluster c : output){
+                if(c.getTotalCost()>=costDifference){
+                    toRemove=c;
+                    break;
+                }
+            }
+            
+            // 7. Remove the cluster found in 6.
+            output.remove(toRemove);
+            
+            // 8. Goto 0 (test feasibility)
+            isFeasible = testSolution(output, true);
         }
+        
+        return output;
     }
     
     /**

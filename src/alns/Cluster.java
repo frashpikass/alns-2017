@@ -259,6 +259,22 @@ public class Cluster {
     }
     
     /**
+     * Gets the total cost for the given vehicle to serve every possible node in the cluster
+     * @param v the vehicle in question
+     * @return the total cost for the given vehicle to serve every possible node in the cluster
+     */
+    public double getTotalCostForVehicle(Vehicle v) {
+        double ret = 0.0;
+        
+        for(Node n : this.nodes){
+            if(v.canServe(n))
+                ret += n.getCost();
+        }
+        
+        return ret;
+    }
+    
+    /**
      * Compute the distance between this cluster and the specified cluster.
      * @param c the cluster to calculate the distance from
      * @return the distance between the two clusters

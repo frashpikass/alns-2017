@@ -74,17 +74,17 @@ public class Cluster {
     };
     
     /**
-     * Comparator to sort clusters by cost.
+     * Comparator to sort clusters by the profit/cost ratio.
      */
-    public final static Comparator<Cluster> COST_COMPARATOR = new Comparator<Cluster>() {
+    public final static Comparator<Cluster> PROFIT_COST_RATIO_COMPARATOR = new Comparator<Cluster>() {
         @Override
         public int compare(Cluster o1, Cluster o2) {
             int ret = 0;
             try {
-                if(o1.getTotalCost() < o2.getTotalCost()){
+                if(o1.profit/o1.getTotalCost() < o2.profit/o2.getTotalCost()){
                     ret=-1;
                 }
-                else if(o1.getTotalCost() > o2.getTotalCost()){
+                else if(o1.profit/o1.getTotalCost() > o2.profit/o2.getTotalCost()){
                     ret=+1;
                 }
             } catch (Exception ex) {

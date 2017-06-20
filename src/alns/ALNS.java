@@ -93,6 +93,14 @@ public class ALNS extends Orienteering{
      */
     final static double[] HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.0};
     
+    /**
+     * Constructor for the class ALNS.
+     * @param o an instance of an Orienteering problem
+     * @param segmentSize the size of a segment (expressed in number of iteration of the destroy/repair heuristic)
+     * @param maxHistorySize the maximum size for the history of previously chosen clusters
+     * @param lambda decay parameter of heuristic weights (must be a double in range [0,1])
+     * @throws Exception if anything goes wrong
+     */
     public ALNS(Orienteering o, int segmentSize, int maxHistorySize, double lambda) throws Exception{
         super(o);
         this.segmentSize = segmentSize;
@@ -110,6 +118,8 @@ public class ALNS extends Orienteering{
         
         repairMethods = new ObjectDistribution<>();
         repairMethods.add(this::repairHeuristicTemplate);
+        repairMethods.add(this::repairVehicleTime);
+        repairMethods.add(this::repairWorstRemoval);
         
     }
     
@@ -642,7 +652,7 @@ public class ALNS extends Orienteering{
      * @param q
      * @return the repaired solution
      */
-    private List<Cluster> repairVehicleTime(List<Cluster> inputSolution, int q) throws Exception{
+    private List<Cluster> repairVehicleTime(List<Cluster> inputSolution, int q){
         // Initialize the output
         List<Cluster> output = new ArrayList<>(inputSolution);
         
@@ -712,8 +722,12 @@ public class ALNS extends Orienteering{
                     
                 }
                 // debug
-                else throw new Exception("Error in repairVehicleTime heuristic!\n"
-                        + "No serving vehicle found for first cluster "+first.getId());
+                else try {
+                    env.message("Error in repairVehicleTime heuristic!\n"
+                            + "No serving vehicle found for first cluster "+first.getId());
+                } catch (GRBException ex) {
+                    Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         // Return the repaired input

@@ -120,6 +120,8 @@ public class ALNS extends Orienteering{
         repairMethods.add(this::repairHeuristicTemplate);
         repairMethods.add(this::repairVehicleTime);
         repairMethods.add(this::repairWorstRemoval);
+        repairMethods.add(this::repairTravelTime);
+        repairMethods.add(this::repairRandomRemoval);
         
     }
     
@@ -803,6 +805,25 @@ public class ALNS extends Orienteering{
                 }
             }
         }
+        // Return the repaired input
+        return output;
+    }
+    
+    private List<Cluster> repairRandomRemoval(List<Cluster> inputSolution, int q){
+        // Initialize the output
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Create an uniform random distribution of clusters and populate it
+        ObjectDistribution<Cluster> clustersToRemove = new ObjectDistribution<>();
+        clustersToRemove.addAll(output);
+        
+        // Remove q clusters from the solution, picking them randomly
+        for(int i = 0; q>0 && i<q; i++){
+            Cluster c = clustersToRemove.getRandom();
+            output.remove(c);
+            clustersToRemove.remove(c);
+        }
+        
         // Return the repaired input
         return output;
     }

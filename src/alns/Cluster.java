@@ -284,6 +284,15 @@ public class Cluster {
     }
     
     /**
+     * Compute the distance between the center of this cluster and the specified node.
+     * @param n the node to calculate the distance from
+     * @return the distance between the two clusters
+     */
+    public double distance(Node n) {
+        return Math.sqrt(Math.pow(this.x - n.getX(), 2)+ Math.pow(this.y - n.getY(), 2));
+    }
+    
+    /**
      * Get the number of nodes in the cluster
      * @return 
      */

@@ -735,6 +735,79 @@ public class ALNS extends Orienteering{
     }
     
     /**
+     * Removal heuristic.
+     * Removes the first cluster with the least profit/cost ratio, then removes
+     * the other q-1 clusters which are the most similar to the first one.
+     * The similarity criterion is computed as follows:
+     * <ul>
+     * <li> 1/D * (distanceBetween(i,j) + distanceBetween(firstNode,j) + distanceBetween(j,lastNode))
+     * <li> D = 3
+     * <li> i = first cluster removed from solution
+     * <li> j = cluster to evaluate for removal
+     * </ul>
+     * @param inputSolution
+     * @param q
+     * @return the repaired solution
+     */
+    private List<Cluster> repairTravelTime(List<Cluster> inputSolution, int q){
+        // Initialize the output
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Constant at the denominator
+        double D = 3.0;
+        
+        // Sort the clusters in the input solution
+        output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
+        
+        if(q>0){
+            // Remove 1 cluster from the solution, following the imposed ordering
+            Cluster first = output.remove(0);
+            
+            if(q>1){
+                double firstRatio = 0.0;
+                Vehicle firstVehicle = null;
+                
+                // Stores clusters and their ratios
+                LinkedHashMap<Cluster,Double> clustersRatios = new LinkedHashMap<>();
+                
+                // Initialize the firstNode and lastNode of the instance we're working on
+                Node firstNode = instance.getNode(0);
+                Node lastNode = instance.getNode(instance.getNum_nodes()-1);
+
+                // Populate the map that holds cluster IDs (in the output) and their ratios
+                for(int i =0; i<output.size(); i++){
+                    Cluster c = output.get(i);
+                    clustersRatios.put(
+                            c,
+                            (first.distance(c)+c.distance(firstNode)+c.distance(lastNode))/D
+                    );
+                }
+
+                // Sort the map by value to get the order for removal (DEBUG: check if it works!)
+                List<Cluster> removeOrder = new ArrayList();
+                clustersRatios.entrySet()
+                        .stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .forEachOrdered(entry -> removeOrder.add(entry.getKey()));
+
+                // Now the map is sorted by value (which is the ratio)
+                // in a growing order
+                // Remove the first q-1 elements of the map from the output
+                int removed = 0;
+                for(Cluster c : removeOrder){
+                    if(removed<q-1){
+                        output.remove(c);
+                        removed++;
+                    }
+                    else break;
+                }
+            }
+        }
+        // Return the repaired input
+        return output;
+    }
+    
+    /**
      * This is a special repair heuristic to bring back an eventual infeasible solution into feasibility.
      * It operates by removing the minimum number of low gain clusters when their
      * total cost is more than or equal the difference between the maximum cost for the solution (Tmax)

@@ -99,6 +99,55 @@ public class ObjectDistribution<T> {
     }
     
     /**
+     * Tries to remove the first occurence of an object from the distribution
+     * and updates all bins and weights consequently.
+     * If this distribution does not contain the element, it is unchanged.
+     * 
+     * @param o the object to remove
+     * @return true if the distribution has changed as a consequence
+     */
+    public boolean remove(T o){
+        boolean ret = false;
+        int id = objects.indexOf(o);
+        int oldsize = objects.size();
+        
+        if(objects.remove(o) && id >= 0 && id < oldsize){
+            weights.remove(id);
+            bins.remove(id);
+            ret = true;
+        }
+        
+        this.updateBins();
+        return ret;
+    }
+    
+    /**
+     * Removes from this distribution all of its elements that are contained in the
+     * specified List.
+     *
+     * @param c List containing elements to be removed from this distribution
+     * @return <tt>true</tt> if this distribution changed as a result of the call
+     */
+    boolean removeAll(List<T> c){
+            boolean ret = false;
+            
+            if(c != null && !c.isEmpty()){
+            for(T o : c){
+                int id = objects.indexOf(o);
+                int oldsize = objects.size();
+
+                if(objects.remove(o) && id >= 0 && id < oldsize){
+                    weights.remove(id);
+                    bins.remove(id);
+                    ret = true;
+                }
+            }
+            this.updateBins();
+        }
+        return ret;
+    }
+    
+    /**
      * Updates the weight of the specified object.
      * <br><b>IMPORTANT:</b> this method won't update the bins after the weight update!
      * To have such a behaviour use method <tt>updateWeightSafely</tt> instead.

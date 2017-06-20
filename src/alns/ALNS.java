@@ -8,19 +8,28 @@ package alns;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import gurobi.GRB;
 import gurobi.GRBCallback;
+import gurobi.GRBConstr;
 import gurobi.GRBEnv;
 import gurobi.GRBException;
+import gurobi.GRBExpr;
+import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -164,6 +173,21 @@ public class ALNS extends Orienteering{
      * @return true is the solution is feasible
      */
     private boolean testSolution(List<Cluster> proposedSolution, boolean log) throws GRBException, Exception {
+        return testSolution(this.model, proposedSolution, log);
+    }
+    
+    /**
+     * use Gurobi to check whether the proposed solution is feasible or not for the specified model.
+     * @param model the model to test the solution on
+     * @param proposedSolution the solution we want to test
+     * @param log true will produce a visible log
+     * @return true is the solution is feasible
+     */
+    private boolean testSolution(
+            GRBModel model,
+            List<Cluster> proposedSolution,
+            boolean log) throws GRBException, Exception {
+        
         boolean isFeasible = false;
         
         // Reset the model to an unsolved state, this will allow us to test our solutions freely
@@ -182,7 +206,7 @@ public class ALNS extends Orienteering{
         
         if(log){
             env.message("\nTesting solution with clusters: [");
-        
+                        
             proposedSolution.forEach(c -> {
                 try {
                     env.message(c.getId()+" ");
@@ -203,6 +227,9 @@ public class ALNS extends Orienteering{
         
         // Clean up the solution: now every solution can be chosable again
         this.resetSolution();
+        
+        // Resetting the callback
+        model.setCallback(null);
         
         return isFeasible;
     }
@@ -317,6 +344,8 @@ public class ALNS extends Orienteering{
         // a pejorative solution
         double temperature = 2*relaxedModel.get(GRB.DoubleAttr.ObjBound);
         
+        // Memory cleanup
+        relaxedModel.dispose();
         
         // stores the previous solution
         List<Cluster> xOld = this.ALNSConstructiveSolution();
@@ -385,10 +414,11 @@ public class ALNS extends Orienteering{
                 // Apply the methods on the solution
                 xNew = repairMethod.apply(destroyMethod.apply(xOld, q), q);
                 // Gather the value of the new objective obtained through the chosen methods
+                // TODO: check whether it would be better to query for ObjBound instead
                 newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
 
                 // Solution evaluation: if the solution improves the obj function, save it
-                // and give a prize to the heuristics coherent with their performance
+                // and give a prize to the heuristics according to their performance
                 solutionIsBetterThanCurrent = (newObjectiveValue > oldObjectiveValue);
                 if(acceptSolution(oldObjectiveValue, newObjectiveValue, temperature)){
                     if(!solutionIsBetterThanCurrent) solutionIsWorseButAccepted=true;
@@ -415,11 +445,19 @@ public class ALNS extends Orienteering{
             } // end of the segment
             
             // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
+            // This would be a nice spot to use some local search algorithm:
+            // repairBackToFeasibility will check whether the solution found in
+            // this segment is infeasible or not; if it is infeasible it will bring
+            // it back to feasibility through a special repair heuristic
+            List<Cluster> xBestRepaired = repairBackToFeasibility(xBest);
             
-            // This would be a nice spot to use some local search algorithm
+            // If xBest and xBestRepaired are not the same solution, make sure the feasible one is the best
+            if(!(xBest.containsAll(xBestRepaired) && xBestRepaired.containsAll(xBest))){
+                // TODO: I'm not sure about this, I need to check again tomorrow; update bestObjectiveValue accordingly
+            }
             
             // We check whether there was an improvement from last segment to this one
-            if(bestObjectiveInSegments<bestObjectiveValue){
+            if(bestObjectiveInSegments < bestObjectiveValue){
                 // There was an improvement!
                 bestObjectiveInSegments = bestObjectiveValue;
                 xBestInSegments = xBest;
@@ -563,6 +601,7 @@ public class ALNS extends Orienteering{
     }
     
     /**
+     * Removal heuristic.
      * Removes the first q clusters with the least profit/cost ratio.
      * @param inputSolution the solution to repair
      * @param q number of clusters to remove
@@ -588,6 +627,100 @@ public class ALNS extends Orienteering{
     }
     
     /**
+     * Removal heuristic.
+     * Removes the first cluster with the least profit/cost ratio, then removes
+     * the other q-1 clusters which are the most similar to the first one.
+     * The similarity criterion is computed as follows:
+     * <ul>
+     * <li>Find v as the vehicle with the longest streak in the first cluster</li>
+     * <li>For every node n in the first cluster get the duration of services servable by v. Sum all the values.</li>
+     * <li>Divide the previous value by the total duration of services in the clusters</li>
+     * <li>Take the absolute value of the difference between the ratio for the
+     * first cluster removed and the ratio for every other cluster as the similarity criterion.</li>
+     * </ul>
+     * @param inputSolution
+     * @param q
+     * @return the repaired solution
+     */
+    private List<Cluster> repairVehicleTime(List<Cluster> inputSolution, int q) throws Exception{
+        // Initialize the output
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Sort the clusters in the input solution
+        output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
+        
+        if(q>0){
+            // Remove 1 cluster from the solution, following the imposed ordering
+            Cluster first = output.remove(0);
+            
+            if(q>1){
+                double firstRatio = 0.0;
+                Vehicle firstVehicle = null;
+                int biggestStreakSize = 0;
+                
+                // Stores clusters and their ratios
+                LinkedHashMap<Cluster,Double> clustersRatios = new LinkedHashMap<>();
+                
+                // Find v as the vehicle with the longest streak in the first cluster
+                for(Vehicle v:instance.getVehicles()){
+                    if(v.canServe(first)){
+                        // Get the biggest streak of v in first
+                        List<Streak> streaks = first.getStreaks(v);
+                        streaks.sort(Streak.SIZE_COMPARATOR.reversed());
+                        int streakSize = streaks.get(0).size();
+                        
+                        // If the streak we've found is bigger than the previous one
+                        // update biggestStreakSize and firstVehicle
+                        if(streakSize > biggestStreakSize){
+                            biggestStreakSize = streakSize;
+                            firstVehicle = v;
+                        }
+                    }
+                }
+                
+                if(firstVehicle != null){
+                    // Calculate the ratio for the first cluster
+                    firstRatio = first.getTotalCostForVehicle(firstVehicle)/first.getTotalCost();
+                    
+                    // Populate the map that holds cluster IDs (in the output) and their ratios
+                    for(int i =0; i<output.size(); i++){
+                        Cluster c = output.get(i);
+                        clustersRatios.put(
+                                c,
+                                Math.abs(firstRatio - c.getTotalCostForVehicle(firstVehicle)/c.getTotalCost())
+                        );
+                    }
+                    
+                    // Sort the map by value to get the order for removal (DEBUG: check if it works!)
+                    List<Cluster> removeOrder = new ArrayList();
+                    clustersRatios.entrySet()
+                            .stream()
+                            .sorted(Map.Entry.comparingByValue())
+                            .forEachOrdered(entry -> removeOrder.add(entry.getKey()));
+                    
+                    // Now the map is sorted by value (which is the ratio)
+                    // in a growing order
+                    // Remove the first q-1 elements of the map from the output
+                    int removed = 0;
+                    for(Cluster c : removeOrder){
+                        if(removed<q-1){
+                            output.remove(c);
+                            removed++;
+                        }
+                        else break;
+                    }
+                    
+                }
+                // debug
+                else throw new Exception("Error in repairVehicleTime heuristic!\n"
+                        + "No serving vehicle found for first cluster "+first.getId());
+            }
+        }
+        // Return the repaired input
+        return output;
+    }
+    
+    /**
      * This is a special repair heuristic to bring back an eventual infeasible solution into feasibility.
      * It operates by removing the minimum number of low gain clusters when their
      * total cost is more than or equal the difference between the maximum cost for the solution (Tmax)
@@ -598,7 +731,7 @@ public class ALNS extends Orienteering{
     private List<Cluster> repairBackToFeasibility(List<Cluster> inputSolution) throws Exception{
         // TODO:
         // 0. Check feasibility. If infeasible goto 1, else goto 9
-        // 1. Compute the IIS model so that we can retrieve some information on z and Tmax
+        // 1. Compute the feasibility relaxation model so that we can retrieve some information on z and Tmax
         // 2. Look at how much into infeasibility we are, so get the maxZ
         // 3. Compute costDifference = maxZ-Tmax
         // 4. Sort inputSolution clusters by increasing profit
@@ -607,55 +740,96 @@ public class ALNS extends Orienteering{
         // 7. Remove the cluster found in 6.
         // 8. Goto 0
         // 9. Return the new feasible solution
+
         
-        GRBModel feasibilityRelaxation = new GRBModel(model);
+        // Create a new objective function for the feasibility relaxation model
+        // The objective function is setup to "minimize the value of sum(z[*][lastNodeID])"
+        // (we want to minimize the time of arrival into the last node)
+        int lastNodeID = instance.getNum_nodes()-1;
+        GRBLinExpr newObj = new GRBLinExpr();
+        for(int s = 0; s < instance.getNum_nodes(); s++){
+            newObj.addTerm(1.0, this.z[s][lastNodeID]);
+        }
         
+        // Setup the output
         List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // 0. Check feasibility and start cycling until we have a feasible solution
         boolean isFeasible = testSolution(output, true);
-        // 0. Check feasibility
         while(!isFeasible){
             // 1. Compute the feasibilityRelaxation so that we can retrieve some information on z and Tmax
-            feasibilityRelaxation.feasRelax(segmentSize, isFeasible, y, HEURISTIC_SCORES, HEURISTIC_SCORES, grbcs, HEURISTIC_SCORES);
+            GRBModel clone = new GRBModel(model);
             
-            // Find the maximum value for z
-            double maxZ = -1;
-            double maxI = -1;
-            double maxJ = -1;
-            double tempZ;
-            for(int i=0;i<instance.getNum_nodes();i++){
-                for(int j=0; j<instance.getNum_nodes();j++){
-                    tempZ = z[i][j].get(GRB.DoubleAttr.X);
-                    if(tempZ>maxZ){
-                        maxI=i;
-                        maxJ=j;
+            // Setup the new value of Tmax as the maximum value for a double
+            double safeTMax = Double.MAX_VALUE;
+            double[] newTMax = new double[this.constraint8.size()];
+            for(int t = 0; t<this.constraint8.size(); t++){
+                newTMax[t] = safeTMax;
+            }
+            
+            // Set the new value of Tmax as the new upper bound for each z
+            for(int i = 0; i < instance.getNum_nodes(); i++){
+                for(int j = 0; j < instance.getNum_nodes(); j++){
+                    GRBVar toFix = clone.getVarByName("z_("+i+","+j+")");
+                    toFix.set(GRB.DoubleAttr.UB, safeTMax);
+                }
+            }
+            
+            // For each constraint in the list of constraints, change Tmax to
+            // the maximum possible value
+            for(int i = 0; i < this.constraint8.size(); i++){
+                List<GRBVar> vars = this.constraint8Variables.get(i);
+                //DEBUG: check if sizes of all arguments are the same!
+                clone.chgCoeffs((GRBConstr[]) constraint8.toArray(), (GRBVar[]) vars.toArray(), newTMax);
+            }
+            
+            // Now we set the objective function to "minimize the time of arrival into the last node"
+            clone.setObjective(newObj, GRB.MINIMIZE);
+            
+            // Update the cloned model
+            clone.update();
+            
+            // Let's test the solution on the feasibility relaxation model (clone)
+            if(this.testSolution(clone, output, true)){
+                // If it worked, we're very happy because we can start looking for the maximum value of Z
+                double maxZ = -1;
+                double tempZ;
+                for(int i=0;i<instance.getNum_nodes();i++){
+                    tempZ = z[i][lastNodeID].get(GRB.DoubleAttr.X);
+                    if(tempZ>=maxZ){
                         maxZ=tempZ;
                     }
                 }
-            }
-            
-            // 3. Compute costDifference = maxZ-Tmax
-            double costDifference = maxZ-instance.getTmax();
-            
-            // 4. Sort inputSolution clusters by increasing profit
-            output.sort(Cluster.PROFIT_COMPARATOR);
-            
-            // 5. Sort inputSolution clusters by increasing service time (cost)
-            output.sort(Cluster.COST_COMPARATOR);
-            
-            // 6. Get the first cluster from sorted inputSolution with cost >= costDifference
-            Cluster toRemove = null;
-            for(Cluster c : output){
-                if(c.getTotalCost()>=costDifference){
-                    toRemove=c;
-                    break;
+                
+                // 3. Compute costDifference = maxZ-Tmax
+                double costDifference = maxZ-instance.getTmax();
+
+                // 4. Sort inputSolution clusters by increasing profit
+                output.sort(Cluster.PROFIT_COMPARATOR);
+
+                // 5. Sort inputSolution clusters by increasing service time (cost)
+                output.sort(Cluster.COST_COMPARATOR);
+
+                // 6. Get the first cluster from sorted inputSolution with cost >= costDifference
+                Cluster toRemove = null;
+                for(Cluster c : output){
+                    if(c.getTotalCost()>=costDifference){
+                        toRemove=c;
+                        break;
+                    }
                 }
+
+                // 7. Remove the cluster found in 6.
+                output.remove(toRemove);
+
+                // 8. Goto 0 (test feasibility)
+                isFeasible = testSolution(output, true);
             }
+            // In case the feasibility relaxation did not work, something went VERY wrong
+            else throw new Exception("PROBLEM: the feasibility relaxation was infeasible!");
             
-            // 7. Remove the cluster found in 6.
-            output.remove(toRemove);
-            
-            // 8. Goto 0 (test feasibility)
-            isFeasible = testSolution(output, true);
+            // Memory cleanup
+            clone.dispose();
         }
         
         return output;

@@ -218,10 +218,10 @@ public class ALNS extends Orienteering{
         model.reset();
         
         // Clear the solution in the model: no cluster will be choseable at the beginning
-        this.clearSolution();
+        clearSolution(model);
         
         // Place the selected clusters in solution
-        this.putInSolution(proposedSolution);
+        putInSolution(model, proposedSolution);
         
         // Setting up the callback
         model.setCallback(new feasibilityCallback());
@@ -295,6 +295,25 @@ public class ALNS extends Orienteering{
     }
     
     /**
+     * Adds the selected clusters to the solution for the model specified.
+     * @param model the model to update
+     * @param l the list of clusters to put into solution.
+     * @throws GRBException if anything goes wrong with updating the model.
+     */
+    private void putInSolution(GRBModel model, List<Cluster> l) throws GRBException{
+        l.forEach(c -> {
+            try {
+                GRBVar var = model.getVarByName("y_c"+c);
+                var.set(GRB.DoubleAttr.LB, 1.0);
+                var.set(GRB.DoubleAttr.UB, 1.0);
+            } catch (GRBException ex) {
+                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        model.update();
+    }
+    
+    /**
      * Remove the selected clusters from the solution.
      * @param l the list of clusters to remove from the solution.
      * @throws GRBException if anything goes wrong with updating the model.
@@ -332,6 +351,20 @@ public class ALNS extends Orienteering{
         for(int c = 0; c<instance.getNum_clusters(); c++){
             y[c].set(GRB.DoubleAttr.LB, 0.0);
             y[c].set(GRB.DoubleAttr.UB, 0.0);
+        }
+        model.update();
+    }
+    
+    /**
+     * Clear the solution of a specific model: no clusters will be selectable by the solver
+     * @param model the model we want to update
+     * @throws GRBException if setting the bounds goes wrong
+     */
+    private void clearSolution(GRBModel model) throws GRBException{
+        for(int c = 0; c<instance.getNum_clusters(); c++){
+            GRBVar var = model.getVarByName("y_c"+c);
+            var.set(GRB.DoubleAttr.LB, 0.0);
+            var.set(GRB.DoubleAttr.UB, 0.0);
         }
         model.update();
     }
@@ -386,11 +419,13 @@ public class ALNS extends Orienteering{
         // best value of the objective function throughout iterations
         double bestObjectiveValue = oldObjectiveValue;
         
-        // q is the number of clusters to repair and destroy at each iteration
-        int q;
-        
-        // qMax is the maximum number of clusters in the instance
+        // qMax is the maximum number of clusters to operate on with heuristic
         int qMax = instance.getNum_clusters();
+        int qMin = 0;
+        
+        // q is the number of clusters to repair and destroy at each iteration
+        int q=1;
+        
         
         // This is how much q should increase at every iteration
         int qDelta = Math.floorDiv(qMax, 10);
@@ -405,6 +440,7 @@ public class ALNS extends Orienteering{
         boolean solutionIsBetterThanCurrent; // true if c(xNew)>c(xOld)
         boolean solutionIsWorseButAccepted;  // true id c(xNew)<=c(xOld) but xNew is accepted
         boolean solutionIsWorseAndRejected;  // true id c(xNew)<=c(xOld) and xNew is rejected
+        boolean repairMethodWasUsed;         // Keeping track whether a repair method had to be used or not
         
         // Setup of stopping criterions
         long maxTimeInSeconds = 6000;
@@ -423,28 +459,38 @@ public class ALNS extends Orienteering{
         
         // TODO: improve logging
         // ALNS START: Cycles every segment
+        q=1;
         do{
-            q=1;
             temperature = initialTtemperature;
             
             // Reset heuristic weights
             this.resetHeuristicMethodsWeight();
 
             // Iterations inside a segment
-            for(int iterations = 0; iterations < this.segmentSize && q<=qMax; iterations++){
+            for(int iterations = 0; iterations < this.segmentSize && xOld.size()>1; iterations++){
                 // Setup of boolean values to evaluate solution quality
                 solutionIsNewGlobalOptimum = false;
                 solutionIsBetterThanCurrent= false;
                 solutionIsWorseButAccepted = false;
                 solutionIsWorseAndRejected = false;
+                repairMethodWasUsed = false;
 
                 // Picking a destroy and a repair method
                 destroyMethod = pickDestroyMethod();
                 repairMethod = pickRepairMethod();
-
-                // Apply the methods on the solution
-                xNew = repairMethod.apply(destroyMethod.apply(xOld, q), q);
-                // Gather the value of the objective function for the new solution
+                
+                
+                
+                // Apply the destruction method on the solution
+                xNew = destroyMethod.apply(xOld, q);
+                //If the new solution is infeasible, apply the repair method
+                if(!testSolution(xNew, false)){
+                    xNew = repairBackToFeasibility3(xNew, repairMethod);
+                    repairMethodWasUsed = true;
+                }
+                
+                // Check if we entered feasibility. If we didn't,
+                // gather the value of the objective function for the new solution
                 // obtained through the chosen methods
                 // TODO: check whether it would be better to query for ObjBound instead
                 // ...or whether I should go back to feasibility before attempting further heuristics
@@ -452,26 +498,25 @@ public class ALNS extends Orienteering{
                     newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
                 }
                 else{
-//                    // CHOICE 1: discard the solution, penalize the two heuristics
-//                    updateHeuristicMethodsWeight(destroyMethod,
-//                            repairMethod,
-//                            false,
-//                            false,
-//                            false,
-//                            true);
-//                    // Update q
-//                    q += qDelta;
-//
-//                    // Update temperature
-//                    temperature *= alpha;
-//                    continue;
+                    // CHOICE 1: discard the solution, penalize the two heuristics
+                    updateHeuristicMethodsWeight(destroyMethod,
+                            repairMethod,
+                            false,
+                            false,
+                            false,
+                            true,
+                            repairMethodWasUsed);
+
+                    // Update temperature
+                    temperature *= alpha;
+                    continue;
 
 //                    // CHOICE 2: get the best bound on the objective and continue
 //                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjBound);
                     
-                    // CHOICE 3: bring the solution back to feasibility and go on
-                    xNew = repairBackToFeasibility(xNew);
-                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+//                    // CHOICE 3: bring the solution back to feasibility and go on
+//                    xNew = repairBackToFeasibility2(xNew);
+//                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
                 }
                 
                 // In any case, now the model has been updated and it stores data
@@ -500,14 +545,12 @@ public class ALNS extends Orienteering{
                         solutionIsNewGlobalOptimum,
                         solutionIsBetterThanCurrent,
                         solutionIsWorseButAccepted,
-                        solutionIsWorseAndRejected);    
-                
-                // Update q
-                q += qDelta;
+                        solutionIsWorseAndRejected,
+                        repairMethodWasUsed);
                 
                 // Update temperature at the end of every iteration
                 temperature *= alpha;
-            } // for: end of the segment
+            } // for: end of all iterations in the segment
             
             // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
             // This would be a nice spot to use some local search algorithm:
@@ -532,12 +575,17 @@ public class ALNS extends Orienteering{
                 segmentsWithoutImprovement = 0;
             }
             else{
-                // There was no improvement: update the segment counter
+                // There was no improvement: update the no-improvement counter
                 segmentsWithoutImprovement++;
             }
             
-        } // do: Stopping criteria
+            // Update q and the segment counter
+            q += qDelta;
+            segments++;
+        } // do: Stopping criteria. If not verified, go on with the next segment
         while(!LocalDateTime.now().isAfter(maxTime)
+                && q>=qMin
+                && q<=qMax
                 && segments < maxSegments
                 && segmentsWithoutImprovement<maxSegmentsWithoutImprovement
                 && model.get(GRB.IntAttr.Status) != GRB.OPTIMAL);
@@ -779,9 +827,11 @@ public class ALNS extends Orienteering{
         // Remove q clusters from the solution, following the imposed ordering
         int i = 0;
         for(Cluster c : inputSolution){
-            output.remove(c);
-            i++;
-            if(i>=q) break;
+            if(i<q && output.size()>1) {
+                output.remove(c);
+                i++;
+            }
+            else break;
         }
         
         // Return the repaired input
@@ -806,9 +856,11 @@ public class ALNS extends Orienteering{
         // Remove q clusters from the solution, following the imposed ordering
         int i = 0;
         for(Cluster c : inputSolution){
-            output.remove(c);
-            i++;
-            if(i>=q) break;
+            if(i<q && output.size()>1) {
+                output.remove(c);
+                i++;
+            }
+            else break;
         }
         
         // Return the repaired input
@@ -832,9 +884,11 @@ public class ALNS extends Orienteering{
         // Remove q clusters from the solution, following the imposed ordering
         int i = 0;
         for(Cluster c : inputSolution){
-            output.remove(c);
-            i++;
-            if(i>=q) break;
+            if(i<q && output.size()>1) {
+                output.remove(c);
+                i++;
+            }
+            else break;
         }
         
         // Return the repaired input
@@ -864,7 +918,7 @@ public class ALNS extends Orienteering{
         // Sort the clusters in the input solution
         output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
         
-        if(q>0){
+        if(q>0 && output.size()>1){
             // Remove 1 cluster from the solution, following the imposed ordering
             Cluster first = output.remove(0);
             
@@ -918,7 +972,7 @@ public class ALNS extends Orienteering{
                     // Remove the first q-1 elements of the map from the output
                     int removed = 0;
                     for(Cluster c : removeOrder){
-                        if(removed<q-1){
+                        if(removed<q-1 && output.size()>1){
                             output.remove(c);
                             removed++;
                         }
@@ -964,7 +1018,7 @@ public class ALNS extends Orienteering{
         // Sort the clusters in the input solution
         output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
         
-        if(q>0){
+        if(q>0  && output.size()>1){
             // Remove 1 cluster from the solution, following the imposed ordering
             Cluster first = output.remove(0);
             
@@ -1000,7 +1054,7 @@ public class ALNS extends Orienteering{
                 // Remove the first q-1 elements of the map from the output
                 int removed = 0;
                 for(Cluster c : removeOrder){
-                    if(removed<q-1){
+                    if(removed<q-1 && output.size()>1){
                         output.remove(c);
                         removed++;
                     }
@@ -1029,7 +1083,7 @@ public class ALNS extends Orienteering{
         clustersToRemove.addAll(output);
         
         // Remove q clusters from the solution, picking them randomly
-        for(int i = 0; q>0 && i<q; i++){
+        for(int i = 0; q>0 && i<q && output.size()>1; i++){
             Cluster c = clustersToRemove.getRandom();
             output.remove(c);
             clustersToRemove.remove(c);
@@ -1078,12 +1132,12 @@ public class ALNS extends Orienteering{
         
         // 0. Check feasibility and start cycling until we have a feasible solution
         boolean isFeasible = testSolution(output, true);
-        while(!isFeasible){
+        while(!isFeasible && output.size()>1){
             // 1. Compute the feasibilityRelaxation so that we can retrieve some information on z and Tmax
             GRBModel clone = new GRBModel(model);
             
             // Setup the new value of Tmax as the maximum value for a double
-            double safeTMax = Double.MAX_VALUE;
+            double safeTMax = instance.getTmax()*instance.getNum_vehicles()*instance.getNum_nodes();
             double[] newTMax = new double[this.constraint8.size()];
             for(int t = 0; t<this.constraint8.size(); t++){
                 newTMax[t] = safeTMax;
@@ -1102,7 +1156,8 @@ public class ALNS extends Orienteering{
             
             // Remove all old constraints
             for(GRBConstr grbc : this.constraint8){
-                clone.remove(grbc);
+                GRBConstr toRemove = clone.getConstrByName(grbc.get(GRB.StringAttr.ConstrName));
+                clone.remove(toRemove);
             }
             // Add new constraints
             for(int i=firstNodeID; i<instance.getNum_nodes(); i++){
@@ -1137,17 +1192,16 @@ public class ALNS extends Orienteering{
             // Update the cloned model
             clone.update();
             
-            clone.write("feasibilitySubmodel.lp");
-            
-            clone.optimize();
+            //clone.write("feasibilitySubmodel.lp");
             // Let's test the solution on the feasibility relaxation model (clone)
             //if(true){
-            if(this.testSolution(clone, output, true)){
+            if(this.testSolution(clone, output, false)){
                 // If it worked, we're very happy because we can start looking for the maximum value of Z
                 double maxZ = -1;
                 double tempZ;
                 for(int i=0;i<instance.getNum_nodes();i++){
-                    tempZ = z[i][lastNodeID].get(GRB.DoubleAttr.X);
+                    GRBVar zCurrent = clone.getVarByName(z[i][lastNodeID].get(GRB.StringAttr.VarName));
+                    tempZ = zCurrent.get(GRB.DoubleAttr.X);
                     if(tempZ>=maxZ){
                         maxZ=tempZ;
                     }
@@ -1156,13 +1210,10 @@ public class ALNS extends Orienteering{
                 // 3. Compute costDifference = maxZ-Tmax
                 double costDifference = maxZ-instance.getTmax();
 
-                // 4. Sort inputSolution clusters by increasing profit
-                output.sort(Cluster.PROFIT_COMPARATOR);
+                // 4. Sort inputSolution clusters by increasing profit/cost ratio
+                output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
 
-                // 5. Sort inputSolution clusters by increasing service time (cost)
-                output.sort(Cluster.COST_COMPARATOR);
-
-                // 6. Get the first cluster from sorted inputSolution with cost >= costDifference
+                // 5. Get the first cluster from sorted inputSolution with cost >= costDifference
                 Cluster toRemove = null;
                 for(Cluster c : output){
                     if(c.getTotalCost()>=costDifference){
@@ -1170,11 +1221,14 @@ public class ALNS extends Orienteering{
                         break;
                     }
                 }
-
-                // 7. Remove the cluster found in 6.
+                // if there isn't a cluster that satisfies our criteria, choose
+                // the one with the least profit/cost ratio
+                if(toRemove == null) toRemove = output.get(0);
+                
+                // 6. Remove the cluster found in 5.
                 output.remove(toRemove);
 
-                // 8. Goto 0 (test feasibility)
+                // 7. Goto 0 (test feasibility)
                 isFeasible = testSolution(output, true);
             }
             // In case the feasibility relaxation did not work, something went VERY wrong
@@ -1182,6 +1236,49 @@ public class ALNS extends Orienteering{
             
             // Memory cleanup
             clone.dispose();
+        }
+        
+        return output;
+    }
+    
+    /**
+     * This is a special repair heuristic to bring back an eventual infeasible solution into feasibility.
+     * It operates by removing the minimum number of low gain-high cost clusters.
+     * <br>Fesibility is tested at the end of the method, so you can expect to find
+     * interesting information about this solution in the current model.
+     * @param inputSolution an infeasible solution
+     * @return a feasible solution
+     * @throws Exception if testing the solution breaks somewhere
+     */
+    private List<Cluster> repairBackToFeasibility2(List<Cluster> inputSolution) throws Exception{
+        // Setup the output
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        while(!testSolution(output, false)){
+            output=this.repairWorstRemoval(output, 1);
+        }
+        
+        return output;
+    }
+    
+    /**
+     * This is a special repair heuristic to bring back an eventual infeasible solution into feasibility.
+     * It operates by removing the minimum number of low gain-high cost clusters.
+     * <br>Fesibility is tested at the end of the method, so you can expect to find
+     * interesting information about this solution in the current model.
+     * @param inputSolution an infeasible solution
+     * @return a feasible solution
+     * @throws Exception if testing the solution breaks somewhere
+     */
+    private List<Cluster> repairBackToFeasibility3(
+            List<Cluster> inputSolution,
+            BiFunction<List<Cluster>,Integer,List<Cluster>> repairMethod
+    ) throws Exception{
+        // Setup the output
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        while(output.size()>1 && !testSolution(output, false)){
+            output=repairMethod.apply(output, 1);
         }
         
         return output;
@@ -1196,6 +1293,7 @@ public class ALNS extends Orienteering{
      * @param solutionIsBetterThanCurrent true if the new solution is better than the old one
      * @param solutionIsWorseButAccepted true if the new solution is worse than the old one, but is accepted anyway
      * @param solutionIsWorseAndRejected true if the new solution is worse than the old one and is rejected
+     * @param repairMethodWasUsed true if the repair method had to be used (so we need to update its weight too)
      */
     private void updateHeuristicMethodsWeight(
             BiFunction<List<Cluster>, Integer, List<Cluster>> destroyMethod,
@@ -1203,7 +1301,8 @@ public class ALNS extends Orienteering{
             boolean solutionIsNewGlobalOptimum,
             boolean solutionIsBetterThanCurrent,
             boolean solutionIsWorseButAccepted,
-            boolean solutionIsWorseAndRejected) {
+            boolean solutionIsWorseAndRejected,
+            boolean repairMethodWasUsed) {
         
         // Setup the prize that will be given to the selected heuristics
         double prize = 0.0;
@@ -1226,7 +1325,8 @@ public class ALNS extends Orienteering{
         double repairOldWeight = repairMethods.getWeightOf(repairMethod);
         double destroyOldWeight = destroyMethods.getWeightOf(destroyMethod);
         
-        repairMethods.updateWeightSafely(repairMethod, repairOldWeight*lambda + (1-lambda)*prize);
+        if(repairMethodWasUsed)
+            repairMethods.updateWeightSafely(repairMethod, repairOldWeight*lambda + (1-lambda)*prize);
         destroyMethods.updateWeightSafely(destroyMethod, destroyOldWeight*lambda + (1-lambda)*prize);
     }
     
@@ -1263,7 +1363,7 @@ class feasibilityCallback extends GRBCallback{
      * Number of solution nodes to visit before the solver gives up on
      * searching for a feasible solution
      */
-    private final static double NODES_BEFORE_ABORT = 100;
+    private final static double NODES_BEFORE_ABORT = 500;
     
     @Override
     protected void callback() {

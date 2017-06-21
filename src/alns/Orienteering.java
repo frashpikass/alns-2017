@@ -829,7 +829,7 @@ public class Orienteering
                 int segmentSize = 200;
                 int historySize = 50;
                 double lambda = 0.4;
-                double alpha = 0.1;
+                double alpha = 0.8;
                 ALNS a = new ALNS(o, segmentSize, historySize, lambda, alpha);
                 
                 // Optimize the model with ALNS

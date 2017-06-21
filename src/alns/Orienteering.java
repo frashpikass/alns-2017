@@ -226,6 +226,8 @@ public class Orienteering
         this.y = o.getY();
         this.z = o.getZ();
         this.heuristicConstraints = o.heuristicConstraints;
+        this.constraint8 = o.constraint8;
+        this.constraint8Variables = o.constraint8Variables;
     }
     
 //    /**
@@ -791,7 +793,7 @@ public class Orienteering
             Orienteering o = new Orienteering(instancePath+LOG_FILE_EXTESION, instancePath,
                     time, DEFAULT_NUMTHREADS, true);
             
-            // Set to true to solve the relaxed problem
+            // Select the solver to use
             int solutionType = SOLVE_ALNS;
 
             // Must set LazyConstraints parameter when using lazy constraints
@@ -827,7 +829,8 @@ public class Orienteering
                 int segmentSize = 200;
                 int historySize = 50;
                 double lambda = 0.4;
-                ALNS a = new ALNS(o, segmentSize, historySize, lambda);
+                double alpha = 0.1;
+                ALNS a = new ALNS(o, segmentSize, historySize, lambda, alpha);
                 
                 // Optimize the model with ALNS
                 a.optimize();
@@ -850,8 +853,6 @@ public class Orienteering
         catch(Exception e){
             System.out.println(e.toString());
         }
-        
-        
     }
     
     /**
@@ -977,7 +978,7 @@ public class Orienteering
     
     /**
      * This method removes all heuristic constraints that tighten the relaxed model.
-     * @throws GRBException 
+     * @throws GRBException if anything goes wrong
      */
     protected void toggleHeuristicConstraintsOn() throws GRBException, Exception{
         // Some useful constants for constraint definition
@@ -1059,7 +1060,7 @@ public class Orienteering
     
     /**
      * This method removes all heuristic constraints that tighten the relaxed model.
-     * @throws GRBException 
+     * @throws GRBException if anything goes wrong
      */
     protected void toggleHeuristicConstraintsOff() throws GRBException{
         for(GRBConstr c : heuristicConstraints){

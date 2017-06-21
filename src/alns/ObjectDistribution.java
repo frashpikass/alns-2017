@@ -152,11 +152,11 @@ public class ObjectDistribution<T> {
      * <br><b>IMPORTANT:</b> this method won't update the bins after the weight update!
      * To have such a behaviour use method <tt>updateWeightSafely</tt> instead.
      * @param o the object we want to update the weight of
-     * @param newWeight the new weight for the specified object
+     * @param newWeight the new weight for the specified object (if it's negative, the absolute value will be taken)
      */
     public void updateWeight(T o, double newWeight){
         int index = this.objects.indexOf(o);
-        this.weights.set(index, newWeight); // check that it's implemented by ArrayList
+        this.weights.set(index, Math.abs(newWeight)); // check that it's implemented by ArrayList
     }
     
     /**
@@ -249,7 +249,7 @@ public class ObjectDistribution<T> {
     
     /**
      * Test method for this class
-     * @param args 
+     * @param args unused parameter
      */
     public static void main(String[] args) {
         ObjectDistribution<String> od = new ObjectDistribution<>();

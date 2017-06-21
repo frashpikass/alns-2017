@@ -82,7 +82,7 @@ public class ALNS extends Orienteering{
      * <br>This value should be a double in the interval [0,1].
      * <br>The temperature is updated at the end of every segment like
      * <br>newTemperature = alpha*Temperature
-     * <br>so that a slowly decreasing temperature (alpha->1) will make fluctuations
+     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make fluctuations
      * in accepted solutions much stronger
      */
     private double alpha;
@@ -249,9 +249,6 @@ public class ALNS extends Orienteering{
             }
         }
         
-        // Clean up the solution: now every solution can be chosable again
-        this.resetSolution();
-        
         // Resetting the callback
         model.setCallback(null);
         
@@ -383,7 +380,7 @@ public class ALNS extends Orienteering{
         List<Cluster> xBest = xOld;
         
         // old value of the objective function, generated through the old solution
-        double oldObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+        double oldObjectiveValue = model.get(GRB.DoubleAttr.ObjBound);
         // new value of the objective function produced by the current iteration
         double newObjectiveValue = oldObjectiveValue;
         // best value of the objective function throughout iterations
@@ -410,7 +407,7 @@ public class ALNS extends Orienteering{
         boolean solutionIsWorseAndRejected;  // true id c(xNew)<=c(xOld) and xNew is rejected
         
         // Setup of stopping criterions
-        long maxTimeInSeconds = 600;
+        long maxTimeInSeconds = 6000;
         LocalDateTime maxTime = LocalDateTime.now().plusSeconds(maxTimeInSeconds);
         
         // Keeping track of how many segments of iterations have been performed
@@ -429,6 +426,9 @@ public class ALNS extends Orienteering{
         do{
             q=1;
             temperature = initialTtemperature;
+            
+            // Reset heuristic weights
+            this.resetHeuristicMethodsWeight();
 
             // Iterations inside a segment
             for(int iterations = 0; iterations < this.segmentSize && q<=qMax; iterations++){
@@ -491,7 +491,8 @@ public class ALNS extends Orienteering{
                     bestObjectiveValue = newObjectiveValue;
                     solutionIsNewGlobalOptimum = true;
                     // So, let's check if we've reached the optimum (haha, fat chance)
-                    if(model.get(GRB.IntAttr.Status) == GRB.OPTIMAL) break;
+                    if(model.get(GRB.IntAttr.Status) == GRB.OPTIMAL)
+                        break;
                 }
                 
                 // Update the heuristic weights
@@ -536,7 +537,7 @@ public class ALNS extends Orienteering{
             }
             
         } // do: Stopping criteria
-        while(LocalDateTime.now().isAfter(maxTime)
+        while(!LocalDateTime.now().isAfter(maxTime)
                 && segments < maxSegments
                 && segmentsWithoutImprovement<maxSegmentsWithoutImprovement
                 && model.get(GRB.IntAttr.Status) != GRB.OPTIMAL);
@@ -1060,7 +1061,8 @@ public class ALNS extends Orienteering{
         // 7. Remove the cluster found in 6.
         // 8. Goto 0
         // 9. Return the new feasible solution
-
+        
+        int firstNodeID = 0;
         
         // Create a new objective function for the feasibility relaxation model
         // The objective function is setup to "minimize the value of sum(z[*][lastNodeID])"
@@ -1095,13 +1097,39 @@ public class ALNS extends Orienteering{
                 }
             }
             
+            // TODO: try removing all constraints8 from the cloned model, then
+            // rebuild them with the new tmax instead
+            
+            // Remove all old constraints
+            for(GRBConstr grbc : this.constraint8){
+                clone.remove(grbc);
+            }
+            // Add new constraints
+            for(int i=firstNodeID; i<instance.getNum_nodes(); i++){
+                for(int j=firstNodeID; j<instance.getNum_nodes(); j++){
+                    GRBLinExpr expr8 = new GRBLinExpr();
+                    for(int v=0; v<instance.getNum_vehicles(); v++){
+                        expr8.addTerm(safeTMax, x[v][i][j]);
+                    }
+                    
+                    // Add the constraint to the cloned model
+                    // This is one constraint for every z[i][j]
+                    clone.addConstr(z[i][j], GRB.LESS_EQUAL, expr8, "c8_arc("+i+","+j+")");
+                }
+            }
+            
+            /*
             // For each constraint in the list of constraints, change Tmax to
             // the maximum possible value
             for(int i = 0; i < this.constraint8.size(); i++){
                 List<GRBVar> vars = this.constraint8Variables.get(i);
                 //DEBUG: check if sizes of all arguments are the same!
-                clone.chgCoeffs((GRBConstr[]) constraint8.toArray(), (GRBVar[]) vars.toArray(), newTMax);
+                GRBConstr [] constraints = constraint8.toArray(new GRBConstr[constraint8.size()]);
+                GRBVar [] variables = vars.toArray(new GRBVar[vars.size()]);
+                
+                clone.chgCoeffs(constraints, variables, newTMax);
             }
+            */
             
             // Now we set the objective function to "minimize the time of arrival into the last node"
             clone.setObjective(newObj, GRB.MINIMIZE);
@@ -1109,7 +1137,11 @@ public class ALNS extends Orienteering{
             // Update the cloned model
             clone.update();
             
+            clone.write("feasibilitySubmodel.lp");
+            
+            clone.optimize();
             // Let's test the solution on the feasibility relaxation model (clone)
+            //if(true){
             if(this.testSolution(clone, output, true)){
                 // If it worked, we're very happy because we can start looking for the maximum value of Z
                 double maxZ = -1;
@@ -1194,8 +1226,8 @@ public class ALNS extends Orienteering{
         double repairOldWeight = repairMethods.getWeightOf(repairMethod);
         double destroyOldWeight = destroyMethods.getWeightOf(destroyMethod);
         
-        repairMethods.updateWeightSafely(repairMethod, repairOldWeight*lambda + (1-lambda)*repairOldWeight);
-        destroyMethods.updateWeightSafely(destroyMethod, destroyOldWeight*lambda + (1-lambda)*destroyOldWeight);
+        repairMethods.updateWeightSafely(repairMethod, repairOldWeight*lambda + (1-lambda)*prize);
+        destroyMethods.updateWeightSafely(destroyMethod, destroyOldWeight*lambda + (1-lambda)*prize);
     }
     
     /**

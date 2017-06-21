@@ -294,7 +294,7 @@ public class Cluster {
     
     /**
      * Get the number of nodes in the cluster
-     * @return 
+     * @return the number of nodes in the cluster
      */
     public int getNumNodes(){
         return this.nodes.size();
@@ -314,7 +314,7 @@ public class Cluster {
     
     /**
      * Gets the number of services required by this cluster
-     * @return 
+     * @return the number of services required by this cluster
      */
     public int getNumServices() {
         return this.getServices().size();
@@ -567,6 +567,11 @@ public class Cluster {
         this.updateMaxNumberOfVehiclesNeeded(instanceVehicles);
         this.updateMinNumberOfVehiclesNeeded(instanceVehicles);
         this.updateWeightedProfit();
+    }
+    
+    @Override
+    public String toString(){
+        return ""+this.id;
     }
     
     

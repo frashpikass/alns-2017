@@ -22,9 +22,9 @@ public class InstanceCTOPWSSReader
          * compatible with the Orienteering problem class.
          * @param path path to the model file
          * @return an Orienteering problem instance
-         * @todo implement serialization to optimize loading operations.
          * Idea: if the path leads to a dat file, check whether it's a good
          * serialization of an InstanceCTOPWSS object and eventually load/return it.
+         * @throws java.lang.Exception if anything goes wrong
          */
         public static InstanceCTOPWSS read(String path) throws Exception
 	{

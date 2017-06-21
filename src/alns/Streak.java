@@ -91,7 +91,7 @@ public class Streak implements Comparable{
     /**
      * Get a deep clone of this Streak
      * @return a deep clone of this Streak
-     * @throws java.lang.CloneNotSupportedException
+     * @throws java.lang.CloneNotSupportedException if the clone operation goes wrong
      */
     @Override
     public Streak clone() throws CloneNotSupportedException{
@@ -118,8 +118,8 @@ public class Streak implements Comparable{
      * Removes the Node at the specified position in this Streak.
      * Shifts any subsequent Nodes to the left (subtracts one from their
      * indices). Returns the Node that was removed from the Streak.
-     * @param index
-     * @return 
+     * @param index the position of the node in the streak to remove
+     * @return the removed node
      */
     public Node remove(int index){
         return nodes.remove(index);

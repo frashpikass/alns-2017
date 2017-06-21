@@ -109,7 +109,7 @@ public class InstanceCTOPWSS implements Serializable
         
         /**
          * Gets the node with the specified ID
-         * @param id
+         * @param id the id of the node to get from the cluster
          * @return the node with the specified ID
          */
         public Node getNode(int id){
@@ -126,7 +126,7 @@ public class InstanceCTOPWSS implements Serializable
         
         /**
          * Gets the cluster with the specified ID
-         * @param id
+         * @param id the ID of the cluster to get
          * @return the cluster with the specified ID
          */
         public Cluster getCluster(int id){
@@ -143,7 +143,7 @@ public class InstanceCTOPWSS implements Serializable
         
         /**
          * Gets the vehicle with the specified ID
-         * @param id
+         * @param id the ID of the vehicle to get
          * @return the vehicle with the specified ID
          */
         public Vehicle getVehicle(int id){

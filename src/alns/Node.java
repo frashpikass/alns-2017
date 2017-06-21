@@ -33,7 +33,7 @@ public class Node implements Comparable<Node>{
     
     /**
      * Sets the cost value for this node (default is -1)
-     * @param cost 
+     * @param cost the new cost value
      */
     public void setCost(double cost) {
         this.cost = cost;
@@ -41,7 +41,7 @@ public class Node implements Comparable<Node>{
     
     /**
      * Sets the service number for this node (default is -1)
-     * @param service 
+     * @param service the service number to set
      */
     public void setService(int service) {
         this.service = service;
@@ -97,7 +97,7 @@ public class Node implements Comparable<Node>{
     
     /**
      * Compute the Euclidean norm for the coordinates of this node
-     * @return 
+     * @return the Euclidean norm for the coordinates of this node
      */
     public double norm(){
         return Math.sqrt(Math.pow(this.x, 2.)+Math.pow(this.y, 2.));

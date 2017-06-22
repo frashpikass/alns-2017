@@ -235,6 +235,15 @@ public class ObjectDistribution<T> {
         return ret;
     }
     
+    /**
+     * Returns a reference to the object at the specified index position in the underlying data structure.
+     * @param index the index of the object to retrieve
+     * @return a reference to the object at position index in the underlying data structure
+     */
+    public T getReferenceFromIndex(int index){
+        return this.objects.get(index);
+    }
+    
     @Override
     public String toString(){
         StringBuffer sb = new StringBuffer("{");

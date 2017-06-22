@@ -51,6 +51,11 @@ public class ALNS extends Orienteering{
     private int maxHistorySize;
     
     /**
+     * The starting value of q (degree of destruction)
+     */
+    private int qStart;
+    
+    /**
      * Number of iterations in an optimization segment
      */
     private int segmentSize;
@@ -96,6 +101,16 @@ public class ALNS extends Orienteering{
     private long timeLimit;
     
     /**
+     * A scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
+     */
+    private double rewardForBestSegmentHeuristics;
+    
+    /**
+     * A scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
+     */
+    private double punishmentForWorstSegmentHeuristics;
+    
+    /**
      * This constant holds the possible values of psi, the function that prizes
      * good heuristics.
      */
@@ -111,24 +126,33 @@ public class ALNS extends Orienteering{
      * @param o an instance of an Orienteering problem
      * @param segmentSize the size of a segment (expressed in number of iteration of the destroy/repair heuristic)
      * @param maxHistorySize the maximum size for the history of previously chosen clusters
+     * @param qStart the first value of q
      * @param lambda decay parameter of heuristic weights (must be a double in range [0,1])
      * @param alpha decay parameter of temperature (must be a double in range [0,1])
      * @param timeLimit maximum time to get a result in seconds
+     * @param rewardForBestSegmentHeuristics scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
+     * @param punishmentForWorstSegmentHeuristics scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
      * @throws Exception if anything goes wrong
      */
     public ALNS(
             Orienteering o,
             int segmentSize,
             int maxHistorySize,
+            int qStart,
             double lambda,
             double alpha,
-            long timeLimit
+            long timeLimit,
+            double rewardForBestSegmentHeuristics,
+            double punishmentForWorstSegmentHeuristics
     ) throws Exception{
         super(o);
         this.segmentSize = segmentSize;
         this.maxHistorySize=maxHistorySize;
+        this.qStart = qStart;
         this.pastHistory = new LinkedBlockingDeque<>();
         this.timeLimit = timeLimit;
+        this.rewardForBestSegmentHeuristics = rewardForBestSegmentHeuristics;
+        this.punishmentForWorstSegmentHeuristics = punishmentForWorstSegmentHeuristics;
         
         // Lambda setup - values out of range [0,1] clip to range boundaries
         if(lambda < 1.0) this.lambda = lambda;
@@ -473,7 +497,7 @@ public class ALNS extends Orienteering{
         int qMin = 1;
         
         // q is the number of clusters to repair and destroy at each iteration
-        int q=1;
+        int q=qStart;
         
         
         // This is how much q should increase at every iteration
@@ -522,15 +546,34 @@ public class ALNS extends Orienteering{
         logger.writeNext(headers);
         
         // ALNS START: Cycles every segment
-        q=1;
         do{
             temperature = initialTtemperature;
             
             // Reset heuristic weights
-            this.resetHeuristicMethodsWeight();
+            // If we aren't in the first iteration, give a prize and a punishment
+            // to the best and the worst heuristics
+            if(segments > 0){
+                // Save the best and the worst heuristics
+                List<BiFunction<List<Cluster>, Integer, List<Cluster>>> bestDestroys = destroyMethods.getAllMostProbable();
+                List<BiFunction<List<Cluster>, Integer, List<Cluster>>> worstDestroys = destroyMethods.getAllLeastProbable();
+                List<BiFunction<List<Cluster>, Integer, List<Cluster>>> bestRepairs = repairMethods.getAllMostProbable();
+                List<BiFunction<List<Cluster>,Integer, List<Cluster>>> worstRepairs = repairMethods.getAllLeastProbable();
+                
+                // Reset all heuristic weights
+                resetHeuristicMethodsWeight();
+                
+                // Reward and punish
+                destroyMethods.scaleAllWeightsOf(bestDestroys, rewardForBestSegmentHeuristics);
+                destroyMethods.scaleAllWeightsOf(worstDestroys, punishmentForWorstSegmentHeuristics);
+                repairMethods.scaleAllWeightsOf(bestRepairs, rewardForBestSegmentHeuristics);
+                repairMethods.scaleAllWeightsOf(worstRepairs, punishmentForWorstSegmentHeuristics);
+            }
+            else resetHeuristicMethodsWeight();
 
             // Iterations inside a segment
             for(int iterations = 0; iterations < this.segmentSize && xOld.size()>1; iterations++){
+                
+                
                 // Setup of boolean values to evaluate solution quality
                 solutionIsAccepted = false;
                 solutionIsNewGlobalOptimum = false;

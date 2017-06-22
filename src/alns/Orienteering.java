@@ -826,12 +826,26 @@ public class Orienteering
             }
             else if(solutionType == SOLVE_ALNS){
                 GRBModel model = o.getModel();
-                int segmentSize = 60;
+                int segmentSize = 45;
                 int historySize = 50;
-                double lambda = 0.4; // Heuristic decay
-                double alpha = 0.8;  // Temperature decay
-                long maxTimeInSeconds = 240;
-                ALNS a = new ALNS(o, segmentSize, historySize, lambda, alpha, maxTimeInSeconds);
+                double lambda = 0.5; // Heuristic decay
+                double alpha = 0.7;  // Temperature decay
+                int qStart = 5;
+                long maxTimeInSeconds = 120;
+                double rewardForBestSegmentHeuristics = 1.5;
+                double punishmentForWorstSegmentHeuristics = 0.5;
+                
+                ALNS a = new ALNS(
+                        o,
+                        segmentSize,
+                        qStart,
+                        historySize,
+                        lambda,
+                        alpha, 
+                        maxTimeInSeconds,
+                        rewardForBestSegmentHeuristics,
+                        punishmentForWorstSegmentHeuristics
+                );
                 
                 // Optimize the model with ALNS
                 a.optimize();

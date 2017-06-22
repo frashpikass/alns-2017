@@ -3,7 +3,11 @@ package alns;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * This class stores objects of type <tt>T</tt> and their weights that determine
@@ -153,20 +157,28 @@ public class ObjectDistribution<T> {
      * To have such a behaviour use method <tt>updateWeightSafely</tt> instead.
      * @param o the object we want to update the weight of
      * @param newWeight the new weight for the specified object (if it's negative, the absolute value will be taken)
+     * @return true if the weight was changed
      */
-    public void updateWeight(T o, double newWeight){
+    public boolean updateWeight(T o, double newWeight){
+        boolean ret = false;
         int index = this.objects.indexOf(o);
-        this.weights.set(index, Math.abs(newWeight)); // check that it's implemented by ArrayList
+        if(index>0){
+            this.weights.set(index, Math.abs(newWeight)); // check that it's implemented by ArrayList
+            ret = true;
+        }
+        return ret;
     }
     
     /**
      * Updates the weight of the specified object and all the bins accordingly.
      * @param o the object we want to update the weight of
      * @param newWeight the new weight for the specified object
+     * @return true if the weight was changed
      */
-    public void updateWeightSafely(T o, double newWeight){
-        this.updateWeight(o, newWeight);
-        this.updateBins();
+    public boolean updateWeightSafely(T o, double newWeight){
+        boolean ret = this.updateWeight(o, newWeight);
+        if(ret) this.updateBins();
+        return ret;
     }
     
     /**
@@ -248,12 +260,124 @@ public class ObjectDistribution<T> {
     public String toString(){
         StringBuffer sb = new StringBuffer("{");
         for(int i = 0; i<this.objects.size(); i++){
-            sb.append("\n\t"+bins.get(i).toString()+" -> "+objects.toString()+
-                    "(weight: "+weights.get(i)+")");
+            sb.append("\n\t"+bins.get(i).toString()+" -> "+objects.get(i).toString()+
+                    " (weight: "+weights.get(i)+")");
         }
         sb.append("\n}");
         
         return sb.toString();
+    }
+    
+    /**
+     * Returns the first object with the highest probability of being randomly chosen.
+     * @return the first object with the highest probability of being randomly chosen, null if it can't be found
+     */
+    public T getMostProbable(){
+        T ret;
+        Optional<Double> maxWeight = this.weights.stream().max(Double::compare);
+        try{
+            ret = this.objects.get(this.weights.indexOf(maxWeight.get()));
+        }
+        catch(NoSuchElementException n){
+            ret = null;
+        }
+        return ret;
+    }
+    
+    /**
+     * Returns the list of objects with the highest probability of being randomly chosen.
+     * @return the list of objects with the highest probability of being randomly chosen,
+     * null if they can't be found
+     */
+    public List<T> getAllMostProbable(){
+        List<T> ret = new ArrayList<>();
+        Optional<Double> maxWeight = this.weights.stream().max(Double::compare);
+        try{
+            double weight = maxWeight.get();
+            for(int i = 0; i < objects.size(); i++){
+                if( weights.get(i).equals(weight)){
+                    ret.add(objects.get(i));
+                }
+            }
+        }
+        catch(NoSuchElementException n){}
+        return ret;
+    }
+    
+    /**
+     * Returns the first object with the lowest probability of being randomly chosen.
+     * @return the first object with the lowest probability of being randomly chosen, null if it can't be found
+     */
+    public T getLeastProbable(){
+        T ret;
+        Optional<Double> minWeight = this.weights.stream().min(Double::compare);
+        try{
+            ret = this.objects.get(this.weights.indexOf(minWeight.get()));
+        }
+        catch(NoSuchElementException n){
+            ret = null;
+        }
+        return ret;
+    }
+    
+    /**
+     * Returns the list of objects with the lowest probability of being randomly chosen.
+     * @return the list of objects with the lowest probability of being randomly chosen,
+     * null if they can't be found
+     */
+    public List<T> getAllLeastProbable(){
+        List<T> ret = new ArrayList<>();
+        Optional<Double> maxWeight = this.weights.stream().max(Double::compare);
+        try{
+            double weight = maxWeight.get();
+            for(int i = 0; i < objects.size(); i++){
+                if( weights.get(i).equals(weight)){
+                    ret.add(objects.get(i));
+                }
+            }
+        }
+        catch(NoSuchElementException n){}
+        return ret;
+    }
+    
+    /**
+     * Scale the weight of an object in the distribution by a factor.
+     * New weight will be oldWeight*factor.
+     * Probability bins are updated at the end of the operation.
+     * @param o the object to update the weight of
+     * @param factor the scale factor
+     * @return true if the weight was scaled
+     */
+    public boolean scaleWeightOf(T o, double factor){
+        boolean ret = false;
+        int i = objects.indexOf(o);
+        if(i>=0){
+            weights.set(i, Math.abs(factor)*weights.get(i));
+            ret = true;
+            updateBins();
+        }
+        return ret;
+    }
+    
+    /**
+     * Scale all the weights of specified objects in the distribution by a factor.
+     * New weights will be oldWeight*factor.
+     * Probability bins are updated at the end of the operation.
+     * @param o the list of objects to update the weight of
+     * @param factor the scale factor
+     * @return true if some of the weights were scaled
+     */
+    public boolean scaleAllWeightsOf(List<T> toScale, double factor){
+        boolean ret = false;
+        for(T o : toScale){
+            int i = objects.indexOf(o);
+            if(i>=0){
+                weights.set(i, Math.abs(factor)*weights.get(i));
+                ret = true;
+            }
+        }
+        updateBins();
+        return ret;
     }
     
     /**
@@ -262,19 +386,59 @@ public class ObjectDistribution<T> {
      */
     public static void main(String[] args) {
         ObjectDistribution<String> od = new ObjectDistribution<>();
+        
+        System.out.println("Most probable element: "+od.getMostProbable());
+        System.out.println("Least probable element: "+od.getLeastProbable());
+        System.out.println("All the most probable elements: "+od.getAllMostProbable().toString());
+        
         boolean add1 = od.add("a");
         boolean add2 = od.addAll(Arrays.asList("b","c","d","e","f","g"));
         double tw = od.getTotalWeight();
         System.out.println("Add1: "+add1+", Add 2: "+add2+"\n"+od.toString()+"\nTotal weight: "+tw);
+        
+        od.scaleAllWeightsOf(Arrays.asList("c","d","e"), 2.0);
+        od.scaleWeightOf("g", 1.1);
+        
+        System.out.println("Some weights were scaled: "+od.toString());
+        
+        System.out.println("Most probable element: "+od.getMostProbable());
+        System.out.println("Least probable element: "+od.getLeastProbable());
+        System.out.println("All the most probable elements: "+od.getAllMostProbable().toString());
+        
         System.out.println("\nSome random extractions:");
-        for(int i = 0; i<100; i++){
+        for(int i = 0; i<10; i++){
             String extracted = od.getRandom();
             System.out.println("Extraction "+i+": "+extracted);
         }
-        od.updateWeightSafely("g", 100.0);
+        
+        od.updateWeightSafely("z", 10.0);
+        od.updateWeightSafely("a", 0.5);
+        
+        System.out.println("\nWeights updated.");
+        tw = od.getTotalWeight();
+        System.out.println(od.toString()+"\nTotal weight: "+tw);
+        System.out.println("Most probable element: "+od.getMostProbable());
+        System.out.println("Least probable element: "+od.getLeastProbable());
+        System.out.println("All the most probable elements: "+od.getAllMostProbable().toString());
         
         System.out.println("\nSome more random extractions:");
-        for(int i = 0; i<100; i++){
+        for(int i = 0; i<10; i++){
+            String extracted = od.getRandom();
+            System.out.println("Extraction "+i+": "+extracted);
+        }
+        
+        od.updateWeightSafely("b", 10.0);
+        od.updateWeightSafely("c", 0.5);
+        
+        System.out.println("\nWeights updated.");
+        tw = od.getTotalWeight();
+        System.out.println(od.toString()+"\nTotal weight: "+tw);
+        System.out.println("Most probable element: "+od.getMostProbable());
+        System.out.println("Least probable element: "+od.getLeastProbable());
+        System.out.println("All the most probable elements: "+od.getAllMostProbable().toString());
+        
+        System.out.println("\nSome more random extractions:");
+        for(int i = 0; i<10; i++){
             String extracted = od.getRandom();
             System.out.println("Extraction "+i+": "+extracted);
         }

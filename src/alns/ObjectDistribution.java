@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * This class stores objects of type <tt>T</tt> and their weights that determine
@@ -112,16 +110,18 @@ public class ObjectDistribution<T> {
      */
     public boolean remove(T o){
         boolean ret = false;
-        int id = objects.indexOf(o);
-        int oldsize = objects.size();
-        
-        if(objects.remove(o) && id >= 0 && id < oldsize){
-            weights.remove(id);
-            bins.remove(id);
-            ret = true;
+        if(o != null){
+            int id = objects.indexOf(o);
+            int oldsize = objects.size();
+
+            if(objects.remove(o) && id >= 0 && id < oldsize){
+                weights.remove(id);
+                bins.remove(id);
+                ret = true;
+            }
+
+            this.updateBins();
         }
-        
-        this.updateBins();
         return ret;
     }
     
@@ -137,13 +137,15 @@ public class ObjectDistribution<T> {
             
             if(c != null && !c.isEmpty()){
             for(T o : c){
-                int id = objects.indexOf(o);
-                int oldsize = objects.size();
+                if(o != null){
+                    int id = objects.indexOf(o);
+                    int oldsize = objects.size();
 
-                if(objects.remove(o) && id >= 0 && id < oldsize){
-                    weights.remove(id);
-                    bins.remove(id);
-                    ret = true;
+                    if(objects.remove(o) && id >= 0 && id < oldsize){
+                        weights.remove(id);
+                        bins.remove(id);
+                        ret = true;
+                    }
                 }
             }
             this.updateBins();
@@ -163,7 +165,7 @@ public class ObjectDistribution<T> {
         boolean ret = false;
         int index = this.objects.indexOf(o);
         if(index>0){
-            this.weights.set(index, Math.abs(newWeight)); // check that it's implemented by ArrayList
+            this.weights.set(index, Math.abs(newWeight));
             ret = true;
         }
         return ret;

@@ -804,7 +804,7 @@ public class ALNS extends Orienteering{
                 segmentEndCause.append(" xOld is too small to work with (size="+xOld.size()+")!");
             if(elapsedTime > this.timeLimitALNS)
                 segmentEndCause.append(" ALNS time limit reached!");
-            if(iterationsWithoutImprovement > maxIterationsWithoutImprovement)
+            if(iterationsWithoutImprovement >= maxIterationsWithoutImprovement)
                 segmentEndCause.append(" Too many iterations without improvement ("+iterationsWithoutImprovement+")!");
             
             // Update the elapsed time
@@ -838,6 +838,25 @@ public class ALNS extends Orienteering{
             }
             
             // Anyway, let's log the local search results
+            StringBuffer localSearchComment = new StringBuffer();
+            
+            // Let's check if the local search was aborted
+            if(
+                timeLimitLocalSearch > 0
+                && timeLimitLocalSearch+elapsedTime <= this.timeLimitALNS
+                && segmentsWithoutImprovement < 1.0)
+            {
+                localSearchComment.append("ABORT:");
+                if(timeLimitLocalSearch <= 0)
+                    localSearchComment.append(" Local search disabled by user!");
+                if(timeLimitLocalSearch+elapsedTime > this.timeLimitALNS)
+                    localSearchComment.append(" No time left for the local search to run!");
+                if(segmentsWithoutImprovement >= 1.0)
+                    localSearchComment.append(" No improvement since last segment, it's useless to perform a local search!");
+            }
+            else localSearchComment.append("OK");
+            
+            
             // Update the elapsed time
             elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
 
@@ -851,7 +870,7 @@ public class ALNS extends Orienteering{
                 csvFormatSolution(xBest), bestObjectiveValue+"",
                 csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
                 optimumFound ? "1" : "0",
-                "Local search results"
+                "Local search results. "+localSearchComment.toString()
             };
             logger.writeNext(logLine);
             
@@ -872,7 +891,7 @@ public class ALNS extends Orienteering{
                 && q>=qMin
                 && q<=qMax
                 && segments < maxSegments
-                && segmentsWithoutImprovement<maxSegmentsWithoutImprovement
+                && segmentsWithoutImprovement < maxSegmentsWithoutImprovement
                 //&& !optimumFound
         );
         

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package alns;
+package solverModel;
 
 import gurobi.*;
 //import java.io.File;
@@ -830,13 +830,13 @@ public class Orienteering
             }
             else if(solutionType == SOLVE_ALNS){
                 GRBModel model = o.getModel();
-                int segmentSize = 100;
+                int segmentSize = 30;
                 int historySize = 50;
                 int qStart = 1;
                 double lambda = 0.35; // Heuristic decay
                 double alpha = 0.85;  // Temperature decay
-                long timeLimitALNS = 600;
-                long timeLimitLocalSearch = 70;
+                long timeLimitALNS = 300;
+                long timeLimitLocalSearch = 90;
                 double rewardForBestSegmentHeuristics = 1.5;
                 double punishmentForWorstSegmentHeuristics = 0.5;
                 

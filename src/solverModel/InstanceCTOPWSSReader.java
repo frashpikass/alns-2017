@@ -1,4 +1,4 @@
-package alns;
+package solverModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;

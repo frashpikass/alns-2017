@@ -1,4 +1,4 @@
-package alns;
+package solverModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

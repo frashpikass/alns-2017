@@ -6,21 +6,16 @@
 package alns;
 
 import com.opencsv.CSVWriter;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import gurobi.GRB;
 import gurobi.GRBCallback;
 import gurobi.GRBConstr;
-import gurobi.GRBEnv;
 import gurobi.GRBException;
-import gurobi.GRBExpr;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
 import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,10 +27,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import javax.print.attribute.standard.DateTimeAtCompleted;
 
 /**
- *
+ * A class to solve an orienteering problem using the ALNS heuristic
  * @author Frash
  */
 public class ALNS extends Orienteering{
@@ -96,9 +91,14 @@ public class ALNS extends Orienteering{
     private double alpha;
     
     /**
-     * Keeps track of how long the optimization process should be run for (in seconds)
+     * Maximum runtime for the ALNS heuristic algorithm (in seconds)
      */
-    private long timeLimit;
+    private long timeLimitALNS;
+    
+    /**
+     * Maximum runtime for the local search process (in seconds)
+     */
+    private long timeLimitLocalSearch;
     
     /**
      * A scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
@@ -114,7 +114,7 @@ public class ALNS extends Orienteering{
      * This constant holds the possible values of psi, the function that prizes
      * good heuristics.
      */
-    final static double[] HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.0};
+    final static double[] HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.1};
     
     /**
      * This map saves all the names for implemented heuristics
@@ -129,7 +129,8 @@ public class ALNS extends Orienteering{
      * @param qStart the first value of q
      * @param lambda decay parameter of heuristic weights (must be a double in range [0,1])
      * @param alpha decay parameter of temperature (must be a double in range [0,1])
-     * @param timeLimit maximum time to get a result in seconds
+     * @param timeLimitALNS maximum runtime for the ALNS heuristic algorithm (in seconds)
+     * @param timeLimitLocalSearch maximum runtime for the local search process (in seconds)
      * @param rewardForBestSegmentHeuristics scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
      * @param punishmentForWorstSegmentHeuristics scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
      * @throws Exception if anything goes wrong
@@ -141,7 +142,8 @@ public class ALNS extends Orienteering{
             int qStart,
             double lambda,
             double alpha,
-            long timeLimit,
+            long timeLimitALNS,
+            long timeLimitLocalSearch,
             double rewardForBestSegmentHeuristics,
             double punishmentForWorstSegmentHeuristics
     ) throws Exception{
@@ -150,7 +152,8 @@ public class ALNS extends Orienteering{
         this.maxHistorySize=maxHistorySize;
         this.qStart = qStart;
         this.pastHistory = new LinkedBlockingDeque<>();
-        this.timeLimit = timeLimit;
+        this.timeLimitALNS = timeLimitALNS;
+        this.timeLimitLocalSearch = timeLimitLocalSearch;
         this.rewardForBestSegmentHeuristics = rewardForBestSegmentHeuristics;
         this.punishmentForWorstSegmentHeuristics = punishmentForWorstSegmentHeuristics;
         
@@ -458,8 +461,6 @@ public class ALNS extends Orienteering{
      * @throws Exception if anything goes wrong
      */
     public void optimize() throws Exception {
-        // TODO: change temperature update by following directions
-        
         // This is a generic ALNS implementation
         GRBModel relaxedModel = model.relax();
         relaxedModel.optimize();
@@ -530,14 +531,27 @@ public class ALNS extends Orienteering{
         long segmentsWithoutImprovement = 0;
         long maxSegmentsWithoutImprovement = 20;
         
+        // Keeping track of how many iterations have been performed
+        // (and how many of those were without improvement)
+        int maxIterationsWithoutImprovement = Math.floorDiv(segmentSize, 4);
+        // TODO: parametrize
+        
+        // A string to log why the segment ended.
+        StringBuffer segmentEndCause = new StringBuffer();
+        
         // A CSV logger to log all the progress of our algorithm for offline analysis
         CSVWriter logger = new CSVWriter(new FileWriter(instance.getName()+"_ALNSlog.csv"), '\t');
+        
+        // Log ALNS parameters to the CSV
+        logger.writeAll(csvGetALNSParameters());
+        
+        // Log headers to the CSV
         String [] headers = {
                     "Segment", "Iteration", "Time",
                     "Destroy Heuristic", "DWeight", "Repair Heuristic", "RWeight", "Repaired?",
                     "Temperature", "q",
                     "xOld", "xOldObj",
-                    "xNew", "xNewObj", "Worse but accepted?", "Infeasible & Discarded?",
+                    "xNew", "xNewObj", "Accepted?","Worse but accepted?", "Infeasible & Discarded?",
                     "xBest", "xBestObj",
                     "xBestInSegments", "xBestInSegmentsObj",
                     "Optimum?",
@@ -568,10 +582,19 @@ public class ALNS extends Orienteering{
                 repairMethods.scaleAllWeightsOf(bestRepairs, rewardForBestSegmentHeuristics);
                 repairMethods.scaleAllWeightsOf(worstRepairs, punishmentForWorstSegmentHeuristics);
             }
-            else resetHeuristicMethodsWeight();
 
-            // Iterations inside a segment
-            for(int iterations = 0; iterations < this.segmentSize && xOld.size()>1; iterations++){
+            // Iterations inside a segment (SEGMENT START)
+            int iterations;
+            int iterationsWithoutImprovement = 0;
+            for(
+                    iterations = 0;
+                    iterations < this.segmentSize
+                    && xOld.size()>1
+                    && elapsedTime <= this.timeLimitALNS
+                    && iterationsWithoutImprovement < maxIterationsWithoutImprovement;
+                    iterations++
+                )
+            {
                 
                 
                 // Setup of boolean values to evaluate solution quality
@@ -616,7 +639,7 @@ public class ALNS extends Orienteering{
                         repairMethodWasUsed ? "1" : "0",
                         temperature+"", q+"",
                         csvFormatSolution(xOld), oldObjectiveValue+"",
-                        csvFormatSolution(xNew), "infeasible", solutionIsWorseButAccepted ? "1" : "0", "1",
+                        csvFormatSolution(xNew), "infeasible", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "1",
                         csvFormatSolution(xBest), bestObjectiveValue+"",
                         csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
                         "0",
@@ -635,6 +658,9 @@ public class ALNS extends Orienteering{
                     
                     // Update temperature, just like at the end of every iteration
                     temperature *= alpha;
+                    
+                    // Update the count of iterations without improvement
+                    iterationsWithoutImprovement++;
                     
                     // proceed with the next iteration
                     continue;
@@ -664,12 +690,18 @@ public class ALNS extends Orienteering{
                 
                 // Anyway, if the solution is better than the current best for the segment
                 // save it as xBest, and its objective value in bestObjectiveValue
-                if(newObjectiveValue > bestObjectiveValue){
+                if(newObjectiveValue >= bestObjectiveValue){ // DEBUG: I changed > to >= to accept even different solutions with the same value for a change
                     xBest = xNew;
                     bestObjectiveValue = newObjectiveValue;
                     // TODO: should I check if the solution is even better than the segment best? maybe not
                     // that would give unnecessary importance to the first heuristic chosen
-                    solutionIsNewGlobalOptimum = true;
+                    
+                    // The solution is a new global optimum only if there was a real improvement
+                    if(newObjectiveValue > bestObjectiveValue){
+                        solutionIsNewGlobalOptimum = true;
+                        iterationsWithoutImprovement = 0;
+                    }
+                    else iterationsWithoutImprovement++;
 //                    // So, let's check if we've reached the optimum (haha, fat chance)
 //                    if(false && model.get(GRB.IntAttr.Status) == GRB.OPTIMAL){
 //                        optimumFound = true;
@@ -694,6 +726,7 @@ public class ALNS extends Orienteering{
 //                        break;
 //                    }
                 }
+                else iterationsWithoutImprovement++;
                 
                 // Update temperature at the end of every iteration
                 temperature *= alpha;
@@ -710,7 +743,7 @@ public class ALNS extends Orienteering{
                     repairMethodWasUsed ? "1" : "0",
                     temperature+"", q+"",
                     csvFormatSolution(xOld), oldObjectiveValue+"",
-                    csvFormatSolution(xNew), newObjectiveValue+"", solutionIsWorseButAccepted ? "1" : "0", "0",
+                    csvFormatSolution(xNew), newObjectiveValue+"", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "0",
                     csvFormatSolution(xBest), bestObjectiveValue+"",
                     csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
                     optimumFound ? "1" : "0",
@@ -732,6 +765,9 @@ public class ALNS extends Orienteering{
                     xOld = xNew;
                     oldObjectiveValue = newObjectiveValue;
                 }
+                
+                // Update the elapsed time
+                elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
             } // for: end of all iterations in the segment
             
 //            // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
@@ -761,20 +797,61 @@ public class ALNS extends Orienteering{
                 segmentsWithoutImprovement++;
             } 
             
+            // Check and log why the segment has ended
+            if(iterations >= this.segmentSize)
+                segmentEndCause.append(" Max segment size reached ("+iterations+")!");
+            if(xOld.size()<=1)
+                segmentEndCause.append(" xOld is too small to work with (size="+xOld.size()+")!");
+            if(elapsedTime > this.timeLimitALNS)
+                segmentEndCause.append(" ALNS time limit reached!");
+            if(iterationsWithoutImprovement > maxIterationsWithoutImprovement)
+                segmentEndCause.append(" Too many iterations without improvement ("+iterationsWithoutImprovement+")!");
+            
             // Update the elapsed time
             elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
 
             // Log at the end of the segment
+            String [] logLineSegmentEnd = {
+                segments+"", "*"+"", elapsedTime+"",
+                "*", "*", "*", "*", "*",
+                temperature+"", q+"",
+                "*", "*",
+                "*", "*", "*", "*", "*",
+                csvFormatSolution(xBest), bestObjectiveValue+"",
+                csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
+                optimumFound ? "1" : "0",
+                "End of the segment. Reason: "+segmentEndCause.toString()
+            };
+            logger.writeNext(logLineSegmentEnd);
+            
+            // Reset the StringBuffer that logs the reason why a segment has ended
+            segmentEndCause = new StringBuffer();
+            
+            // Let's try a local search run, if we have time for it
+            List<Cluster> xLocalSearch = this.localSearch(xBestInSegments, elapsedTime, timeLimitLocalSearch, segmentsWithoutImprovement);
+            double localSearchObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+            
+            // If the local search was successful, save the new solution as the best in segments
+            if(localSearchObjectiveValue >= bestObjectiveValueInSegments){
+                xBestInSegments = xLocalSearch;
+                bestObjectiveValueInSegments = localSearchObjectiveValue;
+            }
+            
+            // Anyway, let's log the local search results
+            // Update the elapsed time
+            elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
+
+            // Log outputs
             String [] logLine = {
                 segments+"", "*"+"", elapsedTime+"",
                 "*", "*", "*", "*", "*",
                 temperature+"", q+"",
                 "*", "*",
-                "*", "*", "*", "*",
+                "*", "*", "*", "*", "*",
                 csvFormatSolution(xBest), bestObjectiveValue+"",
                 csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
                 optimumFound ? "1" : "0",
-                "End of the segment."
+                "Local search results"
             };
             logger.writeNext(logLine);
             
@@ -791,7 +868,7 @@ public class ALNS extends Orienteering{
             segments++;
         } // do: Stopping criteria. If not verified, go on with the next segment
         while(
-                elapsedTime <= timeLimit
+                elapsedTime <= timeLimitALNS
                 && q>=qMin
                 && q<=qMax
                 && segments < maxSegments
@@ -1518,7 +1595,7 @@ public class ALNS extends Orienteering{
             boolean repairMethodWasUsed) {
         
         // Setup the prize that will be given to the selected heuristics
-        double prize = 0.0;
+        double prize = 0.1;
         
         // Check solution quality to decide the prize
         if(solutionIsNewGlobalOptimum){
@@ -1583,6 +1660,133 @@ public class ALNS extends Orienteering{
         return sb.toString();
     }
     
+    private List<Cluster> localSearch(
+            List<Cluster> inputSolution,
+            long elapsedTime,
+            long timeLimitForLocalSearch,
+            long segmentsWithoutImprovement
+    ) throws GRBException, Exception{
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Perform a local search on the input solution, but only if there is time for it
+        // and if it's likely that it will improve the best solution of the this segment.
+        // If this segment's solution didn't improve the one at the last segment,
+        // this local search run would have the same starting solution as the
+        // local search one at the end of the previous segment.
+        // Since the run time of these local searches would be the same, there would
+        // be no advantage in using the local search with the same parameters
+        // (it would yield the same result and waste precious time)
+        if(
+                timeLimitForLocalSearch > 0
+                && timeLimitForLocalSearch+elapsedTime <= this.timeLimitALNS
+                && segmentsWithoutImprovement < 1.0)
+        {
+            // Log the beginning of the search
+            env.message("Local search started at "+elapsedTime+"s - "+LocalDateTime.now().toString());
+            
+            // Make sure all clusters can be selected by the solver
+            this.resetSolution();
+            
+            // Reset the model so that it's fresh
+            model.reset();
+            
+            // Apply heuristic constraints
+            this.toggleHeuristicConstraintsOn();
+            
+            // Clone the original model with the heuristic constraints
+            GRBModel clone = new GRBModel(this.model);
+            GRBModel toSolve = new GRBModel(this.model);
+            
+            // Test the solution on the clone model so that we can gather informations on the warm solution
+            if(this.testSolution(clone, inputSolution, false)){
+                // Gather informations on the solution
+                GRBVar [] cloneVars = clone.getVars();
+                
+                // Get the name and the value of the variable and set it as a
+                // starting point into our model for a warm start
+                for(GRBVar v : cloneVars){
+                    String varName = v.get(GRB.StringAttr.VarName);
+                    Double varValue= v.get(GRB.DoubleAttr.X);
+                    toSolve.getVarByName(varName).set(GRB.DoubleAttr.Start, varValue);
+                }
+                
+                // Now the model is ready to be run for the given time using our
+                // heuristic constraints
+                // model.setCallback(new localSearchCallback(timeLimitForLocalSearch));
+                toSolve.set(GRB.DoubleParam.TimeLimit, (double) timeLimitForLocalSearch);
+                
+                // Update and optimize
+                toSolve.update();
+                toSolve.optimize();
+                
+                // Now the model should be optimized. If we've found a solution,
+                // let's save it to the output variable
+                output = this.getClustersInCurrentModelSolution(toSolve);
+                
+                // Let's remove the callback from the model
+                //model.setCallback(null);
+            }
+            
+            // Let's clear the model from the added constraints
+            this.toggleHeuristicConstraintsOff();
+            
+            // Free the memory
+            clone.dispose();
+            toSolve.dispose();
+            
+            // Log the end of the search
+            env.message("Local search started at "+elapsedTime+"s ended at "+LocalDateTime.now().toString());
+        }
+        else env.message("Local search aborted at "+elapsedTime+"s - "+LocalDateTime.now().toString());
+        
+        // To finish, we shall test the solution found, so that the model shall
+        // come loaded with the new solution
+        this.testSolution(output, true);
+        return output;
+    }
+
+    private List<String[]> csvGetALNSParameters() {
+        List<String[]> output = new ArrayList<>();
+        
+//        int segmentSize = 45;
+//        int historySize = 50;
+//        int qStart = 5;
+//        double lambda = 0.5; // Heuristic decay
+//        double alpha = 0.85;  // Temperature decay
+//        long timeLimit = 600;
+//        double rewardForBestSegmentHeuristics = 1.5;
+//        double punishmentForWorstSegmentHeuristics = 0.5;
+        
+        String [] runName = {this.instance.getName()+"",LocalDateTime.now().toString()};
+        
+        String [] segmentSize = {"Segment size",this.segmentSize+""};
+        String [] maxHistorySize = {"History size", this.maxHistorySize+""};
+        String [] qStart = {"Initial q", this.qStart+""};
+        String [] lambda = {"lambda", this.lambda+""};
+        String [] alpha = {"alpha", this.alpha+""};
+        String [] timeLimitALNS = {"Heuristic time limit", this.timeLimitALNS+""};
+        String [] timeLimitLocalSearch = {"Local search time limit", this.timeLimitLocalSearch+""};
+        String [] rewardForBestSegmentHeuristics = {"Reward for best segment heuristics",this.rewardForBestSegmentHeuristics+""};
+        String [] punishmentForWorstSegmentHeuristics = {"Punishment for worst segment heuristics",this.punishmentForWorstSegmentHeuristics+""};
+        
+        String [] globalTimeLimit = {"Global time limit", this.getTimeLimit()+""};
+        
+        output.add(runName);
+        output.add(segmentSize);
+        output.add(maxHistorySize);
+        output.add(qStart);
+        output.add(lambda);
+        output.add(alpha);
+        output.add(timeLimitALNS);
+        output.add(timeLimitLocalSearch);
+        output.add(rewardForBestSegmentHeuristics);
+        output.add(punishmentForWorstSegmentHeuristics);
+        output.add(globalTimeLimit);
+        
+        return output;
+    }
+    
+    
 }
 
 /**
@@ -1594,13 +1798,49 @@ class feasibilityCallback extends GRBCallback{
      * Number of solution nodes to visit before the solver gives up on
      * searching for a feasible solution
      */
-    private final static double NODES_BEFORE_ABORT = 500;
+    private final static double NODES_BEFORE_ABORT = 5000;
     
     @Override
     protected void callback() {
         try {
             if(where == GRB.CB_MIP){
                     if(getIntInfo(GRB.CB_MIP_SOLCNT)>0 || getDoubleInfo(GRB.CB_MIP_NODCNT)>NODES_BEFORE_ABORT)
+                    {
+                        abort();
+                    }
+            }
+            else if(where == GRB.CB_MIPSOL){
+                abort();
+            }
+        } catch (GRBException ex) {
+            Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}
+
+/**
+ * Inner class to handle callbacks that solve the model for a given amount of time
+ * @author Frash
+ */
+class localSearchCallback extends GRBCallback{
+    /**
+     * Time limit for the execution of a solver run
+     */
+    private long timeLimit;
+    
+    /**
+     * Constructor for class localSearchCallback
+     * @param timeLimit 
+     */
+    public localSearchCallback(long timeLimit){
+        this.timeLimit = timeLimit;
+    }
+    
+    @Override
+    protected void callback() {
+        try {
+            if(where == GRB.CB_MIP){
+                    if(getDoubleInfo(GRB.CB_RUNTIME)>timeLimit)
                     {
                         abort();
                     }

@@ -621,7 +621,7 @@ public class Orienteering
             }
             
             // Activates all heuristic constraints
-            this.toggleHeuristicConstraintsOn();
+            //this.toggleHeuristicConstraintsOn();
             
 //            // Expression 16:
 //            /**
@@ -799,6 +799,8 @@ public class Orienteering
             // Must set LazyConstraints parameter when using lazy constraints
             // o.getModel().set(GRB.IntParam.LazyConstraints, 1);
             if(solutionType == SOLVE_RELAXED){
+                o.toggleHeuristicConstraintsOn();
+                
                 GRBModel relaxedModel = o.getModel().relax();
                 // Optimize the relaxed model
                 relaxedModel.optimize();
@@ -809,6 +811,8 @@ public class Orienteering
             }
             else if(solutionType == SOLVE_MIP)
             {
+                o.toggleHeuristicConstraintsOn();
+                
                 GRBModel model = o.getModel();
                 // Optimize the model
                 model.optimize();
@@ -826,23 +830,25 @@ public class Orienteering
             }
             else if(solutionType == SOLVE_ALNS){
                 GRBModel model = o.getModel();
-                int segmentSize = 45;
+                int segmentSize = 100;
                 int historySize = 50;
-                double lambda = 0.5; // Heuristic decay
-                double alpha = 0.7;  // Temperature decay
-                int qStart = 5;
-                long maxTimeInSeconds = 120;
+                int qStart = 1;
+                double lambda = 0.35; // Heuristic decay
+                double alpha = 0.85;  // Temperature decay
+                long timeLimitALNS = 600;
+                long timeLimitLocalSearch = 70;
                 double rewardForBestSegmentHeuristics = 1.5;
                 double punishmentForWorstSegmentHeuristics = 0.5;
                 
                 ALNS a = new ALNS(
                         o,
                         segmentSize,
-                        qStart,
                         historySize,
+                        qStart,
                         lambda,
                         alpha, 
-                        maxTimeInSeconds,
+                        timeLimitALNS,
+                        timeLimitLocalSearch,
                         rewardForBestSegmentHeuristics,
                         punishmentForWorstSegmentHeuristics
                 );
@@ -951,6 +957,42 @@ public class Orienteering
     }
     
     /**
+     * From the current model, get all the clusters currently in the solution
+     * @return a list of clusters in solution
+     * @throws GRBException if there are problems while retrieving the solution
+     */
+    protected List<Cluster> getClustersInCurrentModelSolution() throws GRBException{
+        List<Cluster> ret = new ArrayList<>();
+        
+        for(int c=0; c<instance.getNum_clusters();c++){
+            if(y[c].get(GRB.DoubleAttr.X)!=0){
+                ret.add(instance.getCluster(c));
+            }
+        }
+        
+        return ret;
+    }
+    
+    /**
+     * From the specified model, get all the clusters currently in the solution
+     * @param inputModel the model to retrieve information from
+     * @return a list of clusters in solution
+     * @throws GRBException if there are problems while retrieving the solution
+     */
+    protected List<Cluster> getClustersInCurrentModelSolution(GRBModel inputModel) throws GRBException{
+        List<Cluster> ret = new ArrayList<>();
+        
+        for(int c=0; c<instance.getNum_clusters();c++){
+            String varName = y[c].get(GRB.StringAttr.VarName);
+            if(inputModel.getVarByName(varName).get(GRB.DoubleAttr.X) != 0){
+                ret.add(instance.getCluster(c));
+            }
+        }
+        
+        return ret;
+    }
+    
+    /**
      * Finds the ID of the previous node in the path described by the solution.
      * @param node the ID of the node we want to find the predecessor of in the solution path
      * @return the ID of the previous node
@@ -992,7 +1034,7 @@ public class Orienteering
     }
     
     /**
-     * This method removes all heuristic constraints that tighten the relaxed model.
+     * This method adds all heuristic constraints that tighten the relaxed model.
      * @throws GRBException if anything goes wrong
      */
     protected void toggleHeuristicConstraintsOn() throws GRBException, Exception{
@@ -1080,8 +1122,8 @@ public class Orienteering
     protected void toggleHeuristicConstraintsOff() throws GRBException{
         for(GRBConstr c : heuristicConstraints){
             model.remove(c);
-            heuristicConstraints.remove(c);
         }
+        heuristicConstraints.clear();
         model.update();
     }
 }

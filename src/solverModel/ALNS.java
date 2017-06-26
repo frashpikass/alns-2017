@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.attribute.standard.DateTimeAtCompleted;
 
 /**
  * A class to solve an orienteering problem using the ALNS heuristic
@@ -72,6 +71,20 @@ public class ALNS extends Orienteering{
     private ObjectDistribution<BiFunction<List<Cluster>,Integer,List<Cluster>>> repairMethods;
     
     /**
+     *  booleans that set whether to use an heuristic or not
+     */
+    private boolean useDestroyGreedyCostInsertion;
+    private boolean useDestroyGreedyBestInsertion;
+    private boolean useDestroyGreedyProfitInsertion;
+    private boolean useDestroyRandomInsertion;
+
+    private boolean useRepairHighCostRemoval;
+    private boolean useRepairRandomRemoval;
+    private boolean useRepairTravelTime;
+    private boolean useRepairVehicleTime;
+    private boolean useRepairWorstRemoval;
+    
+    /**
      * This is the decay parameter of the update process for heuristic method weights.
      * <br>This value should be a double in the interval [0,1].
      * <br>Heuristic method weights are updated following the convex combination
@@ -112,14 +125,40 @@ public class ALNS extends Orienteering{
     
     /**
      * This constant holds the possible values of psi, the function that prizes
-     * good heuristics.
+     * good heuristics and penalizes the bad ones.
+     * <br>The default value for it is:
+     * <br><tt>{3.0, 2.0, 1.0, 0.1}</tt>
      */
-    final static double[] HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.1};
+    public final static double[] DEFAULT_HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.1};
     
+    /**
+     * This constant holds the number of possible output values for function psi,
+     * the one that gives a score for every heuristic. It's used for debugging.
+     */
+    public final static int NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES = 4;
+    
+    /**
+     * This parameters holds the values of psi, the function that prizes good
+     * heuristics and penalizes the bad ones.
+     */
+    private double[] heuristicScores;
+            
     /**
      * This map saves all the names for implemented heuristics
      */
-    private HashMap<BiFunction<List<Cluster>,Integer,List<Cluster>>, String> heuristicNames;
+    // private HashMap<BiFunction<List<Cluster>,Integer,List<Cluster>>, String> heuristicNames;
+    
+    /**
+     * Determines the maximum number of mips nodes to check before giving up a
+     * feasibility check.
+     */
+    private double maxMIPSNodesForFeasibilityCheck;
+    
+    /**
+     * Determines how many ALNS iterations without improvement should be accepted
+     * before the algorithm moves on to a new segment.
+     */
+    private int maxIterationsWithoutImprovement;
     
     /**
      * Constructor for the class ALNS.
@@ -133,6 +172,20 @@ public class ALNS extends Orienteering{
      * @param timeLimitLocalSearch maximum runtime for the local search process (in seconds)
      * @param rewardForBestSegmentHeuristics scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
      * @param punishmentForWorstSegmentHeuristics scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
+     * @param maxMIPSNodesForFeasibilityCheck maximum number of mips nodes to check before giving up a feasibility check.
+     * @param maxIterationsWithoutImprovement how many ALNS iterations without improvement should be accepted before the algorithm moves on to a new segment. A suggested value is a fraction of segmentSize.
+     * @param heuristicScores an array of values for psi, the function that prizes good heuristics and penalizes the bad ones. Should contain at least 4 values, see {@link ALNS#DEFAULT_HEURISTIC_SCORE}
+     * 
+     * @param useDestroyGreedyCostInsertion true to use the heuristic
+     * @param useDestroyGreedyBestInsertion true to use the heuristic
+     * @param useDestroyGreedyProfitInsertion true to use the heuristic
+     * @param useDestroyRandomInsertion true to use the heuristic
+     * 
+     * @param useRepairHighCostRemoval true to use the heuristic
+     * @param useRepairRandomRemoval true to use the heuristic
+     * @param useRepairTravelTime true to use the heuristic
+     * @param useRepairVehicleTime true to use the heuristic
+     * @param useRepairWorstRemoval true to use the heuristic
      * @throws Exception if anything goes wrong
      */
     public ALNS(
@@ -145,7 +198,22 @@ public class ALNS extends Orienteering{
             long timeLimitALNS,
             long timeLimitLocalSearch,
             double rewardForBestSegmentHeuristics,
-            double punishmentForWorstSegmentHeuristics
+            double punishmentForWorstSegmentHeuristics,
+            double maxMIPSNodesForFeasibilityCheck,
+            int maxIterationsWithoutImprovement,
+            double [] heuristicScores,
+            
+            boolean useDestroyGreedyCostInsertion,
+            boolean useDestroyGreedyBestInsertion,
+            boolean useDestroyGreedyProfitInsertion,
+            boolean useDestroyRandomInsertion,
+            
+            boolean useRepairHighCostRemoval,
+            boolean useRepairRandomRemoval,
+            boolean useRepairTravelTime,
+            boolean useRepairVehicleTime,
+            boolean useRepairWorstRemoval
+                    
     ) throws Exception{
         super(o);
         this.segmentSize = segmentSize;
@@ -156,6 +224,25 @@ public class ALNS extends Orienteering{
         this.timeLimitLocalSearch = timeLimitLocalSearch;
         this.rewardForBestSegmentHeuristics = rewardForBestSegmentHeuristics;
         this.punishmentForWorstSegmentHeuristics = punishmentForWorstSegmentHeuristics;
+        this.maxMIPSNodesForFeasibilityCheck = maxMIPSNodesForFeasibilityCheck;
+        this.maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
+        
+        // Use the given heuristic scores, but only if they are correct, otherwise go default
+        if(heuristicScores.length != NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES)
+            this.heuristicScores = heuristicScores;
+        else this.heuristicScores = DEFAULT_HEURISTIC_SCORES;
+        
+        this.useDestroyGreedyCostInsertion = useDestroyGreedyCostInsertion;
+        this.useDestroyGreedyBestInsertion = useDestroyGreedyBestInsertion;
+        this.useDestroyGreedyProfitInsertion = useDestroyGreedyProfitInsertion;
+        this.useDestroyRandomInsertion = useDestroyRandomInsertion;
+
+        this.useRepairHighCostRemoval = useRepairHighCostRemoval;
+        this.useRepairRandomRemoval = useRepairRandomRemoval;
+        this.useRepairTravelTime = useRepairTravelTime;
+        this.useRepairVehicleTime = useRepairVehicleTime;
+        this.useRepairWorstRemoval = useRepairWorstRemoval;
+
         
         // Lambda setup - values out of range [0,1] clip to range boundaries
         if(lambda < 1.0) this.lambda = lambda;
@@ -169,7 +256,7 @@ public class ALNS extends Orienteering{
         if(lambda < 0) this.lambda = 0.1;
         
         // Keeping track of heuristic method names
-        heuristicNames = new HashMap<>();
+        // heuristicNames = new HashMap<>();
         
         // Keeping track of all implemented repair and destroy methods
         
@@ -177,36 +264,36 @@ public class ALNS extends Orienteering{
         // destroyMethods.add(this::destroyHeuristicTemplate);
         int i=0;
         
-        destroyMethods.add(this::destroyGreedyCostInsertion);
-        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyCostInsertion");
+        destroyMethods.add(this::destroyGreedyCostInsertion, useDestroyGreedyCostInsertion, "GreedyCostInsertion");
+//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyCostInsertion");
         
-        destroyMethods.add(this::destroyGreedyBestInsertion);
-        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyBestInsertion");
+        destroyMethods.add(this::destroyGreedyBestInsertion, useDestroyGreedyBestInsertion, "GreedyBestInsertion");
+//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyBestInsertion");
         
-        destroyMethods.add(this::destroyGreedyProfitInsertion);
-        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyProfitInsertion");
+        destroyMethods.add(this::destroyGreedyProfitInsertion, useDestroyGreedyProfitInsertion, "GreedyProfitInsertion");
+//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyProfitInsertion");
         
-        destroyMethods.add(this::destroyRandomInsertion);
-        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "RandomInsertion");
+        destroyMethods.add(this::destroyRandomInsertion, useDestroyRandomInsertion, "RandomInsertion");
+//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "RandomInsertion");
         
         repairMethods = new ObjectDistribution<>();
         // repairMethods.add(this::repairHeuristicTemplate);
         int j=0;
         
-        repairMethods.add(this::repairHighCostRemoval);
-        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "HighCostRemoval");
+        repairMethods.add(this::repairHighCostRemoval, useRepairHighCostRemoval, "HighCostRemoval");
+//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "HighCostRemoval");
         
-        repairMethods.add(this::repairRandomRemoval);
-        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "RandomRemoval");
+        repairMethods.add(this::repairRandomRemoval, useRepairRandomRemoval, "RandomRemoval");
+//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "RandomRemoval");
         
-        repairMethods.add(this::repairTravelTime);
-        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "TravelTime");
+        repairMethods.add(this::repairTravelTime, useRepairTravelTime, "TravelTime");
+//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "TravelTime");
         
-        repairMethods.add(this::repairVehicleTime);
-        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "VehicleTime");
+        repairMethods.add(this::repairVehicleTime, useRepairVehicleTime, "VehicleTime");
+//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "VehicleTime");
         
-        repairMethods.add(this::repairWorstRemoval);
-        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "WorstRemoval");
+        repairMethods.add(this::repairWorstRemoval, useRepairWorstRemoval, "WorstRemoval");
+//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "WorstRemoval");
     }
     
     /**
@@ -248,7 +335,6 @@ public class ALNS extends Orienteering{
             newSolution.add(c);
             
             // Let's use gurobi to check the feasibility of the new solution
-            // TODO: find a way to do so and change isFeasible accordingly
             isFeasible = this.testSolution(newSolution, true);
             // If the new solution is feasible, update the old solution
             if(isFeasible){
@@ -296,7 +382,7 @@ public class ALNS extends Orienteering{
         putInSolution(model, proposedSolution);
         
         // Setting up the callback
-        model.setCallback(new feasibilityCallback());
+        model.setCallback(new feasibilityCallback(this.maxMIPSNodesForFeasibilityCheck));
         model.optimize();
         if(model.get(GRB.IntAttr.SolCount) > 0) isFeasible = true;
         
@@ -531,19 +617,14 @@ public class ALNS extends Orienteering{
         long segmentsWithoutImprovement = 0;
         long maxSegmentsWithoutImprovement = 20;
         
-        // Keeping track of how many iterations have been performed
-        // (and how many of those were without improvement)
-        int maxIterationsWithoutImprovement = Math.floorDiv(segmentSize, 4);
-        // TODO: parametrize
-        
         // A string to log why the segment ended.
         StringBuffer segmentEndCause = new StringBuffer();
         
         // A CSV logger to log all the progress of our algorithm for offline analysis
-        CSVWriter logger = new CSVWriter(new FileWriter(instance.getName()+"_ALNSlog.csv"), '\t');
+        CSVWriter logger = new CSVWriter(new FileWriter(outputFolderPath+instance.getName()+"_ALNSlog.csv"), '\t');
         
         // Log ALNS parameters to the CSV
-        logger.writeAll(csvGetALNSParameters());
+        // logger.writeAll(csvGetALNSParameters());
         
         // Log headers to the CSV
         String [] headers = {
@@ -585,6 +666,7 @@ public class ALNS extends Orienteering{
 
             // Iterations inside a segment (SEGMENT START)
             int iterations;
+            // Keeping track of the number of iterations without improvement in the segment
             int iterationsWithoutImprovement = 0;
             for(
                     iterations = 0;
@@ -634,8 +716,8 @@ public class ALNS extends Orienteering{
                     
                     String [] logLine = {
                         segments+"", iterations+"", elapsedTime+"",
-                        heuristicNames.get(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
-                        heuristicNames.get(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
+                        destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
+                        repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
                         repairMethodWasUsed ? "1" : "0",
                         temperature+"", q+"",
                         csvFormatSolution(xOld), oldObjectiveValue+"",
@@ -738,8 +820,8 @@ public class ALNS extends Orienteering{
                 // Log at the end of the iteration
                 String [] logLine = {
                     segments+"", iterations+"", elapsedTime+"",
-                    heuristicNames.get(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
-                    heuristicNames.get(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
+                    destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
+                    repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
                     repairMethodWasUsed ? "1" : "0",
                     temperature+"", q+"",
                     csvFormatSolution(xOld), oldObjectiveValue+"",
@@ -899,8 +981,11 @@ public class ALNS extends Orienteering{
         logger.flushQuietly();
         logger.close();
         
-        // Final test to set variables in the model
+        // Final test to set variables in the model and log vehicle paths
         testSolution(xBestInSegments, true);
+        
+        // Save the solution to file
+        model.write(this.getModelPath()+".sol");
     }
     
     /**
@@ -1413,7 +1498,6 @@ public class ALNS extends Orienteering{
      * @return a feasible solution
      */
     private List<Cluster> repairBackToFeasibility(List<Cluster> inputSolution) throws Exception{
-        // TODO:
         // 0. Check feasibility. If infeasible goto 1, else goto 9
         // 1. Compute the feasibility relaxation model so that we can retrieve some information on z and Tmax
         // 2. Look at how much into infeasibility we are, so get the maxZ
@@ -1460,7 +1544,7 @@ public class ALNS extends Orienteering{
                 }
             }
             
-            // TODO: try removing all constraints8 from the cloned model, then
+            // try removing all constraints8 from the cloned model, then
             // rebuild them with the new tmax instead
             
             // Remove all old constraints
@@ -1618,16 +1702,16 @@ public class ALNS extends Orienteering{
         
         // Check solution quality to decide the prize
         if(solutionIsNewGlobalOptimum){
-            prize = HEURISTIC_SCORES[0];
+            prize = this.heuristicScores[0];
         }
         else if(solutionIsBetterThanOld){
-            prize = HEURISTIC_SCORES[1];
+            prize = this.heuristicScores[1];
         }
         else if(solutionIsWorseButAccepted){
-            prize = HEURISTIC_SCORES[2];
+            prize = this.heuristicScores[2];
         }
         else if(solutionIsWorseAndRejected){
-            prize = HEURISTIC_SCORES[3];
+            prize = this.heuristicScores[3];
         }
         
         // Give the prize to the selected heuristics, with the best compliments from the house
@@ -1764,20 +1848,13 @@ public class ALNS extends Orienteering{
         return output;
     }
 
-    private List<String[]> csvGetALNSParameters() {
+    public List<String[]> csvGetALNSParameters() {
         List<String[]> output = new ArrayList<>();
         
-//        int segmentSize = 45;
-//        int historySize = 50;
-//        int qStart = 5;
-//        double lambda = 0.5; // Heuristic decay
-//        double alpha = 0.85;  // Temperature decay
-//        long timeLimit = 600;
-//        double rewardForBestSegmentHeuristics = 1.5;
-//        double punishmentForWorstSegmentHeuristics = 0.5;
+        // This is an Orienteering parameter
+        // String [] runName = {this.instance.getName()+"",LocalDateTime.now().toString()};
         
-        String [] runName = {this.instance.getName()+"",LocalDateTime.now().toString()};
-        
+        // These are all ALNS parameters, as seen in the constructor
         String [] segmentSize = {"Segment size",this.segmentSize+""};
         String [] maxHistorySize = {"History size", this.maxHistorySize+""};
         String [] qStart = {"Initial q", this.qStart+""};
@@ -1787,10 +1864,23 @@ public class ALNS extends Orienteering{
         String [] timeLimitLocalSearch = {"Local search time limit", this.timeLimitLocalSearch+""};
         String [] rewardForBestSegmentHeuristics = {"Reward for best segment heuristics",this.rewardForBestSegmentHeuristics+""};
         String [] punishmentForWorstSegmentHeuristics = {"Punishment for worst segment heuristics",this.punishmentForWorstSegmentHeuristics+""};
+        String [] maxMIPSNodesForFeasibilityCheck = {"Maximum MIPS nodes to solve in a feasibility check",this.maxMIPSNodesForFeasibilityCheck+""};
+        String [] heuristicScores = {"Heuristic scores (values for psi)",this.heuristicScores.toString()};
         
-        String [] globalTimeLimit = {"Global time limit", this.getTimeLimit()+""};
+        String [] useDestroyGreedyCostInsertion = {"useDestroyGreedyCostInsertion", this.useDestroyGreedyCostInsertion+""};
+        String [] useDestroyGreedyBestInsertion = {"useDestroyGreedyBestInsertion", this.useDestroyGreedyBestInsertion+""};
+        String [] useDestroyGreedyProfitInsertion = {"useDestroyGreedyProfitInsertion", this.useDestroyGreedyProfitInsertion+""};
+        String [] useDestroyRandomInsertion = {"useDestroyRandomInsertion", this.useDestroyRandomInsertion+""};
+
+        String [] useRepairHighCostRemoval = {"useRepairHighCostRemoval", this.useRepairHighCostRemoval+""};
+        String [] useRepairRandomRemoval = {"useRepairRandomRemoval", this.useRepairRandomRemoval+""};
+        String [] useRepairTravelTime = {"useRepairTravelTime", this.useRepairTravelTime+""};
+        String [] useRepairVehicleTime = {"useRepairVehicleTime", this.useRepairVehicleTime+""};
+        String [] useRepairWorstRemoval = {"useRepairWorstRemoval", this.useRepairWorstRemoval+""};
+        // This is an Orienteering parameter
+        // String [] globalTimeLimit = {"Global time limit", this.getTimeLimit()+""};
         
-        output.add(runName);
+        // output.add(runName);
         output.add(segmentSize);
         output.add(maxHistorySize);
         output.add(qStart);
@@ -1800,7 +1890,21 @@ public class ALNS extends Orienteering{
         output.add(timeLimitLocalSearch);
         output.add(rewardForBestSegmentHeuristics);
         output.add(punishmentForWorstSegmentHeuristics);
-        output.add(globalTimeLimit);
+        output.add(maxMIPSNodesForFeasibilityCheck);
+        output.add(heuristicScores);
+        
+        output.add(useDestroyGreedyCostInsertion);
+        output.add(useDestroyGreedyBestInsertion);
+        output.add(useDestroyGreedyProfitInsertion);
+        output.add(useDestroyRandomInsertion);
+
+        output.add(useRepairHighCostRemoval);
+        output.add(useRepairRandomRemoval);
+        output.add(useRepairTravelTime);
+        output.add(useRepairVehicleTime);
+        output.add(useRepairWorstRemoval);
+        
+        // output.add(globalTimeLimit);
         
         return output;
     }
@@ -1819,11 +1923,34 @@ class feasibilityCallback extends GRBCallback{
      */
     private final static double NODES_BEFORE_ABORT = 5000;
     
+    /**
+     * Determines the maximum number of mips nodes to check before giving up a
+     * feasibility check.
+     */
+    private double maxMIPSNodesForFeasibilityCheck;
+    
+    /**
+     * Constructor for class feasibilityCallback
+     * @param maximumMIPSNodesForFeasibilityCheck maximum number of mips nodes to check before giving up a feasibility check.
+     */
+    public feasibilityCallback(double maximumMIPSNodesForFeasibilityCheck){
+        super();
+        this.maxMIPSNodesForFeasibilityCheck = maximumMIPSNodesForFeasibilityCheck;
+    }
+    
+    /**
+     * Constructor for class feasibilityCallback
+     */
+    public feasibilityCallback(){
+        super();
+        this.maxMIPSNodesForFeasibilityCheck = feasibilityCallback.NODES_BEFORE_ABORT;
+    }
+    
     @Override
     protected void callback() {
         try {
             if(where == GRB.CB_MIP){
-                    if(getIntInfo(GRB.CB_MIP_SOLCNT)>0 || getDoubleInfo(GRB.CB_MIP_NODCNT)>NODES_BEFORE_ABORT)
+                    if(getIntInfo(GRB.CB_MIP_SOLCNT)>0 || getDoubleInfo(GRB.CB_MIP_NODCNT)>maxMIPSNodesForFeasibilityCheck)
                     {
                         abort();
                     }

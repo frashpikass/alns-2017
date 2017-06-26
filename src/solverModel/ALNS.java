@@ -5,6 +5,7 @@
  */
 package solverModel;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 import gurobi.GRB;
 import gurobi.GRBCallback;
@@ -1850,7 +1851,7 @@ public class ALNS extends Orienteering{
 
     public List<String[]> csvGetALNSParameters() {
         List<String[]> output = new ArrayList<>();
-        
+        Gson gson = new Gson();
         // This is an Orienteering parameter
         // String [] runName = {this.instance.getName()+"",LocalDateTime.now().toString()};
         
@@ -1865,7 +1866,7 @@ public class ALNS extends Orienteering{
         String [] rewardForBestSegmentHeuristics = {"Reward for best segment heuristics",this.rewardForBestSegmentHeuristics+""};
         String [] punishmentForWorstSegmentHeuristics = {"Punishment for worst segment heuristics",this.punishmentForWorstSegmentHeuristics+""};
         String [] maxMIPSNodesForFeasibilityCheck = {"Maximum MIPS nodes to solve in a feasibility check",this.maxMIPSNodesForFeasibilityCheck+""};
-        String [] heuristicScores = {"Heuristic scores (values for psi)",this.heuristicScores.toString()};
+        String [] heuristicScores = {"Heuristic scores (values for psi)",gson.toJson(this.heuristicScores)};
         
         String [] useDestroyGreedyCostInsertion = {"useDestroyGreedyCostInsertion", this.useDestroyGreedyCostInsertion+""};
         String [] useDestroyGreedyBestInsertion = {"useDestroyGreedyBestInsertion", this.useDestroyGreedyBestInsertion+""};

@@ -102,10 +102,10 @@ public class Cluster {
         public int compare(Cluster o1, Cluster o2) {
             int ret = 0;
             try {
-                if(o1.profit/o1.getTotalCost() < o2.profit/o2.getTotalCost()){
+                if(o1.profit/(1+o1.getTotalCost()) < o2.profit/(1+o2.getTotalCost())){
                     ret=-1;
                 }
-                else if(o1.profit/o1.getTotalCost() > o2.profit/o2.getTotalCost()){
+                else if(o1.profit/(1+o1.getTotalCost()) > o2.profit/(1+o2.getTotalCost())){
                     ret=+1;
                 }
             } catch (Exception ex) {
@@ -533,7 +533,7 @@ public class Cluster {
      * <code>getWeightedProfit</code> is called.
      */
     public void updateWeightedProfit(){
-        this.weightedProfit = profit/(getMinNumberOfVehiclesNeeded()*getTotalCost());
+        this.weightedProfit = profit/(1+getMinNumberOfVehiclesNeeded()*getTotalCost());
     }
     
     /**

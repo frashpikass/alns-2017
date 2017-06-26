@@ -9,7 +9,7 @@ import java.util.Random;
 
 /**
  * This class stores objects of type <tt>T</tt> and their weights that determine
- * their chance of being randomly chosen.
+ * their chance of being randomly chosen. A label is also stored for each object.
  * @author Frash
  * @param <T> the type of stored objects
  */
@@ -45,6 +45,11 @@ public class ObjectDistribution<T> {
     private List<Bin> bins;
     
     /**
+     * Stores a label for each of the inserted objects
+     */
+    private List<String> labels;
+    
+    /**
      * A random generator to be used in extraction procedures. The random seed
      * is chosen when the constructor for this class is called.
      */
@@ -57,12 +62,13 @@ public class ObjectDistribution<T> {
         objects = new ArrayList<>();
         weights = new ArrayList<>();
         bins = new ArrayList<>();
+        labels = new ArrayList<>();
         randomGenerator = new Random();
     }
     
     /**
-     * Tries to add a new object to the distribution and updates all bins and
-     * weights consequently.
+     * Tries to add a new object to the distribution and updates all bins,
+     * weights and labels consequently.
      * <br>Weights are initially set to DEFAULT_WEIGHT
      * 
      * @param o the object to add
@@ -73,15 +79,110 @@ public class ObjectDistribution<T> {
         if(objects.add(o))
             if(weights.add(DEFAULT_WEIGHT))
                 if(bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))){
-                    ret = true;
-                    this.updateBins();
+                    if(labels.add(o.toString())){
+                        this.updateBins();
+                        ret = true;
+                    }
                 }
         return ret;
     }
     
     /**
+     * Tries to add a new object with a specific label to the distribution and
+     * updates all bins and weights consequently.
+     * <br>Weights are initially set to DEFAULT_WEIGHT
+     * 
+     * @param o the object to add
+     * @param label the object's label
+     * @return true if the distribution has changed as a consequence
+     */
+    public boolean add(T o, String label){
+        boolean ret = false;
+        if(objects.add(o))
+            if(weights.add(DEFAULT_WEIGHT))
+                if(bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))){
+                    if(labels.add(label)){
+                        this.updateBins();
+                        ret = true;
+                    }
+                }
+        return ret;
+    }
+    
+    /**
+     * Tries to add a new object with a specific weight to the distribution and
+     * updates all bins consequently.
+     * <br>Weights are initially set to DEFAULT_WEIGHT
+     * 
+     * @param o the object to add
+     * @param weight the weight of the object
+     * @return true if the distribution has changed as a consequence
+     */
+    public boolean add(T o, double weight){
+        boolean ret = false;
+        if(objects.add(o))
+            if(weights.add(weight))
+                if(bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))){
+                    if(labels.add(o.toString())){
+                        this.updateBins();
+                        ret = true;
+                    }
+                }
+        return ret;
+    }
+    
+    /**
+     * Tries to add a new object with a specific label and weight to the
+     * distribution and updates all bins consequently.
+     * <br>Weights are initially set to DEFAULT_WEIGHT
+     * 
+     * @param o the object to add
+     * @param weight the object's weight
+     * @param label the object's label
+     * @return true if the distribution has changed as a consequence
+     */
+    public boolean add(T o, Double weight, String label){
+        boolean ret = false;
+        if(objects.add(o))
+            if(weights.add(weight))
+                if(bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))){
+                    if(labels.add(label)){
+                        ret = true;
+                        this.updateBins();
+                    }
+                }
+        return ret;
+    }
+    
+    /**
+     * Tries to add a new object with a specific label to the
+     * distribution. Weight will be 1.0 (the default) if variable <tt>use</tt> is set to <tt>true</tt>.
+     * All bins are updated consequently.
+     * <br>Weights are initially set to DEFAULT_WEIGHT
+     * 
+     * @param o the object to add
+     * @param use true if the object has to be set with a default weight of 1.0, false if its initial weight is 0.0
+     * @param label the object's label
+     * @return true if the distribution has changed as a consequence
+     */
+    public boolean add(T o, boolean use, String label){
+        boolean ret = false;
+        if(objects.add(o)){
+            double weight = (use) ? ObjectDistribution.DEFAULT_WEIGHT : 0.0;
+            if(weights.add(weight))
+                if(bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))){
+                    if(labels.add(label)){
+                        ret = true;
+                        this.updateBins();
+                    }
+                }
+        }
+        return ret;
+    }
+    
+    /**
      * Tries to add all the specified objects to the distribution and updates
-     * all weights and bins consequently. This is more efficient than adding new
+     * all weights, bins and labels consequently. This is more efficient than adding new
      * objects one by one because the bins are updated only once at the end of
      * the process (only if everything goes well).
      * <br>Weights are initially set to DEFAULT_WEIGHT
@@ -92,7 +193,11 @@ public class ObjectDistribution<T> {
     public boolean addAll(List<T> objectList){
         boolean ret = true;
         for(T o : objectList){
-            ret = ret && objects.add(o) && weights.add(DEFAULT_WEIGHT) && bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP));
+            ret = ret
+                    && objects.add(o)
+                    && weights.add(DEFAULT_WEIGHT)
+                    && bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))
+                    && labels.add(o.toString());
         }
         if(ret){
             this.updateBins();
@@ -102,7 +207,7 @@ public class ObjectDistribution<T> {
     
     /**
      * Tries to remove the first occurence of an object from the distribution
-     * and updates all bins and weights consequently.
+     * and updates all bins, labels and weights consequently.
      * If this distribution does not contain the element, it is unchanged.
      * 
      * @param o the object to remove
@@ -115,6 +220,33 @@ public class ObjectDistribution<T> {
             int oldsize = objects.size();
 
             if(objects.remove(o) && id >= 0 && id < oldsize){
+                weights.remove(id);
+                bins.remove(id);
+                labels.remove(id);
+                ret = true;
+            }
+
+            this.updateBins();
+        }
+        return ret;
+    }
+    
+    /**
+     * Tries to remove the first occurence of an object with a specific label
+     * from the distribution and updates all bins, labels and weights consequently.
+     * If this distribution does not contain the element, it is unchanged.
+     * 
+     * @param label label of the object to remove
+     * @return true if the distribution has changed as a consequence
+     */
+    public boolean remove(String label){
+        boolean ret = false;
+        if(label != null){
+            int id = labels.indexOf(label);
+            int oldsize = objects.size();
+
+            if(labels.remove(label) && id >= 0 && id < oldsize){
+                objects.remove(id);
                 weights.remove(id);
                 bins.remove(id);
                 ret = true;
@@ -144,6 +276,7 @@ public class ObjectDistribution<T> {
                     if(objects.remove(o) && id >= 0 && id < oldsize){
                         weights.remove(id);
                         bins.remove(id);
+                        labels.remove(id);
                         ret = true;
                     }
                 }
@@ -255,14 +388,44 @@ public class ObjectDistribution<T> {
      * @return a reference to the object at position index in the underlying data structure
      */
     public T getReferenceFromIndex(int index){
-        return this.objects.get(index);
+        T ret = null;
+        if(index >= 0 && index < objects.size())
+            ret = this.objects.get(index);
+        return ret;
+    }
+
+    /**
+     * Returns a reference to the object described by the given label.
+     * @param label the label of the object to retrieve
+     * @return a reference to the object described by label
+     */
+    public T getReferenceFromLabel(String label){
+        T ret = null;
+        int index = this.labels.indexOf(label);
+        if(index >= 0)
+            ret = this.objects.get(index);
+        return ret;
+    }
+    
+    /**
+     * Returns the label of the specified object in the distribution, <tt>null</tt> if it's not found.
+     * @param object the object to get the label of
+     * @return the label of the specified object in the distribution, <tt>null</tt> if it's not found
+     */
+    public String getLabel(T object){
+        String ret = null;
+        int id = objects.indexOf(object);
+        if(id >= 0){
+            ret = labels.get(id);
+        }
+        return ret;
     }
     
     @Override
     public String toString(){
         StringBuffer sb = new StringBuffer("{");
         for(int i = 0; i<this.objects.size(); i++){
-            sb.append("\n\t"+bins.get(i).toString()+" -> "+objects.get(i).toString()+
+            sb.append("\n\t"+bins.get(i).toString()+" -> "+labels.get(i)+
                     " (weight: "+weights.get(i)+")");
         }
         sb.append("\n}");

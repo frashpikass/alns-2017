@@ -14,6 +14,7 @@ import gurobi.*;
 //import java.io.ObjectInputStream;
 //import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,8 +41,12 @@ public class Orienteering
     /**
      * Constant value for the maximum time limit for the Gurobi solver
      */
-    private static final double MAX_DEFAULT_TIMELIMIT = 600.0;
-    private static final int DEFAULT_NUMTHREADS = 4;
+    public static final double MAX_DEFAULT_TIMELIMIT = 600.0;
+    
+    /**
+     * Constant value for the maximum number of threads used by the Gurobi solver
+     */
+    public static final int DEFAULT_NUMTHREADS = 4;
     
     /**
      * Gurobi environment
@@ -71,13 +76,25 @@ public class Orienteering
     private String instanceHash;
     
     
-    private String logname;
+    private String logFilePath;
     private String modelPath;
     private double timeLimit;
     private int numThreads;
+    /**
+     * Path to the output folder
+     */
+    protected String outputFolderPath;
 
-    public String getLogname() {
-        return logname;
+    public String getOutputFolderPath() {
+        return outputFolderPath;
+    }
+
+    public void setOutputFolderPath(String outputFolderPath) {
+        this.outputFolderPath = outputFolderPath;
+    }
+    
+    public String getLogFilePath() {
+        return logFilePath;
     }
 
     public String getModelPath() {
@@ -162,7 +179,8 @@ public class Orienteering
     
     /**
      * Constructor. Setups the Orienteering problem environment, model and instance.
-     * @param logname name of the gurobi logfile to keep track of the solution process
+     * @param outputFolderPath path to the folder that will hold any output files produced by the solvers
+     * @param logFilePath name of the gurobi logfile to keep track of the solution process
      * @param modelPath path to the file containing the instance description
      * @param timeLimit maximum time for solving the problem (in seconds)
      * @param numThreads number of threads used to solve the problem.
@@ -170,7 +188,14 @@ public class Orienteering
      * @param reload true forces instance reloading and preprocessing
      * @throws java.lang.Exception if anything goes wrong
      */
-    public Orienteering(String logname, String modelPath, double timeLimit, int numThreads, boolean reload)
+    public Orienteering(
+            String outputFolderPath,
+            String logFilePath,
+            String modelPath,
+            double timeLimit,
+            int numThreads,
+            boolean reload
+    )
             throws Exception
     {
 //        // Try to deserialize a previously loaded Orienteering model given the path
@@ -179,7 +204,8 @@ public class Orienteering
         // Compute the hash for the model
         this.instanceHash = HashUtilities.fileHash(modelPath);
         
-        this.logname=logname;
+        this.outputFolderPath = outputFolderPath;
+        this.logFilePath=logFilePath;
         this.modelPath=modelPath;
         this.timeLimit=timeLimit;
         this.numThreads=numThreads;
@@ -189,7 +215,7 @@ public class Orienteering
         this.constraint8Variables = new ArrayList<>();
         
         // Go for preprocessing, since serialization of gurobi objects won't work
-        if(reload) instancePreprocessing(logname, modelPath, timeLimit, numThreads);
+        if(reload) instancePreprocessing(logFilePath, modelPath);
         
 //        // If there's a stored object with the name of the instance, load our
 //        // model from there, but only if we don't want to reload it anew
@@ -204,7 +230,7 @@ public class Orienteering
 //        else{
 //            // last resort if we really need/want to reload everything
 //            // grab a cup of coffee and some biscuits as you wait
-//            instancePreprocessing(logname, modelPath, timeLimit);
+//            instancePreprocessing(logFilePath, modelPath, timeLimit);
 //        }
     }
     
@@ -218,7 +244,7 @@ public class Orienteering
         this.instance=o.getInstance();
         this.model=o.getModel();
         this.instanceHash=o.getInstanceHash();
-        this.logname = o.getLogname();
+        this.logFilePath = o.getLogFilePath();
         this.modelPath = o.getModelPath();
         this.numThreads = o.getNumThreads();
         this.timeLimit = o.getTimeLimit();
@@ -279,16 +305,15 @@ public class Orienteering
      * Preprocess the instance file and serialize the resulting Orienteering object
      * @param logname name of the gurobi logfile to keep track of the solution process
      * @param modelPath path to the file containing the instance description
-     * @param timeLimit maximum time for solving the problem (in seconds)
      * @throws Exception 
      */
-    private void instancePreprocessing(String logname, String modelPath, double timeLimit, int numThreads)
+    private void instancePreprocessing(String logname, String modelPath)
             throws Exception{
         // Read the instance file from text
         this.instance = InstanceCTOPWSSReader.read(modelPath);
         
         // Setup the model's variables, constraints and objective function
-        this.setupEnvironment(logname, timeLimit, numThreads);
+        this.setupEnvironment(logname);
         
 // Serialization doesn't work on gurobi objects...        
 //        // Serialize this object
@@ -298,16 +323,16 @@ public class Orienteering
         model.write(modelPath+".lp");
     }
     
-    /**
-     * Constructor. Setups the Orienteering problem environment, model and instance.
-     * @param modelPath path to the file containing the instance description
-     * @param reload true forces instance reloading and preprocessing
-     * @throws java.lang.Exception if anything goes wrong
-     */
-    public Orienteering(String modelPath, boolean reload) throws Exception
-    {
-        this(modelPath+LOG_FILE_EXTESION, modelPath, MAX_DEFAULT_TIMELIMIT, DEFAULT_NUMTHREADS, reload);
-    }
+//    /**
+//     * Constructor. Setups the Orienteering problem environment, model and instance.
+//     * @param modelPath path to the file containing the instance description
+//     * @param reload true forces instance reloading and preprocessing
+//     * @throws java.lang.Exception if anything goes wrong
+//     */
+//    public Orienteering(String modelPath, boolean reload) throws Exception
+//    {
+//        this(modelPath+LOG_FILE_EXTESION, modelPath, MAX_DEFAULT_TIMELIMIT, DEFAULT_NUMTHREADS, reload);
+//    }
     
     /**
      * Constructor. Setups the Orienteering problem environment, model and instance
@@ -316,7 +341,7 @@ public class Orienteering
      * @throws Exception if anything goes wrong
      */
     public Orienteering(Orienteering o) throws Exception{
-        this(o.getLogname(),o.getModelPath(),o.getTimeLimit(),o.getNumThreads(),false);
+        this(o.getOutputFolderPath(),o.getLogFilePath(),o.getModelPath(),o.getTimeLimit(),o.getNumThreads(),false);
         this.initializeFromOrienteeringObject(o);
     }
     
@@ -335,11 +360,8 @@ public class Orienteering
      * This function will also populate the model with all the necessary constraints,
      * variables, the target function and the objective (maximize or minimize).
      * @param logname name of the gurobi logfile to keep track of the solution process
-     * @param timeLimit maximum time for solving the problem (in seconds)
-     * @param numThreads the value of numThreads
-     * @todo the setup phase could be done once and then reloaded from serialized file
      */
-    private void setupEnvironment(String logname, double timeLimit, int numThreads) throws Exception
+    private void setupEnvironment(String logname) throws Exception
     {
         try {
             this.env = new GRBEnv(logname);
@@ -786,11 +808,13 @@ public class Orienteering
         
         System.out.println("Working dir: "+System.getProperty("user.dir"));
         try{
+            String outputFolderPath = "";
             String instancePath = "Instance0.txt";
             
             // Long run, 5 hours
             double time = 5.0*60.0*60.0;
-            Orienteering o = new Orienteering(instancePath+LOG_FILE_EXTESION, instancePath,
+            time = 60.0;
+            Orienteering o = new Orienteering(outputFolderPath,outputFolderPath+instancePath+LOG_FILE_EXTESION, instancePath,
                     time, DEFAULT_NUMTHREADS, true);
             
             // Select the solver to use
@@ -799,34 +823,11 @@ public class Orienteering
             // Must set LazyConstraints parameter when using lazy constraints
             // o.getModel().set(GRB.IntParam.LazyConstraints, 1);
             if(solutionType == SOLVE_RELAXED){
-                o.toggleHeuristicConstraintsOn();
-                
-                GRBModel relaxedModel = o.getModel().relax();
-                // Optimize the relaxed model
-                relaxedModel.optimize();
-                // Save the solution to file
-                relaxedModel.write(instancePath+"_relaxed.sol");
-                // Dispose of the model
-                relaxedModel.dispose();
+                o.optimizeRelaxed(true);
             }
             else if(solutionType == SOLVE_MIP)
             {
-                o.toggleHeuristicConstraintsOn();
-                
-                GRBModel model = o.getModel();
-                // Optimize the model
-                model.optimize();
-                // Save the solution to file
-                model.write(instancePath+".sol");
-                
-                // Get/log the paths of vehicles
-                o.logVehiclePaths();
-                
-                // Log visited clusters
-                o.logVisitedClusters();
-                
-                // Dispose of the model
-                model.dispose();
+                o.optimizeMIP(true);
             }
             else if(solutionType == SOLVE_ALNS){
                 GRBModel model = o.getModel();
@@ -835,11 +836,14 @@ public class Orienteering
                 int qStart = 1;
                 double lambda = 0.35; // Heuristic decay
                 double alpha = 0.85;  // Temperature decay
-                long timeLimitALNS = 300;
+                long timeLimitALNS = 100;
                 long timeLimitLocalSearch = 90;
                 double rewardForBestSegmentHeuristics = 1.5;
                 double punishmentForWorstSegmentHeuristics = 0.5;
+                double maxMIPSNodesForFeasibilityCheck = 5000;
+                int maxIterationsWithoutImprovement = Math.floorDiv(segmentSize, 4);
                 
+                // Use all heuristics for testing purposes
                 ALNS a = new ALNS(
                         o,
                         segmentSize,
@@ -850,7 +854,19 @@ public class Orienteering
                         timeLimitALNS,
                         timeLimitLocalSearch,
                         rewardForBestSegmentHeuristics,
-                        punishmentForWorstSegmentHeuristics
+                        punishmentForWorstSegmentHeuristics,
+                        maxMIPSNodesForFeasibilityCheck,
+                        maxIterationsWithoutImprovement,
+                        ALNS.DEFAULT_HEURISTIC_SCORES,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
                 );
                 
                 // Optimize the model with ALNS
@@ -858,12 +874,6 @@ public class Orienteering
                 
                 // Save the solution to file
                 model.write(instancePath+".sol");
-                
-                // Get/log the paths of vehicles
-                a.logVehiclePaths();
-                
-                // Log visited clusters
-                o.logVisitedClusters();
                 
                 // Dispose of the model
                 model.dispose();
@@ -874,6 +884,76 @@ public class Orienteering
         catch(Exception e){
             System.out.println(e.toString());
         }
+    }
+    
+    /**
+     * Optimize the relaxation of the model provided.
+     * @param useHeuristicConstraints true to make sure the special heuristic constraints are included in the model
+     * @throws GRBException if any Gurobi operation goes wrong
+     * @throws Exception if there are problems while toggling the constraints
+     */
+    public void optimizeRelaxed(boolean useHeuristicConstraints) throws GRBException, Exception{
+        // Reset the model to an unsolved state
+        model.reset();
+        
+        // Check if the user wants to use heuristic constraints
+        if(useHeuristicConstraints) toggleHeuristicConstraintsOn();
+        
+        GRBModel relaxedModel = model.relax();
+        
+        // Optimize the relaxed model
+        relaxedModel.optimize();
+        
+        // Save the relaxed solution to file
+        relaxedModel.write(modelPath+"_relaxed.sol");
+        
+        // Dispose of the relaxed model
+        relaxedModel.dispose();
+    }
+    
+    /**
+     * Update the normal time limit for the Gurobi solver
+     * @param newTimeLimit the new time limit in seconds
+     * @throws GRBException if there are problems while updating the parameters
+     */
+    public void updateTimeLimit(double newTimeLimit) throws GRBException{
+        this.env.set(GRB.DoubleParam.TimeLimit, newTimeLimit);
+        model.update();
+    }
+    
+    /**
+     * Update the number of threads to use with the Gurobi solver
+     * @param newNumThreads the new number of threads to use
+     * @throws GRBException if there are problems while updating the parameters
+     */
+    public void updateNumThreads(int newNumThreads) throws GRBException{
+        this.env.set(GRB.IntParam.Threads, newNumThreads);
+        model.update();
+    }
+    
+    /**
+     * Optimize the provided model using Gurobi's MIPS solver.
+     * @param useHeuristicConstraints true to make sure the special heuristic constraints are included in the model
+     * @throws GRBException if any Gurobi operation goes wrong
+     * @throws Exception if there are problems while toggling the constraints
+     */
+    public void optimizeMIP(boolean useHeuristicConstraints) throws GRBException, Exception{
+        // Reset the model to an unsolved state
+        model.reset();
+        
+        // Check if you want to use heuristic constraints
+        if(useHeuristicConstraints) toggleHeuristicConstraintsOn();
+        
+        // Optimize the model
+        model.optimize();
+        // Save the solution to file
+        model.write(modelPath+".sol");
+        
+        // Get/log the paths of vehicles
+        logVehiclePaths();
+
+        // Log visited clusters
+        logVisitedClusters();
     }
     
     /**
@@ -1125,5 +1205,26 @@ public class Orienteering
         }
         heuristicConstraints.clear();
         model.update();
+    }
+    
+    public List<String[]> csvGetGeneralParameters(){
+        List<String[]> output = new ArrayList<>();
+        
+        // This is an Orienteering parameter
+        String [] runName = {this.instance.getName()+"",LocalDateTime.now().toString()};
+        String [] outputFolderPath = {"Path to the output folder",this.outputFolderPath};
+        String [] logFilePath = {"Path to the log file",this.logFilePath};
+        String [] modelPath = {"Path to the model (instance) file",this.modelPath};
+        String [] timeLimit = {"Global time limit for MIPS",this.timeLimit+""};
+        String [] numThreads = {"Number of threads",this.numThreads+""};
+        
+        output.add(runName);
+        output.add(outputFolderPath);
+        output.add(logFilePath);
+        output.add(modelPath);
+        output.add(timeLimit);
+        output.add(numThreads);
+        
+        return output;
     }
 }

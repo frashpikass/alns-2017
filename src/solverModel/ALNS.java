@@ -1866,6 +1866,7 @@ public class ALNS extends Orienteering{
         String [] rewardForBestSegmentHeuristics = {"Reward for best segment heuristics",this.rewardForBestSegmentHeuristics+""};
         String [] punishmentForWorstSegmentHeuristics = {"Punishment for worst segment heuristics",this.punishmentForWorstSegmentHeuristics+""};
         String [] maxMIPSNodesForFeasibilityCheck = {"Maximum MIPS nodes to solve in a feasibility check",this.maxMIPSNodesForFeasibilityCheck+""};
+        String [] maxIterationsWithoutImprovement = {"Maximum iterations without improvement in a segment",this.maxIterationsWithoutImprovement+""};
         String [] heuristicScores = {"Heuristic scores (values for psi)",gson.toJson(this.heuristicScores)};
         
         String [] useDestroyGreedyCostInsertion = {"useDestroyGreedyCostInsertion", this.useDestroyGreedyCostInsertion+""};
@@ -1892,6 +1893,7 @@ public class ALNS extends Orienteering{
         output.add(rewardForBestSegmentHeuristics);
         output.add(punishmentForWorstSegmentHeuristics);
         output.add(maxMIPSNodesForFeasibilityCheck);
+        output.add(maxIterationsWithoutImprovement);
         output.add(heuristicScores);
         
         output.add(useDestroyGreedyCostInsertion);

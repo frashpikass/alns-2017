@@ -834,21 +834,24 @@ public class Orienteering
                 int segmentSize = 30;
                 int historySize = 50;
                 int qStart = 1;
+                int qDelta = 3;
                 double lambda = 0.35; // Heuristic decay
                 double alpha = 0.85;  // Temperature decay
-                long timeLimitALNS = 100;
-                long timeLimitLocalSearch = 90;
+                long timeLimitALNS = 300;
+                long timeLimitLocalSearch = 60;
                 double rewardForBestSegmentHeuristics = 1.5;
                 double punishmentForWorstSegmentHeuristics = 0.5;
                 double maxMIPSNodesForFeasibilityCheck = 5000;
-                int maxIterationsWithoutImprovement = Math.floorDiv(segmentSize, 4);
+                int maxIterationsWithoutImprovement = 20;
                 
+                // PARAM LOCATION G
                 // Use all heuristics for testing purposes
                 ALNS a = new ALNS(
                         o,
                         segmentSize,
                         historySize,
                         qStart,
+                        qDelta,
                         lambda,
                         alpha, 
                         timeLimitALNS,

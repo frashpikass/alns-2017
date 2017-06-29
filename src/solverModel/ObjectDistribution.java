@@ -528,7 +528,7 @@ public class ObjectDistribution<T> {
      * Scale all the weights of specified objects in the distribution by a factor.
      * New weights will be oldWeight*factor.
      * Probability bins are updated at the end of the operation.
-     * @param o the list of objects to update the weight of
+     * @param toScale the list of objects to update the weight of
      * @param factor the scale factor
      * @return true if some of the weights were scaled
      */

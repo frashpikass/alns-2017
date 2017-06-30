@@ -1,11 +1,20 @@
 package solverModel;
 
+//import java.io.FileNotFoundException;
+//import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
+//import org.apache.poi.ss.usermodel.Cell;
+//import org.apache.poi.ss.usermodel.CreationHelper;
+//import org.apache.poi.ss.usermodel.Row;
+//import org.apache.poi.ss.usermodel.Sheet;
+//import org.apache.poi.ss.usermodel.Workbook;
+//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * This class stores objects of type <tt>T</tt> and their weights that determine
@@ -547,9 +556,9 @@ public class ObjectDistribution<T> {
     
     /**
      * Test method for this class
-     * @param args unused parameter
+     * @throws java.io.IOException if it's impossible to write to the output file
      */
-    public static void main(String[] args) {
+    public static void main() throws IOException{
         ObjectDistribution<String> od = new ObjectDistribution<>();
         
         System.out.println("Most probable element: "+od.getMostProbable());
@@ -607,6 +616,45 @@ public class ObjectDistribution<T> {
             String extracted = od.getRandom();
             System.out.println("Extraction "+i+": "+extracted);
         }
+        
+//        // Testing some random extractions
+//        ObjectDistribution<String> od1 = new ObjectDistribution<>();
+//        od1.add("a", 1.0);
+//        od1.add("b",1.3);
+//        od1.add("c",2.0);
+//        od1.add("d",1.3);
+//        od1.add("e",1.0);
+//        // This should look somewhat like a Gaussian
+//        
+//        // Let's do a number of random extractions, place the results in an excel
+//        // file and then use it to plot some kind of distribution graph
+//        Workbook wb = new XSSFWorkbook();
+//        Sheet sheet1 = wb.createSheet("CIAO");
+//        CreationHelper createHelper = wb.getCreationHelper();
+//        
+//        int numExtractions = 10000;
+//        
+//        for(int i = 0; i<numExtractions; i++){
+//            // Create a row and put some cells in it. Rows are 0 based.
+//            Row row = sheet1.createRow((short)i);
+//            // Create a cell and put a value in it.
+//            Cell cell = row.createCell(0);
+//            cell.setCellValue(
+//                    createHelper.createRichTextString(od1.getRandom())
+//            );
+//            
+//        }
+//        
+//        int j = 0;
+//        for(String label : od1.labels){
+//            sheet1.getRow(j).createCell(1).setCellValue(label);
+//            sheet1.getRow(j).createCell(2).setCellFormula("COUNTIF(A:A,\""+label+"\")/"+numExtractions);
+//            sheet1.getRow(j).createCell(3).setCellFormula(od1.getWeightOf(label)+"/"+od1.getTotalWeight());
+//            j++;
+//        }
+//        try (FileOutputStream fileOut = new FileOutputStream("workbook.xlsx")) {
+//            wb.write(fileOut);
+//        }
         
     }
     

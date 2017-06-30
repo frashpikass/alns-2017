@@ -5,7 +5,6 @@
  */
 package solverModel;
 
-import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 import gurobi.GRB;
 import gurobi.GRBCallback;
@@ -18,7 +17,6 @@ import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,24 +34,44 @@ import java.util.logging.Logger;
 public class ALNS extends Orienteering{
     
     /**
+     * A Javabean that holds all ALNS parameters.
+     */
+    private ALNSPropertiesBean ALNSProperties;
+    
+    /**
      * History of past inserted clusters (long term memory)
      */
     private Deque<Cluster> pastHistory;
     
-    /**
-     * Maximum size of the past history
-     */
-    private int maxHistorySize;
-    
-    /**
-     * The starting value of q (degree of destruction)
-     */
-    private int qStart;
-    
-    /**
-     * Number of iterations in an optimization segment
-     */
-    private int segmentSize;
+//    /**
+//     * Maximum size of the past history
+//     */
+//    private int maxHistorySize;
+//    
+//    /**
+//     * The starting value of q (degree of destruction)
+//     */
+//    private int qStart;
+//    
+//    /**
+//     * The increment of q at the end of every segment
+//     */
+//    private int qDelta;
+//    
+//    /**
+//     * Number of iterations in an optimization segment
+//     */
+//    private int segmentSize;
+//    
+//    /**
+//     * Maximum number of segments in an ALNS run
+//     */
+//    long maxSegments;
+//    
+//    /**
+//     * Numbers of segments without improvement before ALNS termination
+//     */
+//    long maxSegmentsWithoutImprovement;
     
     /**
      * This is an ObjectDistribution for destroy methods.
@@ -71,230 +89,25 @@ public class ALNS extends Orienteering{
      */
     private ObjectDistribution<BiFunction<List<Cluster>,Integer,List<Cluster>>> repairMethods;
     
-    /**
-     *  booleans that set whether to use an heuristic or not
-     */
-    private boolean useDestroyGreedyCostInsertion;
-    private boolean useDestroyGreedyBestInsertion;
-    private boolean useDestroyGreedyProfitInsertion;
-    private boolean useDestroyRandomInsertion;
-
-    private boolean useRepairHighCostRemoval;
-    private boolean useRepairRandomRemoval;
-    private boolean useRepairTravelTime;
-    private boolean useRepairVehicleTime;
-    private boolean useRepairWorstRemoval;
-    
-    /**
-     * This is the decay parameter of the update process for heuristic method weights.
-     * <br>This value should be a double in the interval [0,1].
-     * <br>Heuristic method weights are updated following the convex combination
-     * <br> newWeight = lambda*oldWeight + (1-lambda)*psi
-     * <br>where psi is a value that indicates the relative score to give to an heuristic.
-     */
-    private double lambda;
-    
-    /**
-     * This is the decay parameter of the update process for Temperature.
-     * <br>This value should be a double in the interval [0,1].
-     * <br>The temperature is updated at the end of every segment like
-     * <br>newTemperature = alpha*Temperature
-     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make fluctuations
-     * in accepted solutions much stronger
-     */
-    private double alpha;
-    
-    /**
-     * Maximum runtime for the ALNS heuristic algorithm (in seconds)
-     */
-    private long timeLimitALNS;
-    
-    /**
-     * Maximum runtime for the local search process (in seconds)
-     */
-    private long timeLimitLocalSearch;
-    
-    /**
-     * A scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
-     */
-    private double rewardForBestSegmentHeuristics;
-    
-    /**
-     * A scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
-     */
-    private double punishmentForWorstSegmentHeuristics;
-    
-    /**
-     * This constant holds the possible values of psi, the function that prizes
-     * good heuristics and penalizes the bad ones.
-     * <br>The default value for it is:
-     * <br><tt>{3.0, 2.0, 1.0, 0.1}</tt>
-     */
-    public final static double[] DEFAULT_HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.1};
-    
-    /**
-     * This constant holds the number of possible output values for function psi,
-     * the one that gives a score for every heuristic. It's used for debugging.
-     */
-    public final static int NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES = 4;
-    
-    /**
-     * This parameters holds the values of psi, the function that prizes good
-     * heuristics and penalizes the bad ones.
-     */
-    private double[] heuristicScores;
-            
-    /**
-     * This map saves all the names for implemented heuristics
-     */
-    // private HashMap<BiFunction<List<Cluster>,Integer,List<Cluster>>, String> heuristicNames;
-    
-    /**
-     * Determines the maximum number of mips nodes to check before giving up a
-     * feasibility check.
-     */
-    private double maxMIPSNodesForFeasibilityCheck;
-    
-    /**
-     * Determines how many ALNS iterations without improvement should be accepted
-     * before the algorithm moves on to a new segment.
-     */
-    private int maxIterationsWithoutImprovement;
-    
-    /**
-     * Constructor for the class ALNS.
-     * @param o an instance of an Orienteering problem
-     * @param segmentSize the size of a segment (expressed in number of iteration of the destroy/repair heuristic)
-     * @param maxHistorySize the maximum size for the history of previously chosen clusters
-     * @param qStart the first value of q
-     * @param lambda decay parameter of heuristic weights (must be a double in range [0,1])
-     * @param alpha decay parameter of temperature (must be a double in range [0,1])
-     * @param timeLimitALNS maximum runtime for the ALNS heuristic algorithm (in seconds)
-     * @param timeLimitLocalSearch maximum runtime for the local search process (in seconds)
-     * @param rewardForBestSegmentHeuristics scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
-     * @param punishmentForWorstSegmentHeuristics scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
-     * @param maxMIPSNodesForFeasibilityCheck maximum number of mips nodes to check before giving up a feasibility check.
-     * @param maxIterationsWithoutImprovement how many ALNS iterations without improvement should be accepted before the algorithm moves on to a new segment. A suggested value is a fraction of segmentSize.
-     * @param heuristicScores an array of values for psi, the function that prizes good heuristics and penalizes the bad ones. Should contain at least 4 values, see {@link ALNS#DEFAULT_HEURISTIC_SCORE}
-     * 
-     * @param useDestroyGreedyCostInsertion true to use the heuristic
-     * @param useDestroyGreedyBestInsertion true to use the heuristic
-     * @param useDestroyGreedyProfitInsertion true to use the heuristic
-     * @param useDestroyRandomInsertion true to use the heuristic
-     * 
-     * @param useRepairHighCostRemoval true to use the heuristic
-     * @param useRepairRandomRemoval true to use the heuristic
-     * @param useRepairTravelTime true to use the heuristic
-     * @param useRepairVehicleTime true to use the heuristic
-     * @param useRepairWorstRemoval true to use the heuristic
-     * @throws Exception if anything goes wrong
-     */
-    public ALNS(
-            Orienteering o,
-            int segmentSize,
-            int maxHistorySize,
-            int qStart,
-            double lambda,
-            double alpha,
-            long timeLimitALNS,
-            long timeLimitLocalSearch,
-            double rewardForBestSegmentHeuristics,
-            double punishmentForWorstSegmentHeuristics,
-            double maxMIPSNodesForFeasibilityCheck,
-            int maxIterationsWithoutImprovement,
-            double [] heuristicScores,
-            
-            boolean useDestroyGreedyCostInsertion,
-            boolean useDestroyGreedyBestInsertion,
-            boolean useDestroyGreedyProfitInsertion,
-            boolean useDestroyRandomInsertion,
-            
-            boolean useRepairHighCostRemoval,
-            boolean useRepairRandomRemoval,
-            boolean useRepairTravelTime,
-            boolean useRepairVehicleTime,
-            boolean useRepairWorstRemoval
-                    
-    ) throws Exception{
+    public ALNS(Orienteering o, ALNSPropertiesBean ALNSParams) throws Exception {
         super(o);
-        this.segmentSize = segmentSize;
-        this.maxHistorySize=maxHistorySize;
-        this.qStart = qStart;
-        this.pastHistory = new LinkedBlockingDeque<>();
-        this.timeLimitALNS = timeLimitALNS;
-        this.timeLimitLocalSearch = timeLimitLocalSearch;
-        this.rewardForBestSegmentHeuristics = rewardForBestSegmentHeuristics;
-        this.punishmentForWorstSegmentHeuristics = punishmentForWorstSegmentHeuristics;
-        this.maxMIPSNodesForFeasibilityCheck = maxMIPSNodesForFeasibilityCheck;
-        this.maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
-        
-        // Use the given heuristic scores, but only if they are correct, otherwise go default
-        if(heuristicScores.length != NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES)
-            this.heuristicScores = heuristicScores;
-        else this.heuristicScores = DEFAULT_HEURISTIC_SCORES;
-        
-        this.useDestroyGreedyCostInsertion = useDestroyGreedyCostInsertion;
-        this.useDestroyGreedyBestInsertion = useDestroyGreedyBestInsertion;
-        this.useDestroyGreedyProfitInsertion = useDestroyGreedyProfitInsertion;
-        this.useDestroyRandomInsertion = useDestroyRandomInsertion;
-
-        this.useRepairHighCostRemoval = useRepairHighCostRemoval;
-        this.useRepairRandomRemoval = useRepairRandomRemoval;
-        this.useRepairTravelTime = useRepairTravelTime;
-        this.useRepairVehicleTime = useRepairVehicleTime;
-        this.useRepairWorstRemoval = useRepairWorstRemoval;
-
-        
-        // Lambda setup - values out of range [0,1] clip to range boundaries
-        if(lambda < 1.0) this.lambda = lambda;
-        else this.lambda = 1.0;
-        if(lambda < 0) this.lambda = 0.0;
-        
-        // Alpha setup - values out of range [0,1] clip to values close to range boundaries
-        // we want the temperature to always decrease if not explicitly stated otherwise
-        if(alpha < 1.0) this.alpha = alpha;
-        else this.lambda = 0.9;
-        if(lambda < 0) this.lambda = 0.1;
-        
-        // Keeping track of heuristic method names
-        // heuristicNames = new HashMap<>();
-        
+        this.ALNSProperties = ALNSParams;
         // Keeping track of all implemented repair and destroy methods
         
         destroyMethods = new ObjectDistribution<>();
-        // destroyMethods.add(this::destroyHeuristicTemplate);
-        int i=0;
         
-        destroyMethods.add(this::destroyGreedyCostInsertion, useDestroyGreedyCostInsertion, "GreedyCostInsertion");
-//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyCostInsertion");
-        
-        destroyMethods.add(this::destroyGreedyBestInsertion, useDestroyGreedyBestInsertion, "GreedyBestInsertion");
-//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyBestInsertion");
-        
-        destroyMethods.add(this::destroyGreedyProfitInsertion, useDestroyGreedyProfitInsertion, "GreedyProfitInsertion");
-//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "GreedyProfitInsertion");
-        
-        destroyMethods.add(this::destroyRandomInsertion, useDestroyRandomInsertion, "RandomInsertion");
-//        heuristicNames.put(destroyMethods.getReferenceFromIndex(i++), "RandomInsertion");
+        destroyMethods.add(this::destroyGreedyCostInsertion, ALNSParams.isUseDestroyGreedyCostInsertion(), "GreedyCostInsertion");
+        destroyMethods.add(this::destroyGreedyBestInsertion, ALNSParams.isUseDestroyGreedyBestInsertion(), "GreedyBestInsertion");        
+        destroyMethods.add(this::destroyGreedyProfitInsertion, ALNSParams.isUseDestroyGreedyProfitInsertion(), "GreedyProfitInsertion");        
+        destroyMethods.add(this::destroyRandomInsertion, ALNSParams.isUseDestroyRandomInsertion(), "RandomInsertion");
         
         repairMethods = new ObjectDistribution<>();
-        // repairMethods.add(this::repairHeuristicTemplate);
-        int j=0;
         
-        repairMethods.add(this::repairHighCostRemoval, useRepairHighCostRemoval, "HighCostRemoval");
-//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "HighCostRemoval");
-        
-        repairMethods.add(this::repairRandomRemoval, useRepairRandomRemoval, "RandomRemoval");
-//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "RandomRemoval");
-        
-        repairMethods.add(this::repairTravelTime, useRepairTravelTime, "TravelTime");
-//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "TravelTime");
-        
-        repairMethods.add(this::repairVehicleTime, useRepairVehicleTime, "VehicleTime");
-//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "VehicleTime");
-        
-        repairMethods.add(this::repairWorstRemoval, useRepairWorstRemoval, "WorstRemoval");
-//        heuristicNames.put(repairMethods.getReferenceFromIndex(j++), "WorstRemoval");
+        repairMethods.add(this::repairHighCostRemoval, ALNSParams.isUseRepairHighCostRemoval(), "HighCostRemoval");
+        repairMethods.add(this::repairRandomRemoval, ALNSParams.isUseRepairRandomRemoval(), "RandomRemoval");
+        repairMethods.add(this::repairTravelTime, ALNSParams.isUseRepairTravelTime(), "TravelTime");
+        repairMethods.add(this::repairVehicleTime, ALNSParams.isUseRepairVehicleTime(), "VehicleTime");
+        repairMethods.add(this::repairWorstRemoval, ALNSParams.isUseRepairWorstRemoval(), "WorstRemoval");
     }
     
     /**
@@ -306,7 +119,7 @@ public class ALNS extends Orienteering{
      * @throws GRBException if anything goes wrong with logging or callback mechanisms
      */
     public List<Cluster> ALNSConstructiveSolution() throws GRBException, Exception{
-        env.message("ALNSConstructiveSolution log start, time "+LocalDateTime.now()+"\n");
+        env.message("\nALNSConstructiveSolution log start, time "+LocalDateTime.now()+"\n");
         
         List<Cluster> clusters = instance.cloneClusters();
         // Update the vehicle list for each cluster, might take some time
@@ -345,7 +158,8 @@ public class ALNS extends Orienteering{
         
         // Now solution holds the list of clusters found by our constructive algorithm.
         // Let's update the model so that it cointains the current solution
-        testSolution(solution, false);
+        testSolution(solution, true);
+        env.message("\nALNSConstructiveSolution log end, time "+LocalDateTime.now()+"\n");
         return solution;
     }
     
@@ -383,7 +197,7 @@ public class ALNS extends Orienteering{
         putInSolution(model, proposedSolution);
         
         // Setting up the callback
-        model.setCallback(new feasibilityCallback(this.maxMIPSNodesForFeasibilityCheck));
+        model.setCallback(new feasibilityCallback(ALNSProperties.getMaxMIPSNodesForFeasibilityCheck()));
         model.optimize();
         if(model.get(GRB.IntAttr.SolCount) > 0) isFeasible = true;
         
@@ -548,6 +362,12 @@ public class ALNS extends Orienteering{
      * @throws Exception if anything goes wrong
      */
     public void optimize() throws Exception {
+        
+        // Setup the Excel logger
+        ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
+                orienteeringProperties.getOutputFolderPath()+instance.getName()+"_ALNS.xlsx",
+                instance.getName());
+        
         // This is a generic ALNS implementation
         GRBModel relaxedModel = model.relax();
         relaxedModel.optimize();
@@ -585,11 +405,11 @@ public class ALNS extends Orienteering{
         int qMin = 1;
         
         // q is the number of clusters to repair and destroy at each iteration
-        int q=qStart;
+        int q=ALNSProperties.getqStart();
         
         
         // This is how much q should increase at every iteration
-        int qDelta = Math.floorDiv(qMax, 10);
+        // int qDelta = Math.floorDiv(qMax, 10); // to parametrize
         
         // These variables are references to the chosen destroy and repair methods
         // for the current iteration
@@ -612,34 +432,31 @@ public class ALNS extends Orienteering{
         
         // Keeping track of how many segments of iterations have been performed
         long segments = 0;
-        long maxSegments = 1000;
+        //long maxSegments = 1000;
         
         // Keeping track of how many segments without improvement have been seen
         long segmentsWithoutImprovement = 0;
-        long maxSegmentsWithoutImprovement = 20;
+        //long maxSegmentsWithoutImprovement = 20; // to parametrize / REMOVE
         
         // A string to log why the segment ended.
         StringBuffer segmentEndCause = new StringBuffer();
         
-        // A CSV logger to log all the progress of our algorithm for offline analysis
-        CSVWriter logger = new CSVWriter(new FileWriter(outputFolderPath+instance.getName()+"_ALNSlog.csv"), '\t');
+//        // A CSV logger to log all the progress of our algorithm for offline analysis
+//        CSVWriter logger = new CSVWriter(new FileWriter(orienteeringProperties.getOutputFolderPath()+instance.getName()+"_ALNSlog.csv"), '\t');
         
-        // Log ALNS parameters to the CSV
-        // logger.writeAll(csvGetALNSParameters());
-        
-        // Log headers to the CSV
-        String [] headers = {
-                    "Segment", "Iteration", "Time",
-                    "Destroy Heuristic", "DWeight", "Repair Heuristic", "RWeight", "Repaired?",
-                    "Temperature", "q",
-                    "xOld", "xOldObj",
-                    "xNew", "xNewObj", "Accepted?","Worse but accepted?", "Infeasible & Discarded?",
-                    "xBest", "xBestObj",
-                    "xBestInSegments", "xBestInSegmentsObj",
-                    "Optimum?",
-                    "Comment"
-        };
-        logger.writeNext(headers);
+//        // Log headers to the CSV
+//        String [] headers = {
+//                    "Segment", "Iteration", "Time",
+//                    "Destroy Heuristic", "DWeight", "Repair Heuristic", "RWeight", "Repaired?",
+//                    "Temperature", "q",
+//                    "xOld", "xOldObj",
+//                    "xNew", "xNewObj", "Accepted?","Worse but accepted?", "Infeasible & Discarded?",
+//                    "xBest", "xBestObj",
+//                    "xBestInSegments", "xBestInSegmentsObj",
+//                    "Optimum?",
+//                    "Comment"
+//        };
+//        logger.writeNext(headers);
         
         // ALNS START: Cycles every segment
         do{
@@ -659,10 +476,10 @@ public class ALNS extends Orienteering{
                 resetHeuristicMethodsWeight();
                 
                 // Reward and punish
-                destroyMethods.scaleAllWeightsOf(bestDestroys, rewardForBestSegmentHeuristics);
-                destroyMethods.scaleAllWeightsOf(worstDestroys, punishmentForWorstSegmentHeuristics);
-                repairMethods.scaleAllWeightsOf(bestRepairs, rewardForBestSegmentHeuristics);
-                repairMethods.scaleAllWeightsOf(worstRepairs, punishmentForWorstSegmentHeuristics);
+                destroyMethods.scaleAllWeightsOf(bestDestroys, ALNSProperties.getRewardForBestSegmentHeuristics());
+                destroyMethods.scaleAllWeightsOf(worstDestroys, ALNSProperties.getPunishmentForWorstSegmentHeuristics());
+                repairMethods.scaleAllWeightsOf(bestRepairs, ALNSProperties.getRewardForBestSegmentHeuristics());
+                repairMethods.scaleAllWeightsOf(worstRepairs, ALNSProperties.getPunishmentForWorstSegmentHeuristics());
             }
 
             // Iterations inside a segment (SEGMENT START)
@@ -671,10 +488,10 @@ public class ALNS extends Orienteering{
             int iterationsWithoutImprovement = 0;
             for(
                     iterations = 0;
-                    iterations < this.segmentSize
+                    iterations < ALNSProperties.getSegmentSize()
                     && xOld.size()>1
-                    && elapsedTime <= this.timeLimitALNS
-                    && iterationsWithoutImprovement < maxIterationsWithoutImprovement;
+                    && elapsedTime <= ALNSProperties.getTimeLimitALNS()
+                    && iterationsWithoutImprovement < ALNSProperties.getMaxIterationsWithoutImprovement();
                     iterations++
                 )
             {
@@ -696,7 +513,7 @@ public class ALNS extends Orienteering{
                 xNew = destroyMethod.apply(xOld, q);
                 //If the new solution is infeasible, apply the repair method
                 if(!testSolution(xNew, false)){
-                    xNew = repairBackToFeasibility3(xNew, repairMethod);
+                    xNew = repairBackToFeasibility4(xNew, repairMethod);
                     repairMethodWasUsed = true;
                 }
                 
@@ -728,7 +545,8 @@ public class ALNS extends Orienteering{
                         "0",
                         "Infeasible and discarded."
                     };
-                    logger.writeNext(logLine);
+//                    logger.writeNext(logLine);
+                    xlsxLogger.writeRow(logLine);
                     
                     // Update heuristic weights
                     updateHeuristicMethodsWeight(destroyMethod,
@@ -740,7 +558,7 @@ public class ALNS extends Orienteering{
                             repairMethodWasUsed);
                     
                     // Update temperature, just like at the end of every iteration
-                    temperature *= alpha;
+                    temperature *= ALNSProperties.getAlpha();
                     
                     // Update the count of iterations without improvement
                     iterationsWithoutImprovement++;
@@ -812,7 +630,7 @@ public class ALNS extends Orienteering{
                 else iterationsWithoutImprovement++;
                 
                 // Update temperature at the end of every iteration
-                temperature *= alpha;
+                temperature *= ALNSProperties.getAlpha();
                 
                 // Log the results to CSV
                 // Update the elapsed time
@@ -832,7 +650,8 @@ public class ALNS extends Orienteering{
                     optimumFound ? "1" : "0",
                     ""
                 };
-                logger.writeNext(logLine);
+//                logger.writeNext(logLine);
+                xlsxLogger.writeRow(logLine);
                 
                 // Update the heuristic weights
                 updateHeuristicMethodsWeight(
@@ -881,13 +700,13 @@ public class ALNS extends Orienteering{
             } 
             
             // Check and log why the segment has ended
-            if(iterations >= this.segmentSize)
+            if(iterations >= ALNSProperties.getSegmentSize())
                 segmentEndCause.append(" Max segment size reached ("+iterations+")!");
             if(xOld.size()<=1)
                 segmentEndCause.append(" xOld is too small to work with (size="+xOld.size()+")!");
-            if(elapsedTime > this.timeLimitALNS)
+            if(elapsedTime > ALNSProperties.getTimeLimitALNS())
                 segmentEndCause.append(" ALNS time limit reached!");
-            if(iterationsWithoutImprovement >= maxIterationsWithoutImprovement)
+            if(iterationsWithoutImprovement >= ALNSProperties.getMaxIterationsWithoutImprovement())
                 segmentEndCause.append(" Too many iterations without improvement ("+iterationsWithoutImprovement+")!");
             
             // Update the elapsed time
@@ -905,13 +724,14 @@ public class ALNS extends Orienteering{
                 optimumFound ? "1" : "0",
                 "End of the segment. Reason: "+segmentEndCause.toString()
             };
-            logger.writeNext(logLineSegmentEnd);
+//            logger.writeNext(logLineSegmentEnd);
+            xlsxLogger.writeRow(logLineSegmentEnd);
             
             // Reset the StringBuffer that logs the reason why a segment has ended
             segmentEndCause = new StringBuffer();
             
             // Let's try a local search run, if we have time for it
-            List<Cluster> xLocalSearch = this.localSearch(xBestInSegments, elapsedTime, timeLimitLocalSearch, segmentsWithoutImprovement);
+            List<Cluster> xLocalSearch = this.localSearch(xBestInSegments, elapsedTime, ALNSProperties.getTimeLimitLocalSearch(), segmentsWithoutImprovement);
             double localSearchObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
             
             // If the local search was successful, save the new solution as the best in segments
@@ -924,15 +744,17 @@ public class ALNS extends Orienteering{
             StringBuffer localSearchComment = new StringBuffer();
             
             // Let's check if the local search was aborted
+            // (it's the negation of the same check we do at the beginning of a
+            // local search to decide whether to start a local search or not)
             if(
-                timeLimitLocalSearch > 0
-                && timeLimitLocalSearch+elapsedTime <= this.timeLimitALNS
-                && segmentsWithoutImprovement < 1.0)
+                !(ALNSProperties.getTimeLimitLocalSearch() > 0
+                && ALNSProperties.getTimeLimitLocalSearch()+elapsedTime <= ALNSProperties.getTimeLimitALNS()
+                && segmentsWithoutImprovement < 1.0))
             {
                 localSearchComment.append("ABORT:");
-                if(timeLimitLocalSearch <= 0)
+                if(ALNSProperties.getTimeLimitLocalSearch() <= 0)
                     localSearchComment.append(" Local search disabled by user!");
-                if(timeLimitLocalSearch+elapsedTime > this.timeLimitALNS)
+                if(ALNSProperties.getTimeLimitLocalSearch()+elapsedTime > ALNSProperties.getTimeLimitALNS())
                     localSearchComment.append(" No time left for the local search to run!");
                 if(segmentsWithoutImprovement >= 1.0)
                     localSearchComment.append(" No improvement since last segment, it's useless to perform a local search!");
@@ -955,7 +777,8 @@ public class ALNS extends Orienteering{
                 optimumFound ? "1" : "0",
                 "Local search results. "+localSearchComment.toString()
             };
-            logger.writeNext(logLine);
+//            logger.writeNext(logLine);
+            xlsxLogger.writeRow(logLine);
             
             // Prepare solutions for the next segment
             xOld = xBestInSegments;
@@ -966,27 +789,30 @@ public class ALNS extends Orienteering{
             bestObjectiveValue = bestObjectiveValueInSegments;
             
             // Update q and the segment counter
-            q += qDelta;
+            q += ALNSProperties.getqDelta();
             segments++;
         } // do: Stopping criteria. If not verified, go on with the next segment
         while(
-                elapsedTime <= timeLimitALNS
+                elapsedTime <= ALNSProperties.getTimeLimitALNS()
                 && q>=qMin
                 && q<=qMax
-                && segments < maxSegments
-                && segmentsWithoutImprovement < maxSegmentsWithoutImprovement
+                && segments < ALNSProperties.getMaxSegments()
+                && segmentsWithoutImprovement < ALNSProperties.getMaxSegmentsWithoutImprovement()
                 //&& !optimumFound
         );
         
-        // Close the logger gracefully
-        logger.flushQuietly();
-        logger.close();
+//        // Close the logger gracefully
+//        logger.flushQuietly();
+//        logger.close();
+        
+        // Close the excel logger gracefully
+        xlsxLogger.close();
         
         // Final test to set variables in the model and log vehicle paths
         testSolution(xBestInSegments, true);
         
         // Save the solution to file
-        model.write(this.getModelPath()+".sol");
+        super.writeSolution();
     }
     
     /**
@@ -1242,11 +1068,11 @@ public class ALNS extends Orienteering{
      * @return the repaired solution
      */
     private List<Cluster> repairHighCostRemoval(List<Cluster> inputSolution, int q){
-        // Sort the clusters in the input solution
-        inputSolution.sort(Cluster.COST_COMPARATOR.reversed());
-        
         // Initialize the output
         List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Sort the clusters from the input solution
+        output.sort(Cluster.COST_COMPARATOR.reversed());
         
         // Remove q clusters from the solution, following the imposed ordering
         int i = 0;
@@ -1258,7 +1084,7 @@ public class ALNS extends Orienteering{
             else break;
         }
         
-        // Return the repaired input
+        // Return the repaired solution
         return output;
     }
     
@@ -1273,7 +1099,7 @@ public class ALNS extends Orienteering{
         // Initialize the output
         List<Cluster> output = new ArrayList<>(inputSolution);
         
-        // Sort the clusters in the input solution
+        // Sort the clusters from the input solution
         output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
         
         // Remove q clusters from the solution, following the imposed ordering
@@ -1286,7 +1112,7 @@ public class ALNS extends Orienteering{
             else break;
         }
         
-        // Return the repaired input
+        // Return the repaired solution
         return output;
     }
     
@@ -1315,10 +1141,9 @@ public class ALNS extends Orienteering{
         
         if(q>0 && output.size()>1){
             // Remove 1 cluster from the solution, following the imposed ordering
-            Cluster first = output.remove(0);
+            Cluster firstClusterRemoved = output.remove(0);
             
             if(q>1){
-                double firstRatio = 0.0;
                 Vehicle firstVehicle = null;
                 int biggestStreakSize = 0;
                 
@@ -1327,31 +1152,34 @@ public class ALNS extends Orienteering{
                 
                 // Find v as the vehicle with the longest streak in the first cluster
                 for(Vehicle v:instance.getVehicles()){
-                    if(v.canServe(first)){
+                    if(v.canServe(firstClusterRemoved)){
                         // Get the biggest streak of v in first
-                        List<Streak> streaks = first.getStreaks(v);
-                        streaks.sort(Streak.SIZE_COMPARATOR.reversed());
-                        int streakSize = streaks.get(0).size();
-                        
-                        // If the streak we've found is bigger than the previous one
-                        // update biggestStreakSize and firstVehicle
-                        if(streakSize > biggestStreakSize){
-                            biggestStreakSize = streakSize;
-                            firstVehicle = v;
+                        List<Streak> streaks = firstClusterRemoved.getStreaks(v);
+                        // If there are streaks for vehicle v in the first cluster removed
+                        if(!streaks.isEmpty()){
+                            streaks.sort(Streak.SIZE_COMPARATOR.reversed());
+                            int streakSize = streaks.get(0).size();
+
+                            // If the streak we've found is bigger than the previous one
+                            // update biggestStreakSize and firstVehicle
+                            if(streakSize > biggestStreakSize){
+                                biggestStreakSize = streakSize;
+                                firstVehicle = v;
+                            }
                         }
                     }
                 }
                 
                 if(firstVehicle != null){
                     // Calculate the ratio for the first cluster
-                    firstRatio = first.getTotalCostForVehicle(firstVehicle)/first.getTotalCost();
+                    double firstClusterRatio = firstClusterRemoved.getTotalCostForVehicle(firstVehicle)/(1+firstClusterRemoved.getTotalCost());
                     
                     // Populate the map that holds cluster IDs (in the output) and their ratios
                     for(int i =0; i<output.size(); i++){
                         Cluster c = output.get(i);
                         clustersRatios.put(
                                 c,
-                                Math.abs(firstRatio - c.getTotalCostForVehicle(firstVehicle)/c.getTotalCost())
+                                Math.abs(firstClusterRatio - c.getTotalCostForVehicle(firstVehicle)/(1+c.getTotalCost()) )
                         );
                     }
                     
@@ -1378,7 +1206,7 @@ public class ALNS extends Orienteering{
                 // debug
                 else try {
                     env.message("Error in repairVehicleTime heuristic!\n"
-                            + "No serving vehicle found for first cluster "+first.getId());
+                            + "No serving vehicle found for first cluster "+firstClusterRemoved.getId());
                 } catch (GRBException ex) {
                     Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1415,25 +1243,25 @@ public class ALNS extends Orienteering{
         
         if(q>0  && output.size()>1){
             // Remove 1 cluster from the solution, following the imposed ordering
-            Cluster first = output.remove(0);
+            Cluster firstClusterRemoved = output.remove(0);
             
             if(q>1){
-                double firstRatio = 0.0;
-                Vehicle firstVehicle = null;
+                // Initialize the firstNode and lastNode of the instance we're working on
+                Node firstNode = instance.getNode(0);
+                Node lastNode = instance.getNode(instance.getNum_nodes()-1);
+                
+                double firstRatio = (firstClusterRemoved.distance(firstNode) + firstClusterRemoved.distance(lastNode))/D;
                 
                 // Stores clusters and their ratios
                 LinkedHashMap<Cluster,Double> clustersRatios = new LinkedHashMap<>();
                 
-                // Initialize the firstNode and lastNode of the instance we're working on
-                Node firstNode = instance.getNode(0);
-                Node lastNode = instance.getNode(instance.getNum_nodes()-1);
 
                 // Populate the map that holds cluster IDs (in the output) and their ratios
                 for(int i =0; i<output.size(); i++){
-                    Cluster c = output.get(i);
+                    Cluster candidateCluster = output.get(i);
                     clustersRatios.put(
-                            c,
-                            (first.distance(c)+c.distance(firstNode)+c.distance(lastNode))/D
+                            candidateCluster,
+                            Math.abs(firstRatio-(firstClusterRemoved.distance(candidateCluster)+candidateCluster.distance(firstNode)+candidateCluster.distance(lastNode))/D)
                     );
                 }
 
@@ -1449,7 +1277,7 @@ public class ALNS extends Orienteering{
                 // Remove the first q-1 elements of the map from the output
                 int removed = 0;
                 for(Cluster c : removeOrder){
-                    if(removed<q-1 && output.size()>1){
+                    if(removed<q-1 && output.size()>1){ // DEBUG: weird
                         output.remove(c);
                         removed++;
                     }
@@ -1657,10 +1485,12 @@ public class ALNS extends Orienteering{
     
     /**
      * This is a special repair heuristic to bring back an eventual infeasible solution into feasibility.
-     * It operates by removing the minimum number of low gain-high cost clusters.
+     * It operates by removing the minimum number of clusters through the repeated
+     * application of the specified repair method with q=1.
      * <br>Fesibility is tested at the end of the method, so you can expect to find
      * interesting information about this solution in the current model.
      * @param inputSolution an infeasible solution
+     * @param repairMethod the repair heuristic to use
      * @return a feasible solution
      * @throws Exception if testing the solution breaks somewhere
      */
@@ -1673,6 +1503,55 @@ public class ALNS extends Orienteering{
         
         while(output.size()>1 && !testSolution(output, false)){
             output=repairMethod.apply(output, 1);
+        }
+        
+        return output;
+    }
+
+    /**
+     * This is a special repair heuristic to bring back an eventual infeasible solution into feasibility.
+     * It operates by removing the minimum number of clusters to bring the starting
+     * solution back to feasibility.
+     * This implementation is different than the previous ones because it will test
+     * different "degrees of destructions" q until it finds the smallest one that works.
+     * <br>Fesibility is tested again at the end of the method, so you can expect to find
+     * interesting information about this solution in the current model.
+     * @param inputSolution an infeasible solution
+     * @param repairMethod the repair heuristic to use
+     * @return a feasible solution
+     * @throws Exception if testing the solution breaks somewhere
+     */
+    private List<Cluster> repairBackToFeasibility4(
+            List<Cluster> inputSolution,
+            BiFunction<List<Cluster>,Integer,List<Cluster>> repairMethod
+    ) throws Exception{
+        // Clone the input
+        List<Cluster> inputClone = new ArrayList<>(inputSolution);
+        
+        // Setup the starting output solution as a clone of the input solution
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Check the initial input size
+        int inputSize = inputSolution.size();
+        
+        // Setup the initial degree of reparation
+        int q = 1;
+        
+        boolean isFeasible = testSolution(output, false);
+        
+        // Cycle while q is smaller than the size of the input (we don't want to
+        // test empty solutions) and
+        // the solution is infeasible (we want to exit the cycle when the solution
+        // is either too small or feasible)
+        while(!isFeasible && q < inputSize){            
+            // Try repairing the input solution with the given heuristic and the given q
+            output=repairMethod.apply(inputClone, q);
+            isFeasible = testSolution(output, false);
+            
+            if(!isFeasible){
+                // Increase q
+                q++;
+            }
         }
         
         return output;
@@ -1703,16 +1582,16 @@ public class ALNS extends Orienteering{
         
         // Check solution quality to decide the prize
         if(solutionIsNewGlobalOptimum){
-            prize = this.heuristicScores[0];
+            prize = ALNSProperties.getHeuristicScores()[0];
         }
         else if(solutionIsBetterThanOld){
-            prize = this.heuristicScores[1];
+            prize = ALNSProperties.getHeuristicScores()[1];
         }
         else if(solutionIsWorseButAccepted){
-            prize = this.heuristicScores[2];
+            prize = ALNSProperties.getHeuristicScores()[2];
         }
         else if(solutionIsWorseAndRejected){
-            prize = this.heuristicScores[3];
+            prize = ALNSProperties.getHeuristicScores()[3];
         }
         
         // Give the prize to the selected heuristics, with the best compliments from the house
@@ -1720,8 +1599,8 @@ public class ALNS extends Orienteering{
         double destroyOldWeight = destroyMethods.getWeightOf(destroyMethod);
         
         if(repairMethodWasUsed)
-            repairMethods.updateWeightSafely(repairMethod, repairOldWeight*lambda + (1-lambda)*prize);
-        destroyMethods.updateWeightSafely(destroyMethod, destroyOldWeight*lambda + (1-lambda)*prize);
+            repairMethods.updateWeightSafely(repairMethod, repairOldWeight*ALNSProperties.getLambda() + (1-ALNSProperties.getLambda())*prize);
+        destroyMethods.updateWeightSafely(destroyMethod, destroyOldWeight*ALNSProperties.getLambda() + (1-ALNSProperties.getLambda())*prize);
     }
     
     /**
@@ -1782,7 +1661,7 @@ public class ALNS extends Orienteering{
         // (it would yield the same result and waste precious time)
         if(
                 timeLimitForLocalSearch > 0
-                && timeLimitForLocalSearch+elapsedTime <= this.timeLimitALNS
+                && timeLimitForLocalSearch+elapsedTime <= ALNSProperties.getTimeLimitALNS()
                 && segmentsWithoutImprovement < 1.0)
         {
             // Log the beginning of the search
@@ -1848,72 +1727,7 @@ public class ALNS extends Orienteering{
         this.testSolution(output, true);
         return output;
     }
-
-    public List<String[]> csvGetALNSParameters() {
-        List<String[]> output = new ArrayList<>();
-        Gson gson = new Gson();
-        // This is an Orienteering parameter
-        // String [] runName = {this.instance.getName()+"",LocalDateTime.now().toString()};
-        
-        // These are all ALNS parameters, as seen in the constructor
-        String [] segmentSize = {"Segment size",this.segmentSize+""};
-        String [] maxHistorySize = {"History size", this.maxHistorySize+""};
-        String [] qStart = {"Initial q", this.qStart+""};
-        String [] lambda = {"lambda", this.lambda+""};
-        String [] alpha = {"alpha", this.alpha+""};
-        String [] timeLimitALNS = {"Heuristic time limit", this.timeLimitALNS+""};
-        String [] timeLimitLocalSearch = {"Local search time limit", this.timeLimitLocalSearch+""};
-        String [] rewardForBestSegmentHeuristics = {"Reward for best segment heuristics",this.rewardForBestSegmentHeuristics+""};
-        String [] punishmentForWorstSegmentHeuristics = {"Punishment for worst segment heuristics",this.punishmentForWorstSegmentHeuristics+""};
-        String [] maxMIPSNodesForFeasibilityCheck = {"Maximum MIPS nodes to solve in a feasibility check",this.maxMIPSNodesForFeasibilityCheck+""};
-        String [] maxIterationsWithoutImprovement = {"Maximum iterations without improvement in a segment",this.maxIterationsWithoutImprovement+""};
-        String [] heuristicScores = {"Heuristic scores (values for psi)",gson.toJson(this.heuristicScores)};
-        
-        String [] useDestroyGreedyCostInsertion = {"useDestroyGreedyCostInsertion", this.useDestroyGreedyCostInsertion+""};
-        String [] useDestroyGreedyBestInsertion = {"useDestroyGreedyBestInsertion", this.useDestroyGreedyBestInsertion+""};
-        String [] useDestroyGreedyProfitInsertion = {"useDestroyGreedyProfitInsertion", this.useDestroyGreedyProfitInsertion+""};
-        String [] useDestroyRandomInsertion = {"useDestroyRandomInsertion", this.useDestroyRandomInsertion+""};
-
-        String [] useRepairHighCostRemoval = {"useRepairHighCostRemoval", this.useRepairHighCostRemoval+""};
-        String [] useRepairRandomRemoval = {"useRepairRandomRemoval", this.useRepairRandomRemoval+""};
-        String [] useRepairTravelTime = {"useRepairTravelTime", this.useRepairTravelTime+""};
-        String [] useRepairVehicleTime = {"useRepairVehicleTime", this.useRepairVehicleTime+""};
-        String [] useRepairWorstRemoval = {"useRepairWorstRemoval", this.useRepairWorstRemoval+""};
-        // This is an Orienteering parameter
-        // String [] globalTimeLimit = {"Global time limit", this.getTimeLimit()+""};
-        
-        // output.add(runName);
-        output.add(segmentSize);
-        output.add(maxHistorySize);
-        output.add(qStart);
-        output.add(lambda);
-        output.add(alpha);
-        output.add(timeLimitALNS);
-        output.add(timeLimitLocalSearch);
-        output.add(rewardForBestSegmentHeuristics);
-        output.add(punishmentForWorstSegmentHeuristics);
-        output.add(maxMIPSNodesForFeasibilityCheck);
-        output.add(maxIterationsWithoutImprovement);
-        output.add(heuristicScores);
-        
-        output.add(useDestroyGreedyCostInsertion);
-        output.add(useDestroyGreedyBestInsertion);
-        output.add(useDestroyGreedyProfitInsertion);
-        output.add(useDestroyRandomInsertion);
-
-        output.add(useRepairHighCostRemoval);
-        output.add(useRepairRandomRemoval);
-        output.add(useRepairTravelTime);
-        output.add(useRepairVehicleTime);
-        output.add(useRepairWorstRemoval);
-        
-        // output.add(globalTimeLimit);
-        
-        return output;
-    }
-    
-    
-}
+} // end of class ALNS
 
 /**
  * Inner class to handle callbacks that check for the first feasible solution

@@ -327,7 +327,7 @@ public class Cluster {
      * @param vehicle the vehicle we want to find streaks for
      * @return the ordered list of streaks for the vehicle
      */
-    List<Streak> getStreaks(Vehicle vehicle) {
+    public List<Streak> getStreaks(Vehicle vehicle) {
         List<Streak> streaks = new ArrayList<>();
         
         Streak currStreak = new Streak(vehicle, this);

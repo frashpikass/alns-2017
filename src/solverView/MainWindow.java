@@ -5,12 +5,29 @@
  */
 package solverView;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.ToolTipManager;
+import solverController.Controller;
+import solverController.OptimizationStatusMessage;
+import solverController.ParametersBean;
 
 /**
  *
@@ -35,19 +52,27 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         buttonGroupSolver = new javax.swing.ButtonGroup();
         buttonGroupInstance = new javax.swing.ButtonGroup();
         jFileChooserInstances = new javax.swing.JFileChooser();
         buttonGroupActions = new javax.swing.ButtonGroup();
         jTextField19 = new javax.swing.JTextField();
+        jFileChooserOutputFolderPath = new javax.swing.JFileChooser();
+        orienteeringPropertiesBean = new solverController.OrienteeringPropertiesBean();
+        alnsPropertiesBean = new solverController.ALNSPropertiesBean();
+        jFileChooserLoadParameters = new javax.swing.JFileChooser();
+        jFileChooserSaveParameters = new javax.swing.JFileChooser();
+        jFileChooserSaveOutput = new javax.swing.JFileChooser();
+        parametersBean = new solverController.ParametersBean();
         jPanelMain = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanelControls = new javax.swing.JPanel();
         jPanelSolver = new javax.swing.JPanel();
-        radioMIPS = new javax.swing.JRadioButton();
-        radioRelaxed = new javax.swing.JRadioButton();
-        radioALNS = new javax.swing.JRadioButton();
+        jRadioButtonMIPS = new javax.swing.JRadioButton();
+        jRadioButtonRelaxed = new javax.swing.JRadioButton();
+        jRadioButtonALNS = new javax.swing.JRadioButton();
         jPanelnstances = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jListInstances = new javax.swing.JList<>();
@@ -58,15 +83,18 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelParametersEnvelope = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jPanelParameters = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        jPanelGeneralParameters = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jTextFieldTimeLimit = new javax.swing.JTextField();
+        jTextFieldNumThreads = new javax.swing.JTextField();
+        jLabelOutputFolderPath = new javax.swing.JLabel();
+        jTextFieldOutputFolderPath = new javax.swing.JTextField();
+        jCheckBoxForceHeuristicConstraints = new javax.swing.JCheckBox();
+        jLabel17 = new javax.swing.JLabel();
+        jButtonOutputFolderPath = new javax.swing.JButton();
+        jPanelALNSParameters = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        jTextFieldSegmentSize = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -78,37 +106,56 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
-        jTextField9 = new javax.swing.JTextField();
-        jTextField10 = new javax.swing.JTextField();
-        jTextField11 = new javax.swing.JTextField();
-        jTextField12 = new javax.swing.JTextField();
-        jTextField13 = new javax.swing.JTextField();
-        jTextField14 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        jTextFieldQDelta = new javax.swing.JTextField();
+        jTextFieldQStart = new javax.swing.JTextField();
+        jTextFieldLambda = new javax.swing.JTextField();
+        jTextFieldAlpha = new javax.swing.JTextField();
+        jTextFieldTimeLimitALNS = new javax.swing.JTextField();
+        jTextFieldTimeLimitLocalSearch = new javax.swing.JTextField();
+        jTextFieldRewardForBestSegmentHeuristics = new javax.swing.JTextField();
+        jTextFieldPunishmentForWorstSegmentHeuristics = new javax.swing.JTextField();
+        jTextFieldMaxMIPSNodesForFeasibilityCheck = new javax.swing.JTextField();
+        jTextFieldMaxIterationsWithoutImprovement = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         jPanelPsi = new javax.swing.JPanel();
         jTextFieldPsi0 = new javax.swing.JTextField();
         jTextFieldPsi1 = new javax.swing.JTextField();
         jTextFieldPsi2 = new javax.swing.JTextField();
         jTextFieldPsi3 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldMaxSegments = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jTextFieldMaxSegmentsWithoutImprovement = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jPanel2 = new javax.swing.JPanel();
+        jPanelRepairHeuristics = new javax.swing.JPanel();
+        jCheckBoxRepairHighCostRemoval = new javax.swing.JCheckBox();
+        jCheckBoxRepairRandomRemoval = new javax.swing.JCheckBox();
+        jCheckBoxRepairTravelTime = new javax.swing.JCheckBox();
+        jCheckBoxRepairVehicleTime = new javax.swing.JCheckBox();
+        jCheckBoxRepairWorstRemoval = new javax.swing.JCheckBox();
+        jPanelDestroyHeuristics = new javax.swing.JPanel();
+        jCheckBoxDestroyGreedyCostInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyGreedyBestInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyGreedyProfitInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyRandomInsertion = new javax.swing.JCheckBox();
         jPanelActions = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        jButtonSaveParameters = new javax.swing.JButton();
+        jButtonLoadParameters = new javax.swing.JButton();
+        jButtonRun = new javax.swing.JButton();
+        jButtonTestBean = new javax.swing.JButton();
         jPanelOutput = new javax.swing.JPanel();
         jButtonStop = new javax.swing.JButton();
         jButtonSaveOutput = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
         jButtonReset = new javax.swing.JButton();
+        jPanelStatusBar = new javax.swing.JPanel();
+        jLabelStatus = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
 
         jFileChooserInstances.setAccessory(btnAddInstance);
         jFileChooserInstances.setDialogTitle("Select instance file(s) to add");
@@ -117,61 +164,62 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextField19.setText("jTextField19");
 
+        jFileChooserOutputFolderPath.setAcceptAllFileFilterUsed(false);
+        jFileChooserOutputFolderPath.setDialogTitle("Choose the output directory");
+        jFileChooserOutputFolderPath.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        jFileChooserOutputFolderPath.setToolTipText("Choose the output directory");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("ALNS Solver, by Francesco Piazza, v1.0");
 
         jPanelControls.setBorder(javax.swing.BorderFactory.createTitledBorder("New Run Configuration"));
-        jPanelControls.setToolTipText("");
+        jPanelControls.setToolTipText(null);
 
         jPanelSolver.setBorder(javax.swing.BorderFactory.createTitledBorder("Solver"));
+        java.awt.GridBagLayout jPanelSolverLayout = new java.awt.GridBagLayout();
+        jPanelSolverLayout.columnWidths = new int[] {0};
+        jPanelSolverLayout.rowHeights = new int[] {0, 10, 0, 10, 0};
+        jPanelSolver.setLayout(jPanelSolverLayout);
 
-        buttonGroupSolver.add(radioMIPS);
-        radioMIPS.setText("MIPS");
+        buttonGroupSolver.add(jRadioButtonMIPS);
+        jRadioButtonMIPS.setText("MIPS");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanelSolver.add(jRadioButtonMIPS, gridBagConstraints);
 
-        buttonGroupSolver.add(radioRelaxed);
-        radioRelaxed.setText("Relaxed");
-        radioRelaxed.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroupSolver.add(jRadioButtonRelaxed);
+        jRadioButtonRelaxed.setText("Relaxed");
+        jRadioButtonRelaxed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioRelaxedActionPerformed(evt);
+                jRadioButtonRelaxedActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanelSolver.add(jRadioButtonRelaxed, gridBagConstraints);
 
-        buttonGroupSolver.add(radioALNS);
-        radioALNS.setSelected(true);
-        radioALNS.setText("ALNS");
-
-        javax.swing.GroupLayout jPanelSolverLayout = new javax.swing.GroupLayout(jPanelSolver);
-        jPanelSolver.setLayout(jPanelSolverLayout);
-        jPanelSolverLayout.setHorizontalGroup(
-            jPanelSolverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelSolverLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelSolverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(radioMIPS)
-                    .addComponent(radioRelaxed)
-                    .addComponent(radioALNS))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanelSolverLayout.setVerticalGroup(
-            jPanelSolverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelSolverLayout.createSequentialGroup()
-                .addComponent(radioMIPS)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(radioRelaxed)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(radioALNS))
-        );
+        buttonGroupSolver.add(jRadioButtonALNS);
+        jRadioButtonALNS.setSelected(true);
+        jRadioButtonALNS.setText("ALNS");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanelSolver.add(jRadioButtonALNS, gridBagConstraints);
 
         jPanelnstances.setBorder(javax.swing.BorderFactory.createTitledBorder("Instances to run"));
 
         jListInstances.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        jListInstances.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jListInstances.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListInstances.setToolTipText(null);
         jScrollPane2.setViewportView(jListInstances);
 
         btnAddInstance.setText("+");
@@ -248,396 +296,757 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         jPanelParametersEnvelope.setBorder(javax.swing.BorderFactory.createTitledBorder("Solver parameters"));
-        jPanelParametersEnvelope.setLayout(new java.awt.BorderLayout());
+        jPanelParametersEnvelope.setLayout(new java.awt.GridLayout(1, 0));
 
+        jScrollPane3.getVerticalScrollBar().setUnitIncrement(16);
+        jScrollPane3.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(600, 500));
+
+        jPanelParameters.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         java.awt.GridBagLayout jPanelParametersLayout = new java.awt.GridBagLayout();
-        jPanelParametersLayout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
-        jPanelParametersLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        jPanelParametersLayout.columnWidths = new int[] {0};
+        jPanelParametersLayout.rowHeights = new int[] {0, 10, 0};
         jPanelParameters.setLayout(jPanelParametersLayout);
 
-        jLabel2.setText("Output folder");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel2, gridBagConstraints);
+        jPanelGeneralParameters.setBorder(javax.swing.BorderFactory.createTitledBorder("General Parameters"));
+        java.awt.GridBagLayout jPanelGeneralParametersLayout = new java.awt.GridBagLayout();
+        jPanelGeneralParametersLayout.columnWidths = new int[] {0, 10, 0, 10, 0};
+        jPanelGeneralParametersLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0};
+        jPanelGeneralParameters.setLayout(jPanelGeneralParametersLayout);
 
-        jTextField1.setText(".");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField1, gridBagConstraints);
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 0;
-        jPanelParameters.add(jButton1, gridBagConstraints);
-
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Global time limit for MIPS");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel3, gridBagConstraints);
+        jPanelGeneralParameters.add(jLabel3, gridBagConstraints);
 
-        jTextField2.setText("jTextField2");
+        jTextFieldTimeLimit.setToolTipText("Sets how long (in seconds) should the MIPS solver run for");
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimit}"), jTextFieldTimeLimit, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimit");
+        bindingGroup.addBinding(binding);
+
+        jTextFieldTimeLimit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldTimeLimitActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField2, gridBagConstraints);
+        jPanelGeneralParameters.add(jTextFieldTimeLimit, gridBagConstraints);
 
-        jLabel4.setText("Number of Threads");
+        jTextFieldNumThreads.setToolTipText("<html>\nSelect how many threads should be used by the MIPS solver (also affects ALNS).\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${numThreads}"), jTextFieldNumThreads, org.jdesktop.beansbinding.BeanProperty.create("text"), "numThreads");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelGeneralParameters.add(jTextFieldNumThreads, gridBagConstraints);
+
+        jLabelOutputFolderPath.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelOutputFolderPath.setText("Output folder");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelGeneralParameters.add(jLabelOutputFolderPath, gridBagConstraints);
+
+        jTextFieldOutputFolderPath.setToolTipText("Choose the output directory");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "outputFolderPath");
+        bindingGroup.addBinding(binding);
+
+        jTextFieldOutputFolderPath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldOutputFolderPathActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelGeneralParameters.add(jTextFieldOutputFolderPath, gridBagConstraints);
+
+        jCheckBoxForceHeuristicConstraints.setText("Force heuristic constraints in MIPS");
+        jCheckBoxForceHeuristicConstraints.setToolTipText("If checked, heuristic constraints will always be used every time the MIPS solver is run (also affects ALNS)");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints, org.jdesktop.beansbinding.BeanProperty.create("selected"), "forceHeuristicConstraints");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelGeneralParameters.add(jCheckBoxForceHeuristicConstraints, gridBagConstraints);
+
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Number of threads");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel4, gridBagConstraints);
+        jPanelGeneralParameters.add(jLabel17, gridBagConstraints);
 
-        jTextField3.setText("jTextField3");
+        jButtonOutputFolderPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/openSmall.png"))); // NOI18N
+        jButtonOutputFolderPath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOutputFolderPathActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        jPanelGeneralParameters.add(jButtonOutputFolderPath, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        jPanelParameters.add(jPanelGeneralParameters, gridBagConstraints);
+
+        jPanelALNSParameters.setBorder(javax.swing.BorderFactory.createTitledBorder("ALNS parameters"));
+        java.awt.GridBagLayout jPanelALNSParametersLayout = new java.awt.GridBagLayout();
+        jPanelALNSParametersLayout.columnWidths = new int[] {0, 10, 0};
+        jPanelALNSParametersLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0};
+        jPanelALNSParameters.setLayout(jPanelALNSParametersLayout);
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel5.setText("Max iterations per segment");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel5, gridBagConstraints);
+
+        jTextFieldSegmentSize.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldSegmentSize.setToolTipText("<html> Maximum number of iterations in an ALNS optimization segment.\n<br>Every iteration includes the application of a destroy heuristic over\n<br>the previous feasible solution, followed by the application of a\n<br>repair heuristic to bring the destroyed solution back to feasibility.\n<br>This parameter can be throttled by the \"Maximum iterations without\n<br>improvement in a segment\" parameter.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${segmentSize}"), jTextFieldSegmentSize, org.jdesktop.beansbinding.BeanProperty.create("text"), "segmentSize");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldSegmentSize, gridBagConstraints);
+        jTextFieldSegmentSize.getAccessibleContext().setAccessibleDescription("<html>\nMaximum number of iterations in an ALNS optimization segment.\n<br>Every iteration includes the application of a destroy heuristic over\n<br>the previous feasible solution, followed by the application of a\n<br>repair heuristic to bring the destroyed solution back to feasibility.\n<br>This parameter can be throttled by the \"Maximum iterations without\n<br>improvement in a segment\" parameter.");
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel6.setText("Delta q");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField3, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel6, gridBagConstraints);
 
-        jLabel5.setText("Segment size");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel5, gridBagConstraints);
-
-        jTextField4.setText("jTextField4");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField4, gridBagConstraints);
-
-        jLabel6.setText("History size");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel6, gridBagConstraints);
-
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel7.setText("Initial q");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel7, gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel7, gridBagConstraints);
 
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel8.setText("Lambda");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel8, gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel8, gridBagConstraints);
 
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel9.setText("Alpha");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel9, gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel9, gridBagConstraints);
 
-        jLabel10.setText("Heuristic time limit");
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel10.setText("ALNS solver time limit");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 16;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel10, gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 32;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel10, gridBagConstraints);
 
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel11.setText("Local search time limit");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 18;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel11, gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 14;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel11, gridBagConstraints);
 
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel12.setText("Reward for best segment heuristics");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 20;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel12, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel12, gridBagConstraints);
 
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel13.setText("Punishment for worst segment heuristics");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 22;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel13, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel13, gridBagConstraints);
 
-        jLabel14.setText("Maximum MIPS nodes to solve in a feasibility check");
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel14.setText("Max MIPS nodes to solve in feasibility check");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 24;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel14, gridBagConstraints);
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 16;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel14, gridBagConstraints);
 
-        jLabel15.setText("Maximum iterations without improvement in a segment");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 26;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel15, gridBagConstraints);
-
-        jLabel16.setText("Heuristic scores (values for psi)");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 28;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel16, gridBagConstraints);
-
-        jLabel19.setText("Force heuristic constraints in MIPS");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 30;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel19, gridBagConstraints);
-
-        jTextField5.setText("jTextField5");
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel15.setText("Max iterations w/o improvement in a segment");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField5, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel15, gridBagConstraints);
 
-        jTextField6.setText("jTextField6");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField6, gridBagConstraints);
-
-        jTextField7.setText("jTextField7");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField7, gridBagConstraints);
-
-        jTextField8.setText("jTextField8");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 14;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField8, gridBagConstraints);
-
-        jTextField9.setText("jTextField9");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 16;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField9, gridBagConstraints);
-
-        jTextField10.setText("jTextField10");
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel16.setText("Heuristic scores (values for psi)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 18;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField10, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel16, gridBagConstraints);
 
-        jTextField11.setText("jTextField11");
+        jTextFieldQDelta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldQDelta.setToolTipText("<html>\nConstant increment of q at the end of every segment.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${qDelta}"), jTextFieldQDelta, org.jdesktop.beansbinding.BeanProperty.create("text"), "qDelta");
+        bindingGroup.addBinding(binding);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 20;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField11, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldQDelta, gridBagConstraints);
 
-        jTextField12.setText("jTextField12");
+        jTextFieldQStart.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldQStart.setToolTipText("<html>\nInitial value of q (degree of destruction) at the beginning of the first ALNS segment.\n<br>q determines how many clusters are to be inserted by the destruction heuristics.\n<br>The value of q increases at the end of each segment by <tt>qDelta</tt>.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${qStart}"), jTextFieldQStart, org.jdesktop.beansbinding.BeanProperty.create("text"), "qStart");
+        bindingGroup.addBinding(binding);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 22;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField12, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldQStart, gridBagConstraints);
 
-        jTextField13.setText("jTextField13");
+        jTextFieldLambda.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldLambda.setToolTipText("<html>\nThis is the decay parameter of the update process for heuristic method weights.\n<br>This value should be a double in the interval [0,1].\n<br>Heuristic method weights are updated at the end of every iteration\n<br>following the convex combination:\n<br> <tt>newWeight</tt> = <tt>lambda</tt>*<tt>oldWeight</tt> + (1-<tt>lambda</tt>)*<tt>psi</tt>\n<br>where <tt>psi</tt> is a value that indicates the relative score to give to an heuristic.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${lambda}"), jTextFieldLambda, org.jdesktop.beansbinding.BeanProperty.create("text"), "lambda");
+        bindingGroup.addBinding(binding);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 24;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField13, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldLambda, gridBagConstraints);
 
-        jTextField14.setText("jTextField14");
+        jTextFieldAlpha.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldAlpha.setToolTipText("<html>\n<b>Simulated annealing</b>\n<br>This is the decay parameter of the update process for <tt>Temperature.</tt>\n<br>This value should be a real number in the interval [0,1].\n<br>The temperature is updated at the end of every segment like\n<br><tt>newTemperature</tt> = <tt>alpha</tt>*<tt>oldTemperature</tt>\n<br>A slowly decreasing temperature (<tt>alpha</tt>-&gt;1)\n<br>will make it more likely to accept worse solutions at the\n<br>beginning of a segment, but it might find a better solution.\n<br>However a slowly decreasing temperature will take longer to converge\n<br>to a better solution.\n<br>\n<br><b>NOTE:</b> to be changed in accordance with <tt>Segment Size</tt>");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${alpha}"), jTextFieldAlpha, org.jdesktop.beansbinding.BeanProperty.create("text"), "alpha");
+        bindingGroup.addBinding(binding);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 26;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jTextField14, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldAlpha, gridBagConstraints);
+        jTextFieldAlpha.getAccessibleContext().setAccessibleDescription("<html>\n<b>Simulated annealing</b>\n<br>This is the decay parameter of the update process for <tt>Temperature.</tt>\n<br>This value should be a double in the interval [0,1].\n<br>The temperature is updated at the end of every segment like\n<br><tt>newTemperature</tt> = <tt>alpha</tt>*<tt>oldTemperature</tt>\n<br>A slowly decreasing temperature (<tt>alpha</tt>-&gt;1)\n<br>will make it more likely to accept worse solutions at the\n<br>beginning, but it might find a better solution in a longer time.\n<br><b>NOTE:</b> to be changed in accordance with <tt>Segment Size</tt>");
 
-        jCheckBox1.setText("Force heuristic constraints in MIPS");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 30;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jCheckBox1, gridBagConstraints);
+        jTextFieldTimeLimitALNS.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldTimeLimitALNS.setToolTipText("<html>\nMaximum runtime for the ALNS heuristic algorithm (in seconds).\n<br>When this time is reached, the ALNS solver execution terminates.");
 
-        jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel20.setText("Selected Heuristics");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimitALNS}"), jTextFieldTimeLimitALNS, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitALNS");
+        bindingGroup.addBinding(binding);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 32;
-        gridBagConstraints.gridwidth = 11;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jLabel20, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldTimeLimitALNS, gridBagConstraints);
 
-        jPanelPsi.setLayout(new javax.swing.BoxLayout(jPanelPsi, javax.swing.BoxLayout.X_AXIS));
+        jTextFieldTimeLimitLocalSearch.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldTimeLimitLocalSearch.setToolTipText("<html>\nMaximum runtime (in seconds) for the local search process.\n<br>A MIPS local search is run at the end of every segment, when possible.\n<br>The local search process takes advantage of all the heuristic constraints\n<br>defined by our Optimization Algorithms team.");
 
-        jTextFieldPsi0.setText("3.0");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimitLocalSearch}"), jTextFieldTimeLimitLocalSearch, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitLocalSearch");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 14;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldTimeLimitLocalSearch, gridBagConstraints);
+
+        jTextFieldRewardForBestSegmentHeuristics.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldRewardForBestSegmentHeuristics.setToolTipText("<html>\nA scaling factor which is applied to the weight of the best heuristics of the previous segment,\n<br>at the beginning of the next segment.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${rewardForBestSegmentHeuristics}"), jTextFieldRewardForBestSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "rewardForBestSegmentHeuristics");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 20;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldRewardForBestSegmentHeuristics, gridBagConstraints);
+
+        jTextFieldPunishmentForWorstSegmentHeuristics.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldPunishmentForWorstSegmentHeuristics.setToolTipText("<html>\nA scaling factor which is applied to the weight of the worst heuristics of the previous segment,\n<br>at the beginning of the next segment.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${punishmentForWorstSegmentHeuristics}"), jTextFieldPunishmentForWorstSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "punishmentForWorstSegmentHeuristics");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 22;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldPunishmentForWorstSegmentHeuristics, gridBagConstraints);
+
+        jTextFieldMaxMIPSNodesForFeasibilityCheck.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldMaxMIPSNodesForFeasibilityCheck.setToolTipText("<html>\nDetermines the maximum number of MIPS nodes to solve before\n<br>giving up on a feasibility test on a solution.\n<br>Should be set to a high amount (ideally more than 5000) to avoid\n<br>claiming that a feasible (but hard to prove) solution is infeasible.\n<br><b>Note:</b> hard-to-prove-as-feasible solutions will take advantage\n<br>of this possibility, but will take much longer to prove as feasible.\n<br>A lower amount will cutoff such hard-to-prove solutions (and save time).\n<br><b>When in doubt, leave at the default value.</b>");
+        jTextFieldMaxMIPSNodesForFeasibilityCheck.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxMIPSNodesForFeasibilityCheck}"), jTextFieldMaxMIPSNodesForFeasibilityCheck, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxMIPSNodesForFeasibilityCheck");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 16;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldMaxMIPSNodesForFeasibilityCheck, gridBagConstraints);
+
+        jTextFieldMaxIterationsWithoutImprovement.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldMaxIterationsWithoutImprovement.setToolTipText("<html>\nMaximum number of iterations without improvement in an ALNS optimization segment.\n<br>If this number of iterations without improvement is reached,\n<br>the ALNS solver will move on with the next segment (evenutally doing a little\n<br>local search in between the two segments).");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxIterationsWithoutImprovement}"), jTextFieldMaxIterationsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxIterationsWithoutImprovement");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldMaxIterationsWithoutImprovement, gridBagConstraints);
+
+        jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel20.setText("Active Heuristics:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 38;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanelALNSParameters.add(jLabel20, gridBagConstraints);
+
+        jPanelPsi.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                updatePsiGui(evt);
+            }
+        });
+        java.awt.GridBagLayout jPanelPsiLayout = new java.awt.GridBagLayout();
+        jPanelPsiLayout.columnWidths = new int[] {0, 10, 0, 10, 0, 10, 0};
+        jPanelPsiLayout.rowHeights = new int[] {0};
+        jPanelPsi.setLayout(jPanelPsiLayout);
+
+        jTextFieldPsi0.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi0.setText("0.0");
+        jTextFieldPsi0.setToolTipText("<html>\n<tt>w1</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be a new global optimum.");
+        jTextFieldPsi0.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi0FocusLost(evt);
+            }
+        });
         jTextFieldPsi0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldPsi0ActionPerformed(evt);
             }
         });
-        jPanelPsi.add(jTextFieldPsi0);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanelPsi.add(jTextFieldPsi0, gridBagConstraints);
 
-        jTextFieldPsi1.setText("2.0");
-        jPanelPsi.add(jTextFieldPsi1);
-
-        jTextFieldPsi2.setText("1.0");
-        jPanelPsi.add(jTextFieldPsi2);
-
-        jTextFieldPsi3.setText("0.0");
-        jPanelPsi.add(jTextFieldPsi3);
-
+        jTextFieldPsi1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi1.setText("0.0");
+        jTextFieldPsi1.setToolTipText("<html>\n<tt>w2</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be better than the previous one.");
+        jTextFieldPsi1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi1FocusLost(evt);
+            }
+        });
+        jTextFieldPsi1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPsi1ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 28;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        jPanelParameters.add(jPanelPsi, gridBagConstraints);
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanelPsi.add(jTextFieldPsi1, gridBagConstraints);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Destroy Heuristics"));
-        jPanel1.setToolTipText("");
+        jTextFieldPsi2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi2.setText("0.0");
+        jTextFieldPsi2.setToolTipText("<html>\n<tt>w3</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is worse than the previous one but is accepted anyway.");
+        jTextFieldPsi2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi2FocusLost(evt);
+            }
+        });
+        jTextFieldPsi2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPsi2ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanelPsi.add(jTextFieldPsi2, gridBagConstraints);
 
-        jCheckBox2.setText("jCheckBox2");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox2)
-                .addContainerGap(200, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox2)
-                .addContainerGap(70, Short.MAX_VALUE))
-        );
+        jTextFieldPsi3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi3.setText("0.0");
+        jTextFieldPsi3.setToolTipText("<html>\n<tt>w4</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be worse than the previous one and is rejected.");
+        jTextFieldPsi3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi3FocusLost(evt);
+            }
+        });
+        jTextFieldPsi3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPsi3ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanelPsi.add(jTextFieldPsi3, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 34;
+        gridBagConstraints.gridy = 18;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanelParameters.add(jPanel1, gridBagConstraints);
+        jPanelALNSParameters.add(jPanelPsi, gridBagConstraints);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Repair Heuristics"));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 283, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel2.setText("Max segments for an ALNS run");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 34;
-        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.gridy = 28;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanelParameters.add(jPanel2, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel2, gridBagConstraints);
+
+        jTextFieldMaxSegments.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldMaxSegments.setToolTipText("<html>\nMaximum number of segments for an ALNS run.\n<br>When this number of segments is reached, the ALNS solver\n<br>terminates its execution.\n<br>This value is throttled by the \"Max segments without improvement\"\n<br>parameter.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxSegments}"), jTextFieldMaxSegments, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxSegments");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 28;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldMaxSegments, gridBagConstraints);
+
+        jLabel4.setText("Setup:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanelALNSParameters.add(jLabel4, gridBagConstraints);
+
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel18.setText("Termination criteria:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 26;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanelALNSParameters.add(jLabel18, gridBagConstraints);
+
+        jTextFieldMaxSegmentsWithoutImprovement.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldMaxSegmentsWithoutImprovement.setToolTipText("<html>\nMaximum number of segments without improvement for an ALNS run.\n<br>When this number of segments without improvement is reached,\n<br>the ALNS solver terminates its execution.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxSegmentsWithoutImprovement}"), jTextFieldMaxSegmentsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxSegmentsWithoutImprovement");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 30;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanelALNSParameters.add(jTextFieldMaxSegmentsWithoutImprovement, gridBagConstraints);
+
+        jLabel19.setText("Max segments without improvement");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 30;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelALNSParameters.add(jLabel19, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 24;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelALNSParameters.add(jSeparator1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 36;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelALNSParameters.add(jSeparator2, gridBagConstraints);
+
+        jPanel1.setLayout(new java.awt.GridLayout(1, 2));
+
+        jPanelRepairHeuristics.setBorder(javax.swing.BorderFactory.createTitledBorder("Repair Heuristics"));
+        jPanelRepairHeuristics.setToolTipText("");
+        jPanelRepairHeuristics.setName(""); // NOI18N
+        jPanelRepairHeuristics.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBoxRepairHighCostRemoval.setText("RepairHighCostRemoval");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairHighCostRemoval}"), jCheckBoxRepairHighCostRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairHighCostRemoval");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairHighCostRemoval, gridBagConstraints);
+
+        jCheckBoxRepairRandomRemoval.setText("RepairRandomRemoval");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairRandomRemoval}"), jCheckBoxRepairRandomRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairRandomRemoval");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairRandomRemoval, gridBagConstraints);
+
+        jCheckBoxRepairTravelTime.setText("RepairTravelTime");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairTravelTime}"), jCheckBoxRepairTravelTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairTravelTime");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairTravelTime, gridBagConstraints);
+
+        jCheckBoxRepairVehicleTime.setText("RepairVehicleTime");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairVehicleTime}"), jCheckBoxRepairVehicleTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairVehicleTime");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairVehicleTime, gridBagConstraints);
+
+        jCheckBoxRepairWorstRemoval.setText("RepairWorstRemoval");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairWorstRemoval}"), jCheckBoxRepairWorstRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairWorstRemoval");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairWorstRemoval, gridBagConstraints);
+
+        jPanel1.add(jPanelRepairHeuristics);
+
+        jPanelDestroyHeuristics.setBorder(javax.swing.BorderFactory.createTitledBorder("Destroy Heuristics"));
+        jPanelDestroyHeuristics.setToolTipText("");
+        jPanelDestroyHeuristics.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBoxDestroyGreedyCostInsertion.setText("DestroyGreedyCostInsertion");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyGreedyCostInsertion}"), jCheckBoxDestroyGreedyCostInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyCostInsertion");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyCostInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyGreedyBestInsertion.setText("DestroyGreedyBestInsertion");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyGreedyBestInsertion}"), jCheckBoxDestroyGreedyBestInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyBestInsertion");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyBestInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyGreedyProfitInsertion.setText("DestroyGreedyProfitInsertion");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyGreedyProfitInsertion}"), jCheckBoxDestroyGreedyProfitInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyProfitInsertion");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyProfitInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyRandomInsertion.setText("DestroyRandomInsertion");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyRandomInsertion}"), jCheckBoxDestroyRandomInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyRandomInsertion");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxDestroyRandomInsertion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxDestroyRandomInsertionActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyRandomInsertion, gridBagConstraints);
+
+        jPanel1.add(jPanelDestroyHeuristics);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 40;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanelALNSParameters.add(jPanel1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        jPanelParameters.add(jPanelALNSParameters, gridBagConstraints);
 
         jScrollPane3.setViewportView(jPanelParameters);
 
-        jPanelParametersEnvelope.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+        jPanelParametersEnvelope.add(jScrollPane3);
 
         jPanelActions.setBorder(javax.swing.BorderFactory.createTitledBorder("Actions"));
-
-        jButton5.setText("Save Run Configuration");
-        buttonGroupActions.add(jButton5);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
-        jButton6.setText("Load Run Configuration");
-        buttonGroupActions.add(jButton6);
-
-        jButton9.setText("Run!");
-        buttonGroupActions.add(jButton9);
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelActionsLayout = new javax.swing.GroupLayout(jPanelActions);
+        java.awt.GridBagLayout jPanelActionsLayout = new java.awt.GridBagLayout();
+        jPanelActionsLayout.columnWidths = new int[] {0};
+        jPanelActionsLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0};
         jPanelActions.setLayout(jPanelActionsLayout);
-        jPanelActionsLayout.setHorizontalGroup(
-            jPanelActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelActionsLayout.createSequentialGroup()
-                .addGroup(jPanelActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelActionsLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jButton5))
-                    .addGroup(jPanelActionsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelActionsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanelActionsLayout.setVerticalGroup(
-            jPanelActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelActionsLayout.createSequentialGroup()
-                .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton9)
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
+
+        jButtonSaveParameters.setText("Save Parameters");
+        buttonGroupActions.add(jButtonSaveParameters);
+        jButtonSaveParameters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveParametersActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelActions.add(jButtonSaveParameters, gridBagConstraints);
+
+        jButtonLoadParameters.setText("Load Parameters");
+        buttonGroupActions.add(jButtonLoadParameters);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanelActions.add(jButtonLoadParameters, gridBagConstraints);
+
+        jButtonRun.setText("Run!");
+        buttonGroupActions.add(jButtonRun);
+        jButtonRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRunActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 107;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanelActions.add(jButtonRun, gridBagConstraints);
+
+        jButtonTestBean.setText("TEST BEAN");
+        jButtonTestBean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTestBeanActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanelActions.add(jButtonTestBean, gridBagConstraints);
 
         javax.swing.GroupLayout jPanelControlsLayout = new javax.swing.GroupLayout(jPanelControls);
         jPanelControls.setLayout(jPanelControlsLayout);
@@ -647,7 +1056,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanelnstances, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+                .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanelSolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -669,63 +1078,96 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         jPanelOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
+        java.awt.GridBagLayout jPanelOutputLayout = new java.awt.GridBagLayout();
+        jPanelOutputLayout.columnWidths = new int[] {0, 10, 0, 10, 0, 10, 0};
+        jPanelOutputLayout.rowHeights = new int[] {0, 10, 0};
+        jPanelOutput.setLayout(jPanelOutputLayout);
 
         jButtonStop.setText("Stop");
         jButtonStop.setEnabled(false);
+        jButtonStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStopActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanelOutput.add(jButtonStop, gridBagConstraints);
 
         jButtonSaveOutput.setText("Save Output");
-        jButtonSaveOutput.setEnabled(false);
         jButtonSaveOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveOutputActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelOutput.add(jButtonSaveOutput, gridBagConstraints);
 
         jScrollPane1.setBackground(new java.awt.Color(0, 51, 102));
 
         jTextAreaOutput.setEditable(false);
         jTextAreaOutput.setBackground(new java.awt.Color(0, 0, 102));
-        jTextAreaOutput.setColumns(20);
+        jTextAreaOutput.setColumns(15);
         jTextAreaOutput.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jTextAreaOutput.setForeground(new java.awt.Color(255, 255, 0));
         jTextAreaOutput.setRows(8);
         jTextAreaOutput.setTabSize(4);
+        jTextAreaOutput.setToolTipText(null);
         jTextAreaOutput.setMargin(new java.awt.Insets(5, 7, 5, 7));
         jTextAreaOutput.setSelectedTextColor(new java.awt.Color(255, 255, 153));
         jTextAreaOutput.setSelectionColor(new java.awt.Color(102, 0, 102));
         jScrollPane1.setViewportView(jTextAreaOutput);
 
-        jButtonReset.setText("Reset");
-        jButtonReset.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 1157;
+        gridBagConstraints.ipady = 238;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
+        jPanelOutput.add(jScrollPane1, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanelOutputLayout = new javax.swing.GroupLayout(jPanelOutput);
-        jPanelOutput.setLayout(jPanelOutputLayout);
-        jPanelOutputLayout.setHorizontalGroup(
-            jPanelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOutputLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelOutputLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonStop)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonReset)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonSaveOutput)))
-                .addContainerGap())
-        );
-        jPanelOutputLayout.setVerticalGroup(
-            jPanelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOutputLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonStop)
-                    .addComponent(jButtonSaveOutput)
-                    .addComponent(jButtonReset))
-                .addContainerGap())
-        );
+        jButtonReset.setText("Reset");
+        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonResetActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelOutput.add(jButtonReset, gridBagConstraints);
+
+        jPanelStatusBar.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
+        jPanelStatusBar.setForeground(java.awt.SystemColor.windowText);
+        jPanelStatusBar.setLayout(new java.awt.GridLayout(1, 0));
+
+        jLabelStatus.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabelStatus.setText("Ready.");
+        jPanelStatusBar.add(jLabelStatus);
+
+        jProgressBar1.setToolTipText(null);
+        jProgressBar1.setBorder(null);
+        jPanelStatusBar.add(jProgressBar1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
+        jPanelOutput.add(jPanelStatusBar, gridBagConstraints);
 
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
@@ -738,7 +1180,7 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addComponent(jPanelControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanelOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -748,11 +1190,13 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         getContentPane().add(jPanelMain, java.awt.BorderLayout.CENTER);
+
+        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -761,9 +1205,10 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonSaveOutputActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+        
+    }//GEN-LAST:event_jButtonSaveParametersActionPerformed
 
     private void btnMoveInstanceDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveInstanceDownActionPerformed
         // TODO add your handling code here:
@@ -821,9 +1266,9 @@ public class MainWindow extends javax.swing.JFrame {
         jListInstances.setModel(dlm);
     }//GEN-LAST:event_btnAddInstanceActionPerformed
 
-    private void radioRelaxedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRelaxedActionPerformed
+    private void jRadioButtonRelaxedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonRelaxedActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_radioRelaxedActionPerformed
+    }//GEN-LAST:event_jRadioButtonRelaxedActionPerformed
 
     private void btnRemoveInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInstanceActionPerformed
         // TODO add your handling code here:
@@ -838,22 +1283,158 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnRemoveInstanceActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
         // TODO add your handling code here:
         System.out.println("Who are you running from? Don't be silly!");
-    }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        
+        // Update the parameters
+        updateParametersBean();
+        
+        // Retrieve all instances to run
+        List<String> modelPaths = new ArrayList<>();
+        for(int i=0; i < jListInstances.getModel().getSize(); i++){
+            modelPaths.add(jListInstances.getModel().getElementAt(i));
+        }
+        
+        if(!modelPaths.isEmpty()){
+            // Disable all control windows
+            enableComponents(jPanelControls, false);
+            // Enable the stop button
+            jButtonStop.setEnabled(true);
+            // Disable the reset and save output buttons
+            jButtonReset.setEnabled(false);
+            jButtonSaveOutput.setEnabled(false);
+            
+            // Retrieve information on which solver to use
+            Controller.Solvers solver = Controller.Solvers.SOLVE_RELAXED;
+            if(jRadioButtonALNS.isSelected())
+                solver = Controller.Solvers.SOLVE_ALNS;
+            else if(jRadioButtonMIPS.isSelected())
+                solver = Controller.Solvers.SOLVE_MIPS;
+            else if(jRadioButtonRelaxed.isSelected())
+                solver = Controller.Solvers.SOLVE_RELAXED;
+            // Update the status bar
+            updateStatusLabel("Running.");
+            
+            
+            // Setup a new instance of controller
+            Controller task = new Controller(modelPaths, parametersBean, solver, jProgressBar1, jLabelStatus);
+            task.execute();
+            
+            // Now it's done. Let's re-enable controls
+            // Re-enable all control windows
+            enableComponents(jPanelControls, true);
+            // Disable the stop button
+            jButtonStop.setEnabled(false);
+            // Re-enable the reset and save output buttons
+            jButtonReset.setEnabled(true);
+            jButtonSaveOutput.setEnabled(true);
+            
+            // Update the status label
+            updateStatusLabel("Done! Ready.");
+        }
+        else{
+            updateStatusLabel("No instances to solve! Ready.");
+        }
+    }//GEN-LAST:event_jButtonRunActionPerformed
+    
+    private void jTextFieldOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPathActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
+        jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
+        File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
+        if(outputFolderPath != null)
+            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
+    }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
+
+    private void jTextFieldTimeLimitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTimeLimitActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jTextFieldTimeLimitActionPerformed
+
+    private void jButtonTestBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestBeanActionPerformed
+        updateParametersBean();
+        jTextAreaOutput.append("Stato del bean:\n");
+        jTextAreaOutput.append(parametersBean.toJSON());
+    }//GEN-LAST:event_jButtonTestBeanActionPerformed
+
+    private void jCheckBoxDestroyRandomInsertionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDestroyRandomInsertionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxDestroyRandomInsertionActionPerformed
+
+    private void updatePsiGui(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_updatePsiGui
+        // TODO add your handling code here:
+        updatePsiGui();
+    }//GEN-LAST:event_updatePsiGui
 
     private void jTextFieldPsi0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi0ActionPerformed
         // TODO add your handling code here:
+        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi0ActionPerformed
+
+    private void jTextFieldPsi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi1ActionPerformed
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi1ActionPerformed
+
+    private void jTextFieldPsi2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi2ActionPerformed
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi2ActionPerformed
+
+    private void jTextFieldPsi3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi3ActionPerformed
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi3ActionPerformed
+
+    private void jTextFieldPsi0FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi0FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi0FocusLost
+
+    private void jTextFieldPsi1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi1FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi1FocusLost
+
+    private void jTextFieldPsi2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi2FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi2FocusLost
+
+    private void jTextFieldPsi3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi3FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi3FocusLost
+
+    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
+        // TODO add your handling code here:
+        
+        // Re-enable the control panel
+        enableComponents(jPanelControls, true);
+        
+        // Disable the stop button again
+        jButtonStop.setEnabled(false);
+        
+        // Enable the reset button
+        jButtonReset.setEnabled(true);
+        
+        // Enable the save output button
+        jButtonSaveOutput.setEnabled(true);
+        
+        // Update the status text
+        updateStatusLabel("Stopped.");
+    }//GEN-LAST:event_jButtonStopActionPerformed
+
+    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
+        // TODO add your handling code here:
+        // Cleanup the output area
+        jTextAreaOutput.setText("");
+        
+        // Update the status text
+        updateStatusLabel("Ready.");
+    }//GEN-LAST:event_jButtonResetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -885,16 +1466,66 @@ public class MainWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainWindow().setVisible(true);
+                MainWindow mw = new MainWindow();
+                // Set the title
+                mw.setTitle("ALNS Solver v1.0 (GUI mode)");
+                
+                // Make the window appear
+                mw.setVisible(true);
+                
+                // Make tooltips appear faster and last longer
+                ToolTipManager.sharedInstance().setInitialDelay(250);
+                ToolTipManager.sharedInstance().setDismissDelay(15000);
             }
         });
         
         /* Redirects system streams to jTextAreaOutput */
-        
     }
     
     /**
-     * This method updates jTextAreaOutput with the output from the algorithms
+     * Sets the "enabled" flag of every component in the specified container
+     * @param container the parent container to start setting the enabled flag from
+     * @param enable the enable flag to set
+     */
+    public void enableComponents(Container container, boolean enable) {
+        Component[] components = container.getComponents();
+        for (Component component : components) {
+            component.setEnabled(enable);
+            if (component instanceof Container) {
+                enableComponents((Container)component, enable);
+            }
+        }
+    }
+    
+    /**
+     * Updates all values of psi in the GUI
+     */
+    private void updatePsiGui(){
+        jTextFieldPsi0.setText(alnsPropertiesBean.getHeuristicScores()[0]+"");
+        jTextFieldPsi1.setText(alnsPropertiesBean.getHeuristicScores()[1]+"");
+        jTextFieldPsi2.setText(alnsPropertiesBean.getHeuristicScores()[2]+"");
+        jTextFieldPsi3.setText(alnsPropertiesBean.getHeuristicScores()[3]+"");
+        jTextFieldPsi0.updateUI();
+        jTextFieldPsi1.updateUI();
+        jTextFieldPsi2.updateUI();
+        jTextFieldPsi3.updateUI();
+    }
+    
+    /**
+     * This method updates the values of psi in the ALNS properties bean, using 
+     * the values written in the psi text fields.
+     */
+    private void updatePsiBean(){
+        double [] toSet = new double[4];
+        toSet[0] = Double.parseDouble(jTextFieldPsi0.getText());
+        toSet[1] = Double.parseDouble(jTextFieldPsi1.getText());
+        toSet[2] = Double.parseDouble(jTextFieldPsi2.getText());
+        toSet[3] = Double.parseDouble(jTextFieldPsi3.getText());
+        alnsPropertiesBean.setHeuristicScores(toSet);
+    }
+    
+    /**
+     * This method updates jTextAreaOutput with the output from the optimization algorithms
      * @param text the text to put in jTextAreaOutput
      */
     private void updateTextArea(final String text) {
@@ -931,6 +1562,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private solverController.ALNSPropertiesBean alnsPropertiesBean;
     private javax.swing.JButton btnAddInstance;
     private javax.swing.JButton btnMoveInstanceDown;
     private javax.swing.JButton btnMoveInstanceUp;
@@ -938,16 +1570,29 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupActions;
     private javax.swing.ButtonGroup buttonGroupInstance;
     private javax.swing.ButtonGroup buttonGroupSolver;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JButton jButtonLoadParameters;
+    private javax.swing.JButton jButtonOutputFolderPath;
     private javax.swing.JButton jButtonReset;
+    private javax.swing.JButton jButtonRun;
     private javax.swing.JButton jButtonSaveOutput;
+    private javax.swing.JButton jButtonSaveParameters;
     private javax.swing.JButton jButtonStop;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JButton jButtonTestBean;
+    private javax.swing.JCheckBox jCheckBoxDestroyGreedyBestInsertion;
+    private javax.swing.JCheckBox jCheckBoxDestroyGreedyCostInsertion;
+    private javax.swing.JCheckBox jCheckBoxDestroyGreedyProfitInsertion;
+    private javax.swing.JCheckBox jCheckBoxDestroyRandomInsertion;
+    private javax.swing.JCheckBox jCheckBoxForceHeuristicConstraints;
+    private javax.swing.JCheckBox jCheckBoxRepairHighCostRemoval;
+    private javax.swing.JCheckBox jCheckBoxRepairRandomRemoval;
+    private javax.swing.JCheckBox jCheckBoxRepairTravelTime;
+    private javax.swing.JCheckBox jCheckBoxRepairVehicleTime;
+    private javax.swing.JCheckBox jCheckBoxRepairWorstRemoval;
     private javax.swing.JFileChooser jFileChooserInstances;
+    private javax.swing.JFileChooser jFileChooserLoadParameters;
+    private javax.swing.JFileChooser jFileChooserOutputFolderPath;
+    private javax.swing.JFileChooser jFileChooserSaveOutput;
+    private javax.swing.JFileChooser jFileChooserSaveParameters;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -956,6 +1601,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -966,43 +1613,75 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelOutputFolderPath;
+    private javax.swing.JLabel jLabelStatus;
     private javax.swing.JList<String> jListInstances;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanelALNSParameters;
     private javax.swing.JPanel jPanelActions;
     private javax.swing.JPanel jPanelControls;
+    private javax.swing.JPanel jPanelDestroyHeuristics;
+    private javax.swing.JPanel jPanelGeneralParameters;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JPanel jPanelOutput;
     private javax.swing.JPanel jPanelParameters;
     private javax.swing.JPanel jPanelParametersEnvelope;
     private javax.swing.JPanel jPanelPsi;
+    private javax.swing.JPanel jPanelRepairHeuristics;
     private javax.swing.JPanel jPanelSolver;
+    private javax.swing.JPanel jPanelStatusBar;
     private javax.swing.JPanel jPanelnstances;
+    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JRadioButton jRadioButtonALNS;
+    private javax.swing.JRadioButton jRadioButtonMIPS;
+    private javax.swing.JRadioButton jRadioButtonRelaxed;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextArea jTextAreaOutput;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField jTextFieldAlpha;
+    private javax.swing.JTextField jTextFieldLambda;
+    private javax.swing.JTextField jTextFieldMaxIterationsWithoutImprovement;
+    private javax.swing.JTextField jTextFieldMaxMIPSNodesForFeasibilityCheck;
+    private javax.swing.JTextField jTextFieldMaxSegments;
+    private javax.swing.JTextField jTextFieldMaxSegmentsWithoutImprovement;
+    private javax.swing.JTextField jTextFieldNumThreads;
+    private javax.swing.JTextField jTextFieldOutputFolderPath;
     private javax.swing.JTextField jTextFieldPsi0;
     private javax.swing.JTextField jTextFieldPsi1;
     private javax.swing.JTextField jTextFieldPsi2;
     private javax.swing.JTextField jTextFieldPsi3;
-    private javax.swing.JRadioButton radioALNS;
-    private javax.swing.JRadioButton radioMIPS;
-    private javax.swing.JRadioButton radioRelaxed;
+    private javax.swing.JTextField jTextFieldPunishmentForWorstSegmentHeuristics;
+    private javax.swing.JTextField jTextFieldQDelta;
+    private javax.swing.JTextField jTextFieldQStart;
+    private javax.swing.JTextField jTextFieldRewardForBestSegmentHeuristics;
+    private javax.swing.JTextField jTextFieldSegmentSize;
+    private javax.swing.JTextField jTextFieldTimeLimit;
+    private javax.swing.JTextField jTextFieldTimeLimitALNS;
+    private javax.swing.JTextField jTextFieldTimeLimitLocalSearch;
+    private solverController.OrienteeringPropertiesBean orienteeringPropertiesBean;
+    private solverController.ParametersBean parametersBean;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    
+    /**
+     * Updates the text in the status bar.
+     * @param statusText
+     */
+    private void updateStatusLabel(String statusText) {
+        jLabelStatus.setText(statusText);
+        jLabelStatus.updateUI();
+    }
+    
+    /**
+     * Updates the parameters bean with the latest version of the parameters in
+     * alnsPropertiesBean and orienteeringPropertiesBean.
+     * Necessary before parameter visualization/serialization.
+     */
+    private void updateParametersBean(){
+        parametersBean = new ParametersBean(orienteeringPropertiesBean, alnsPropertiesBean);
+    }
 }

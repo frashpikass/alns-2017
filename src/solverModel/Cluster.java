@@ -345,6 +345,12 @@ public class Cluster {
                 }
             }
         }
+        // Add the last streak ending on the last node (and still don't add empty streaks!)
+        if(!currStreak.isEmpty()){
+            // Save the previous streak if it's not empty and start a new one
+            streaks.add(currStreak);
+            currStreak = new Streak(vehicle, this);
+        }
         
         return streaks;
     }

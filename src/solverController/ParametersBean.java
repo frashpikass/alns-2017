@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import solverModel.ALNSPropertiesBean;
-import solverModel.OrienteeringPropertiesBean;
 
 /**
  *
@@ -88,6 +86,19 @@ public class ParametersBean implements Serializable {
     }
     
     /**
+     * Serialize this bean to a humanly readable JSON string.
+     * @return a humanly readable JSON string representing this bean
+     */
+    public String toJSON(){
+        // Create a new Gson object
+        // The setPrettyPrinting option should make the output file more humanly readable
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        // Serialize to JSON
+        String json = gson.toJson(this);
+        return json;
+    }
+    
+    /**
      * Serialize the current parameters bean to a json file.
      * The file name will be the one specified in the parameter <code>outputPath</code>.
      * @param outputPath path to the output file with parameters.
@@ -95,11 +106,8 @@ public class ParametersBean implements Serializable {
      */
     public void serializeToJSON(String outputPath)
             throws IOException{
-        // Create a new Gson object
-        // The setPrettyPrinting option should make the output file more humanly readable
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         // Serialize to JSON
-        String json = gson.toJson(this);
+        String json = this.toJSON();
         // Write to file
         try (FileWriter fw = new FileWriter(outputPath)) {
             fw.write(json);
@@ -116,7 +124,7 @@ public class ParametersBean implements Serializable {
             throws IOException{
         this.serializeToJSON(
             this.OrienteeringProperties.getOutputFolderPath()
-            + ParametersBean.OUTPUT_JSON_NAME
+            + "/"+ParametersBean.OUTPUT_JSON_NAME
         );
     }
     

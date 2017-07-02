@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 /**
  * Java Bean to hold all the properties and parameters for the ALNS optimizer.
+ *
  * @author Frash
  */
 public class ALNSPropertiesBean implements Serializable {
@@ -17,109 +18,113 @@ public class ALNSPropertiesBean implements Serializable {
      * Maximum size of the past history
      */
     private int maxHistorySize = 30;
-    
+
     /**
      * The starting value of q (degree of destruction)
      */
     private int qStart = 1;
-    
+
     /**
      * The increment of q at the end of every segment
      */
     private int qDelta = 5;
-    
+
     /**
      * Number of iterations in an optimization segment
      */
     private int segmentSize = 100;
-    
+
     /**
      * Maximum number of segments in an ALNS run
      */
     private long maxSegments = 1000;
-    
+
     /**
      * Number of segments without improvement before ALNS termination
      */
     private long maxSegmentsWithoutImprovement = 100;
-    
+
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useDestroyGreedyCostInsertion = true;
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useDestroyGreedyBestInsertion = true;
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useDestroyGreedyProfitInsertion = true;
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useDestroyRandomInsertion = true;
 
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useRepairHighCostRemoval = true;
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useRepairRandomRemoval = true;
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useRepairTravelTime = true;
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useRepairVehicleTime = true;
     /**
-     *  Determines whether to use this heuristic.
+     * Determines whether to use this heuristic.
      */
     private boolean useRepairWorstRemoval = true;
-    
+
     /**
-     * This is the decay parameter of the update process for heuristic method weights.
+     * This is the decay parameter of the update process for heuristic method
+     * weights.
      * <br>This value should be a double in the interval [0,1].
      * <br>Heuristic method weights are updated following the convex combination
      * <br> newWeight = lambda*oldWeight + (1-lambda)*psi
-     * <br>where psi is a value that indicates the relative score to give to an heuristic.
+     * <br>where psi is a value that indicates the relative score to give to an
+     * heuristic.
      */
     private double lambda = 0.5;
-    
+
     /**
      * This is the decay parameter of the update process for Temperature.
      * <br>This value should be a double in the interval [0,1].
      * <br>The temperature is updated at the end of every segment like
      * <br>newTemperature = alpha*oldTemperature
-     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make fluctuations
-     * in accepted solutions much stronger
+     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make
+     * fluctuations in accepted solutions much stronger
      */
     private double alpha = 0.85;
-    
+
     /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
      */
-    private long timeLimitALNS = 70;
-    
+    private long timeLimitALNS = 5;
+
     /**
      * Maximum runtime for the local search process (in seconds)
      */
     private long timeLimitLocalSearch = 90;
-    
+
     /**
-     * A scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
+     * A scaling factor that's applied to the weight of the best heuristics at
+     * the beginning of every segment
      */
     private double rewardForBestSegmentHeuristics = 1.5;
-    
+
     /**
-     * A scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
+     * A scaling factor that's applied to the weight of the worst heuristics at
+     * the beginning of every segment
      */
     private double punishmentForWorstSegmentHeuristics = 0.5;
-    
+
     /**
      * This constant holds the possible values of psi, the function that prizes
      * good heuristics and penalizes the bad ones.
@@ -127,32 +132,33 @@ public class ALNSPropertiesBean implements Serializable {
      * <br><tt>{3.0, 2.0, 1.0, 0.1}</tt>
      */
     public final static double[] DEFAULT_HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.0};
-    
+
     /**
-     * This constant holds the number of possible output values for function psi,
-     * the one that gives a score for every heuristic. It's used for debugging.
+     * This constant holds the number of possible output values for function
+     * psi, the one that gives a score for every heuristic. It's used for
+     * debugging.
      */
     public final static int NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES = 4;
-    
+
     /**
      * This parameters holds the values of psi, the function that prizes good
      * heuristics and penalizes the bad ones.
      */
     private double[] heuristicScores = DEFAULT_HEURISTIC_SCORES;
-    
+
     /**
      * Determines the maximum number of mips nodes to check before giving up a
      * feasibility check.
      */
     private double maxMIPSNodesForFeasibilityCheck = 5000;
-    
+
     /**
-     * Determines how many ALNS iterations without improvement should be accepted
-     * before the algorithm moves on to a new segment.
-     * Ideally it should be the same as the number of iterations per segment.
+     * Determines how many ALNS iterations without improvement should be
+     * accepted before the algorithm moves on to a new segment. Ideally it
+     * should be the same as the number of iterations per segment.
      */
     private int maxIterationsWithoutImprovement = 50;
-    
+
     /**
      * Empty constructor.
      */
@@ -161,6 +167,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Maximum size of the past history
+     *
      * @return the maxHistorySize
      */
     public int getMaxHistorySize() {
@@ -169,6 +176,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Maximum size of the past history
+     *
      * @param maxHistorySize the maxHistorySize to set
      */
     public void setMaxHistorySize(int maxHistorySize) {
@@ -177,6 +185,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * The starting value of q (degree of destruction)
+     *
      * @return the qStart
      */
     public int getqStart() {
@@ -185,6 +194,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * The starting value of q (degree of destruction)
+     *
      * @param qStart the qStart to set
      */
     public void setqStart(int qStart) {
@@ -193,6 +203,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * The increment of q at the end of every segment
+     *
      * @return the qDelta
      */
     public int getqDelta() {
@@ -201,6 +212,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * The increment of q at the end of every segment
+     *
      * @param qDelta the qDelta to set
      */
     public void setqDelta(int qDelta) {
@@ -209,6 +221,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Number of iterations in an optimization segment
+     *
      * @return the segmentSize
      */
     public int getSegmentSize() {
@@ -217,6 +230,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Number of iterations in an optimization segment
+     *
      * @param segmentSize the segmentSize to set
      */
     public void setSegmentSize(int segmentSize) {
@@ -225,6 +239,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Maximum number of segments in an ALNS run
+     *
      * @return the maxSegments
      */
     public long getMaxSegments() {
@@ -233,6 +248,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Maximum number of segments in an ALNS run
+     *
      * @param maxSegments the maxSegments to set
      */
     public void setMaxSegments(long maxSegments) {
@@ -241,6 +257,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Number of segments without improvement before ALNS termination
+     *
      * @return the maxSegmentsWithoutImprovement
      */
     public long getMaxSegmentsWithoutImprovement() {
@@ -249,7 +266,9 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Number of segments without improvement before ALNS termination
-     * @param maxSegmentsWithoutImprovement the maxSegmentsWithoutImprovement to set
+     *
+     * @param maxSegmentsWithoutImprovement the maxSegmentsWithoutImprovement to
+     * set
      */
     public void setMaxSegmentsWithoutImprovement(long maxSegmentsWithoutImprovement) {
         this.maxSegmentsWithoutImprovement = maxSegmentsWithoutImprovement;
@@ -257,6 +276,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useDestroyGreedyCostInsertion
      */
     public boolean isUseDestroyGreedyCostInsertion() {
@@ -265,7 +285,9 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
-     * @param useDestroyGreedyCostInsertion the useDestroyGreedyCostInsertion to set
+     *
+     * @param useDestroyGreedyCostInsertion the useDestroyGreedyCostInsertion to
+     * set
      */
     public void setUseDestroyGreedyCostInsertion(boolean useDestroyGreedyCostInsertion) {
         this.useDestroyGreedyCostInsertion = useDestroyGreedyCostInsertion;
@@ -273,6 +295,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useDestroyGreedyBestInsertion
      */
     public boolean isUseDestroyGreedyBestInsertion() {
@@ -281,7 +304,9 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
-     * @param useDestroyGreedyBestInsertion the useDestroyGreedyBestInsertion to set
+     *
+     * @param useDestroyGreedyBestInsertion the useDestroyGreedyBestInsertion to
+     * set
      */
     public void setUseDestroyGreedyBestInsertion(boolean useDestroyGreedyBestInsertion) {
         this.useDestroyGreedyBestInsertion = useDestroyGreedyBestInsertion;
@@ -289,6 +314,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useDestroyGreedyProfitInsertion
      */
     public boolean isUseDestroyGreedyProfitInsertion() {
@@ -297,7 +323,9 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
-     * @param useDestroyGreedyProfitInsertion the useDestroyGreedyProfitInsertion to set
+     *
+     * @param useDestroyGreedyProfitInsertion the
+     * useDestroyGreedyProfitInsertion to set
      */
     public void setUseDestroyGreedyProfitInsertion(boolean useDestroyGreedyProfitInsertion) {
         this.useDestroyGreedyProfitInsertion = useDestroyGreedyProfitInsertion;
@@ -305,6 +333,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useDestroyRandomInsertion
      */
     public boolean isUseDestroyRandomInsertion() {
@@ -313,6 +342,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @param useDestroyRandomInsertion the useDestroyRandomInsertion to set
      */
     public void setUseDestroyRandomInsertion(boolean useDestroyRandomInsertion) {
@@ -321,6 +351,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useRepairHighCostRemoval
      */
     public boolean isUseRepairHighCostRemoval() {
@@ -329,6 +360,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @param useRepairHighCostRemoval the useRepairHighCostRemoval to set
      */
     public void setUseRepairHighCostRemoval(boolean useRepairHighCostRemoval) {
@@ -337,6 +369,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useRepairRandomRemoval
      */
     public boolean isUseRepairRandomRemoval() {
@@ -345,6 +378,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @param useRepairRandomRemoval the useRepairRandomRemoval to set
      */
     public void setUseRepairRandomRemoval(boolean useRepairRandomRemoval) {
@@ -353,6 +387,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useRepairTravelTime
      */
     public boolean isUseRepairTravelTime() {
@@ -361,6 +396,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @param useRepairTravelTime the useRepairTravelTime to set
      */
     public void setUseRepairTravelTime(boolean useRepairTravelTime) {
@@ -369,6 +405,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useRepairVehicleTime
      */
     public boolean isUseRepairVehicleTime() {
@@ -377,6 +414,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @param useRepairVehicleTime the useRepairVehicleTime to set
      */
     public void setUseRepairVehicleTime(boolean useRepairVehicleTime) {
@@ -385,6 +423,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @return the useRepairWorstRemoval
      */
     public boolean isUseRepairWorstRemoval() {
@@ -393,6 +432,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Determines whether to use this heuristic.
+     *
      * @param useRepairWorstRemoval the useRepairWorstRemoval to set
      */
     public void setUseRepairWorstRemoval(boolean useRepairWorstRemoval) {
@@ -400,11 +440,14 @@ public class ALNSPropertiesBean implements Serializable {
     }
 
     /**
-     * This is the decay parameter of the update process for heuristic method weights.
+     * This is the decay parameter of the update process for heuristic method
+     * weights.
      * <br>This value should be a double in the interval [0,1].
      * <br>Heuristic method weights are updated following the convex combination
      * <br> newWeight = lambda*oldWeight + (1-lambda)*psi
-     * <br>where psi is a value that indicates the relative score to give to an heuristic.
+     * <br>where psi is a value that indicates the relative score to give to an
+     * heuristic.
+     *
      * @return the lambda
      */
     public double getLambda() {
@@ -412,18 +455,26 @@ public class ALNSPropertiesBean implements Serializable {
     }
 
     /**
-     * This is the decay parameter of the update process for heuristic method weights.
+     * This is the decay parameter of the update process for heuristic method
+     * weights.
      * <br>This value should be a double in the interval [0,1].
      * <br>Heuristic method weights are updated following the convex combination
      * <br> newWeight = lambda*oldWeight + (1-lambda)*psi
-     * <br>where psi is a value that indicates the relative score to give to an heuristic.
+     * <br>where psi is a value that indicates the relative score to give to an
+     * heuristic.
+     *
      * @param lambda the lambda to set
      */
     public void setLambda(double lambda) {
         // Lambda setup - values out of range [0,1] clip to range boundaries
-        if(lambda < 1.0) this.lambda = lambda;
-        else this.lambda = 1.0;
-        if(lambda < 0) this.lambda = 0.0;
+        if (lambda < 1.0) {
+            this.lambda = lambda;
+        } else {
+            this.lambda = 1.0;
+        }
+        if (lambda < 0) {
+            this.lambda = 0.0;
+        }
     }
 
     /**
@@ -431,8 +482,9 @@ public class ALNSPropertiesBean implements Serializable {
      * <br>This value should be a double in the interval [0,1].
      * <br>The temperature is updated at the end of every segment like
      * <br>newTemperature = alpha*Temperature
-     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make fluctuations
-     * in accepted solutions much stronger
+     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make
+     * fluctuations in accepted solutions much stronger
+     *
      * @return the alpha
      */
     public double getAlpha() {
@@ -444,20 +496,27 @@ public class ALNSPropertiesBean implements Serializable {
      * <br>This value should be a double in the interval [0,1].
      * <br>The temperature is updated at the end of every segment like
      * <br>newTemperature = alpha*Temperature
-     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make fluctuations
-     * in accepted solutions much stronger
+     * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make
+     * fluctuations in accepted solutions much stronger
+     *
      * @param alpha the alpha to set
      */
     public void setAlpha(double alpha) {
         // Alpha setup - values out of range [0,1] clip to values close to range boundaries
         // we want the temperature to always decrease if not explicitly stated otherwise
-        if(alpha < 1.0) this.alpha = alpha;
-        else this.lambda = 1.0;
-        if(lambda < 0) this.lambda = 0.0;
+        if (alpha < 1.0) {
+            this.alpha = alpha;
+        } else {
+            this.lambda = 1.0;
+        }
+        if (lambda < 0) {
+            this.lambda = 0.0;
+        }
     }
 
     /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
+     *
      * @return the timeLimitALNS
      */
     public long getTimeLimitALNS() {
@@ -466,6 +525,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
+     *
      * @param timeLimitALNS the timeLimitALNS to set
      */
     public void setTimeLimitALNS(long timeLimitALNS) {
@@ -474,6 +534,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Maximum runtime for the local search process (in seconds)
+     *
      * @return the timeLimitLocalSearch
      */
     public long getTimeLimitLocalSearch() {
@@ -482,6 +543,7 @@ public class ALNSPropertiesBean implements Serializable {
 
     /**
      * Maximum runtime for the local search process (in seconds)
+     *
      * @param timeLimitLocalSearch the timeLimitLocalSearch to set
      */
     public void setTimeLimitLocalSearch(long timeLimitLocalSearch) {
@@ -489,7 +551,9 @@ public class ALNSPropertiesBean implements Serializable {
     }
 
     /**
-     * A scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
+     * A scaling factor that's applied to the weight of the best heuristics at
+     * the beginning of every segment
+     *
      * @return the rewardForBestSegmentHeuristics
      */
     public double getRewardForBestSegmentHeuristics() {
@@ -497,15 +561,20 @@ public class ALNSPropertiesBean implements Serializable {
     }
 
     /**
-     * A scaling factor that's applied to the weight of the best heuristics at the beginning of every segment
-     * @param rewardForBestSegmentHeuristics the rewardForBestSegmentHeuristics to set
+     * A scaling factor that's applied to the weight of the best heuristics at
+     * the beginning of every segment
+     *
+     * @param rewardForBestSegmentHeuristics the rewardForBestSegmentHeuristics
+     * to set
      */
     public void setRewardForBestSegmentHeuristics(double rewardForBestSegmentHeuristics) {
         this.rewardForBestSegmentHeuristics = rewardForBestSegmentHeuristics;
     }
 
     /**
-     * A scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
+     * A scaling factor that's applied to the weight of the worst heuristics at
+     * the beginning of every segment
+     *
      * @return the punishmentForWorstSegmentHeuristics
      */
     public double getPunishmentForWorstSegmentHeuristics() {
@@ -513,8 +582,11 @@ public class ALNSPropertiesBean implements Serializable {
     }
 
     /**
-     * A scaling factor that's applied to the weight of the worst heuristics at the beginning of every segment
-     * @param punishmentForWorstSegmentHeuristics the punishmentForWorstSegmentHeuristics to set
+     * A scaling factor that's applied to the weight of the worst heuristics at
+     * the beginning of every segment
+     *
+     * @param punishmentForWorstSegmentHeuristics the
+     * punishmentForWorstSegmentHeuristics to set
      */
     public void setPunishmentForWorstSegmentHeuristics(double punishmentForWorstSegmentHeuristics) {
         this.punishmentForWorstSegmentHeuristics = punishmentForWorstSegmentHeuristics;
@@ -523,6 +595,7 @@ public class ALNSPropertiesBean implements Serializable {
     /**
      * This parameters holds the values of psi, the function that prizes good
      * heuristics and penalizes the bad ones.
+     *
      * @return the heuristicScores
      */
     public double[] getHeuristicScores() {
@@ -532,6 +605,7 @@ public class ALNSPropertiesBean implements Serializable {
     /**
      * This parameters holds the values of psi, the function that prizes good
      * heuristics and penalizes the bad ones.
+     *
      * @param heuristicScores the heuristicScores to set
      */
     public void setHeuristicScores(double[] heuristicScores) {
@@ -541,6 +615,7 @@ public class ALNSPropertiesBean implements Serializable {
     /**
      * Determines the maximum number of mips nodes to check before giving up a
      * feasibility check.
+     *
      * @return the maxMIPSNodesForFeasibilityCheck
      */
     public double getMaxMIPSNodesForFeasibilityCheck() {
@@ -550,16 +625,19 @@ public class ALNSPropertiesBean implements Serializable {
     /**
      * Determines the maximum number of mips nodes to check before giving up a
      * feasibility check.
-     * @param maxMIPSNodesForFeasibilityCheck the maxMIPSNodesForFeasibilityCheck to set
+     *
+     * @param maxMIPSNodesForFeasibilityCheck the
+     * maxMIPSNodesForFeasibilityCheck to set
      */
     public void setMaxMIPSNodesForFeasibilityCheck(double maxMIPSNodesForFeasibilityCheck) {
         this.maxMIPSNodesForFeasibilityCheck = maxMIPSNodesForFeasibilityCheck;
     }
 
     /**
-     * Determines how many ALNS iterations without improvement should be accepted
-     * before the algorithm moves on to a new segment.
-     * Ideally it should be the same as the number of iterations per segment.
+     * Determines how many ALNS iterations without improvement should be
+     * accepted before the algorithm moves on to a new segment. Ideally it
+     * should be the same as the number of iterations per segment.
+     *
      * @return the maxIterationsWithoutImprovement
      */
     public int getMaxIterationsWithoutImprovement() {
@@ -567,10 +645,12 @@ public class ALNSPropertiesBean implements Serializable {
     }
 
     /**
-     * Determines how many ALNS iterations without improvement should be accepted
-     * before the algorithm moves on to a new segment.
-     * Ideally it should be the same as the number of iterations per segment.
-     * @param maxIterationsWithoutImprovement the maxIterationsWithoutImprovement to set
+     * Determines how many ALNS iterations without improvement should be
+     * accepted before the algorithm moves on to a new segment. Ideally it
+     * should be the same as the number of iterations per segment.
+     *
+     * @param maxIterationsWithoutImprovement the
+     * maxIterationsWithoutImprovement to set
      */
     public void setMaxIterationsWithoutImprovement(int maxIterationsWithoutImprovement) {
         this.maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;

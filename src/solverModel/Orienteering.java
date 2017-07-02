@@ -5,6 +5,8 @@
  */
 package solverModel;
 
+import solverController.OrienteeringPropertiesBean;
+import solverController.ALNSPropertiesBean;
 import gurobi.*;
 //import java.io.File;
 //import java.io.FileInputStream;
@@ -19,14 +21,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingWorker;
+import solverController.Controller;
+import solverController.Controller.Solvers;
+import solverController.OptimizationStatusMessage;
 
 /**
  * Class to solve an instance of the Orienteering problem.
  * It offers a static main method to run.
  * @author Frash
  */
-public class Orienteering
-        implements Serializable
+public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage>
 {
     /**
      * A Javabean that holds all general parameters for an Orienteering solver.
@@ -322,6 +327,8 @@ public class Orienteering
             
             this.env.set(GRB.DoubleParam.TimeLimit, orienteeringProperties.getTimeLimit());
             this.env.set(GRB.IntParam.Threads, orienteeringProperties.getNumThreads());
+            this.env.set(GRB.IntParam.LogToConsole, 1);
+            this.env.set(GRB.IntParam.OutputFlag, 1);
             
             this.model = new GRBModel(this.env);
             
@@ -788,16 +795,7 @@ public class Orienteering
                 o.optimizeMIPS();
             }
             else if(solutionType == SOLVE_ALNS){
-                ALNSPropertiesBean apb = new ALNSPropertiesBean();
-                
-                // Use all heuristics for testing purposes
-                ALNS a = new ALNS(
-                        o,
-                        apb
-                );
-                
-                // Optimize the model with ALNS
-                a.optimize();
+                // Use the controller to test ALNS!
             }
             // Dispose of all used variables
             o.cleanup();
@@ -1157,4 +1155,9 @@ public class Orienteering
 //        
 //        return output;
 //    }
+
+    @Override
+    protected Boolean doInBackground() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -16,9 +16,9 @@ public class OptimizationStatusMessage {
     private String instancePath;
     
     /**
-     * Current progress (a double between [0,1])
+     * Current progress (integer between 0 and 100)
      */
-    private double progress;
+    private int progress;
     
     /**
      * Currently elapsed time
@@ -38,12 +38,12 @@ public class OptimizationStatusMessage {
     /**
      * Constructor.
      * @param instancePath Path to the instance currently being solved
-     * @param progress Current progress (a double between [0,1])
+     * @param progress Current progress (an in between [0,100])
      * @param elapsedTime Currently elapsed time
      */
     public OptimizationStatusMessage(
             String instancePath,
-            double progress,
+            int progress,
             double elapsedTime){
         this.instancePath = instancePath;
         this.progress = progress;
@@ -55,12 +55,14 @@ public class OptimizationStatusMessage {
     /**
      * Constructor.
      * @param instancePath Path to the instance currently being solved
-     * @param progress Current progress (a double between [0,1])
+     * @param progress Current progress (an int between [0,100])
      * @param elapsedTime Currently elapsed time
+     * @param instanceNumber number of the instance in the batch
+     * @param batchSize size of the batch
      */
     public OptimizationStatusMessage(
             String instancePath,
-            double progress,
+            int progress,
             double elapsedTime,
             int instanceNumber,
             int batchSize){
@@ -73,20 +75,23 @@ public class OptimizationStatusMessage {
 
     /**
      * Path to the instance currently being solved
+     * @return Path to the instance currently being solved
      */
     public String getInstancePath() {
         return instancePath;
     }
     
     /**
-     * Current progress (a double between [0,1])
+     * Current progress (an int between [0,100])
+     * @return current progress
      */
-    public double getProgress() {
+    public int getProgress() {
         return progress;
     }
     
     /**
      * Currently elapsed time
+     * @return Currently elapsed time
      */
     public double getElapsedTime() {
         return elapsedTime;
@@ -94,6 +99,7 @@ public class OptimizationStatusMessage {
     
     /**
      * Number of the instance in the batch
+     * @return Number of the instance in the batch
      */
     public int getInstanceNumber() {
         return instanceNumber;
@@ -101,13 +107,13 @@ public class OptimizationStatusMessage {
 
     /**
      * Size of the batch
+     * @return Size of the batch
      */
     public int getBatchSize() {
         return batchSize;
     }
     
-    
-    
-    
-    
+    public String toString(){
+        return elapsedTime+"s: Current Instance '"+instancePath+"' @ "+progress+"%, batch "+instanceNumber+"/"+batchSize+" done";
+    }
 }

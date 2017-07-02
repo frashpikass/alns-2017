@@ -9,6 +9,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -16,8 +18,10 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.ToolTipManager;
 import solverModel.ALNS;
 import solverModel.Orienteering;
+import solverView.MainWindow;
 
 /**
  * A Controller class to solve batches of orienteering problem instances using
@@ -44,6 +48,12 @@ public class Controller
      * Reference to the current ALNS task being solved
      */
     private ALNS currentALNS;
+    
+    /**
+     * The outputstream where we want to print all the result.
+     * If null, the default one will be used.
+     */
+    private OutputStream stdoutStream=null;
 
     @Override
     protected Void doInBackground() throws Exception {
@@ -72,10 +82,10 @@ public class Controller
                 currentALNS.get();
             }
             catch(InterruptedException e){
-                System.out.println("ALNS was interrupted: "+e.getMessage());
+                System.out.println("Controller - ALNS was interrupted: "+e.getMessage());
             }
             catch(ExecutionException e){
-                System.out.println("What happened to ALNS? "+e.getMessage());
+                System.out.println("Controller - ALNS has thrown ExecutionException: "+e.getMessage());
             }
             
             // Update the batch number
@@ -139,70 +149,105 @@ public class Controller
      * @param opb Javabean that holds all general parameters for an Orienteering solver
      * @param apb Javabean that holds all ALNS parameters 
      * @param solver the solver to use with this controller
+     * @param stdoutStream the output stream where output should be printed to. If <code>null</code>, the default will be used.
      */
     public Controller(
             List<String> modelPaths,
             OrienteeringPropertiesBean opb,
             ALNSPropertiesBean apb,
-            Solvers solver
+            Solvers solver,
+            OutputStream stdoutStream
     ){
         // Setup all parameters
         pb = new ParametersBean(opb, apb);
-        this.modelPaths = modelPaths;        
+        this.modelPaths = modelPaths;
         this.solver = solver;
-        
+        if(stdoutStream != null){
+            this.stdoutStream = stdoutStream;
+            System.setOut(new PrintStream(stdoutStream));
+            System.setErr(new PrintStream(stdoutStream));
+        }
     }
+    
+    /**
+     * Gets the outputstream used by the controller.
+     * @return the outputstream used by the controller, <code>null</code> if the default stream is being used.
+     */
+    public OutputStream getStdoutStream() {
+        return stdoutStream;
+    }
+    
+    
     
     /**
      * Constructor for the controller class.
      * @param modelPaths list of model paths to solve in a batch
      * @param pb Javabean that holds all solver parameters
      * @param solver the solver to use with this controller
+     * @param stdoutStream the output stream where output should be printed to. If <code>null</code>, the default will be used.
      */
     public Controller(
             List<String> modelPaths,
             ParametersBean pb,
-            Solvers solver
+            Solvers solver,
+            OutputStream stdoutStream
     ){
         this.pb = pb;
         this.modelPaths = modelPaths;
         this.solver = solver;
+        if(stdoutStream != null){
+            this.stdoutStream = stdoutStream;
+            System.setOut(new PrintStream(stdoutStream));
+            System.setErr(new PrintStream(stdoutStream));
+        }
     }
 
     public static void main(String[] args) throws Exception {
+        
+        /*
+        MainWindow mw = new MainWindow();
+        System.setOut(new PrintStream(mw.getTextAreaOutputStream()));
+        System.setErr(new PrintStream(mw.getTextAreaOutputStream()));
+        
+        mw.openWindow(args);
+        /*
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                MainWindow mw = new MainWindow();
+                // Set the title
+                mw.setTitle("ALNS Solver v1.0 (GUI mode)");
+                
+                // Make the window appear
+                mw.setVisible(true);
+                
+                // Make tooltips appear faster and last longer
+                ToolTipManager.sharedInstance().setInitialDelay(250);
+                ToolTipManager.sharedInstance().setDismissDelay(15000);
+            }
+        });
+        */
         // TEST
         List<String> modelPaths = new ArrayList<>();
         modelPaths.add("Instance0.txt");
         
         Controller c = new Controller(
                 modelPaths,
-                new OrienteeringPropertiesBean(),
-                new ALNSPropertiesBean(),
-                Solvers.SOLVE_ALNS
+                new ParametersBean(),
+                Solvers.SOLVE_ALNS,
+                null
         );
-        
-        /*
-        c.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if("messageFromALNS".equals(evt.getPropertyName())){
-                    Controller c = (Controller) evt.getSource();
-                    c.messageReceived();
-                }
-            }
-        });
-        */
-        //SwingUtilities.invokeLater(c);
         c.execute();
         try{
             c.get();
         }
         catch(InterruptedException e){
-            System.out.println("Optimization interrupted. "+e.getMessage());
+            System.out.println("Controller Main - Optimization interrupted: "+e.getMessage());
         }
         catch(ExecutionException e){
-            System.out.println("Hmm... "+e.getMessage());
+            System.out.println("ControllerMain - ExecutionException: "+e.getMessage());
         }
+        
+        
     }
     
     /**
@@ -266,23 +311,11 @@ public class Controller
                     this
             );
             
-            // Pick a solver and apply it
-            switch(solver){
-                case SOLVE_RELAXED:
-                    a.optimizeRelaxed();
-                    break;
-                
-                case SOLVE_MIPS:
-                    a.optimizeMIPS();
-                    break;
-                
-                case SOLVE_ALNS:
-                    a.optimizeALNS();
-                    break;
-            }
+            // ALNS object will automatically pick a solver and apply it
+            a.optimize();
             
             // Free memory occupied by Gurobi models
-            o.cleanup();
+            a.cleanup();
         }
     }
     
@@ -332,8 +365,9 @@ public class Controller
     
     @Override
     protected void process(List<OptimizationStatusMessage> messages){
-        if(messages != null && !messages.isEmpty())
-            System.out.println("Message from ALNS: "+messages.get(messages.size()-1)); // DEBUG
+        if(messages != null && !messages.isEmpty()){
+            //System.out.println("Message from ALNS: "+messages.get(messages.size()-1)); // DEBUG
         // here I should update the progress bar and the label in the gui
+        }
     }
 }

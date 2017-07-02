@@ -5,6 +5,7 @@
  */
 package solverModel;
 
+import solverController.ALNSPropertiesBean;
 import com.opencsv.CSVWriter;
 import gurobi.GRB;
 import gurobi.GRBCallback;
@@ -26,6 +27,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import solverController.Controller;
+import solverController.Controller.Solvers;
+import solverController.OptimizationStatusMessage;
 
 /**
  * A class to solve an orienteering problem using the ALNS heuristic
@@ -89,10 +93,17 @@ public class ALNS extends Orienteering{
      */
     private ObjectDistribution<BiFunction<List<Cluster>,Integer,List<Cluster>>> repairMethods;
     
-    public ALNS(Orienteering o, ALNSPropertiesBean ALNSParams) throws Exception {
+    /**
+     * The controller to notfy of eventual changes
+     */
+    private Controller controller;
+    
+    public ALNS(Orienteering o, ALNSPropertiesBean ALNSParams, Controller c) throws Exception {
         super(o);
         this.ALNSProperties = ALNSParams;
         // Keeping track of all implemented repair and destroy methods
+        
+        this.controller = c;
         
         destroyMethods = new ObjectDistribution<>();
         
@@ -361,7 +372,7 @@ public class ALNS extends Orienteering{
      * returned.
      * @throws Exception if anything goes wrong
      */
-    public void optimize() throws Exception {
+    public void optimizeALNS() throws Exception {
         
         // Setup the Excel logger
         ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
@@ -547,6 +558,7 @@ public class ALNS extends Orienteering{
                     };
 //                    logger.writeNext(logLine);
                     xlsxLogger.writeRow(logLine);
+                    notifyController(elapsedTime);
                     
                     // Update heuristic weights
                     updateHeuristicMethodsWeight(destroyMethod,
@@ -591,6 +603,7 @@ public class ALNS extends Orienteering{
                 
                 // Anyway, if the solution is better than the current best for the segment
                 // save it as xBest, and its objective value in bestObjectiveValue
+                solutionIsNewGlobalOptimum = newObjectiveValue > bestObjectiveValue;
                 if(newObjectiveValue >= bestObjectiveValue){ // DEBUG: I changed > to >= to accept even different solutions with the same value for a change
                     xBest = xNew;
                     bestObjectiveValue = newObjectiveValue;
@@ -598,8 +611,7 @@ public class ALNS extends Orienteering{
                     // that would give unnecessary importance to the first heuristic chosen
                     
                     // The solution is a new global optimum only if there was a real improvement
-                    if(newObjectiveValue > bestObjectiveValue){
-                        solutionIsNewGlobalOptimum = true;
+                    if(solutionIsNewGlobalOptimum){
                         iterationsWithoutImprovement = 0;
                     }
                     else iterationsWithoutImprovement++;
@@ -652,6 +664,7 @@ public class ALNS extends Orienteering{
                 };
 //                logger.writeNext(logLine);
                 xlsxLogger.writeRow(logLine);
+                notifyController(elapsedTime);
                 
                 // Update the heuristic weights
                 updateHeuristicMethodsWeight(
@@ -726,6 +739,7 @@ public class ALNS extends Orienteering{
             };
 //            logger.writeNext(logLineSegmentEnd);
             xlsxLogger.writeRow(logLineSegmentEnd);
+            notifyController(elapsedTime);
             
             // Reset the StringBuffer that logs the reason why a segment has ended
             segmentEndCause = new StringBuffer();
@@ -779,6 +793,7 @@ public class ALNS extends Orienteering{
             };
 //            logger.writeNext(logLine);
             xlsxLogger.writeRow(logLine);
+            notifyController(elapsedTime);
             
             // Prepare solutions for the next segment
             xOld = xBestInSegments;
@@ -807,12 +822,23 @@ public class ALNS extends Orienteering{
         
         // Close the excel logger gracefully
         xlsxLogger.close();
+        notifyController(elapsedTime);
         
         // Final test to set variables in the model and log vehicle paths
         testSolution(xBestInSegments, true);
         
         // Save the solution to file
         super.writeSolution();
+    }
+    
+    /**
+     * Calculate an integer estimate of the progress of the solver run
+     * @param elapsedTime
+     * @return an integer between [0,100] representing what percent of the solver run has been completed
+     */
+    private int progressEstimate(long elapsedTime){
+        int ret = Math.min((int) Math.round(((double)elapsedTime/(double)ALNSProperties.getTimeLimitALNS())*100.0), 100);
+        return ret;
     }
     
     /**
@@ -849,8 +875,10 @@ public class ALNS extends Orienteering{
      * @param newObjectiveValue new value of the objective function, obtained through the new solution
      * @param temperature a weighting parameter which should be made slowly decreasing by the caller
      * @return <tt>true</tt> if the new solution is accepted.
+     * @throws GRBException if there are problems with sending Gurobi environment messages.
      */
-    private boolean acceptSolution(double oldObjectiveValue, double newObjectiveValue, double temperature){
+    private boolean acceptSolution(double oldObjectiveValue, double newObjectiveValue, double temperature)
+            throws GRBException{
         /**
          * The following text defines simulated annealing for a minimum problem
          * 
@@ -895,7 +923,14 @@ public class ALNS extends Orienteering{
          * If the solution is worse
          *  DIFF<0 and 0 < P=exp(DIFF/T) < 1 => the solution is accepted with probability P
          */
-        return r.nextDouble() < Math.exp( (newObjectiveValue - oldObjectiveValue)/temperature);
+        if(r.nextDouble() < Math.exp( (newObjectiveValue - oldObjectiveValue)/temperature)){
+            env.message("\nSolution accepted!\n");
+            return true;
+        }
+        else{
+            env.message("\nSolution rejected!\n");
+            return false;
+        }
     }
     
     // DESTROY HEURISTICS
@@ -1206,7 +1241,7 @@ public class ALNS extends Orienteering{
                 // debug
                 else try {
                     env.message("Error in repairVehicleTime heuristic!\n"
-                            + "No serving vehicle found for first cluster "+firstClusterRemoved.getId());
+                            + "No serving vehicle found for first cluster "+firstClusterRemoved.getId()+"\n");
                 } catch (GRBException ex) {
                     Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1643,6 +1678,16 @@ public class ALNS extends Orienteering{
         return sb.toString();
     }
     
+    /**
+     * Perform a local search run.
+     * @param inputSolution the solution to start the local search from
+     * @param elapsedTime how long the solver has been working on the ALNS for
+     * @param timeLimitForLocalSearch how much time we should spend in the local search
+     * @param segmentsWithoutImprovement how many segments without improvement have there been before the local search started
+     * @return the solution computed by the local search
+     * @throws GRBException if there are problems handling Gurobi objects
+     * @throws Exception if there are other problems
+     */
     private List<Cluster> localSearch(
             List<Cluster> inputSolution,
             long elapsedTime,
@@ -1698,7 +1743,7 @@ public class ALNS extends Orienteering{
                 // model.setCallback(new localSearchCallback(timeLimitForLocalSearch));
                 toSolve.set(GRB.DoubleParam.TimeLimit, (double) timeLimitForLocalSearch);
                 
-                // Update and optimize
+                // Update and optimizeALNS
                 toSolve.update();
                 toSolve.optimize();
                 
@@ -1726,6 +1771,57 @@ public class ALNS extends Orienteering{
         // come loaded with the new solution
         this.testSolution(output, true);
         return output;
+    }
+    
+    @Override
+    protected Boolean doInBackground() throws Exception {
+        try{
+            if(null != controller.getSolver())switch (controller.getSolver()) {
+                case SOLVE_RELAXED:
+                    this.optimizeRelaxed();
+                    break;
+                case SOLVE_MIPS:
+                    this.optimizeMIPS();
+                    break;
+                case SOLVE_ALNS:
+                    this.optimizeALNS();
+                    break;
+                default:
+                    break;
+            }
+        }
+        catch(InterruptedException e){
+            this.cleanup();
+        }
+        return true;
+    }
+    
+    /**
+     * Notify the controller of current solver progress
+     * @param osm 
+     */
+    protected void notifyController(long elapsedTime){
+        this.setProgress(progressEstimate(elapsedTime));
+        OptimizationStatusMessage osm = new OptimizationStatusMessage(
+                instance.getName(),
+                this.getProgress(),
+                elapsedTime);
+        //publish(osm);
+        controller.setMessageFromALNS(osm);
+    }
+    
+    @Override
+    protected void process(List<OptimizationStatusMessage> messages){
+        if(messages != null && messages.size() != 0){
+            
+        }
+    }
+    
+    @Override
+    public void done(){
+        if(this.getState() == StateValue.DONE){
+            notifyController(this.ALNSProperties.getTimeLimitALNS());
+        }
     }
 } // end of class ALNS
 

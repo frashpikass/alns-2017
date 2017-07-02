@@ -8,6 +8,7 @@ package solverModel;
 import solverController.OrienteeringPropertiesBean;
 import solverController.ALNSPropertiesBean;
 import gurobi.*;
+import java.io.File;
 //import java.io.File;
 //import java.io.FileInputStream;
 //import java.io.FileNotFoundException;
@@ -21,10 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import solverController.Controller;
 import solverController.Controller.Solvers;
+import solverController.LogRedirector;
 import solverController.OptimizationStatusMessage;
+import sun.rmi.log.ReliableLog;
 
 /**
  * Class to solve an instance of the Orienteering problem.
@@ -93,6 +97,11 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * Path to the model file to read
      */
     private String modelPath;
+    
+    /**
+     * Redirects the output of the log file to console
+     */
+    protected LogRedirector logRedirector;
 
     public GRBVar[][][] getX() {
         return x;
@@ -223,6 +232,9 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.constraint8 = new ArrayList<>();
         this.constraint8Variables = new ArrayList<>();
         
+        // Redirect the log to stdout
+        this.logRedirector = new LogRedirector(logFilePath);
+        
         // Go for preprocessing
         instancePreprocessing();
     }
@@ -263,6 +275,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.x = o.getX();
         this.y = o.getY();
         this.z = o.getZ();
+        this.logRedirector = o.logRedirector;
     }
     
 //    /**
@@ -323,13 +336,16 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     private void setupEnvironment(String logname) throws Exception
     {
         try {
+            // Start redirecting the log to the output
+            logRedirector.execute();
+            //SwingUtilities.invokeLater(logRedirector);
+            
             this.env = new GRBEnv(logname);
             
             this.env.set(GRB.DoubleParam.TimeLimit, orienteeringProperties.getTimeLimit());
             this.env.set(GRB.IntParam.Threads, orienteeringProperties.getNumThreads());
-            this.env.set(GRB.IntParam.LogToConsole, 1);
+            this.env.set(GRB.IntParam.LogToConsole, 0);
             this.env.set(GRB.IntParam.OutputFlag, 1);
-            
             this.model = new GRBModel(this.env);
             
             // Some useful constants for constraint definition

@@ -15,6 +15,7 @@ import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
 import java.io.FileWriter;
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -98,6 +99,11 @@ public class ALNS extends Orienteering{
      */
     private Controller controller;
     
+    /**
+     * Time elapsed since the beginning of the optimization process
+     */
+    private long elapsedTime = 0;
+    
     public ALNS(Orienteering o, ALNSPropertiesBean ALNSParams, Controller c) throws Exception {
         super(o);
         this.ALNSProperties = ALNSParams;
@@ -119,6 +125,12 @@ public class ALNS extends Orienteering{
         repairMethods.add(this::repairTravelTime, ALNSParams.isUseRepairTravelTime(), "TravelTime");
         repairMethods.add(this::repairVehicleTime, ALNSParams.isUseRepairVehicleTime(), "VehicleTime");
         repairMethods.add(this::repairWorstRemoval, ALNSParams.isUseRepairWorstRemoval(), "WorstRemoval");
+        
+        // Redirect stdout and stderr to the controller
+        if(controller != null && controller.getStdoutStream() != null){
+            System.setOut(new PrintStream(controller.getStdoutStream()));
+            System.setErr(new PrintStream(controller.getStdoutStream()));
+        }
     }
     
     /**
@@ -354,6 +366,33 @@ public class ALNS extends Orienteering{
     }
     
     /**
+     * Automatically picks a solver from the controller selection, and optimizes
+     * the current model using it.
+     * @throws gurobi.GRBException
+     * @throws Exception 
+     */
+    public void optimize() throws GRBException, Exception{
+        if(controller.getSolver() != null){
+            switch(controller.getSolver()){
+                case SOLVE_RELAXED:
+                    optimizeRelaxed();
+                    break;
+                
+                case SOLVE_MIPS:
+                    optimizeMIPS();
+                    break;
+                
+                case SOLVE_ALNS:
+                    optimizeALNS();
+                    break;
+                default:
+                    env.message("ALNS optimize() error: null solver\n");
+                    break;
+            }
+        }
+    }
+    
+    /**
      * Run the ALNS optimization on the current Orienteering problem.
      * <br>At the beginning a feasible solution is created by a constructive method.
      * <br>Then, until a stopping criterion is met, a cycle will test different
@@ -438,7 +477,7 @@ public class ALNS extends Orienteering{
         
         // Setup of stopping criterions and time management
         // Elapsed time in seconds
-        long elapsedTime = 0;
+        elapsedTime = 0;
         long startTimeInNanos = System.nanoTime();
         
         // Keeping track of how many segments of iterations have been performed
@@ -1776,29 +1815,24 @@ public class ALNS extends Orienteering{
     @Override
     protected Boolean doInBackground() throws Exception {
         try{
-            if(null != controller.getSolver())switch (controller.getSolver()) {
-                case SOLVE_RELAXED:
-                    this.optimizeRelaxed();
-                    break;
-                case SOLVE_MIPS:
-                    this.optimizeMIPS();
-                    break;
-                case SOLVE_ALNS:
-                    this.optimizeALNS();
-                    break;
-                default:
-                    break;
-            }
+            this.optimize();
         }
         catch(InterruptedException e){
-            this.cleanup();
+            env.message("Optimization interrupted by user.\n");
         }
+        finally{
+            this.cleanup();
+            if(logRedirector == null) System.out.println("Logredirector is null!");
+            //logRedirector.finish();
+            logRedirector.cancel(true);
+        }
+        
         return true;
     }
     
     /**
      * Notify the controller of current solver progress
-     * @param osm 
+     * @param elapsedTime time elapsed since the start of the current solver process
      */
     protected void notifyController(long elapsedTime){
         this.setProgress(progressEstimate(elapsedTime));
@@ -1820,8 +1854,19 @@ public class ALNS extends Orienteering{
     @Override
     public void done(){
         if(this.getState() == StateValue.DONE){
-            notifyController(this.ALNSProperties.getTimeLimitALNS());
+            notifyController(elapsedTime);
         }
+        /*
+        try {
+            boolean cancelLogRedir = this.logRedirector.cancel(true);
+            env.message("Did you close the logger door? "+cancelLogRedir+"\n");
+        } catch (GRBException ex) {
+            Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch(Exception e){
+            System.out.println("Strange error happened: "+e.getMessage());
+        }
+        */
     }
 } // end of class ALNS
 

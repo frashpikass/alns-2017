@@ -28,19 +28,26 @@ import javax.swing.ToolTipManager;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
 import solverController.ParametersBean;
+import solverController.SmartScroller;
 
 /**
  *
  * @author Frash
  */
 public class MainWindow extends javax.swing.JFrame {
-
+    /**
+     * Pointer to the task at hand
+     */
+    private Controller task=null;
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
         redirectSystemStreams();
+        
+        // Setup a smart scroller on the output text area
+        new SmartScroller(jScrollPaneTextAreaOutput);
     }
 
     /**
@@ -150,7 +157,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelOutput = new javax.swing.JPanel();
         jButtonStop = new javax.swing.JButton();
         jButtonSaveOutput = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPaneTextAreaOutput = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
         jButtonReset = new javax.swing.JButton();
         jPanelStatusBar = new javax.swing.JPanel();
@@ -1109,7 +1116,8 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelOutput.add(jButtonSaveOutput, gridBagConstraints);
 
-        jScrollPane1.setBackground(new java.awt.Color(0, 51, 102));
+        jScrollPaneTextAreaOutput.setBackground(new java.awt.Color(0, 51, 102));
+        jScrollPaneTextAreaOutput.setAutoscrolls(true);
 
         jTextAreaOutput.setEditable(false);
         jTextAreaOutput.setBackground(new java.awt.Color(0, 0, 102));
@@ -1119,10 +1127,11 @@ public class MainWindow extends javax.swing.JFrame {
         jTextAreaOutput.setRows(8);
         jTextAreaOutput.setTabSize(4);
         jTextAreaOutput.setToolTipText(null);
+        jTextAreaOutput.setAutoscrolls(false);
         jTextAreaOutput.setMargin(new java.awt.Insets(5, 7, 5, 7));
         jTextAreaOutput.setSelectedTextColor(new java.awt.Color(255, 255, 153));
         jTextAreaOutput.setSelectionColor(new java.awt.Color(102, 0, 102));
-        jScrollPane1.setViewportView(jTextAreaOutput);
+        jScrollPaneTextAreaOutput.setViewportView(jTextAreaOutput);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1135,7 +1144,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
-        jPanelOutput.add(jScrollPane1, gridBagConstraints);
+        jPanelOutput.add(jScrollPaneTextAreaOutput, gridBagConstraints);
 
         jButtonReset.setText("Reset");
         jButtonReset.addActionListener(new java.awt.event.ActionListener() {
@@ -1318,9 +1327,15 @@ public class MainWindow extends javax.swing.JFrame {
             
             
             // Setup a new instance of controller
-            Controller task = new Controller(modelPaths, parametersBean, solver, jProgressBar1, jLabelStatus);
+            task = new Controller(modelPaths,
+                    orienteeringPropertiesBean,
+                    alnsPropertiesBean,
+                    solver,
+                    textAreaOutputStream
+            );
             task.execute();
             
+            /*
             // Now it's done. Let's re-enable controls
             // Re-enable all control windows
             enableComponents(jPanelControls, true);
@@ -1332,6 +1347,7 @@ public class MainWindow extends javax.swing.JFrame {
             
             // Update the status label
             updateStatusLabel("Done! Ready.");
+            */
         }
         else{
             updateStatusLabel("No instances to solve! Ready.");
@@ -1411,6 +1427,11 @@ public class MainWindow extends javax.swing.JFrame {
     private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
         // TODO add your handling code here:
         
+        // Kill the controller thread
+        if(task != null){
+            task.cancel(true);
+        }
+        
         // Re-enable the control panel
         enableComponents(jPanelControls, true);
         
@@ -1435,10 +1456,7 @@ public class MainWindow extends javax.swing.JFrame {
         // Update the status text
         updateStatusLabel("Ready.");
     }//GEN-LAST:event_jButtonResetActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1480,6 +1498,39 @@ public class MainWindow extends javax.swing.JFrame {
         });
         
         /* Redirects system streams to jTextAreaOutput */
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public void openWindow(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        this.setTitle("ALNS Solver v1.0 (GUI mode)");
+        this.setVisible(true);
+        ToolTipManager.sharedInstance().setInitialDelay(250);
+        ToolTipManager.sharedInstance().setDismissDelay(15000);
     }
     
     /**
@@ -1534,6 +1585,12 @@ public class MainWindow extends javax.swing.JFrame {
                 jTextAreaOutput.append(text);
             }
         });
+    }
+    
+    // These two allow me to get the outputstream and give it to other classes
+    private OutputStream textAreaOutputStream;
+    public OutputStream getTextAreaOutputStream(){
+        return textAreaOutputStream;
     }
     
     /**
@@ -1635,9 +1692,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButtonALNS;
     private javax.swing.JRadioButton jRadioButtonMIPS;
     private javax.swing.JRadioButton jRadioButtonRelaxed;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPaneTextAreaOutput;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextArea jTextAreaOutput;

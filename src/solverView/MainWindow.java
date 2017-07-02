@@ -35,17 +35,19 @@ import solverController.SmartScroller;
  * @author Frash
  */
 public class MainWindow extends javax.swing.JFrame {
+
     /**
      * Pointer to the task at hand
      */
-    private Controller task=null;
+    private Controller task = null;
+
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
         redirectSystemStreams();
-        
+
         // Setup a smart scroller on the output text area
         new SmartScroller(jScrollPaneTextAreaOutput);
     }
@@ -1216,46 +1218,48 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jButtonSaveParametersActionPerformed
 
     private void btnMoveInstanceDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveInstanceDownActionPerformed
         // TODO add your handling code here:
-        if(!jListInstances.isSelectionEmpty()){
+        if (!jListInstances.isSelectionEmpty()) {
             int toMoveDn = jListInstances.getSelectedIndex();
             DefaultListModel dlm = new DefaultListModel();
-            if(toMoveDn < jListInstances.getModel().getSize()-1){
-                for(int i = 0; i<jListInstances.getModel().getSize();i++){
-                    if(i == toMoveDn){
+            if (toMoveDn < jListInstances.getModel().getSize() - 1) {
+                for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
+                    if (i == toMoveDn) {
                         String temp = jListInstances.getModel().getElementAt(i);
-                        dlm.addElement(jListInstances.getModel().getElementAt(i+1));
+                        dlm.addElement(jListInstances.getModel().getElementAt(i + 1));
                         dlm.addElement(temp);
                         i++;
+                    } else {
+                        dlm.addElement(jListInstances.getModel().getElementAt(i));
                     }
-                    else dlm.addElement(jListInstances.getModel().getElementAt(i));
                 }
                 jListInstances.setModel(dlm);
-                jListInstances.setSelectedIndex(Math.min(toMoveDn+1, dlm.size()-1));
+                jListInstances.setSelectedIndex(Math.min(toMoveDn + 1, dlm.size() - 1));
             }
         }
     }//GEN-LAST:event_btnMoveInstanceDownActionPerformed
 
     private void btnMoveInstanceUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveInstanceUpActionPerformed
         // TODO add your handling code here:
-        if(!jListInstances.isSelectionEmpty()){
+        if (!jListInstances.isSelectionEmpty()) {
             int toMoveUp = jListInstances.getSelectedIndex();
             DefaultListModel dlm = new DefaultListModel();
-            for(int i = 0; i<jListInstances.getModel().getSize();i++){
-                if(i == toMoveUp-1){
+            for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
+                if (i == toMoveUp - 1) {
                     String temp = jListInstances.getModel().getElementAt(i);
-                    dlm.addElement(jListInstances.getModel().getElementAt(i+1));
+                    dlm.addElement(jListInstances.getModel().getElementAt(i + 1));
                     dlm.addElement(temp);
                     i++;
+                } else {
+                    dlm.addElement(jListInstances.getModel().getElementAt(i));
                 }
-                else dlm.addElement(jListInstances.getModel().getElementAt(i));
             }
             jListInstances.setModel(dlm);
-            jListInstances.setSelectedIndex(Math.max(toMoveUp-1, 0));
+            jListInstances.setSelectedIndex(Math.max(toMoveUp - 1, 0));
         }
     }//GEN-LAST:event_btnMoveInstanceUpActionPerformed
 
@@ -1264,14 +1268,14 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserInstances.showOpenDialog(jPanelMain);
         File[] selected = jFileChooserInstances.getSelectedFiles();
         DefaultListModel dlm = new DefaultListModel();
-        for(int i = 0; i<jListInstances.getModel().getSize();i++){
+        for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
             dlm.addElement(jListInstances.getModel().getElementAt(i));
         }
-        for(File f : selected){
+        for (File f : selected) {
             String path = f.getAbsolutePath();
             dlm.addElement(path);
         }
-        
+
         jListInstances.setModel(dlm);
     }//GEN-LAST:event_btnAddInstanceActionPerformed
 
@@ -1281,12 +1285,13 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void btnRemoveInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInstanceActionPerformed
         // TODO add your handling code here:
-        if(!jListInstances.isSelectionEmpty()){
+        if (!jListInstances.isSelectionEmpty()) {
             int toRemove = jListInstances.getSelectedIndex();
             DefaultListModel dlm = new DefaultListModel();
-            for(int i = 0; i<jListInstances.getModel().getSize();i++){
-                if(i != toRemove)
+            for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
+                if (i != toRemove) {
                     dlm.addElement(jListInstances.getModel().getElementAt(i));
+                }
             }
             jListInstances.setModel(dlm);
         }
@@ -1295,17 +1300,17 @@ public class MainWindow extends javax.swing.JFrame {
     private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
         // TODO add your handling code here:
         System.out.println("Who are you running from? Don't be silly!");
-        
+
         // Update the parameters
         updateParametersBean();
-        
+
         // Retrieve all instances to run
         List<String> modelPaths = new ArrayList<>();
-        for(int i=0; i < jListInstances.getModel().getSize(); i++){
+        for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
             modelPaths.add(jListInstances.getModel().getElementAt(i));
         }
-        
-        if(!modelPaths.isEmpty()){
+
+        if (!modelPaths.isEmpty()) {
             // Disable all control windows
             enableComponents(jPanelControls, false);
             // Enable the stop button
@@ -1313,19 +1318,19 @@ public class MainWindow extends javax.swing.JFrame {
             // Disable the reset and save output buttons
             jButtonReset.setEnabled(false);
             jButtonSaveOutput.setEnabled(false);
-            
+
             // Retrieve information on which solver to use
             Controller.Solvers solver = Controller.Solvers.SOLVE_RELAXED;
-            if(jRadioButtonALNS.isSelected())
+            if (jRadioButtonALNS.isSelected()) {
                 solver = Controller.Solvers.SOLVE_ALNS;
-            else if(jRadioButtonMIPS.isSelected())
+            } else if (jRadioButtonMIPS.isSelected()) {
                 solver = Controller.Solvers.SOLVE_MIPS;
-            else if(jRadioButtonRelaxed.isSelected())
+            } else if (jRadioButtonRelaxed.isSelected()) {
                 solver = Controller.Solvers.SOLVE_RELAXED;
+            }
             // Update the status bar
             updateStatusLabel("Running.");
-            
-            
+
             // Setup a new instance of controller
             task = new Controller(modelPaths,
                     orienteeringPropertiesBean,
@@ -1334,7 +1339,7 @@ public class MainWindow extends javax.swing.JFrame {
                     textAreaOutputStream
             );
             task.execute();
-            
+
             /*
             // Now it's done. Let's re-enable controls
             // Re-enable all control windows
@@ -1347,13 +1352,12 @@ public class MainWindow extends javax.swing.JFrame {
             
             // Update the status label
             updateStatusLabel("Done! Ready.");
-            */
-        }
-        else{
+             */
+        } else {
             updateStatusLabel("No instances to solve! Ready.");
         }
     }//GEN-LAST:event_jButtonRunActionPerformed
-    
+
     private void jTextFieldOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPathActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
@@ -1361,8 +1365,9 @@ public class MainWindow extends javax.swing.JFrame {
     private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
         jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
-        if(outputFolderPath != null)
+        if (outputFolderPath != null) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
+        }
     }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
 
     private void jTextFieldTimeLimitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTimeLimitActionPerformed
@@ -1426,24 +1431,24 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
         // TODO add your handling code here:
-        
+
         // Kill the controller thread
-        if(task != null){
+        if (task != null) {
             task.cancel(true);
         }
-        
+
         // Re-enable the control panel
         enableComponents(jPanelControls, true);
-        
+
         // Disable the stop button again
         jButtonStop.setEnabled(false);
-        
+
         // Enable the reset button
         jButtonReset.setEnabled(true);
-        
+
         // Enable the save output button
         jButtonSaveOutput.setEnabled(true);
-        
+
         // Update the status text
         updateStatusLabel("Stopped.");
     }//GEN-LAST:event_jButtonStopActionPerformed
@@ -1452,11 +1457,11 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Cleanup the output area
         jTextAreaOutput.setText("");
-        
+
         // Update the status text
         updateStatusLabel("Ready.");
     }//GEN-LAST:event_jButtonResetActionPerformed
-    
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1487,19 +1492,19 @@ public class MainWindow extends javax.swing.JFrame {
                 MainWindow mw = new MainWindow();
                 // Set the title
                 mw.setTitle("ALNS Solver v1.0 (GUI mode)");
-                
+
                 // Make the window appear
                 mw.setVisible(true);
-                
+
                 // Make tooltips appear faster and last longer
                 ToolTipManager.sharedInstance().setInitialDelay(250);
                 ToolTipManager.sharedInstance().setDismissDelay(15000);
             }
         });
-        
+
         /* Redirects system streams to jTextAreaOutput */
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -1532,10 +1537,12 @@ public class MainWindow extends javax.swing.JFrame {
         ToolTipManager.sharedInstance().setInitialDelay(250);
         ToolTipManager.sharedInstance().setDismissDelay(15000);
     }
-    
+
     /**
      * Sets the "enabled" flag of every component in the specified container
-     * @param container the parent container to start setting the enabled flag from
+     *
+     * @param container the parent container to start setting the enabled flag
+     * from
      * @param enable the enable flag to set
      */
     public void enableComponents(Container container, boolean enable) {
@@ -1543,40 +1550,42 @@ public class MainWindow extends javax.swing.JFrame {
         for (Component component : components) {
             component.setEnabled(enable);
             if (component instanceof Container) {
-                enableComponents((Container)component, enable);
+                enableComponents((Container) component, enable);
             }
         }
     }
-    
+
     /**
      * Updates all values of psi in the GUI
      */
-    private void updatePsiGui(){
-        jTextFieldPsi0.setText(alnsPropertiesBean.getHeuristicScores()[0]+"");
-        jTextFieldPsi1.setText(alnsPropertiesBean.getHeuristicScores()[1]+"");
-        jTextFieldPsi2.setText(alnsPropertiesBean.getHeuristicScores()[2]+"");
-        jTextFieldPsi3.setText(alnsPropertiesBean.getHeuristicScores()[3]+"");
+    private void updatePsiGui() {
+        jTextFieldPsi0.setText(alnsPropertiesBean.getHeuristicScores()[0] + "");
+        jTextFieldPsi1.setText(alnsPropertiesBean.getHeuristicScores()[1] + "");
+        jTextFieldPsi2.setText(alnsPropertiesBean.getHeuristicScores()[2] + "");
+        jTextFieldPsi3.setText(alnsPropertiesBean.getHeuristicScores()[3] + "");
         jTextFieldPsi0.updateUI();
         jTextFieldPsi1.updateUI();
         jTextFieldPsi2.updateUI();
         jTextFieldPsi3.updateUI();
     }
-    
+
     /**
-     * This method updates the values of psi in the ALNS properties bean, using 
+     * This method updates the values of psi in the ALNS properties bean, using
      * the values written in the psi text fields.
      */
-    private void updatePsiBean(){
-        double [] toSet = new double[4];
+    private void updatePsiBean() {
+        double[] toSet = new double[4];
         toSet[0] = Double.parseDouble(jTextFieldPsi0.getText());
         toSet[1] = Double.parseDouble(jTextFieldPsi1.getText());
         toSet[2] = Double.parseDouble(jTextFieldPsi2.getText());
         toSet[3] = Double.parseDouble(jTextFieldPsi3.getText());
         alnsPropertiesBean.setHeuristicScores(toSet);
     }
-    
+
     /**
-     * This method updates jTextAreaOutput with the output from the optimization algorithms
+     * This method updates jTextAreaOutput with the output from the optimization
+     * algorithms
+     *
      * @param text the text to put in jTextAreaOutput
      */
     private void updateTextArea(final String text) {
@@ -1586,13 +1595,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
-    
+
     // These two allow me to get the outputstream and give it to other classes
     private OutputStream textAreaOutputStream;
-    public OutputStream getTextAreaOutputStream(){
+
+    public OutputStream getTextAreaOutputStream() {
         return textAreaOutputStream;
     }
-    
+
     /**
      * Redirects System Streams to jTextAreaOutput
      */
@@ -1600,17 +1610,17 @@ public class MainWindow extends javax.swing.JFrame {
         OutputStream out = new OutputStream() {
             @Override
             public void write(int b) throws IOException {
-              updateTextArea(String.valueOf((char) b));
+                updateTextArea(String.valueOf((char) b));
             }
 
             @Override
             public void write(byte[] b, int off, int len) throws IOException {
-              updateTextArea(new String(b, off, len));
+                updateTextArea(new String(b, off, len));
             }
 
             @Override
             public void write(byte[] b) throws IOException {
-              write(b, 0, b.length);
+                write(b, 0, b.length);
             }
         };
 
@@ -1723,22 +1733,23 @@ public class MainWindow extends javax.swing.JFrame {
     private solverController.ParametersBean parametersBean;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-    
+
     /**
      * Updates the text in the status bar.
+     *
      * @param statusText
      */
     private void updateStatusLabel(String statusText) {
         jLabelStatus.setText(statusText);
         jLabelStatus.updateUI();
     }
-    
+
     /**
      * Updates the parameters bean with the latest version of the parameters in
-     * alnsPropertiesBean and orienteeringPropertiesBean.
-     * Necessary before parameter visualization/serialization.
+     * alnsPropertiesBean and orienteeringPropertiesBean. Necessary before
+     * parameter visualization/serialization.
      */
-    private void updateParametersBean(){
+    private void updateParametersBean() {
         parametersBean = new ParametersBean(orienteeringPropertiesBean, alnsPropertiesBean);
     }
 }

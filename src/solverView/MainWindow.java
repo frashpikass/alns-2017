@@ -1521,7 +1521,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case RUNNING:
                     this.jProgressBar1.setIndeterminate(false);
                     this.jLabelStatus.setText("Working. Solving instance '"+osm.getInstancePath()
-                            +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize());
+                            +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+" completed.");
                     this.jProgressBar1.setValue(osm.getProgress());
                     break;
                     
@@ -1532,7 +1532,7 @@ public class MainWindow extends javax.swing.JFrame {
                 case STOPPED:
                     this.jProgressBar1.setIndeterminate(false);
                     this.jLabelStatus.setText("Stopped while solving instance '"+osm.getInstancePath()
-                            +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+". Ready.");
+                            +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+" completed. Ready.");
                     this.jProgressBar1.setValue(osm.getProgress());
                     // Re-enable the control panel
                     this.enableControlPanel(true);
@@ -1552,6 +1552,8 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
         else this.updateSolverStatusTemporary("Please wait...");
+        
+        jLabelStatus.setToolTipText(jLabelStatus.getText());
     }
     
     public void updateSolverStatusTemporary(String message){

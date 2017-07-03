@@ -177,6 +177,10 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserOutputFolderPath.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         jFileChooserOutputFolderPath.setToolTipText("Choose the output directory");
 
+        jFileChooserSaveParameters.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        jFileChooserSaveParameters.setSelectedFile(new java.io.File("C:\\Program Files\\NetBeans 8.2\\myparams.json"));
+        jFileChooserSaveParameters.setToolTipText("");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("ALNS Solver, by Francesco Piazza, v1.0");
@@ -1203,6 +1207,17 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
         // TODO add your handling code here:
+        jFileChooserSaveParameters.showOpenDialog(jPanelGeneralParameters);
+        File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
+        if (outputFilePath != null) {
+            updateParametersBean();
+            try {
+                this.parametersBean.serializeToJSON(outputFilePath.getAbsolutePath());
+            } catch (IOException ex) {
+                System.out.println("Can't save to '"+outputFilePath.getAbsolutePath()+"': "+ex.getMessage());
+            }
+            System.out.println("Parameters saved to '"+outputFilePath.getAbsolutePath()+"'");
+        }
 
     }//GEN-LAST:event_jButtonSaveParametersActionPerformed
 

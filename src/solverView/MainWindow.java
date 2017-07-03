@@ -1506,8 +1506,6 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * Updates the status bar (label+progress bar).
      * @param osm the optimization status message to display.
-     * @param done true if solver is done
-     * @param stopped true if solver is stopped.
      */
     public void updateSolverStatusIndicators(
             OptimizationStatusMessage osm

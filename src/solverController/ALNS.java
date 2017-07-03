@@ -1866,7 +1866,7 @@ public class ALNS extends Orienteering {
             env.message(e.getMessage());
             this.cleanup();
             //DEBUG: uncomment later
-            //logRedirector.cancel(true);
+            logRedirector.cancel(true);
             return false;
         } finally {
             this.cleanup();

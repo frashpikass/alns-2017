@@ -50,6 +50,7 @@ public class OptimizationStatusMessage {
      * @param instancePath Path to the instance currently being solved
      * @param progress Current progress (an in between [0,100])
      * @param elapsedTime Currently elapsed time
+     * @param status solver status
      */
     public OptimizationStatusMessage(
             String instancePath,
@@ -71,6 +72,7 @@ public class OptimizationStatusMessage {
      * @param elapsedTime Currently elapsed time
      * @param instanceNumber number of the instance in the batch
      * @param batchSize size of the batch
+     * @param status solver status
      */
     public OptimizationStatusMessage(
             String instancePath,

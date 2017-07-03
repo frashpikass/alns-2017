@@ -381,6 +381,8 @@ public class Controller
     /**
      * Optimizes a single instance using the solver specified through the
      * <code>setSolver</code> method.
+     * @param modelPath path to the model file to optimize
+     * @throws java.lang.Exception if anything goes wrong
      */
     public void optimize(String modelPath) throws Exception{
         // Save the chosen parameters to the output folder

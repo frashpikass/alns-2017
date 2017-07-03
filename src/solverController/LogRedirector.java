@@ -104,7 +104,7 @@ public class LogRedirector
     
     @Override
     protected void done(){
-        System.out.println("LogRedirector "+this.getState());
+        // System.out.println("LogRedirector "+this.getState()); //DEBUG
         
         if(this.getState() == StateValue.DONE){
             try {

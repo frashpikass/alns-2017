@@ -1044,7 +1044,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         jPanelActions.add(jButtonRun, gridBagConstraints);
 
-        jButtonTestBean.setText("TEST BEAN");
+        jButtonTestBean.setText("Show parameters JSON");
         jButtonTestBean.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTestBeanActionPerformed(evt);
@@ -1153,6 +1153,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabelStatus.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelStatus.setText("Ready.");
+        jLabelStatus.setToolTipText(jLabelStatus.getText());
         jPanelStatusBar.add(jLabelStatus);
 
         jProgressBar1.setToolTipText(null);

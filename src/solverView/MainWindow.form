@@ -5613,7 +5613,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="jButtonTestBean">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="TEST BEAN"/>
+                    <Property name="text" type="java.lang.String" value="Show parameters JSON"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonTestBeanActionPerformed"/>
@@ -6118,6 +6118,9 @@
                       <Font name="Dialog" size="12" style="0"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Ready."/>
+                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="jLabelStatus.getText()" type="code"/>
+                    </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JProgressBar" name="jProgressBar1">

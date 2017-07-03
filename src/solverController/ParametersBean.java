@@ -7,7 +7,6 @@ package solverController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.beans.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;

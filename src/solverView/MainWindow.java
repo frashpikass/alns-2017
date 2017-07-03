@@ -28,7 +28,6 @@ import javax.swing.ToolTipManager;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
 import solverController.ParametersBean;
-import solverController.SmartScroller;
 
 /**
  *

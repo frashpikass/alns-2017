@@ -1026,6 +1026,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonLoadParameters.setText("Load Parameters");
         buttonGroupActions.add(jButtonLoadParameters);
+        jButtonLoadParameters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoadParametersActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -1042,7 +1047,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 107;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -1056,7 +1061,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanelActions.add(jButtonTestBean, gridBagConstraints);
 
@@ -1441,6 +1446,21 @@ public class MainWindow extends javax.swing.JFrame {
         // Update the status text
         updateStatusLabel("Ready.");
     }//GEN-LAST:event_jButtonResetActionPerformed
+
+    private void jButtonLoadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersActionPerformed
+        // TODO add your handling code here:
+        jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
+        File inputFile = jFileChooserLoadParameters.getSelectedFile();
+        if (inputFile != null) {
+            updateParametersBean();
+            try {
+                this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
+            } catch (IOException ex) {
+                System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
+            }
+            System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
+        }
+    }//GEN-LAST:event_jButtonLoadParametersActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

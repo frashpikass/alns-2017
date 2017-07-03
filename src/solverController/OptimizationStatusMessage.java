@@ -36,6 +36,16 @@ public class OptimizationStatusMessage {
     private int batchSize;
     
     /**
+     * Enum for optimization statuses
+     */
+    public enum Status {STARTING, RUNNING, STOPPING, STOPPED, DONE}
+    
+    /**
+     * Optimization status
+     */
+    private Status status;
+    
+    /**
      * Constructor.
      * @param instancePath Path to the instance currently being solved
      * @param progress Current progress (an in between [0,100])
@@ -44,12 +54,14 @@ public class OptimizationStatusMessage {
     public OptimizationStatusMessage(
             String instancePath,
             int progress,
-            double elapsedTime){
+            double elapsedTime,
+            Status status){
         this.instancePath = instancePath;
         this.progress = progress;
         this.elapsedTime = elapsedTime;
         this.instanceNumber = 0;
         this.batchSize = 1;
+        this.status = status;
     }
     
     /**
@@ -65,12 +77,14 @@ public class OptimizationStatusMessage {
             int progress,
             double elapsedTime,
             int instanceNumber,
-            int batchSize){
+            int batchSize,
+            Status status){
         this.instancePath = instancePath;
         this.progress = progress;
         this.elapsedTime = elapsedTime;
         this.instanceNumber = instanceNumber;
         this.batchSize = batchSize;
+        this.status = status;
     }
 
     /**
@@ -112,8 +126,16 @@ public class OptimizationStatusMessage {
     public int getBatchSize() {
         return batchSize;
     }
+
+    /**
+     * Optimization status
+     * @return optimization statis
+     */
+    public Status getStatus() {
+        return status;
+    }
     
     public String toString(){
-        return elapsedTime+"s: Current Instance '"+instancePath+"' @ "+progress+"%, batch "+instanceNumber+"/"+batchSize+" done";
+        return elapsedTime+"s: Current Instance '"+instancePath+"' @ "+progress+"%, batch "+instanceNumber+"/"+batchSize+" done, status: "+status;
     }
 }

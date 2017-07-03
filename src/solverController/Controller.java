@@ -133,6 +133,7 @@ public class Controller
   
     /**
      * List of possible choices for solvers.
+     * Values are SOLVE_RELAXED, SOLVE_MIPS, SOLVE_ALNS
      */
     public enum Solvers {SOLVE_RELAXED, SOLVE_MIPS, SOLVE_ALNS};
     

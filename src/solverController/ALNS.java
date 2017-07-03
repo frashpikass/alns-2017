@@ -5,8 +5,6 @@
  */
 package solverController;
 
-import solverController.ALNSPropertiesBean;
-import com.opencsv.CSVWriter;
 import gurobi.GRB;
 import gurobi.GRBCallback;
 import gurobi.GRBConstr;
@@ -14,7 +12,6 @@ import gurobi.GRBException;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
@@ -24,14 +21,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import solverController.Controller;
-import solverController.Controller.Solvers;
-import solverController.OptimizationStatusMessage;
 import solverModel.Cluster;
 import solverModel.Node;
 import solverModel.Streak;

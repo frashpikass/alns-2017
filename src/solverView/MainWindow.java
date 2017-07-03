@@ -37,9 +37,9 @@ import solverController.SmartScroller;
 public class MainWindow extends javax.swing.JFrame {
 
     /**
-     * Pointer to the task at hand
+     * Pointer to the controller task at hand
      */
-    private Controller task = null;
+    private Controller controllerTask = null;
 
     /**
      * Creates new form MainWindow
@@ -158,7 +158,6 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonTestBean = new javax.swing.JButton();
         jPanelOutput = new javax.swing.JPanel();
         jButtonStop = new javax.swing.JButton();
-        jButtonSaveOutput = new javax.swing.JButton();
         jScrollPaneTextAreaOutput = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
         jButtonReset = new javax.swing.JButton();
@@ -1106,18 +1105,6 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
         jPanelOutput.add(jButtonStop, gridBagConstraints);
 
-        jButtonSaveOutput.setText("Save Output");
-        jButtonSaveOutput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveOutputActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelOutput.add(jButtonSaveOutput, gridBagConstraints);
-
         jScrollPaneTextAreaOutput.setBackground(new java.awt.Color(0, 51, 102));
         jScrollPaneTextAreaOutput.setAutoscrolls(true);
 
@@ -1170,6 +1157,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jProgressBar1.setToolTipText(null);
         jProgressBar1.setBorder(null);
+        jProgressBar1.setStringPainted(true);
         jPanelStatusBar.add(jProgressBar1);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1211,10 +1199,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButtonSaveOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveOutputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonSaveOutputActionPerformed
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
         // TODO add your handling code here:
@@ -1312,12 +1296,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         if (!modelPaths.isEmpty()) {
             // Disable all control windows
-            enableComponents(jPanelControls, false);
-            // Enable the stop button
-            jButtonStop.setEnabled(true);
-            // Disable the reset and save output buttons
-            jButtonReset.setEnabled(false);
-            jButtonSaveOutput.setEnabled(false);
+            this.enableControlPanel(false);
 
             // Retrieve information on which solver to use
             Controller.Solvers solver = Controller.Solvers.SOLVE_RELAXED;
@@ -1330,29 +1309,18 @@ public class MainWindow extends javax.swing.JFrame {
             }
             // Update the status bar
             updateStatusLabel("Running.");
+            jProgressBar1.setIndeterminate(false);
+            jProgressBar1.setValue(0);
 
             // Setup a new instance of controller
-            task = new Controller(modelPaths,
+            controllerTask = new Controller(modelPaths,
                     orienteeringPropertiesBean,
                     alnsPropertiesBean,
                     solver,
-                    textAreaOutputStream
+                    textAreaOutputStream,
+                    this
             );
-            task.execute();
-
-            /*
-            // Now it's done. Let's re-enable controls
-            // Re-enable all control windows
-            enableComponents(jPanelControls, true);
-            // Disable the stop button
-            jButtonStop.setEnabled(false);
-            // Re-enable the reset and save output buttons
-            jButtonReset.setEnabled(true);
-            jButtonSaveOutput.setEnabled(true);
-            
-            // Update the status label
-            updateStatusLabel("Done! Ready.");
-             */
+            controllerTask.execute();
         } else {
             updateStatusLabel("No instances to solve! Ready.");
         }
@@ -1376,7 +1344,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonTestBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestBeanActionPerformed
         updateParametersBean();
-        jTextAreaOutput.append("Stato del bean:\n");
+        jTextAreaOutput.append("Current properties bean:\n");
         jTextAreaOutput.append(parametersBean.toJSON());
     }//GEN-LAST:event_jButtonTestBeanActionPerformed
 
@@ -1432,22 +1400,14 @@ public class MainWindow extends javax.swing.JFrame {
     private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
         // TODO add your handling code here:
 
-        // Kill the controller thread
-        if (task != null) {
-            task.cancel(true);
+        // Kill the controller thread and triggers the garbage collector
+        if (controllerTask != null) {
+            controllerTask.cancel(true);
+            controllerTask = null;
+            System.gc();
         }
-
-        // Re-enable the control panel
-        enableComponents(jPanelControls, true);
-
-        // Disable the stop button again
-        jButtonStop.setEnabled(false);
-
-        // Enable the reset button
-        jButtonReset.setEnabled(true);
-
-        // Enable the save output button
-        jButtonSaveOutput.setEnabled(true);
+        
+        enableControlPanel(true);
 
         // Update the status text
         updateStatusLabel("Stopped.");
@@ -1457,6 +1417,10 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Cleanup the output area
         jTextAreaOutput.setText("");
+        
+        // Reset the progress bar
+        jProgressBar1.setIndeterminate(false);
+        jProgressBar1.setValue(0);
 
         // Update the status text
         updateStatusLabel("Ready.");
@@ -1501,10 +1465,89 @@ public class MainWindow extends javax.swing.JFrame {
                 ToolTipManager.sharedInstance().setDismissDelay(15000);
             }
         });
-
-        /* Redirects system streams to jTextAreaOutput */
     }
+    
+    /**
+     * Updates the status bar (label+progress bar).
+     * @param osm the optimization status message to display.
+     * @param done true if solver is done
+     * @param stopped true if solver is stopped.
+     */
+    public void updateSolverStatusIndicators(
+            OptimizationStatusMessage osm
+    ){
+        if(osm != null){
+            switch(osm.getStatus()){
+                case STARTING:
+                    this.updateSolverStatusTemporary("Starting. Please wait...");
+                    break;
+                    
+                case RUNNING:
+                    this.jProgressBar1.setIndeterminate(false);
+                    this.jLabelStatus.setText("Working. Solving instance '"+osm.getInstancePath()
+                            +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize());
+                    this.jProgressBar1.setValue(osm.getProgress());
+                    break;
+                    
+                case STOPPING:
+                    this.updateSolverStatusTemporary("Stopping. Please wait...");
+                    break;
+                    
+                case STOPPED:
+                    this.jProgressBar1.setIndeterminate(false);
+                    this.jLabelStatus.setText("Stopped while solving instance '"+osm.getInstancePath()
+                            +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+". Ready.");
+                    this.jProgressBar1.setValue(osm.getProgress());
+                    // Re-enable the control panel
+                    this.enableControlPanel(true);
+                    break;
+                    
+                case DONE:
+                    this.jProgressBar1.setIndeterminate(false);
+                    // Update the status label
+                    updateStatusLabel("Done! Ready.");
+                    
+                    // Update the progress bar
+                    this.jProgressBar1.setValue(100);
 
+                    // Re-enable the control panel
+                    this.enableControlPanel(true);
+                    break;
+            }
+        }
+        else this.updateSolverStatusTemporary("Please wait...");
+    }
+    
+    public void updateSolverStatusTemporary(String message){
+        this.jLabelStatus.setText(message);
+        this.jProgressBar1.setIndeterminate(true);
+    }
+    
+    /**
+     * Enables or disables the control panel in this GUI
+     * @param enabled flag to be set
+     */
+    private void enableControlPanel(boolean enabled){
+        if(enabled){
+            // Enable all control windows
+            enableComponents(jPanelControls, true);
+            // Disable the stop button
+            jButtonStop.setEnabled(false);
+            // Enable the reset and save output buttons
+            jButtonReset.setEnabled(true);
+            //jButtonSaveOutput.setEnabled(true);
+        }
+        else {
+            // Disable all control windows
+            enableComponents(jPanelControls, false);
+            // Enable the stop button
+            jButtonStop.setEnabled(true);
+            // Disable the reset and save output buttons
+            jButtonReset.setEnabled(false);
+            //jButtonSaveOutput.setEnabled(false);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -1641,7 +1684,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonOutputFolderPath;
     private javax.swing.JButton jButtonReset;
     private javax.swing.JButton jButtonRun;
-    private javax.swing.JButton jButtonSaveOutput;
     private javax.swing.JButton jButtonSaveParameters;
     private javax.swing.JButton jButtonStop;
     private javax.swing.JButton jButtonTestBean;

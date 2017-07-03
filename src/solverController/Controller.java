@@ -57,43 +57,74 @@ public class Controller
 
     @Override
     protected Void doInBackground() throws Exception {
-        // Initialize PropertyChangeSupport
-        getPropertyChangeSupport().addPropertyChangeListener( this );
-        
-        // Initialize the last instance number
-        this.lastInstanceNumber = 0;
-        
-        // Execute the batch of instances, one at a time
-        for(String path : this.modelPaths){
-            // Save the current model path
-            this.lastModelPath = path;
-            
-            // Initialize progress to 0
-            this.setProgress(0);
-            // Publish information about the initial status
-            this.publish(new OptimizationStatusMessage(lastModelPath, 0, 0, lastInstanceNumber, modelPaths.size()));
-            
-            // Proceed with the optimization
-            this.optimize(path);
-            
-            currentALNS.execute();
-            
-            try{
-                currentALNS.get();
-            }
-            catch(InterruptedException e){
-                System.out.println("Controller - ALNS was interrupted: "+e.getMessage());
-            }
-            catch(ExecutionException e){
-                System.out.println("Controller - ALNS has thrown ExecutionException: "+e.getMessage());
-            }
-            
-            // Update the batch number
-            this.lastInstanceNumber++;
-        }
-        return null;
-    }
+        try{
+            // Initialize PropertyChangeSupport
+            getPropertyChangeSupport().addPropertyChangeListener( this );
 
+            // Initialize the last instance number
+            this.lastInstanceNumber = 0;
+
+            // Execute the batch of instances, one at a time
+            for(String path : this.modelPaths){
+                // Save the current model path
+                this.lastModelPath = path;
+
+                // Initialize progress to 0
+                this.setProgress(0);
+                // Publish information about the initial status
+                this.publish(new OptimizationStatusMessage(
+                        lastModelPath, 0, 0,
+                        lastInstanceNumber,
+                        modelPaths.size(),
+                        OptimizationStatusMessage.Status.STARTING)
+                );
+
+                // Proceed with the optimization
+                this.optimize(path);
+
+                currentALNS.execute();
+
+                try{
+                    currentALNS.get();
+                }
+                catch(ExecutionException e){
+                    System.out.println("Controller - ALNS has thrown ExecutionException: "+e.getMessage());
+                }
+
+                // Update the batch number
+                this.lastInstanceNumber++;
+            }
+            return null;
+        }
+        catch(InterruptedException e){
+            System.out.println("Controller was interrupted: "+e.getMessage());
+            
+            // Update the window
+            messageReceived();
+            
+            // Kill the ALNS thread
+            currentALNS.cancel(true);
+            currentALNS = null;
+            lastOrienteering = null;
+            
+            return null;
+        }
+    }
+    
+    @Override
+    public void done(){
+        if(isCancelled()){
+            if(mainWindow != null){
+                messageReceived();
+            }
+        }
+        else if(isDone()){
+            if(mainWindow != null){
+                messageReceived();
+            }
+        }
+    }
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if("messageFromALNS".equals(evt.getPropertyName())){
@@ -129,14 +160,27 @@ public class Controller
     private Orienteering lastOrienteering = null;
     
     /**
+     * The MainWindow which hosts the gui. This object must be used to update GUI features.
+     */
+    private MainWindow mainWindow;
+    
+    /**
      * A message from an ALNS thread
      */
     private OptimizationStatusMessage messageFromALNS;
     
+    /**
+     * Retrieve the last message set by the ALNS thread
+     * @return the last message set by the ALNS thread
+     */
     public OptimizationStatusMessage getMessageFromALNS() {
         return messageFromALNS;
     }
-
+    
+    /**
+     * Method used by the ALNS thread to set a message for this Controller
+     * @param messageFromALNS the message from the ALNS thread
+     */
     public void setMessageFromALNS(OptimizationStatusMessage messageFromALNS) {
         OptimizationStatusMessage old = this.messageFromALNS;
         this.messageFromALNS = messageFromALNS;
@@ -150,13 +194,15 @@ public class Controller
      * @param apb Javabean that holds all ALNS parameters 
      * @param solver the solver to use with this controller
      * @param stdoutStream the output stream where output should be printed to. If <code>null</code>, the default will be used.
+     * @param mainWindow the main window to update the fetures of. Can be null.
      */
     public Controller(
             List<String> modelPaths,
             OrienteeringPropertiesBean opb,
             ALNSPropertiesBean apb,
             Solvers solver,
-            OutputStream stdoutStream
+            OutputStream stdoutStream,
+            MainWindow mainWindow
     ){
         // Setup all parameters
         pb = new ParametersBean(opb, apb);
@@ -167,6 +213,7 @@ public class Controller
             System.setOut(new PrintStream(stdoutStream));
             System.setErr(new PrintStream(stdoutStream));
         }
+        this.mainWindow = mainWindow;
     }
     
     /**
@@ -185,12 +232,14 @@ public class Controller
      * @param pb Javabean that holds all solver parameters
      * @param solver the solver to use with this controller
      * @param stdoutStream the output stream where output should be printed to. If <code>null</code>, the default will be used.
+     * @param mainWindow the main window to update the fetures of. Can be null.
      */
     public Controller(
             List<String> modelPaths,
             ParametersBean pb,
             Solvers solver,
-            OutputStream stdoutStream
+            OutputStream stdoutStream,
+            MainWindow mainWindow
     ){
         this.pb = pb;
         this.modelPaths = modelPaths;
@@ -200,6 +249,7 @@ public class Controller
             System.setOut(new PrintStream(stdoutStream));
             System.setErr(new PrintStream(stdoutStream));
         }
+        this.mainWindow = mainWindow;
     }
 
     public static void main(String[] args) throws Exception {
@@ -234,6 +284,7 @@ public class Controller
                 modelPaths,
                 new ParametersBean(),
                 Solvers.SOLVE_ALNS,
+                null,
                 null
         );
         c.execute();
@@ -289,33 +340,41 @@ public class Controller
     /**
      * Optimizes the batch of instances using the solver specified through the
      * <code>setSolver</code> method.
+     * @throws java.lang.InterruptedException if the solver was interrupted by an external thread
+     * @throws Exception if anything else goes wrong
      */
-    public void optimize() throws Exception{
+    public void optimize() throws InterruptedException, Exception{
         // Save the chosen parameters to the output folder
         pb.serializeToJSON();
         
         this.lastInstanceNumber = 0;
-        for(String modelPath : modelPaths){
-            this.lastModelPath = modelPath;
-            // Initialize a new Orienteering object starting from the current modelPath
-            Orienteering o = new Orienteering(
-                    modelPath,
-                    pb.getOrienteeringProperties()
-            );
-            
-            // Initialize a new ALNS object starting from the current modelPath
-            // and Orienteering object
-            ALNS a = new ALNS(
-                    o,
-                    pb.getALNSproperties(),
-                    this
-            );
-            
-            // ALNS object will automatically pick a solver and apply it
-            a.optimize();
-            
-            // Free memory occupied by Gurobi models
-            a.cleanup();
+        try{
+            for(int i = 0; i < modelPaths.size() && !this.isCancelled(); i++){
+                String modelPath = modelPaths.get(i);
+                this.lastModelPath = modelPath;
+                // Initialize a new Orienteering object starting from the current modelPath
+                Orienteering o = new Orienteering(
+                        modelPath,
+                        pb.getOrienteeringProperties()
+                );
+
+                // Initialize a new ALNS object starting from the current modelPath
+                // and Orienteering object
+                ALNS a = new ALNS(
+                        o,
+                        pb.getALNSproperties(),
+                        this
+                );
+
+                // ALNS object will automatically pick a solver and apply it
+                a.optimize();
+
+                // Free memory occupied by Gurobi models
+                a.cleanup();
+            }
+        }
+        catch(InterruptedException e){
+            throw new InterruptedException(e.getMessage());
         }
     }
     
@@ -351,23 +410,64 @@ public class Controller
     private void messageReceived(){
         // Here I should publish the message I've received and add information
         // on the batch size and instance number in the batch
-        this.setProgress(messageFromALNS.getProgress());
-        
-        OptimizationStatusMessage newMessage = new OptimizationStatusMessage(
-                lastModelPath,
-                messageFromALNS.getProgress(),
-                messageFromALNS.getElapsedTime(),
-                this.lastInstanceNumber,
-                this.modelPaths.size()
-        );
-        publish(newMessage);
+        if(messageFromALNS != null){
+            this.setProgress(messageFromALNS.getProgress());
+
+            OptimizationStatusMessage newMessage = new OptimizationStatusMessage(
+                    lastModelPath,
+                    messageFromALNS.getProgress(),
+                    messageFromALNS.getElapsedTime(),
+                    this.lastInstanceNumber,
+                    this.modelPaths.size(),
+                    messageFromALNS.getStatus()
+            );
+            publish(newMessage);
+        }
     }
     
     @Override
     protected void process(List<OptimizationStatusMessage> messages){
-        if(messages != null && !messages.isEmpty()){
+        if(messages != null && !messages.isEmpty() && mainWindow != null){
+            OptimizationStatusMessage osm = messages.get(messages.size()-1);
+            
+            OptimizationStatusMessage.Status realState = OptimizationStatusMessage.Status.RUNNING;
+            switch(osm.getStatus()){
+                case STARTING:
+                    if(isCancelled())
+                        realState = OptimizationStatusMessage.Status.STOPPING;
+                    else realState = OptimizationStatusMessage.Status.STARTING;
+                    break;
+                case RUNNING:
+                    if(isCancelled())
+                        realState = OptimizationStatusMessage.Status.STOPPING;
+                    else realState = OptimizationStatusMessage.Status.RUNNING;
+                    break;
+                case STOPPING:
+                    realState = OptimizationStatusMessage.Status.STOPPING;
+                    break;
+                case DONE:
+                    if(isCancelled())
+                        realState = OptimizationStatusMessage.Status.STOPPED;
+                    else realState = OptimizationStatusMessage.Status.DONE;
+                    break;
+                case STOPPED:
+                    if(isCancelled())
+                        realState = OptimizationStatusMessage.Status.STOPPED;
+                    else realState = OptimizationStatusMessage.Status.STOPPING;
+                    break;
+            }
             //System.out.println("Message from ALNS: "+messages.get(messages.size()-1)); // DEBUG
-        // here I should update the progress bar and the label in the gui
+            // here I should update the progress bar and the label in the gui
+            mainWindow.updateSolverStatusIndicators(
+                    new OptimizationStatusMessage(
+                            osm.getInstancePath(),
+                            osm.getProgress(),
+                            osm.getElapsedTime(),
+                            osm.getInstanceNumber(),
+                            osm.getBatchSize(),
+                            realState
+                    )
+            );
         }
     }
 }

@@ -15,6 +15,7 @@ import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -165,7 +166,7 @@ public class ALNS extends Orienteering{
         List<Cluster> newSolution = new ArrayList<>();
         // isFeasible keeps track of the feasibility of the new solution found
         boolean isFeasible = true;
-        for(int i = 0; i<clusters.size() && isFeasible; i++){
+        for(int i = 0; i<clusters.size() && isFeasible && !this.isCancelled(); i++){
             Cluster c = clusters.get(i);
             // Let's extract the first cluster from the ordered list of clusters
             // and let's put it into the new solution
@@ -183,6 +184,8 @@ public class ALNS extends Orienteering{
         // Let's update the model so that it cointains the current solution
         testSolution(solution, true);
         env.message("\nALNSConstructiveSolution log end, time "+LocalDateTime.now()+"\n");
+        if(this.isCancelled())
+                throw new InterruptedException("optimizeALNS() interrupted in the constructive solution building phase.");
         return solution;
     }
     
@@ -368,27 +371,31 @@ public class ALNS extends Orienteering{
     /**
      * Automatically picks a solver from the controller selection, and optimizes
      * the current model using it.
-     * @throws gurobi.GRBException
-     * @throws Exception 
+     * @throws gurobi.GRBException if there are problems with Gurobi
+     * @throws Exception if there are generic problems
      */
     public void optimize() throws GRBException, Exception{
-        if(controller.getSolver() != null){
-            switch(controller.getSolver()){
-                case SOLVE_RELAXED:
-                    optimizeRelaxed();
-                    break;
-                
-                case SOLVE_MIPS:
-                    optimizeMIPS();
-                    break;
-                
-                case SOLVE_ALNS:
-                    optimizeALNS();
-                    break;
-                default:
-                    env.message("ALNS optimize() error: null solver\n");
-                    break;
+        try{
+            if(controller.getSolver() != null){
+                switch(controller.getSolver()){
+                    case SOLVE_RELAXED:
+                        optimizeRelaxed();
+                        break;
+
+                    case SOLVE_MIPS:
+                        optimizeMIPS();
+                        break;
+
+                    case SOLVE_ALNS:
+                        optimizeALNS();
+                        break;
+                    default:
+                        env.message("ALNS optimize() error: null solver\n");
+                        break;
+                }
             }
+        }catch(InterruptedException e){
+            throw new InterruptedException(e.getMessage());
         }
     }
     
@@ -409,179 +416,291 @@ public class ALNS extends Orienteering{
      * maximum number of iterations from the last improvement, maximum
      * computation time) the cycle ends and the last best feasible solution is
      * returned.
-     * @throws Exception if anything goes wrong
+     * @throws java.io.IOException if there are problems with the logger
+     * @throws gurobi.GRBException if there are problems with Gurobi
+     * @throws java.lang.InterruptedException if the thread was interrupted while solving
+     * @throws Exception if anything else goes wrong
      */
-    public void optimizeALNS() throws Exception {
-        
-        // Setup the Excel logger
-        ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
-                orienteeringProperties.getOutputFolderPath()+instance.getName()+"_ALNS.xlsx",
-                instance.getName());
-        
-        // This is a generic ALNS implementation
-        GRBModel relaxedModel = model.relax();
-        relaxedModel.optimize();
-        
-        // Temperature mitigates the effects of the simulated annealing process
-        // A lower temperature will make it less likely for the proccess to accept
-        // a pejorative solution
-        double initialTtemperature = 2*relaxedModel.get(GRB.DoubleAttr.ObjBound);
-        double temperature;
-        
-        // Memory cleanup
-        relaxedModel.dispose();
-        
-        // STEP 1: generate a CONSTRUCTIVE SOLUTION
-        // xOld stores the previous solution, the starting point of any iteration
-        List<Cluster> xOld = this.ALNSConstructiveSolution();
-        // stores the new solution, produced by the destroy and repair heuristics
-        List<Cluster> xNew = xOld;
-        // stores the best solution found through iterations
-        List<Cluster> xBest = xOld;
-        // stores the best solution found through segments
-        List<Cluster> xBestInSegments = xOld;
-        
-        // old value of the objective function, generated through the old solution
-        double oldObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-        // new value of the objective function produced by the current iteration
-        double newObjectiveValue = oldObjectiveValue;
-        // best value of the objective function throughout iterations
-        double bestObjectiveValue = oldObjectiveValue;
-        // best value of the objective function throughout segments
-        double bestObjectiveValueInSegments = oldObjectiveValue;
-        
-        // qMax is the maximum number of clusters to operate on with heuristic
-        int qMax = instance.getNum_clusters();
-        int qMin = 1;
-        
-        // q is the number of clusters to repair and destroy at each iteration
-        int q=ALNSProperties.getqStart();
-        
-        
-        // This is how much q should increase at every iteration
-        // int qDelta = Math.floorDiv(qMax, 10); // to parametrize
-        
-        // These variables are references to the chosen destroy and repair methods
-        // for the current iteration
-        BiFunction<List<Cluster>,Integer,List<Cluster>> destroyMethod;
-        BiFunction<List<Cluster>,Integer,List<Cluster>> repairMethod;
-        
-        // Parameters to determine how to update heuristic weights
-        boolean solutionIsAccepted;
-        boolean solutionIsNewGlobalOptimum;  // true if c(xNew)>c(xBest)
-        boolean solutionIsBetterThanOld;     // true if c(xNew)>c(xOld)
-        boolean solutionIsWorseButAccepted;  // true id c(xNew)<=c(xOld) but xNew is accepted
-        boolean solutionIsWorseAndRejected;  // true id c(xNew)<=c(xOld) and xNew is rejected
-        boolean repairMethodWasUsed;         // Keeping track whether a repair method had to be used or not
-        boolean optimumFound = false;        // true if the optimum solution for the problem was found
-        
-        // Setup of stopping criterions and time management
-        // Elapsed time in seconds
-        elapsedTime = 0;
-        long startTimeInNanos = System.nanoTime();
-        
-        // Keeping track of how many segments of iterations have been performed
-        long segments = 0;
-        //long maxSegments = 1000;
-        
-        // Keeping track of how many segments without improvement have been seen
-        long segmentsWithoutImprovement = 0;
-        //long maxSegmentsWithoutImprovement = 20; // to parametrize / REMOVE
-        
-        // A string to log why the segment ended.
-        StringBuffer segmentEndCause = new StringBuffer();
-        
-//        // A CSV logger to log all the progress of our algorithm for offline analysis
-//        CSVWriter logger = new CSVWriter(new FileWriter(orienteeringProperties.getOutputFolderPath()+instance.getName()+"_ALNSlog.csv"), '\t');
-        
-//        // Log headers to the CSV
-//        String [] headers = {
-//                    "Segment", "Iteration", "Time",
-//                    "Destroy Heuristic", "DWeight", "Repair Heuristic", "RWeight", "Repaired?",
-//                    "Temperature", "q",
-//                    "xOld", "xOldObj",
-//                    "xNew", "xNewObj", "Accepted?","Worse but accepted?", "Infeasible & Discarded?",
-//                    "xBest", "xBestObj",
-//                    "xBestInSegments", "xBestInSegmentsObj",
-//                    "Optimum?",
-//                    "Comment"
-//        };
-//        logger.writeNext(headers);
-        
-        // ALNS START: Cycles every segment
-        do{
-            temperature = initialTtemperature;
+    public void optimizeALNS() throws IOException, GRBException, InterruptedException, Exception{
+        try{
+            // Send the controller a message saying we're starting
+            notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING);
             
-            // Reset heuristic weights
-            // If we aren't in the first iteration, give a prize and a punishment
-            // to the best and the worst heuristics
-            if(segments > 0){
-                // Save the best and the worst heuristics
-                List<BiFunction<List<Cluster>, Integer, List<Cluster>>> bestDestroys = destroyMethods.getAllMostProbable();
-                List<BiFunction<List<Cluster>, Integer, List<Cluster>>> worstDestroys = destroyMethods.getAllLeastProbable();
-                List<BiFunction<List<Cluster>, Integer, List<Cluster>>> bestRepairs = repairMethods.getAllMostProbable();
-                List<BiFunction<List<Cluster>,Integer, List<Cluster>>> worstRepairs = repairMethods.getAllLeastProbable();
-                
-                // Reset all heuristic weights
-                resetHeuristicMethodsWeight();
-                
-                // Reward and punish
-                destroyMethods.scaleAllWeightsOf(bestDestroys, ALNSProperties.getRewardForBestSegmentHeuristics());
-                destroyMethods.scaleAllWeightsOf(worstDestroys, ALNSProperties.getPunishmentForWorstSegmentHeuristics());
-                repairMethods.scaleAllWeightsOf(bestRepairs, ALNSProperties.getRewardForBestSegmentHeuristics());
-                repairMethods.scaleAllWeightsOf(worstRepairs, ALNSProperties.getPunishmentForWorstSegmentHeuristics());
-            }
+            // Setup the Excel logger
+            ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
+                    orienteeringProperties.getOutputFolderPath()+instance.getName()+"_ALNS.xlsx",
+                    instance.getName());
 
-            // Iterations inside a segment (SEGMENT START)
-            int iterations;
-            // Keeping track of the number of iterations without improvement in the segment
-            int iterationsWithoutImprovement = 0;
-            for(
-                    iterations = 0;
-                    iterations < ALNSProperties.getSegmentSize()
-                    && xOld.size()>1
-                    && elapsedTime <= ALNSProperties.getTimeLimitALNS()
-                    && iterationsWithoutImprovement < ALNSProperties.getMaxIterationsWithoutImprovement();
-                    iterations++
-                )
-            {
-                
-                
-                // Setup of boolean values to evaluate solution quality
-                solutionIsAccepted = false;
-                solutionIsNewGlobalOptimum = false;
-                solutionIsBetterThanOld= false;
-                solutionIsWorseButAccepted = false;
-                solutionIsWorseAndRejected = false;
-                repairMethodWasUsed = false;
+            // This is a generic ALNS implementation
+            GRBModel relaxedModel = model.relax();
+            relaxedModel.optimize();
 
-                // Picking a destroy and a repair method
-                destroyMethod = pickDestroyMethod();
-                repairMethod = pickRepairMethod();
-                
-                // Apply the destruction method on the solution
-                xNew = destroyMethod.apply(xOld, q);
-                //If the new solution is infeasible, apply the repair method
-                if(!testSolution(xNew, false)){
-                    xNew = repairBackToFeasibility4(xNew, repairMethod);
-                    repairMethodWasUsed = true;
+            // Temperature mitigates the effects of the simulated annealing process
+            // A lower temperature will make it less likely for the proccess to accept
+            // a pejorative solution
+            double initialTtemperature = 2*relaxedModel.get(GRB.DoubleAttr.ObjBound);
+            double temperature;
+
+            // Memory cleanup
+            relaxedModel.dispose();
+
+            // STEP 1: generate a CONSTRUCTIVE SOLUTION
+            // xOld stores the previous solution, the starting point of any iteration
+            List<Cluster> xOld = this.ALNSConstructiveSolution();
+            // stores the new solution, produced by the destroy and repair heuristics
+            List<Cluster> xNew = xOld;
+            // stores the best solution found through iterations
+            List<Cluster> xBest = xOld;
+            // stores the best solution found through segments
+            List<Cluster> xBestInSegments = xOld;
+
+            // old value of the objective function, generated through the old solution
+            double oldObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+            // new value of the objective function produced by the current iteration
+            double newObjectiveValue = oldObjectiveValue;
+            // best value of the objective function throughout iterations
+            double bestObjectiveValue = oldObjectiveValue;
+            // best value of the objective function throughout segments
+            double bestObjectiveValueInSegments = oldObjectiveValue;
+
+            // qMax is the maximum number of clusters to operate on with heuristic
+            int qMax = instance.getNum_clusters();
+            int qMin = 1;
+
+            // q is the number of clusters to repair and destroy at each iteration
+            int q=ALNSProperties.getqStart();
+
+
+            // This is how much q should increase at every iteration
+            // int qDelta = Math.floorDiv(qMax, 10); // to parametrize
+
+            // These variables are references to the chosen destroy and repair methods
+            // for the current iteration
+            BiFunction<List<Cluster>,Integer,List<Cluster>> destroyMethod;
+            BiFunction<List<Cluster>,Integer,List<Cluster>> repairMethod;
+
+            // Parameters to determine how to update heuristic weights
+            boolean solutionIsAccepted;
+            boolean solutionIsNewGlobalOptimum;  // true if c(xNew)>c(xBest)
+            boolean solutionIsBetterThanOld;     // true if c(xNew)>c(xOld)
+            boolean solutionIsWorseButAccepted;  // true id c(xNew)<=c(xOld) but xNew is accepted
+            boolean solutionIsWorseAndRejected;  // true id c(xNew)<=c(xOld) and xNew is rejected
+            boolean repairMethodWasUsed;         // Keeping track whether a repair method had to be used or not
+            boolean optimumFound = false;        // true if the optimum solution for the problem was found
+
+            // Setup of stopping criterions and time management
+            long startTimeInNanos = System.nanoTime();
+
+            // Keeping track of how many segments of iterations have been performed
+            long segments = 0;
+            //long maxSegments = 1000;
+
+            // Keeping track of how many segments without improvement have been seen
+            long segmentsWithoutImprovement = 0;
+            //long maxSegmentsWithoutImprovement = 20; // to parametrize / REMOVE
+
+            // A string to log why the segment ended.
+            StringBuffer segmentEndCause = new StringBuffer();
+
+    //        // A CSV logger to log all the progress of our algorithm for offline analysis
+    //        CSVWriter logger = new CSVWriter(new FileWriter(orienteeringProperties.getOutputFolderPath()+instance.getName()+"_ALNSlog.csv"), '\t');
+
+    //        // Log headers to the CSV
+    //        String [] headers = {
+    //                    "Segment", "Iteration", "Time",
+    //                    "Destroy Heuristic", "DWeight", "Repair Heuristic", "RWeight", "Repaired?",
+    //                    "Temperature", "q",
+    //                    "xOld", "xOldObj",
+    //                    "xNew", "xNewObj", "Accepted?","Worse but accepted?", "Infeasible & Discarded?",
+    //                    "xBest", "xBestObj",
+    //                    "xBestInSegments", "xBestInSegmentsObj",
+    //                    "Optimum?",
+    //                    "Comment"
+    //        };
+    //        logger.writeNext(headers);
+
+            // ALNS START: Cycles every segment
+            do{
+                notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+                temperature = initialTtemperature;
+
+                // Reset heuristic weights
+                // If we aren't in the first iteration, give a prize and a punishment
+                // to the best and the worst heuristics
+                if(segments > 0){
+                    // Save the best and the worst heuristics
+                    List<BiFunction<List<Cluster>, Integer, List<Cluster>>> bestDestroys = destroyMethods.getAllMostProbable();
+                    List<BiFunction<List<Cluster>, Integer, List<Cluster>>> worstDestroys = destroyMethods.getAllLeastProbable();
+                    List<BiFunction<List<Cluster>, Integer, List<Cluster>>> bestRepairs = repairMethods.getAllMostProbable();
+                    List<BiFunction<List<Cluster>,Integer, List<Cluster>>> worstRepairs = repairMethods.getAllLeastProbable();
+
+                    // Reset all heuristic weights
+                    resetHeuristicMethodsWeight();
+
+                    // Reward and punish
+                    destroyMethods.scaleAllWeightsOf(bestDestroys, ALNSProperties.getRewardForBestSegmentHeuristics());
+                    destroyMethods.scaleAllWeightsOf(worstDestroys, ALNSProperties.getPunishmentForWorstSegmentHeuristics());
+                    repairMethods.scaleAllWeightsOf(bestRepairs, ALNSProperties.getRewardForBestSegmentHeuristics());
+                    repairMethods.scaleAllWeightsOf(worstRepairs, ALNSProperties.getPunishmentForWorstSegmentHeuristics());
                 }
-                
-                // Check if we entered feasibility. If we didn't,
-                // gather the value of the objective function for the new solution
-                // obtained through the chosen methods
-                if(testSolution(xNew, false)){
-                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-                }
-                else{
-                    // If we're here, it means that the repaired solution was still infeasible,
-                    // which is pretty bad and shouldn't happen (too often)
-                    
-                    // CHOICE 1: discard the solution, penalize the two heuristics
+
+                // Iterations inside a segment (SEGMENT START)
+                int iterations;
+                // Keeping track of the number of iterations without improvement in the segment
+                int iterationsWithoutImprovement = 0;
+                for(
+                        iterations = 0;
+                        iterations < ALNSProperties.getSegmentSize()
+                        && xOld.size()>1
+                        && elapsedTime <= ALNSProperties.getTimeLimitALNS()
+                        && iterationsWithoutImprovement < ALNSProperties.getMaxIterationsWithoutImprovement()
+                        && !this.isCancelled();
+                        iterations++
+                    )
+                {
+
+
+                    // Setup of boolean values to evaluate solution quality
+                    solutionIsAccepted = false;
+                    solutionIsNewGlobalOptimum = false;
+                    solutionIsBetterThanOld= false;
+                    solutionIsWorseButAccepted = false;
+                    solutionIsWorseAndRejected = false;
+                    repairMethodWasUsed = false;
+
+                    // Picking a destroy and a repair method
+                    destroyMethod = pickDestroyMethod();
+                    repairMethod = pickRepairMethod();
+
+                    // Apply the destruction method on the solution
+                    xNew = destroyMethod.apply(xOld, q);
+                    //If the new solution is infeasible, apply the repair method
+                    if(!testSolution(xNew, false)){
+                        xNew = repairBackToFeasibility4(xNew, repairMethod);
+                        repairMethodWasUsed = true;
+                    }
+
+                    // Check if we entered feasibility. If we didn't,
+                    // gather the value of the objective function for the new solution
+                    // obtained through the chosen methods
+                    if(testSolution(xNew, false)){
+                        newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+                    }
+                    else{
+                        // If we're here, it means that the repaired solution was still infeasible,
+                        // which is pretty bad and shouldn't happen (too often)
+
+                        // CHOICE 1: discard the solution, penalize the two heuristics
+                        // Log the results to CSV
+                        // Update the elapsed time
+                        elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
+
+                        String [] logLine = {
+                            segments+"", iterations+"", elapsedTime+"",
+                            destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
+                            repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
+                            repairMethodWasUsed ? "1" : "0",
+                            temperature+"", q+"",
+                            csvFormatSolution(xOld), oldObjectiveValue+"",
+                            csvFormatSolution(xNew), "infeasible", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "1",
+                            csvFormatSolution(xBest), bestObjectiveValue+"",
+                            csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
+                            "0",
+                            "Infeasible and discarded."
+                        };
+    //                    logger.writeNext(logLine);
+                        xlsxLogger.writeRow(logLine);
+                        notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+
+                        // Update heuristic weights
+                        updateHeuristicMethodsWeight(destroyMethod,
+                                repairMethod,
+                                false,
+                                false,
+                                false,
+                                true,
+                                repairMethodWasUsed);
+
+                        // Update temperature, just like at the end of every iteration
+                        temperature *= ALNSProperties.getAlpha();
+
+                        // Update the count of iterations without improvement
+                        iterationsWithoutImprovement++;
+
+                        // proceed with the next iteration
+                        continue;
+
+    //                    // CHOICE 2: get the best bound on the objective and continue
+    //                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjBound);
+
+    //                    // CHOICE 3: bring the solution back to feasibility and go on
+    //                    xNew = repairBackToFeasibility2(xNew);
+    //                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+                    }
+
+                    // In any case, now the model has been updated and it stores data
+                    // about the current solution
+
+                    // Solution evaluation: if the solution improves the obj function, save it
+                    // and give a prize to the heuristics according to their performance
+                    solutionIsBetterThanOld = (newObjectiveValue > oldObjectiveValue);
+
+                    // In case the solution is accepted, keep track whether it's
+                    // improving the objective
+                    solutionIsAccepted = acceptSolution(oldObjectiveValue, newObjectiveValue, temperature);
+                    if(solutionIsAccepted){
+                        if(!solutionIsBetterThanOld) solutionIsWorseButAccepted=true;
+                    }
+                    else if(!solutionIsBetterThanOld) solutionIsWorseAndRejected=true;
+
+                    // Anyway, if the solution is better than the current best for the segment
+                    // save it as xBest, and its objective value in bestObjectiveValue
+                    solutionIsNewGlobalOptimum = newObjectiveValue > bestObjectiveValue;
+                    if(newObjectiveValue >= bestObjectiveValue){ // DEBUG: I changed > to >= to accept even different solutions with the same value for a change
+                        xBest = xNew;
+                        bestObjectiveValue = newObjectiveValue;
+                        // TODO: should I check if the solution is even better than the segment best? maybe not
+                        // that would give unnecessary importance to the first heuristic chosen
+
+                        // The solution is a new global optimum only if there was a real improvement
+                        if(solutionIsNewGlobalOptimum){
+                            iterationsWithoutImprovement = 0;
+                        }
+                        else iterationsWithoutImprovement++;
+    //                    // So, let's check if we've reached the optimum (haha, fat chance)
+    //                    if(false && model.get(GRB.IntAttr.Status) == GRB.OPTIMAL){
+    //                        optimumFound = true;
+    //                        // Log the results to CSV
+    //                        // Update the elapsed time
+    //                        elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
+    //                        
+    //                        String [] logLine = {
+    //                        segments+"", iterations+"", elapsedTime+"",
+    //                        heuristicNames.get(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
+    //                        heuristicNames.get(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
+    //                        repairMethodWasUsed ? "1" : "0",
+    //                        temperature+"", q+"",
+    //                        csvFormatSolution(xOld), oldObjectiveValue+"",
+    //                        csvFormatSolution(xNew), newObjectiveValue+"", solutionIsWorseButAccepted ? "1" : "0", "0",
+    //                        csvFormatSolution(xBest), bestObjectiveValue+"",
+    //                        csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
+    //                        "1", // optimum found
+    //                        "Optimal solution found!"
+    //                        };
+    //                        logger.writeNext(logLine);
+    //                        break;
+    //                    }
+                    }
+                    else iterationsWithoutImprovement++;
+
+                    // Update temperature at the end of every iteration
+                    temperature *= ALNSProperties.getAlpha();
+
                     // Log the results to CSV
                     // Update the elapsed time
                     elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
-                    
+
+                    // Log at the end of the iteration
                     String [] logLine = {
                         segments+"", iterations+"", elapsedTime+"",
                         destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
@@ -589,285 +708,185 @@ public class ALNS extends Orienteering{
                         repairMethodWasUsed ? "1" : "0",
                         temperature+"", q+"",
                         csvFormatSolution(xOld), oldObjectiveValue+"",
-                        csvFormatSolution(xNew), "infeasible", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "1",
+                        csvFormatSolution(xNew), newObjectiveValue+"", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "0",
                         csvFormatSolution(xBest), bestObjectiveValue+"",
                         csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
-                        "0",
-                        "Infeasible and discarded."
+                        optimumFound ? "1" : "0",
+                        ""
                     };
-//                    logger.writeNext(logLine);
+    //                logger.writeNext(logLine);
                     xlsxLogger.writeRow(logLine);
-                    notifyController(elapsedTime);
-                    
-                    // Update heuristic weights
-                    updateHeuristicMethodsWeight(destroyMethod,
-                            repairMethod,
-                            false,
-                            false,
-                            false,
-                            true,
-                            repairMethodWasUsed);
-                    
-                    // Update temperature, just like at the end of every iteration
-                    temperature *= ALNSProperties.getAlpha();
-                    
-                    // Update the count of iterations without improvement
-                    iterationsWithoutImprovement++;
-                    
-                    // proceed with the next iteration
-                    continue;
+                    notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
 
-//                    // CHOICE 2: get the best bound on the objective and continue
-//                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjBound);
-                    
-//                    // CHOICE 3: bring the solution back to feasibility and go on
-//                    xNew = repairBackToFeasibility2(xNew);
-//                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-                }
-                
-                // In any case, now the model has been updated and it stores data
-                // about the current solution
-                
-                // Solution evaluation: if the solution improves the obj function, save it
-                // and give a prize to the heuristics according to their performance
-                solutionIsBetterThanOld = (newObjectiveValue > oldObjectiveValue);
-                
-                // In case the solution is accepted, keep track whether it's
-                // improving the objective
-                solutionIsAccepted = acceptSolution(oldObjectiveValue, newObjectiveValue, temperature);
-                if(solutionIsAccepted){
-                    if(!solutionIsBetterThanOld) solutionIsWorseButAccepted=true;
-                }
-                else if(!solutionIsBetterThanOld) solutionIsWorseAndRejected=true;
-                
-                // Anyway, if the solution is better than the current best for the segment
-                // save it as xBest, and its objective value in bestObjectiveValue
-                solutionIsNewGlobalOptimum = newObjectiveValue > bestObjectiveValue;
-                if(newObjectiveValue >= bestObjectiveValue){ // DEBUG: I changed > to >= to accept even different solutions with the same value for a change
-                    xBest = xNew;
-                    bestObjectiveValue = newObjectiveValue;
-                    // TODO: should I check if the solution is even better than the segment best? maybe not
-                    // that would give unnecessary importance to the first heuristic chosen
-                    
-                    // The solution is a new global optimum only if there was a real improvement
-                    if(solutionIsNewGlobalOptimum){
-                        iterationsWithoutImprovement = 0;
+                    // Update the heuristic weights
+                    updateHeuristicMethodsWeight(
+                            destroyMethod, repairMethod,
+                            solutionIsNewGlobalOptimum,
+                            solutionIsBetterThanOld,
+                            solutionIsWorseButAccepted,
+                            solutionIsWorseAndRejected,
+                            repairMethodWasUsed);
+
+                    // If the new solution was accepted, use it as a starting point for the next iteration
+                    if(solutionIsAccepted){
+                        xOld = xNew;
+                        oldObjectiveValue = newObjectiveValue;
                     }
-                    else iterationsWithoutImprovement++;
-//                    // So, let's check if we've reached the optimum (haha, fat chance)
-//                    if(false && model.get(GRB.IntAttr.Status) == GRB.OPTIMAL){
-//                        optimumFound = true;
-//                        // Log the results to CSV
-//                        // Update the elapsed time
-//                        elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
-//                        
-//                        String [] logLine = {
-//                        segments+"", iterations+"", elapsedTime+"",
-//                        heuristicNames.get(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
-//                        heuristicNames.get(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
-//                        repairMethodWasUsed ? "1" : "0",
-//                        temperature+"", q+"",
-//                        csvFormatSolution(xOld), oldObjectiveValue+"",
-//                        csvFormatSolution(xNew), newObjectiveValue+"", solutionIsWorseButAccepted ? "1" : "0", "0",
-//                        csvFormatSolution(xBest), bestObjectiveValue+"",
-//                        csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
-//                        "1", // optimum found
-//                        "Optimal solution found!"
-//                        };
-//                        logger.writeNext(logLine);
-//                        break;
-//                    }
+
+                    // Update the elapsed time
+                    elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
+                } // for: end of all iterations in the segment
+
+    //            // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
+    //            // This would be a nice spot to use some local search algorithm:
+    //            // repairBackToFeasibility will check whether the solution found in
+    //            // this segment is infeasible or not; if it is infeasible it will bring
+    //            // it back to feasibility through a special repair heuristic
+    //            List<Cluster> xBestRepaired = repairBackToFeasibility(xBest);
+    //            
+    //            // If xBest and xBestRepaired are not the same solution, make sure the feasible one is the best
+    //            if(!(xBest.containsAll(xBestRepaired) && xBestRepaired.containsAll(xBest))){
+    //                // TODO: I'm not sure about this, I need to check again tomorrow; update bestObjectiveValue accordingly
+    //                xBest = xBestRepaired;
+    //                bestObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+    //            }
+    //            
+                // We check whether there was an improvement from last segment to this one
+                if(bestObjectiveValueInSegments < bestObjectiveValue){
+                    // There was an improvement! Save the best solution found in the iterations
+                    bestObjectiveValueInSegments = bestObjectiveValue;
+                    xBestInSegments = xBest;
+                    // Reset the no-improvement counter
+                    segmentsWithoutImprovement = 0;
                 }
-                else iterationsWithoutImprovement++;
-                
-                // Update temperature at the end of every iteration
-                temperature *= ALNSProperties.getAlpha();
-                
-                // Log the results to CSV
+                else{
+                    // There was no improvement: update the no-improvement counter
+                    segmentsWithoutImprovement++;
+                } 
+
+                // Check and log why the segment has ended
+                if(iterations >= ALNSProperties.getSegmentSize())
+                    segmentEndCause.append(" Max segment size reached ("+iterations+")!");
+                if(xOld.size()<=1)
+                    segmentEndCause.append(" xOld is too small to work with (size="+xOld.size()+")!");
+                if(elapsedTime > ALNSProperties.getTimeLimitALNS())
+                    segmentEndCause.append(" ALNS time limit reached!");
+                if(iterationsWithoutImprovement >= ALNSProperties.getMaxIterationsWithoutImprovement())
+                    segmentEndCause.append(" Too many iterations without improvement ("+iterationsWithoutImprovement+")!");
+
                 // Update the elapsed time
                 elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
-                
-                // Log at the end of the iteration
-                String [] logLine = {
-                    segments+"", iterations+"", elapsedTime+"",
-                    destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod)+"",
-                    repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod)+"",
-                    repairMethodWasUsed ? "1" : "0",
+
+                // Log at the end of the segment
+                String [] logLineSegmentEnd = {
+                    segments+"", "*"+"", elapsedTime+"",
+                    "*", "*", "*", "*", "*",
                     temperature+"", q+"",
-                    csvFormatSolution(xOld), oldObjectiveValue+"",
-                    csvFormatSolution(xNew), newObjectiveValue+"", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "0",
+                    "*", "*",
+                    "*", "*", "*", "*", "*",
                     csvFormatSolution(xBest), bestObjectiveValue+"",
                     csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
                     optimumFound ? "1" : "0",
-                    ""
+                    "End of the segment. Reason: "+segmentEndCause.toString()
                 };
-//                logger.writeNext(logLine);
-                xlsxLogger.writeRow(logLine);
-                notifyController(elapsedTime);
-                
-                // Update the heuristic weights
-                updateHeuristicMethodsWeight(
-                        destroyMethod, repairMethod,
-                        solutionIsNewGlobalOptimum,
-                        solutionIsBetterThanOld,
-                        solutionIsWorseButAccepted,
-                        solutionIsWorseAndRejected,
-                        repairMethodWasUsed);
-                
-                // If the new solution was accepted, use it as a starting point for the next iteration
-                if(solutionIsAccepted){
-                    xOld = xNew;
-                    oldObjectiveValue = newObjectiveValue;
+    //            logger.writeNext(logLineSegmentEnd);
+                xlsxLogger.writeRow(logLineSegmentEnd);
+                notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+
+                // Reset the StringBuffer that logs the reason why a segment has ended
+                segmentEndCause = new StringBuffer();
+
+                // Let's try a local search run, if we have time for it
+                List<Cluster> xLocalSearch = this.localSearch(xBestInSegments, elapsedTime, ALNSProperties.getTimeLimitLocalSearch(), segmentsWithoutImprovement);
+                double localSearchObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+
+                // If the local search was successful, save the new solution as the best in segments
+                if(localSearchObjectiveValue >= bestObjectiveValueInSegments){
+                    xBestInSegments = xLocalSearch;
+                    bestObjectiveValueInSegments = localSearchObjectiveValue;
                 }
-                
+
+                // Anyway, let's log the local search results
+                StringBuffer localSearchComment = new StringBuffer();
+
+                // Let's check if the local search was aborted
+                // (it's the negation of the same check we do at the beginning of a
+                // local search to decide whether to start a local search or not)
+                if(
+                    !(ALNSProperties.getTimeLimitLocalSearch() > 0
+                    && ALNSProperties.getTimeLimitLocalSearch()+elapsedTime <= ALNSProperties.getTimeLimitALNS()
+                    && segmentsWithoutImprovement < 1.0))
+                {
+                    localSearchComment.append("ABORT:");
+                    if(ALNSProperties.getTimeLimitLocalSearch() <= 0)
+                        localSearchComment.append(" Local search disabled by user!");
+                    if(ALNSProperties.getTimeLimitLocalSearch()+elapsedTime > ALNSProperties.getTimeLimitALNS())
+                        localSearchComment.append(" No time left for the local search to run!");
+                    if(segmentsWithoutImprovement >= 1.0)
+                        localSearchComment.append(" No improvement since last segment, it's useless to perform a local search!");
+                }
+                else localSearchComment.append("OK");
+
+
                 // Update the elapsed time
                 elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
-            } // for: end of all iterations in the segment
-            
-//            // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
-//            // This would be a nice spot to use some local search algorithm:
-//            // repairBackToFeasibility will check whether the solution found in
-//            // this segment is infeasible or not; if it is infeasible it will bring
-//            // it back to feasibility through a special repair heuristic
-//            List<Cluster> xBestRepaired = repairBackToFeasibility(xBest);
-//            
-//            // If xBest and xBestRepaired are not the same solution, make sure the feasible one is the best
-//            if(!(xBest.containsAll(xBestRepaired) && xBestRepaired.containsAll(xBest))){
-//                // TODO: I'm not sure about this, I need to check again tomorrow; update bestObjectiveValue accordingly
-//                xBest = xBestRepaired;
-//                bestObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-//            }
-//            
-            // We check whether there was an improvement from last segment to this one
-            if(bestObjectiveValueInSegments < bestObjectiveValue){
-                // There was an improvement! Save the best solution found in the iterations
-                bestObjectiveValueInSegments = bestObjectiveValue;
-                xBestInSegments = xBest;
-                // Reset the no-improvement counter
-                segmentsWithoutImprovement = 0;
-            }
-            else{
-                // There was no improvement: update the no-improvement counter
-                segmentsWithoutImprovement++;
-            } 
-            
-            // Check and log why the segment has ended
-            if(iterations >= ALNSProperties.getSegmentSize())
-                segmentEndCause.append(" Max segment size reached ("+iterations+")!");
-            if(xOld.size()<=1)
-                segmentEndCause.append(" xOld is too small to work with (size="+xOld.size()+")!");
-            if(elapsedTime > ALNSProperties.getTimeLimitALNS())
-                segmentEndCause.append(" ALNS time limit reached!");
-            if(iterationsWithoutImprovement >= ALNSProperties.getMaxIterationsWithoutImprovement())
-                segmentEndCause.append(" Too many iterations without improvement ("+iterationsWithoutImprovement+")!");
-            
-            // Update the elapsed time
-            elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
 
-            // Log at the end of the segment
-            String [] logLineSegmentEnd = {
-                segments+"", "*"+"", elapsedTime+"",
-                "*", "*", "*", "*", "*",
-                temperature+"", q+"",
-                "*", "*",
-                "*", "*", "*", "*", "*",
-                csvFormatSolution(xBest), bestObjectiveValue+"",
-                csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
-                optimumFound ? "1" : "0",
-                "End of the segment. Reason: "+segmentEndCause.toString()
-            };
-//            logger.writeNext(logLineSegmentEnd);
-            xlsxLogger.writeRow(logLineSegmentEnd);
-            notifyController(elapsedTime);
-            
-            // Reset the StringBuffer that logs the reason why a segment has ended
-            segmentEndCause = new StringBuffer();
-            
-            // Let's try a local search run, if we have time for it
-            List<Cluster> xLocalSearch = this.localSearch(xBestInSegments, elapsedTime, ALNSProperties.getTimeLimitLocalSearch(), segmentsWithoutImprovement);
-            double localSearchObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-            
-            // If the local search was successful, save the new solution as the best in segments
-            if(localSearchObjectiveValue >= bestObjectiveValueInSegments){
-                xBestInSegments = xLocalSearch;
-                bestObjectiveValueInSegments = localSearchObjectiveValue;
-            }
-            
-            // Anyway, let's log the local search results
-            StringBuffer localSearchComment = new StringBuffer();
-            
-            // Let's check if the local search was aborted
-            // (it's the negation of the same check we do at the beginning of a
-            // local search to decide whether to start a local search or not)
-            if(
-                !(ALNSProperties.getTimeLimitLocalSearch() > 0
-                && ALNSProperties.getTimeLimitLocalSearch()+elapsedTime <= ALNSProperties.getTimeLimitALNS()
-                && segmentsWithoutImprovement < 1.0))
-            {
-                localSearchComment.append("ABORT:");
-                if(ALNSProperties.getTimeLimitLocalSearch() <= 0)
-                    localSearchComment.append(" Local search disabled by user!");
-                if(ALNSProperties.getTimeLimitLocalSearch()+elapsedTime > ALNSProperties.getTimeLimitALNS())
-                    localSearchComment.append(" No time left for the local search to run!");
-                if(segmentsWithoutImprovement >= 1.0)
-                    localSearchComment.append(" No improvement since last segment, it's useless to perform a local search!");
-            }
-            else localSearchComment.append("OK");
-            
-            
-            // Update the elapsed time
-            elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-startTimeInNanos);
+                // Log outputs
+                String [] logLine = {
+                    segments+"", "*"+"", elapsedTime+"",
+                    "*", "*", "*", "*", "*",
+                    temperature+"", q+"",
+                    "*", "*",
+                    "*", "*", "*", "*", "*",
+                    csvFormatSolution(xBest), bestObjectiveValue+"",
+                    csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
+                    optimumFound ? "1" : "0",
+                    "Local search results. "+localSearchComment.toString()
+                };
+    //            logger.writeNext(logLine);
+                xlsxLogger.writeRow(logLine);
+                notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
 
-            // Log outputs
-            String [] logLine = {
-                segments+"", "*"+"", elapsedTime+"",
-                "*", "*", "*", "*", "*",
-                temperature+"", q+"",
-                "*", "*",
-                "*", "*", "*", "*", "*",
-                csvFormatSolution(xBest), bestObjectiveValue+"",
-                csvFormatSolution(xBestInSegments), bestObjectiveValueInSegments+"",
-                optimumFound ? "1" : "0",
-                "Local search results. "+localSearchComment.toString()
-            };
-//            logger.writeNext(logLine);
-            xlsxLogger.writeRow(logLine);
-            notifyController(elapsedTime);
+                // Prepare solutions for the next segment
+                xOld = xBestInSegments;
+                xNew = xBestInSegments;
+                xBest = xBestInSegments;
+                oldObjectiveValue = bestObjectiveValueInSegments;
+                newObjectiveValue = bestObjectiveValueInSegments;
+                bestObjectiveValue = bestObjectiveValueInSegments;
+
+                // Update q and the segment counter
+                q += ALNSProperties.getqDelta();
+                segments++;
+            } // do: Stopping criteria. If not verified, go on with the next segment
+            while(
+                    elapsedTime <= ALNSProperties.getTimeLimitALNS()
+                    && q>=qMin
+                    && q<=qMax
+                    && segments < ALNSProperties.getMaxSegments()
+                    && segmentsWithoutImprovement < ALNSProperties.getMaxSegmentsWithoutImprovement()
+                    && !this.isCancelled()
+                    //&& !optimumFound
+            );
+
+            // Close the excel logger gracefully
+            xlsxLogger.close();
+            notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+
+            // Final test to set variables in the model and log vehicle paths
+            testSolution(xBestInSegments, true);
+
+            // Save the solution to file
+            super.writeSolution();
             
-            // Prepare solutions for the next segment
-            xOld = xBestInSegments;
-            xNew = xBestInSegments;
-            xBest = xBestInSegments;
-            oldObjectiveValue = bestObjectiveValueInSegments;
-            newObjectiveValue = bestObjectiveValueInSegments;
-            bestObjectiveValue = bestObjectiveValueInSegments;
-            
-            // Update q and the segment counter
-            q += ALNSProperties.getqDelta();
-            segments++;
-        } // do: Stopping criteria. If not verified, go on with the next segment
-        while(
-                elapsedTime <= ALNSProperties.getTimeLimitALNS()
-                && q>=qMin
-                && q<=qMax
-                && segments < ALNSProperties.getMaxSegments()
-                && segmentsWithoutImprovement < ALNSProperties.getMaxSegmentsWithoutImprovement()
-                //&& !optimumFound
-        );
-        
-//        // Close the logger gracefully
-//        logger.flushQuietly();
-//        logger.close();
-        
-        // Close the excel logger gracefully
-        xlsxLogger.close();
-        notifyController(elapsedTime);
-        
-        // Final test to set variables in the model and log vehicle paths
-        testSolution(xBestInSegments, true);
-        
-        // Save the solution to file
-        super.writeSolution();
+            // If we were interrupted by the user, throw an exception
+            if(this.isCancelled())
+                throw new InterruptedException("optimizeALNS() interrupted in the solver phase.");
+        }catch(InterruptedException e){
+            notifyController(elapsedTime, OptimizationStatusMessage.Status.STOPPED);
+            super.cancel(true);
+            throw new InterruptedException(e.getMessage());
+        }
     }
     
     /**
@@ -1819,6 +1838,11 @@ public class ALNS extends Orienteering{
         }
         catch(InterruptedException e){
             env.message("Optimization interrupted by user.\n");
+            env.message(e.getMessage());
+            this.cleanup();
+            //DEBUG: uncomment later
+            //logRedirector.cancel(true);
+            return false;
         }
         finally{
             this.cleanup();
@@ -1826,7 +1850,7 @@ public class ALNS extends Orienteering{
             //logRedirector.finish();
             logRedirector.cancel(true);
         }
-        
+        // We're done!
         return true;
     }
     
@@ -1834,19 +1858,46 @@ public class ALNS extends Orienteering{
      * Notify the controller of current solver progress
      * @param elapsedTime time elapsed since the start of the current solver process
      */
-    protected void notifyController(long elapsedTime){
-        this.setProgress(progressEstimate(elapsedTime));
+    protected void notifyController(long elapsedTime, OptimizationStatusMessage.Status alnsStatus){
+        OptimizationStatusMessage.Status realState = OptimizationStatusMessage.Status.RUNNING;
+        switch(alnsStatus){
+            case STARTING:
+                if(isCancelled())
+                    realState = OptimizationStatusMessage.Status.STOPPING;
+                else realState = OptimizationStatusMessage.Status.STARTING;
+                break;
+                
+            case RUNNING:
+                if(isCancelled())
+                    realState = OptimizationStatusMessage.Status.STOPPING;
+                else realState = OptimizationStatusMessage.Status.RUNNING;
+                break;
+                
+            case DONE:
+                realState = OptimizationStatusMessage.Status.DONE;
+                break;
+            
+            case STOPPED:
+                realState = OptimizationStatusMessage.Status.STOPPED;
+                break;
+        }
+        
+        // Do an estimate of the progress
+        this.setProgress(this.progressEstimate(elapsedTime));
+        
         OptimizationStatusMessage osm = new OptimizationStatusMessage(
-                instance.getName(),
-                this.getProgress(),
-                elapsedTime);
-        //publish(osm);
+                    instance.getName(),
+                    this.getProgress(),
+                    elapsedTime,
+                    realState
+        );
+        
         controller.setMessageFromALNS(osm);
     }
     
     @Override
     protected void process(List<OptimizationStatusMessage> messages){
-        if(messages != null && messages.size() != 0){
+        if(messages != null && !messages.isEmpty()){
             
         }
     }
@@ -1854,7 +1905,9 @@ public class ALNS extends Orienteering{
     @Override
     public void done(){
         if(this.getState() == StateValue.DONE){
-            notifyController(elapsedTime);
+            if(!isCancelled())
+                notifyController(elapsedTime, OptimizationStatusMessage.Status.DONE);
+            else notifyController(elapsedTime, OptimizationStatusMessage.Status.STOPPED);
         }
         /*
         try {

@@ -19,8 +19,6 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
-import solverModel.ALNS;
-import solverModel.Orienteering;
 import solverView.MainWindow;
 
 /**

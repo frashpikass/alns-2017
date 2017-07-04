@@ -845,12 +845,15 @@ public class ALNS extends Orienteering {
                 bestObjectiveValue = bestObjectiveValueInSegments;
 
                 // Update q and the segment counter
-                q += ALNSProperties.getqDelta();
+                // q will cycle: if it becomes bigger than qMax, it starts again
+                q = (q + ALNSProperties.getqDelta()) % qMax;
+                
+                // Segments will increase
                 segments++;
             } // do: Stopping criteria. If not verified, go on with the next segment
             while (elapsedTime <= ALNSProperties.getTimeLimitALNS()
                     && q >= qMin
-                    && q <= qMax // DEBUG: PROBLEM this makes it impossible for us to do real work for 30 minutes
+                    && q <= qMax // We should never exit because of this unless qStart was wrong
                     && segments < ALNSProperties.getMaxSegments()
                     && segmentsWithoutImprovement < ALNSProperties.getMaxSegmentsWithoutImprovement()
                     && !this.isCancelled() //&& !optimumFound

@@ -12,6 +12,7 @@ import gurobi.GRBException;
 import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
@@ -418,7 +419,7 @@ public class ALNS extends Orienteering {
 
             // Setup the Excel logger
             ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
-                    orienteeringProperties.getOutputFolderPath() + instance.getName() + "_ALNS.xlsx",
+                    orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_ALNS.xlsx",
                     instance.getName());
 
             // This is a generic ALNS implementation
@@ -849,7 +850,7 @@ public class ALNS extends Orienteering {
             } // do: Stopping criteria. If not verified, go on with the next segment
             while (elapsedTime <= ALNSProperties.getTimeLimitALNS()
                     && q >= qMin
-                    && q <= qMax
+                    && q <= qMax // DEBUG: PROBLEM this makes it impossible for us to do real work for 30 minutes
                     && segments < ALNSProperties.getMaxSegments()
                     && segmentsWithoutImprovement < ALNSProperties.getMaxSegmentsWithoutImprovement()
                     && !this.isCancelled() //&& !optimumFound
@@ -967,8 +968,9 @@ public class ALNS extends Orienteering {
          * specified probability if a pejorative solution is found.
          *
          * Let's define: DIFF = newObjectiveValue - oldObjectiveValue > 0 T>0
-         * So, if we improve our solution we get that DIFF>=0 and P=exp(DIFF/T)
-         * >= 1 => the solution is always accepted If the solution is worse
+         * So, if we improve our solution we get that
+         * DIFF>=0 and P=exp(DIFF/T) >= 1
+         * => the solution is always accepted If the solution is worse
          * DIFF<0 and 0 < P=exp(DIFF/T) < 1 => the solution is accepted with
          * probability P
          */
@@ -1256,7 +1258,9 @@ public class ALNS extends Orienteering {
                         if (!streaks.isEmpty()) {
                             streaks.sort(Streak.SIZE_COMPARATOR.reversed());
                             int streakSize = streaks.get(0).size();
-
+                            
+                            // PROBLEMA: sto prendendo la lunghezza dello streak invece della sua durata!
+                            
                             // If the streak we've found is bigger than the previous one
                             // update biggestStreakSize and firstVehicle
                             if (streakSize > biggestStreakSize) {

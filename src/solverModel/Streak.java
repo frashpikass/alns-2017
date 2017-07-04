@@ -5,6 +5,7 @@
  */
 package solverModel;
 
+import com.google.gson.Gson;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -137,7 +138,7 @@ public class Streak implements Comparable{
      */
     public int precedenceOn(Streak s){
         int ret = 0;
-        if(this.cluster.equals(s.cluster)){
+        if(this.cluster.equals(s.cluster) && !this.nodes.isEmpty() && !s.nodes.isEmpty()){
             // If the first node of this streak comes before the first node of
             // the other streak s, this streak has precedence on s
             int startOfThisStreak = this.cluster.positionOfNode(this.nodes.get(0));
@@ -249,5 +250,18 @@ public class Streak implements Comparable{
         return this.nodes.equals(s.nodes) && this.cluster==s.cluster && this.vehicle==s.vehicle;
     }
     
+    /**
+     * Returns a string representation of this streak
+     * @return a string representation of this streak
+     */
+    public String toString(){
+        StringBuffer sb = new StringBuffer("[");
+        for(Node n : nodes){
+            sb.append(n.toString());
+            sb.append(" ");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 
 }

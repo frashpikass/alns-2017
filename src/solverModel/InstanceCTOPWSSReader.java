@@ -3,6 +3,7 @@ package solverModel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,14 +57,23 @@ public class InstanceCTOPWSSReader
                 
                 // Fix: get first character for name
                 int firstIndexOfNameInPath;
-                if((firstIndexOfNameInPath = path.lastIndexOf("//"))==-1){
+                /*if((firstIndexOfNameInPath = path.lastIndexOf("/"))==-1){
                     if((firstIndexOfNameInPath = path.lastIndexOf("\\"))==-1){
                         firstIndexOfNameInPath=0;
                     }
                 }
+                */
                 
-                InstanceCTOPWSS inst = new InstanceCTOPWSS(path.substring(firstIndexOfNameInPath, path.lastIndexOf(".")), numClusters, numVehicles, numServices, numNodes, tmax);
-		List<Point> points = new ArrayList<>();
+                // Try to get filename and instance name from the path
+                Path instancePath = Paths.get(path);
+                String filename = instancePath.getFileName().toString();
+                String instanceName = filename;
+                if(filename.lastIndexOf('.') != -1)
+                    instanceName = filename.substring(0, filename.lastIndexOf('.'));
+                
+                //InstanceCTOPWSS inst = new InstanceCTOPWSS(path.substring(firstIndexOfNameInPath, path.lastIndexOf(".")), numClusters, numVehicles, numServices, numNodes, tmax);
+		InstanceCTOPWSS inst = new InstanceCTOPWSS(instanceName, numClusters, numVehicles, numServices, numNodes, tmax);
+                List<Point> points = new ArrayList<>();
 		
                 // Get node coordinates, service required and service duration
                 // The first/last nodes in the sequence are the starting/ending points

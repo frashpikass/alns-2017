@@ -235,7 +235,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         
         // Setup instance specific parameters
         this.modelPath = modelPath;
-        this.logFilePath = opb.getOutputFolderPath()+instanceNameFromPath(modelPath)+LOG_FILE_EXTESION;
+        this.logFilePath = opb.getOutputFolderPath()+File.pathSeparator+instanceNameFromPath(modelPath)+LOG_FILE_EXTESION;
         this.heuristicConstraints = new ArrayList<>();
         this.constraint8 = new ArrayList<>();
         this.constraint8Variables = new ArrayList<>();

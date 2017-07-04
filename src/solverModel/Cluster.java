@@ -457,8 +457,10 @@ public class Cluster {
             for(Streak sB : streaks){
                 // If two streaks are equal, do nothing
                 // If they are not equal, follow precedence and remove nodes
+                //System.out.println("Streak sA: "+sA+"; Streak sB: "+sB); // DEBUG: remove later
                 if(!sA.equals(sB) && sB.isPreceding(sA)){
                     sA.removeAll(sB);
+                    //System.out.println(""); // DEBUG remove later
                 }
             } // for each Streak sB
         } // for each Streak sA
@@ -531,7 +533,7 @@ public class Cluster {
         Set<Vehicle> vset = new HashSet<>();
         streaks.forEach(s -> vset.add(s.getVehicle()));
         
-        this.minNumberOfVehiclesNeeded = vset.size();
+        this.maxNumberOfVehiclesNeeded = vset.size();
     }
     
     /**

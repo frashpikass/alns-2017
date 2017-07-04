@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -33,8 +34,7 @@ public class Main {
      * Main method. Calls either the GUI or the Controller from a command line
      * interface.
      *
-     * @param args
-     * @return
+     * @param args input arguments from the command line
      */
     public static void main(String[] args) {
         try {
@@ -46,8 +46,7 @@ public class Main {
 
                 // Run the controller, if it was created correctly
                 if (cnt != null) {
-                    cnt.execute();
-                    cnt.get();
+                    SwingUtilities.invokeAndWait(cnt);
                 }
             }
         } catch (ParseException e) {

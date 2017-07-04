@@ -81,13 +81,18 @@ public class Controller
                 this.optimize(path);
 
                 currentALNS.execute();
-
+                
+                //DEBUG1:
+                currentALNS.get();
+                /*
                 try{
                     currentALNS.get();
                 }
                 catch(ExecutionException e){
                     System.out.println("Controller - ALNS has thrown ExecutionException: "+e.getMessage());
                 }
+                */
+                //DEBUG1_end
 
                 // Update the batch number
                 this.lastInstanceNumber++;

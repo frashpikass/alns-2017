@@ -37,12 +37,12 @@ public class ALNSPropertiesBean implements Serializable {
     /**
      * Maximum number of segments in an ALNS run
      */
-    private long maxSegments = 1000;
+    private long maxSegments = 10000;
 
     /**
      * Number of segments without improvement before ALNS termination
      */
-    private long maxSegmentsWithoutImprovement = 100;
+    private long maxSegmentsWithoutImprovement = 10000;
 
     /**
      * Determines whether to use this heuristic.
@@ -91,7 +91,7 @@ public class ALNSPropertiesBean implements Serializable {
      * <br>where psi is a value that indicates the relative score to give to an
      * heuristic.
      */
-    private double lambda = 0.5;
+    private double lambda = 0.55;
 
     /**
      * This is the decay parameter of the update process for Temperature.
@@ -106,24 +106,24 @@ public class ALNSPropertiesBean implements Serializable {
     /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
      */
-    private long timeLimitALNS = 5;
+    private long timeLimitALNS = 1800;
 
     /**
      * Maximum runtime for the local search process (in seconds)
      */
-    private long timeLimitLocalSearch = 90;
+    private long timeLimitLocalSearch = 120;
 
     /**
      * A scaling factor that's applied to the weight of the best heuristics at
      * the beginning of every segment
      */
-    private double rewardForBestSegmentHeuristics = 1.5;
+    private double rewardForBestSegmentHeuristics = 1.3;
 
     /**
      * A scaling factor that's applied to the weight of the worst heuristics at
      * the beginning of every segment
      */
-    private double punishmentForWorstSegmentHeuristics = 0.5;
+    private double punishmentForWorstSegmentHeuristics = 0.7;
 
     /**
      * This constant holds the possible values of psi, the function that prizes

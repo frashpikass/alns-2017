@@ -240,9 +240,6 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.constraint8 = new ArrayList<>();
         this.constraint8Variables = new ArrayList<>();
         
-        // Redirect the log to stdout
-        this.logRedirector = new LogRedirector(logFilePath);
-        
         // Go for preprocessing
         instancePreprocessing();
     }
@@ -320,6 +317,9 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         
         // Setup the model's variables, constraints and objective function
         this.setupEnvironment(logFilePath);
+        
+        // Redirect the log to stdout
+        this.logRedirector = new LogRedirector(logFilePath);
         
         //Try to serialize the produced constraints
         model.write(orienteeringProperties.getOutputFolderPath()+instance.getName()+".lp");

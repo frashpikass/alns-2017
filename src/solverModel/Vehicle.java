@@ -70,5 +70,13 @@ public class Vehicle {
         }
         return ret;
     }
+    
+    /**
+     * Returns a string representation of this vehicle
+     * @return a string representation of this vehicle
+     */
+    public String toString(){
+        return String.valueOf(this.id);
+    }
 
 }

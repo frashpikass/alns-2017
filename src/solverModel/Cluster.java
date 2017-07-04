@@ -280,7 +280,7 @@ public class Cluster {
      * @return the distance between the two clusters
      */
     public double distance(Cluster c) {
-        return Math.sqrt(Math.pow(this.x - c.x, 2)+ Math.pow(this.y - c.y, 2));
+        return Math.floor((Math.sqrt(Math.pow(this.x - c.getX(), 2)+ Math.pow(this.y - c.getY(), 2))*1000))/1000.0;
     }
     
     /**
@@ -289,7 +289,7 @@ public class Cluster {
      * @return the distance between the two clusters
      */
     public double distance(Node n) {
-        return Math.sqrt(Math.pow(this.x - n.getX(), 2)+ Math.pow(this.y - n.getY(), 2));
+        return Math.floor((Math.sqrt(Math.pow(this.x - n.getX(), 2)+ Math.pow(this.y - n.getY(), 2))*1000))/1000.0;
     }
     
     /**

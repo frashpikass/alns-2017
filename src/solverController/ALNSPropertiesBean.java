@@ -13,6 +13,13 @@ import java.beans.PropertyChangeSupport;
  * @author Frash
  */
 public class ALNSPropertiesBean {
+    
+    /**
+     * Empty constructor.
+     */
+    public ALNSPropertiesBean(){
+        
+    }
 
     /**
      * Maximum size of the past history

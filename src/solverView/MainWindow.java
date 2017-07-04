@@ -1356,6 +1356,7 @@ public class MainWindow extends javax.swing.JFrame {
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
         if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
+            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
         }
     }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
 

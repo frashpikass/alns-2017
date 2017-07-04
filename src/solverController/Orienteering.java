@@ -315,14 +315,15 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         // Read the instance file from text
         this.instance = InstanceCTOPWSSReader.read(modelPath);
         
+        // Setup the log redirector to redirect the log to stdout
+        this.logRedirector = new LogRedirector(logFilePath);
+        
         // Setup the model's variables, constraints and objective function
         this.setupEnvironment(logFilePath);
         
-        // Redirect the log to stdout
-        this.logRedirector = new LogRedirector(logFilePath);
         
         //Try to serialize the produced constraints
-        model.write(orienteeringProperties.getOutputFolderPath()+instance.getName()+".lp");
+        model.write(orienteeringProperties.getOutputFolderPath()+File.separator+instance.getName()+".lp");
     }
     
     /**
@@ -847,7 +848,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         relaxedModel.optimize();
         
         // Save the relaxed solution to file
-        relaxedModel.write(orienteeringProperties.getOutputFolderPath()+instance.getName()+"_relaxed.sol");
+        relaxedModel.write(orienteeringProperties.getOutputFolderPath()+File.separator+instance.getName()+"_relaxed.sol");
         
         // Dispose of the relaxed model
         relaxedModel.dispose();
@@ -905,7 +906,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @throws gurobi.GRBException if there are problems while retrieving the solution or writing it to a file
      */
     protected void writeSolution() throws GRBException{
-        model.write(orienteeringProperties.getOutputFolderPath()+instance.getName()+".sol");
+        model.write(orienteeringProperties.getOutputFolderPath()+File.separator+instance.getName()+".sol");
     }
     
     /**

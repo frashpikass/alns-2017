@@ -5,14 +5,14 @@
  */
 package solverController;
 
-import java.io.Serializable;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Java Bean to hold all the properties and parameters for the ALNS optimizer.
  *
  * @author Frash
  */
-public class ALNSPropertiesBean implements Serializable {
+public class ALNSPropertiesBean {
 
     /**
      * Maximum size of the past history
@@ -104,6 +104,25 @@ public class ALNSPropertiesBean implements Serializable {
     private double alpha = 0.85;
 
     /**
+     * This parameter is the scaling factor to change the chance of bad clusters
+     * being chosen for insertion heuristics.
+     * <br>Probability for bad clusters is downscaled like
+     * <br><li><i>newProbability</i> =
+     * <i>punishmentGamma</i>*<i>oldProbability</i></li>
+     */
+    private double punishmentGamma = 0.60;
+
+    /**
+     * This parameter is the scaling factor used in the cooldown process.
+     * <br>Must be a small double in range [0,1].
+     * <br><li>A hot (freshly selected) cluster will have a new probability of
+     * being chosen which is cooldownGamma times smaller</li>
+     * <br><li>A cold cluster (not amongst the freshly selected ones) will have
+     * a new probability which is cooldownGamma times smaller.
+     */
+    private double cooldownGamma = 0.05;
+
+    /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
      */
     private long timeLimitALNS = 1800;
@@ -160,12 +179,6 @@ public class ALNSPropertiesBean implements Serializable {
     private int maxIterationsWithoutImprovement = 50;
 
     /**
-     * Empty constructor.
-     */
-    public ALNSPropertiesBean() {
-    }
-
-    /**
      * Maximum size of the past history
      *
      * @return the maxHistorySize
@@ -180,7 +193,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param maxHistorySize the maxHistorySize to set
      */
     public void setMaxHistorySize(int maxHistorySize) {
+        int oldMaxHistorySize = this.maxHistorySize;
         this.maxHistorySize = maxHistorySize;
+        propertyChangeSupport.firePropertyChange(PROP_MAXHISTORYSIZE, oldMaxHistorySize, maxHistorySize);
     }
 
     /**
@@ -198,7 +213,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param qStart the qStart to set
      */
     public void setqStart(int qStart) {
+        int oldqStart = this.qStart;
         this.qStart = qStart;
+        propertyChangeSupport.firePropertyChange(PROP_QSTART, oldqStart, qStart);
     }
 
     /**
@@ -216,7 +233,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param qDelta the qDelta to set
      */
     public void setqDelta(int qDelta) {
+        int oldqDelta = this.qDelta;
         this.qDelta = qDelta;
+        propertyChangeSupport.firePropertyChange(PROP_QDELTA, oldqDelta, qDelta);
     }
 
     /**
@@ -234,7 +253,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param segmentSize the segmentSize to set
      */
     public void setSegmentSize(int segmentSize) {
+        int oldSegmentSize = this.segmentSize;
         this.segmentSize = segmentSize;
+        propertyChangeSupport.firePropertyChange(PROP_SEGMENTSIZE, oldSegmentSize, segmentSize);
     }
 
     /**
@@ -252,7 +273,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param maxSegments the maxSegments to set
      */
     public void setMaxSegments(long maxSegments) {
+        long oldMaxSegments = this.maxSegments;
         this.maxSegments = maxSegments;
+        propertyChangeSupport.firePropertyChange(PROP_MAXSEGMENTS, oldMaxSegments, maxSegments);
     }
 
     /**
@@ -271,7 +294,9 @@ public class ALNSPropertiesBean implements Serializable {
      * set
      */
     public void setMaxSegmentsWithoutImprovement(long maxSegmentsWithoutImprovement) {
+        long oldMaxSegmentsWithoutImprovement = this.maxSegmentsWithoutImprovement;
         this.maxSegmentsWithoutImprovement = maxSegmentsWithoutImprovement;
+        propertyChangeSupport.firePropertyChange(PROP_MAXSEGMENTSWITHOUTIMPROVEMENT, oldMaxSegmentsWithoutImprovement, maxSegmentsWithoutImprovement);
     }
 
     /**
@@ -290,7 +315,9 @@ public class ALNSPropertiesBean implements Serializable {
      * set
      */
     public void setUseDestroyGreedyCostInsertion(boolean useDestroyGreedyCostInsertion) {
+        boolean oldUseDestroyGreedyCostInsertion = this.useDestroyGreedyCostInsertion;
         this.useDestroyGreedyCostInsertion = useDestroyGreedyCostInsertion;
+        propertyChangeSupport.firePropertyChange(PROP_USEDESTROYGREEDYCOSTINSERTION, oldUseDestroyGreedyCostInsertion, useDestroyGreedyCostInsertion);
     }
 
     /**
@@ -309,7 +336,9 @@ public class ALNSPropertiesBean implements Serializable {
      * set
      */
     public void setUseDestroyGreedyBestInsertion(boolean useDestroyGreedyBestInsertion) {
+        boolean oldUseDestroyGreedyBestInsertion = this.useDestroyGreedyBestInsertion;
         this.useDestroyGreedyBestInsertion = useDestroyGreedyBestInsertion;
+        propertyChangeSupport.firePropertyChange(PROP_USEDESTROYGREEDYBESTINSERTION, oldUseDestroyGreedyBestInsertion, useDestroyGreedyBestInsertion);
     }
 
     /**
@@ -328,7 +357,9 @@ public class ALNSPropertiesBean implements Serializable {
      * useDestroyGreedyProfitInsertion to set
      */
     public void setUseDestroyGreedyProfitInsertion(boolean useDestroyGreedyProfitInsertion) {
+        boolean oldUseDestroyGreedyProfitInsertion = this.useDestroyGreedyProfitInsertion;
         this.useDestroyGreedyProfitInsertion = useDestroyGreedyProfitInsertion;
+        propertyChangeSupport.firePropertyChange(PROP_USEDESTROYGREEDYPROFITINSERTION, oldUseDestroyGreedyProfitInsertion, useDestroyGreedyProfitInsertion);
     }
 
     /**
@@ -346,7 +377,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param useDestroyRandomInsertion the useDestroyRandomInsertion to set
      */
     public void setUseDestroyRandomInsertion(boolean useDestroyRandomInsertion) {
+        boolean oldUseDestroyRandomInsertion = this.useDestroyRandomInsertion;
         this.useDestroyRandomInsertion = useDestroyRandomInsertion;
+        propertyChangeSupport.firePropertyChange(PROP_USEDESTROYRANDOMINSERTION, oldUseDestroyRandomInsertion, useDestroyRandomInsertion);
     }
 
     /**
@@ -364,7 +397,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param useRepairHighCostRemoval the useRepairHighCostRemoval to set
      */
     public void setUseRepairHighCostRemoval(boolean useRepairHighCostRemoval) {
+        boolean oldUseRepairHighCostRemoval = this.useRepairHighCostRemoval;
         this.useRepairHighCostRemoval = useRepairHighCostRemoval;
+        propertyChangeSupport.firePropertyChange(PROP_USEREPAIRHIGHCOSTREMOVAL, oldUseRepairHighCostRemoval, useRepairHighCostRemoval);
     }
 
     /**
@@ -382,7 +417,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param useRepairRandomRemoval the useRepairRandomRemoval to set
      */
     public void setUseRepairRandomRemoval(boolean useRepairRandomRemoval) {
+        boolean oldUseRepairRandomRemoval = this.useRepairRandomRemoval;
         this.useRepairRandomRemoval = useRepairRandomRemoval;
+        propertyChangeSupport.firePropertyChange(PROP_USEREPAIRRANDOMREMOVAL, oldUseRepairRandomRemoval, useRepairRandomRemoval);
     }
 
     /**
@@ -400,7 +437,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param useRepairTravelTime the useRepairTravelTime to set
      */
     public void setUseRepairTravelTime(boolean useRepairTravelTime) {
+        boolean oldUseRepairTravelTime = this.useRepairTravelTime;
         this.useRepairTravelTime = useRepairTravelTime;
+        propertyChangeSupport.firePropertyChange(PROP_USEREPAIRTRAVELTIME, oldUseRepairTravelTime, useRepairTravelTime);
     }
 
     /**
@@ -418,7 +457,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param useRepairVehicleTime the useRepairVehicleTime to set
      */
     public void setUseRepairVehicleTime(boolean useRepairVehicleTime) {
+        boolean oldUseRepairVehicleTime = this.useRepairVehicleTime;
         this.useRepairVehicleTime = useRepairVehicleTime;
+        propertyChangeSupport.firePropertyChange(PROP_USEREPAIRVEHICLETIME, oldUseRepairVehicleTime, useRepairVehicleTime);
     }
 
     /**
@@ -436,7 +477,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param useRepairWorstRemoval the useRepairWorstRemoval to set
      */
     public void setUseRepairWorstRemoval(boolean useRepairWorstRemoval) {
+        boolean oldUseRepairWorstRemoval = this.useRepairWorstRemoval;
         this.useRepairWorstRemoval = useRepairWorstRemoval;
+        propertyChangeSupport.firePropertyChange(PROP_USEREPAIRWORSTREMOVAL, oldUseRepairWorstRemoval, useRepairWorstRemoval);
     }
 
     /**
@@ -466,22 +509,28 @@ public class ALNSPropertiesBean implements Serializable {
      * @param lambda the lambda to set
      */
     public void setLambda(double lambda) {
-        // Lambda setup - values out of range [0,1] clip to range boundaries
-        if (lambda < 1.0) {
-            this.lambda = lambda;
+        double oldLambda = this.lambda;
+        double newLambda;
+
+        // Lambda setup - values out of range [0,1] clip to values close to range boundaries
+        // we want the temperature to always decrease if not explicitly stated otherwise
+        if (lambda <= 0) {
+            newLambda = 0.0;
+        } else if (lambda >= 1) {
+            newLambda = 1;
         } else {
-            this.lambda = 1.0;
+            newLambda = lambda;
         }
-        if (lambda < 0) {
-            this.lambda = 0.0;
-        }
+
+        this.lambda = lambda;
+        propertyChangeSupport.firePropertyChange(PROP_LAMBDA, oldLambda, newLambda);
     }
 
     /**
      * This is the decay parameter of the update process for Temperature.
      * <br>This value should be a double in the interval [0,1].
      * <br>The temperature is updated at the end of every segment like
-     * <br>newTemperature = alpha*Temperature
+     * <br>newTemperature = alpha*oldTemperature
      * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make
      * fluctuations in accepted solutions much stronger
      *
@@ -495,23 +544,109 @@ public class ALNSPropertiesBean implements Serializable {
      * This is the decay parameter of the update process for Temperature.
      * <br>This value should be a double in the interval [0,1].
      * <br>The temperature is updated at the end of every segment like
-     * <br>newTemperature = alpha*Temperature
+     * <br>newTemperature = alpha*oldTemperature
      * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make
      * fluctuations in accepted solutions much stronger
      *
      * @param alpha the alpha to set
      */
     public void setAlpha(double alpha) {
+        double oldAlpha = this.alpha;
+        double newAlpha;
         // Alpha setup - values out of range [0,1] clip to values close to range boundaries
         // we want the temperature to always decrease if not explicitly stated otherwise
-        if (alpha < 1.0) {
-            this.alpha = alpha;
+        if (alpha <= 0) {
+            newAlpha = 0.0;
+        } else if (alpha >= 1) {
+            newAlpha = 1;
         } else {
-            this.lambda = 1.0;
+            newAlpha = alpha;
         }
-        if (lambda < 0) {
-            this.lambda = 0.0;
+
+        this.alpha = newAlpha;
+        propertyChangeSupport.firePropertyChange(PROP_ALPHA, oldAlpha, newAlpha);
+    }
+
+    /**
+     * This parameter is the scaling factor to change the chance of bad clusters
+     * being chosen for insertion heuristics.
+     * <br>Probability for bad clusters is downscaled like
+     * <br><li><i>newProbability</i> =
+     * <i>punishmentGamma</i>*<i>oldProbability</i></li>
+     *
+     * @return the punishmentGamma
+     */
+    public double getPunishmentGamma() {
+        return punishmentGamma;
+    }
+
+    /**
+     * This parameter is the scaling factor to change the chance of bad clusters
+     * being chosen for insertion heuristics.
+     * <br>Probability for bad clusters is downscaled like
+     * <br><li><i>newProbability</i> =
+     * <i>punishmentGamma</i>*<i>oldProbability</i></li>
+     *
+     * @param punishmentGamma the punishmentGamma to set
+     */
+    public void setPunishmentGamma(double punishmentGamma) {
+        double oldGamma = this.punishmentGamma;
+        double newGamma;
+
+        // Lambda setup - values out of range [0,1] clip to values close to range boundaries
+        // we want the temperature to always decrease if not explicitly stated otherwise
+        if (punishmentGamma <= 0) {
+            newGamma = 0.0;
+        } else if (punishmentGamma >= 1) {
+            newGamma = 1;
+        } else {
+            newGamma = punishmentGamma;
         }
+
+        this.punishmentGamma = newGamma;
+        propertyChangeSupport.firePropertyChange(PROP_PUNISHMENTGAMMA, oldGamma, newGamma);
+    }
+
+    /**
+     * This parameter is the scaling factor used in the cooldown process.
+     * <br>Must be a small double in range [0,1].
+     * <br><li>A hot (freshly selected) cluster will have a new probability of
+     * being chosen which is cooldownGamma times smaller</li>
+     * <br><li>A cold cluster (not amongst the freshly selected ones) will have
+     * a new probability which is cooldownGamma times smaller.
+     *
+     * @return the cooldownGamma
+     */
+    public double getCooldownGamma() {
+        return cooldownGamma;
+    }
+
+    /**
+     * This parameter is the scaling factor used in the cooldown process.
+     * <br>Must be a small double in range [0,1].
+     * <br><li>A hot (freshly selected) cluster will have a new probability of
+     * being chosen which is cooldownGamma times smaller</li>
+     * <br><li>A cold cluster (not amongst the freshly selected ones) will have
+     * a new probability which is cooldownGamma times smaller.
+     *
+     * @param cooldownGamma the cooldownGamma to set
+     */
+    public void setCooldownGamma(double cooldownGamma) {
+        double oldCooldownGamma = this.cooldownGamma;
+        double newGamma;
+
+        // Lambda setup - values out of range [0,1] clip to values close to range boundaries
+        // we want the temperature to always decrease if not explicitly stated otherwise
+        if (cooldownGamma <= 0) {
+            newGamma = 0.0;
+        } else if (cooldownGamma >= 1) {
+            newGamma = 1;
+        } else {
+            newGamma = cooldownGamma;
+        }
+        
+        this.cooldownGamma = newGamma;
+        propertyChangeSupport.firePropertyChange(PROP_COOLDOWNGAMMA, oldCooldownGamma, newGamma);
     }
 
     /**
@@ -529,7 +664,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param timeLimitALNS the timeLimitALNS to set
      */
     public void setTimeLimitALNS(long timeLimitALNS) {
+        long oldTimeLimitALNS = this.timeLimitALNS;
         this.timeLimitALNS = timeLimitALNS;
+        propertyChangeSupport.firePropertyChange(PROP_TIMELIMITALNS, oldTimeLimitALNS, timeLimitALNS);
     }
 
     /**
@@ -547,7 +684,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param timeLimitLocalSearch the timeLimitLocalSearch to set
      */
     public void setTimeLimitLocalSearch(long timeLimitLocalSearch) {
+        long oldTimeLimitLocalSearch = this.timeLimitLocalSearch;
         this.timeLimitLocalSearch = timeLimitLocalSearch;
+        propertyChangeSupport.firePropertyChange(PROP_TIMELIMITLOCALSEARCH, oldTimeLimitLocalSearch, timeLimitLocalSearch);
     }
 
     /**
@@ -568,7 +707,9 @@ public class ALNSPropertiesBean implements Serializable {
      * to set
      */
     public void setRewardForBestSegmentHeuristics(double rewardForBestSegmentHeuristics) {
+        double oldRewardForBestSegmentHeuristics = this.rewardForBestSegmentHeuristics;
         this.rewardForBestSegmentHeuristics = rewardForBestSegmentHeuristics;
+        propertyChangeSupport.firePropertyChange(PROP_REWARDFORBESTSEGMENTHEURISTICS, oldRewardForBestSegmentHeuristics, rewardForBestSegmentHeuristics);
     }
 
     /**
@@ -589,7 +730,9 @@ public class ALNSPropertiesBean implements Serializable {
      * punishmentForWorstSegmentHeuristics to set
      */
     public void setPunishmentForWorstSegmentHeuristics(double punishmentForWorstSegmentHeuristics) {
+        double oldPunishmentForWorstSegmentHeuristics = this.punishmentForWorstSegmentHeuristics;
         this.punishmentForWorstSegmentHeuristics = punishmentForWorstSegmentHeuristics;
+        propertyChangeSupport.firePropertyChange(PROP_PUNISHMENTFORWORSTSEGMENTHEURISTICS, oldPunishmentForWorstSegmentHeuristics, punishmentForWorstSegmentHeuristics);
     }
 
     /**
@@ -609,7 +752,9 @@ public class ALNSPropertiesBean implements Serializable {
      * @param heuristicScores the heuristicScores to set
      */
     public void setHeuristicScores(double[] heuristicScores) {
+        double[] oldHeuristicScores = this.heuristicScores;
         this.heuristicScores = heuristicScores;
+        propertyChangeSupport.firePropertyChange(PROP_HEURISTICSCORES, oldHeuristicScores, heuristicScores);
     }
 
     /**
@@ -630,7 +775,9 @@ public class ALNSPropertiesBean implements Serializable {
      * maxMIPSNodesForFeasibilityCheck to set
      */
     public void setMaxMIPSNodesForFeasibilityCheck(double maxMIPSNodesForFeasibilityCheck) {
+        double oldMaxMIPSNodesForFeasibilityCheck = this.maxMIPSNodesForFeasibilityCheck;
         this.maxMIPSNodesForFeasibilityCheck = maxMIPSNodesForFeasibilityCheck;
+        propertyChangeSupport.firePropertyChange(PROP_MAXMIPSNODESFORFEASIBILITYCHECK, oldMaxMIPSNodesForFeasibilityCheck, maxMIPSNodesForFeasibilityCheck);
     }
 
     /**
@@ -653,6 +800,37 @@ public class ALNSPropertiesBean implements Serializable {
      * maxIterationsWithoutImprovement to set
      */
     public void setMaxIterationsWithoutImprovement(int maxIterationsWithoutImprovement) {
+        int oldMaxIterationsWithoutImprovement = this.maxIterationsWithoutImprovement;
         this.maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
+        propertyChangeSupport.firePropertyChange(PROP_MAXITERATIONSWITHOUTIMPROVEMENT, oldMaxIterationsWithoutImprovement, maxIterationsWithoutImprovement);
     }
+    
+    private final transient PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+    public static final String PROP_MAXHISTORYSIZE = "maxHistorySize";
+    public static final String PROP_QSTART = "qStart";
+    public static final String PROP_QDELTA = "qDelta";
+    public static final String PROP_SEGMENTSIZE = "segmentSize";
+    public static final String PROP_MAXSEGMENTS = "maxSegments";
+    public static final String PROP_MAXSEGMENTSWITHOUTIMPROVEMENT = "maxSegmentsWithoutImprovement";
+    public static final String PROP_USEDESTROYGREEDYCOSTINSERTION = "useDestroyGreedyCostInsertion";
+    public static final String PROP_USEDESTROYGREEDYBESTINSERTION = "useDestroyGreedyBestInsertion";
+    public static final String PROP_USEDESTROYGREEDYPROFITINSERTION = "useDestroyGreedyProfitInsertion";
+    public static final String PROP_USEDESTROYRANDOMINSERTION = "useDestroyRandomInsertion";
+    public static final String PROP_USEREPAIRHIGHCOSTREMOVAL = "useRepairHighCostRemoval";
+    public static final String PROP_USEREPAIRRANDOMREMOVAL = "useRepairRandomRemoval";
+    public static final String PROP_USEREPAIRTRAVELTIME = "useRepairTravelTime";
+    public static final String PROP_USEREPAIRVEHICLETIME = "useRepairVehicleTime";
+    public static final String PROP_USEREPAIRWORSTREMOVAL = "useRepairWorstRemoval";
+    public static final String PROP_LAMBDA = "lambda";
+    public static final String PROP_ALPHA = "alpha";
+    public static final String PROP_PUNISHMENTGAMMA = "punishmentGamma";
+    public static final String PROP_COOLDOWNGAMMA = "cooldownGamma";
+    public static final String PROP_TIMELIMITALNS = "timeLimitALNS";
+    public static final String PROP_TIMELIMITLOCALSEARCH = "timeLimitLocalSearch";
+    public static final String PROP_REWARDFORBESTSEGMENTHEURISTICS = "rewardForBestSegmentHeuristics";
+    public static final String PROP_PUNISHMENTFORWORSTSEGMENTHEURISTICS = "punishmentForWorstSegmentHeuristics";
+    public static final String PROP_HEURISTICSCORES = "heuristicScores";
+    public static final String PROP_MAXMIPSNODESFORFEASIBILITYCHECK = "maxMIPSNodesForFeasibilityCheck";
+    public static final String PROP_MAXITERATIONSWITHOUTIMPROVEMENT = "maxIterationsWithoutImprovement";
+
 }

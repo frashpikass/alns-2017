@@ -127,5 +127,13 @@ public class Node implements Comparable<Node>{
     public boolean equals(Node n){
         return this.id == n.id;
     }
+    
+    /**
+     * Return a string representation of this Node
+     * @return a string representation of this Node 
+     */
+    public String toString(){
+        return id+"s"+service;
+    }
 
 }

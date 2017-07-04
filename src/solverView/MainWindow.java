@@ -26,6 +26,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
+import solverController.ALNSPropertiesBean;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
 import solverController.ParametersBean;
@@ -156,6 +157,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonLoadParameters = new javax.swing.JButton();
         jButtonRun = new javax.swing.JButton();
         jButtonTestBean = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanelOutput = new javax.swing.JPanel();
         jButtonStop = new javax.swing.JButton();
         jScrollPaneTextAreaOutput = new javax.swing.JScrollPane();
@@ -1008,7 +1010,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelActions.setBorder(javax.swing.BorderFactory.createTitledBorder("Actions"));
         java.awt.GridBagLayout jPanelActionsLayout = new java.awt.GridBagLayout();
         jPanelActionsLayout.columnWidths = new int[] {0};
-        jPanelActionsLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0};
+        jPanelActionsLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0};
         jPanelActions.setLayout(jPanelActionsLayout);
 
         jButtonSaveParameters.setText("Save Parameters");
@@ -1064,6 +1066,17 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanelActions.add(jButtonTestBean, gridBagConstraints);
+
+        jButton1.setText("Stop debugger");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        jPanelActions.add(jButton1, gridBagConstraints);
 
         javax.swing.GroupLayout jPanelControlsLayout = new javax.swing.GroupLayout(jPanelControls);
         jPanelControls.setLayout(jPanelControlsLayout);
@@ -1199,7 +1212,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1212,10 +1225,10 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
         // TODO add your handling code here:
+        updateParametersBean();
         int result = jFileChooserSaveParameters.showOpenDialog(jPanelGeneralParameters);
         File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
         if (outputFilePath != null && result == JFileChooser.APPROVE_OPTION) {
-            updateParametersBean();
             try {
                 this.parametersBean.serializeToJSON(outputFilePath.getAbsolutePath());
             } catch (IOException ex) {
@@ -1304,7 +1317,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
         // TODO add your handling code here:
-        System.out.println("Who are you running from? Don't be silly!");
+        System.out.println("Who are you running from? Don't be silly!\n");
 
         // Update the parameters
         updateParametersBean();
@@ -1450,22 +1463,26 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonLoadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersActionPerformed
         // TODO add your handling code here:
+        updateParametersBean();
         int result = jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
         File inputFile = jFileChooserLoadParameters.getSelectedFile();
         if (inputFile != null && result == JFileChooser.APPROVE_OPTION) {
-            updateParametersBean();
             try {
                 this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
                 this.alnsPropertiesBean = parametersBean.getALNSproperties();
                 this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
                 this.updateParametersGUI();
-                this.updateParametersBean();
             } catch (IOException ex) {
                 System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
             }
             System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
         }
     }//GEN-LAST:event_jButtonLoadParametersActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        System.out.println("Execution paused");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -1658,7 +1675,7 @@ public class MainWindow extends javax.swing.JFrame {
      * the values written in the psi text fields.
      */
     private void updatePsiBean() {
-        double[] toSet = new double[4];
+        double[] toSet = new double[ALNSPropertiesBean.NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES];
         toSet[0] = Double.parseDouble(jTextFieldPsi0.getText());
         toSet[1] = Double.parseDouble(jTextFieldPsi1.getText());
         toSet[2] = Double.parseDouble(jTextFieldPsi2.getText());
@@ -1721,6 +1738,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupActions;
     private javax.swing.ButtonGroup buttonGroupInstance;
     private javax.swing.ButtonGroup buttonGroupSolver;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonLoadParameters;
     private javax.swing.JButton jButtonOutputFolderPath;
     private javax.swing.JButton jButtonReset;

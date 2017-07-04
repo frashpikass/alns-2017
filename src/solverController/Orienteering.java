@@ -17,6 +17,8 @@ import java.io.File;
 //import java.io.ObjectInputStream;
 //import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -251,14 +253,14 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @return the name of the instance file, without any extension
      */
     private static String instanceNameFromPath(String path){
-        int firstIndexOfNameInPath;
-        if((firstIndexOfNameInPath = path.lastIndexOf("//"))==-1){
-            if((firstIndexOfNameInPath = path.lastIndexOf("\\"))==-1){
-                firstIndexOfNameInPath=0;
-            }
-        }
+        // Try to get filename and instance name from the path
+        Path instancePath = Paths.get(path);
+        String filename = instancePath.getFileName().toString();
+        String instanceName = filename;
+        if(filename.lastIndexOf('.') != -1)
+            instanceName = filename.substring(0, filename.lastIndexOf('.'));
                 
-        return path.substring(firstIndexOfNameInPath, path.lastIndexOf("."));
+        return instanceName;
     }
     
     /**

@@ -13,12 +13,12 @@ import java.beans.PropertyChangeSupport;
  * @author Frash
  */
 public class ALNSPropertiesBean {
-    
+
     /**
      * Empty constructor.
      */
-    public ALNSPropertiesBean(){
-        
+    public ALNSPropertiesBean() {
+
     }
 
     /**
@@ -651,7 +651,7 @@ public class ALNSPropertiesBean {
         } else {
             newGamma = cooldownGamma;
         }
-        
+
         this.cooldownGamma = newGamma;
         propertyChangeSupport.firePropertyChange(PROP_COOLDOWNGAMMA, oldCooldownGamma, newGamma);
     }
@@ -811,7 +811,7 @@ public class ALNSPropertiesBean {
         this.maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
         propertyChangeSupport.firePropertyChange(PROP_MAXITERATIONSWITHOUTIMPROVEMENT, oldMaxIterationsWithoutImprovement, maxIterationsWithoutImprovement);
     }
-    
+
     private final transient PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
     public static final String PROP_MAXHISTORYSIZE = "maxHistorySize";
     public static final String PROP_QSTART = "qStart";

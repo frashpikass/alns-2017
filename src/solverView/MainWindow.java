@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -1211,9 +1212,9 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
         // TODO add your handling code here:
-        jFileChooserSaveParameters.showOpenDialog(jPanelGeneralParameters);
+        int result = jFileChooserSaveParameters.showOpenDialog(jPanelGeneralParameters);
         File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
-        if (outputFilePath != null) {
+        if (outputFilePath != null && result == JFileChooser.APPROVE_OPTION) {
             updateParametersBean();
             try {
                 this.parametersBean.serializeToJSON(outputFilePath.getAbsolutePath());
@@ -1351,9 +1352,9 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
 
     private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
-        jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
+        int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
-        if (outputFolderPath != null) {
+        if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
         }
     }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
@@ -1448,12 +1449,16 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonLoadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersActionPerformed
         // TODO add your handling code here:
-        jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
+        int result = jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
         File inputFile = jFileChooserLoadParameters.getSelectedFile();
-        if (inputFile != null) {
+        if (inputFile != null && result == JFileChooser.APPROVE_OPTION) {
             updateParametersBean();
             try {
                 this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
+                this.alnsPropertiesBean = parametersBean.getALNSproperties();
+                this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
+                this.updateParametersGUI();
+                this.updateParametersBean();
             } catch (IOException ex) {
                 System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
             }
@@ -1823,10 +1828,57 @@ public class MainWindow extends javax.swing.JFrame {
 
     /**
      * Updates the parameters bean with the latest version of the parameters in
-     * alnsPropertiesBean and orienteeringPropertiesBean. Necessary before
-     * parameter visualization/serialization.
+     * alnsPropertiesBean and orienteeringPropertiesBean (taken from the GUI). 
+     * Necessary before parameter visualization/serialization.
      */
     private void updateParametersBean() {
         parametersBean = new ParametersBean(orienteeringPropertiesBean, alnsPropertiesBean);
+    }
+    
+    /**
+     * Updates every GUI field from orienteeringPropertiesBean and alnsPropertiesBean
+     */
+    private void updateParametersGUI() {
+        // orienteering
+        jTextFieldOutputFolderPath.setText(orienteeringPropertiesBean.getOutputFolderPath());
+        jTextFieldTimeLimit.setText(String.valueOf(orienteeringPropertiesBean.getTimeLimit()));
+        jTextFieldNumThreads.setText(String.valueOf(orienteeringPropertiesBean.getNumThreads()));
+        jCheckBoxForceHeuristicConstraints.setSelected(orienteeringPropertiesBean.isForceHeuristicConstraints());
+        
+        //alns
+        //jTextFieldMaxHistorySize.setText(alnsPropertiesBean.getMaxHistorySize());
+        jTextFieldQStart.setText(String.valueOf(alnsPropertiesBean.getqStart()));
+        jTextFieldQDelta.setText(String.valueOf(alnsPropertiesBean.getqDelta()));
+        jTextFieldSegmentSize.setText(String.valueOf(alnsPropertiesBean.getSegmentSize()));
+        jTextFieldMaxSegments.setText(String.valueOf(alnsPropertiesBean.getMaxSegments()));
+        jTextFieldMaxSegmentsWithoutImprovement.setText(String.valueOf(alnsPropertiesBean.getMaxSegmentsWithoutImprovement()));
+        
+        jCheckBoxDestroyGreedyCostInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyCostInsertion());
+        jCheckBoxDestroyGreedyBestInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyBestInsertion());
+        jCheckBoxDestroyGreedyProfitInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyProfitInsertion());
+        jCheckBoxDestroyRandomInsertion.setSelected(alnsPropertiesBean.isUseDestroyRandomInsertion());
+        
+        jCheckBoxRepairHighCostRemoval.setSelected(alnsPropertiesBean.isUseRepairHighCostRemoval());
+        jCheckBoxRepairRandomRemoval.setSelected(alnsPropertiesBean.isUseRepairRandomRemoval());
+        jCheckBoxRepairTravelTime.setSelected(alnsPropertiesBean.isUseRepairTravelTime());
+        jCheckBoxRepairVehicleTime.setSelected(alnsPropertiesBean.isUseRepairVehicleTime());
+        jCheckBoxRepairWorstRemoval.setSelected(alnsPropertiesBean.isUseRepairWorstRemoval());
+        
+        jTextFieldLambda.setText(String.valueOf(alnsPropertiesBean.getLambda()));
+        jTextFieldAlpha.setText(String.valueOf(alnsPropertiesBean.getAlpha()));
+        jTextFieldTimeLimitALNS.setText(String.valueOf(alnsPropertiesBean.getTimeLimitALNS()));
+        jTextFieldTimeLimitLocalSearch.setText(String.valueOf(alnsPropertiesBean.getTimeLimitLocalSearch()));
+        jTextFieldRewardForBestSegmentHeuristics.setText(String.valueOf(alnsPropertiesBean.getRewardForBestSegmentHeuristics()));
+        jTextFieldPunishmentForWorstSegmentHeuristics.setText(String.valueOf(alnsPropertiesBean.getPunishmentForWorstSegmentHeuristics()));
+        jTextFieldMaxMIPSNodesForFeasibilityCheck.setText(String.valueOf(alnsPropertiesBean.getMaxMIPSNodesForFeasibilityCheck()));
+        
+        jTextFieldPsi0.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[0]));
+        jTextFieldPsi1.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[1]));
+        jTextFieldPsi2.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[2]));
+        jTextFieldPsi3.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[3]));
+        
+        jTextFieldMaxIterationsWithoutImprovement.setText(String.valueOf(alnsPropertiesBean.getMaxIterationsWithoutImprovement()));
+
+        
     }
 }

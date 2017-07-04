@@ -125,7 +125,7 @@ public class ALNSPropertiesBean {
      * <br><li>A hot (freshly selected) cluster will have a new probability of
      * being chosen which is cooldownGamma times smaller</li>
      * <br><li>A cold cluster (not amongst the freshly selected ones) will have
-     * a new probability which is cooldownGamma times smaller.
+     * a new probability which is cooldownGamma times bigger.
      */
     private double cooldownGamma = 0.05;
 
@@ -634,7 +634,7 @@ public class ALNSPropertiesBean {
      * <br><li>A hot (freshly selected) cluster will have a new probability of
      * being chosen which is cooldownGamma times smaller</li>
      * <br><li>A cold cluster (not amongst the freshly selected ones) will have
-     * a new probability which is cooldownGamma times smaller.
+     * a new probability which is cooldownGamma times bigger.
      *
      * @param cooldownGamma the cooldownGamma to set
      */

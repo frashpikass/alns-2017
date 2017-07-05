@@ -22,11 +22,11 @@ import solverModel.Cluster;
  * of each cluster.
  * <br>In particular, one could increase (upscale) the probability by a gamma
  * factor, included between [0,1], in this fashion:
- * <br><li><i>newProbability</i> =
+ * <br><i>newProbability</i> =
  * <i>gamma</i>*<i>oldProbability</i>+(1-<i>gamma</i>)
  * <br>or one could decrease (downscale) the probability by the same gamma
  * factor:
- * <br><li><i>newProbability</i> = <i>gamma</i>*<i>oldProbability</i>
+ * <br><i>newProbability</i> = <i>gamma</i>*<i>oldProbability</i>
  * <br>This class is used to implement some sort of taboo mechanism into ALNS,
  * to avoid going back to infeasible solutions.
  *
@@ -96,7 +96,7 @@ public class ClusterRoulette {
 
     /**
      * Upscales the selected list of clusters by a factor gamma according to
-     * <br><li><i>newProbability</i> =
+     * <br><i>newProbability</i> =
      * <i>gamma</i>*<i>oldProbability</i>+(1-<i>gamma</i>) .
      * <br>If the clusters in the list are not in this structure, they are
      * ignored.
@@ -116,7 +116,7 @@ public class ClusterRoulette {
 
     /**
      * Downscales the selected list of clusters by a factor gamma according to
-     * <br><li><i>newProbability</i> = <i>gamma</i>*<i>oldProbability</i>.
+     * <br><i>newProbability</i> = <i>gamma</i>*<i>oldProbability</i>.
      * <br>If the clusters in the list are not in this structure, they are
      * ignored.
      *
@@ -148,52 +148,54 @@ public class ClusterRoulette {
         }
         return ret;
     }
-    
+
     /**
-     * A hot cluster is a cluster which has been just selected.
-     * The cooldown process makes it a little less likely to select a hot
-     * cluster.
-     * <br>The inverse of the same process makes it a little more likely to chose
-     * a cluster which wasn't amidst the selected hot clusters.
-     * 
-     * <br>The cooldownGamma factor is applied in a downscaling fashion to
-     * hot clusters and in an upscaling fashion to all the other clusters in this
+     * A hot cluster is a cluster which has been just selected. The cooldown
+     * process makes it a little less likely to select a hot cluster.
+     * <br>The inverse of the same process makes it a little more likely to
+     * chose a cluster which wasn't amidst the selected hot clusters.
+     *
+     * <br>The cooldownGamma factor is applied in a downscaling fashion to hot
+     * clusters and in an upscaling fashion to all the other clusters in this
      * structure.
-     * 
-     * @param cooldownGamma the cooldown factor. Should be a small double in range [0,1].
-     * Represents the decrease in probability,
+     *
+     * @param cooldownGamma the cooldown factor. Should be a small double in
+     * range [0,1]. Represents the decrease in probability,
      * <br>e.g.: cooldownGamma = 0.1
-     * <br> => the new probability for hot clusters will be 10% less than the old one
-     * <br> => the new probability for cold clusters will be 10% more than the old one
+     * <br> =&gt; the new probability for hot clusters will be 10% less than the
+     * old one
+     * <br> =&gt; the new probability for cold clusters will be 10% more than
+     * the old one
      * @param hotClusters clusters that have just been chosen
      */
-    public void cooldown(double cooldownGamma, List<Cluster> hotClusters){
+    public void cooldown(double cooldownGamma, List<Cluster> hotClusters) {
         // Make sure the cooldown gamma is in range [0,1]
         cooldownGamma = gammaFilter(cooldownGamma);
-        
+
         // Make a list of cold clusters
         List<Cluster> coldClusters = new ArrayList<>(clusters);
         coldClusters.removeAll(hotClusters);
-        
+
         // Cooldown hot clusters
-        this.downscale((1-cooldownGamma), hotClusters);
-        
+        this.downscale((1 - cooldownGamma), hotClusters);
+
         // Warm up cold clusters
-        this.upscale((1-cooldownGamma), coldClusters);
+        this.upscale((1 - cooldownGamma), coldClusters);
     }
-    
+
     /**
      * Computes the average probability for a cluster to be chosen.
-     * 
-     * @return the average probability for a cluster to be chosen if the list of clusters has some elements;
-     * 0.5 otherwise.
+     *
+     * @return the average probability for a cluster to be chosen if the list of
+     * clusters has some elements; 0.5 otherwise.
      */
-    public double getAverageProbability(){
+    public double getAverageProbability() {
         OptionalDouble ret = probabilities.stream().mapToDouble(a -> a).average();
-        if(ret.isPresent())
+        if (ret.isPresent()) {
             return ret.getAsDouble();
-        else
+        } else {
             return 0.5;
+        }
     }
 
     /**

@@ -74,7 +74,9 @@ public class ALNSExcelLogger {
     private final static String [] HEADERS = {
         "Segment", "Iteration", "Time",
         "Destroy Heuristic", "DWeight", "Repair Heuristic", "RWeight", "Repaired?",
-        "Temperature", "q",
+        "Temperature",
+        "Sim. Ann. Barrier",
+        "q",
         "xOld", "xOldObj",
         "xNew", "xNewObj", "Accepted?","Worse but accepted?", "Infeasible & Discarded?",
         "xBest", "xBestObj",

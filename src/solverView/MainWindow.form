@@ -49,6 +49,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JFileChooser" name="jFileChooserSaveOutput">
+      <Properties>
+        <Property name="dialogType" type="int" value="1"/>
+      </Properties>
     </Component>
     <Component class="solverController.ParametersBean" name="parametersBean">
     </Component>

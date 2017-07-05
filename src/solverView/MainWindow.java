@@ -187,6 +187,8 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserSaveParameters.setSelectedFile(new java.io.File("C:\\Program Files\\NetBeans 8.2\\myparams.json"));
         jFileChooserSaveParameters.setToolTipText("");
 
+        jFileChooserSaveOutput.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("ALNS Solver, by Francesco Piazza, v1.0");

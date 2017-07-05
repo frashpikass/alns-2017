@@ -113,33 +113,34 @@ public class ALNSPropertiesBean {
     /**
      * This parameter is the scaling factor to change the chance of bad clusters
      * being chosen for insertion heuristics.
+     * <br>Must be a double in range [0,1].
      * <br>Probability for bad clusters is downscaled like
-     * <br><li><i>newProbability</i> =
-     * <i>punishmentGamma</i>*<i>oldProbability</i></li>
+     * <br><i>newProbability</i> =
+     * <i>punishmentGamma</i>*<i>oldProbability</i>
      */
     private double punishmentGamma = 0.60;
 
     /**
      * This parameter is the scaling factor used in the cooldown process.
      * <br>Must be a small double in range [0,1].
-     * <br><li>A hot (freshly selected) cluster will have a new probability of
-     * being chosen which is cooldownGamma times smaller</li>
+     * <br>A hot (freshly selected) cluster will have a new probability of being
+     * chosen which is cooldownGamma times smaller
      *
      * <br>Probability for hot clusters is downscaled like
-     * <br><li><i>newProbability</i> = (1 -
-     * <i>cooldownGamma</i>)*<i>oldProbability</i></li>
+     * <br><i>newProbability</i> = (1 -
+     * <i>cooldownGamma</i>)*<i>oldProbability</i>
      */
     private double cooldownGamma = 0.1;
 
     /**
      * This parameter is the scaling factor used in the warmup process.
      * <br>Must be a small double in range [0,1].
-     * <br><li>A cold (not freshly selected) cluster will have a new probability
-     * of being chosen which is warmupGamma times bigger</li>
+     * <br>A cold (not freshly selected) cluster will have a new probability of
+     * being chosen which is warmupGamma times bigger
      *
      * <br>Probability for cold clusters is upscaled like
-     * <br><li><i>newProbability</i> = (1 -
-     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>
+     * <br><i>newProbability</i> = (1 -
+     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i>
      */
     private double warmupGamma = 0.001;
 
@@ -591,9 +592,10 @@ public class ALNSPropertiesBean {
     /**
      * This parameter is the scaling factor to change the chance of bad clusters
      * being chosen for insertion heuristics.
+     * <br>Must be a double in range [0,1].
      * <br>Probability for bad clusters is downscaled like
-     * <br><li><i>newProbability</i> =
-     * <i>punishmentGamma</i>*<i>oldProbability</i></li>
+     * <br><i>newProbability</i> =
+     * <i>punishmentGamma</i>*<i>oldProbability</i>
      *
      * @return the punishmentGamma
      */
@@ -604,9 +606,10 @@ public class ALNSPropertiesBean {
     /**
      * This parameter is the scaling factor to change the chance of bad clusters
      * being chosen for insertion heuristics.
+     * <br>Must be a double in range [0,1].
      * <br>Probability for bad clusters is downscaled like
-     * <br><li><i>newProbability</i> =
-     * <i>punishmentGamma</i>*<i>oldProbability</i></li>
+     * <br><i>newProbability</i> =
+     * <i>punishmentGamma</i>*<i>oldProbability</i>
      *
      * @param punishmentGamma the punishmentGamma to set
      */
@@ -631,12 +634,12 @@ public class ALNSPropertiesBean {
     /**
      * This parameter is the scaling factor used in the cooldown process.
      * <br>Must be a small double in range [0,1].
-     * <br><li>A hot (freshly selected) cluster will have a new probability of
-     * being chosen which is cooldownGamma times smaller</li>
+     * <br>A hot (freshly selected) cluster will have a new probability of being
+     * chosen which is cooldownGamma times smaller
      *
      * <br>Probability for hot clusters is downscaled like
-     * <br><li><i>newProbability</i> = (1 -
-     * <i>cooldownGamma</i>)*<i>oldProbability</i></li>
+     * <br><i>newProbability</i> = (1 -
+     * <i>cooldownGamma</i>)*<i>oldProbability</i>
      *
      * @return the cooldownGamma
      */
@@ -647,12 +650,12 @@ public class ALNSPropertiesBean {
     /**
      * This parameter is the scaling factor used in the cooldown process.
      * <br>Must be a small double in range [0,1].
-     * <br><li>A hot (freshly selected) cluster will have a new probability of
-     * being chosen which is cooldownGamma times smaller</li>
+     * <br>A hot (freshly selected) cluster will have a new probability of being
+     * chosen which is cooldownGamma times smaller
      *
      * <br>Probability for hot clusters is downscaled like
-     * <br><li><i>newProbability</i> = (1 -
-     * <i>cooldownGamma</i>)*<i>oldProbability</i></li>
+     * <br><i>newProbability</i> = (1 -
+     * <i>cooldownGamma</i>)*<i>oldProbability</i>
      *
      * @param cooldownGamma the cooldownGamma to set
      */
@@ -677,12 +680,12 @@ public class ALNSPropertiesBean {
     /**
      * This parameter is the scaling factor used in the warmup process.
      * <br>Must be a small double in range [0,1].
-     * <br><li>A cold (not freshly selected) cluster will have a new probability
-     * of being chosen which is warmupGamma times bigger</li>
+     * <br>A cold (not freshly selected) cluster will have a new probability of
+     * being chosen which is warmupGamma times bigger
      *
      * <br>Probability for cold clusters is upscaled like
-     * <br><li><i>newProbability</i> = (1 -
-     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>
+     * <br><i>newProbability</i> = (1 -
+     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i>
      *
      * @return the warmupGamma
      */
@@ -693,12 +696,12 @@ public class ALNSPropertiesBean {
     /**
      * This parameter is the scaling factor used in the warmup process.
      * <br>Must be a small double in range [0,1].
-     * <br><li>A cold (not freshly selected) cluster will have a new probability
-     * of being chosen which is warmupGamma times bigger</li>
+     * <br>A cold (not freshly selected) cluster will have a new probability of
+     * being chosen which is warmupGamma times bigger
      *
      * <br>Probability for cold clusters is upscaled like
-     * <br><li><i>newProbability</i> = (1 -
-     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>
+     * <br><i>newProbability</i> = (1 -
+     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i>
      *
      * @param warmupGamma the warmupGamma to set
      */

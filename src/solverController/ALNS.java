@@ -63,7 +63,7 @@ public class ALNS extends Orienteering {
      * defined by the ALNS procedure.
      */
     private ObjectDistribution<BiFunction<List<Cluster>, Integer, List<Cluster>>> repairMethods;
-    
+
     /**
      * A list of clusters associated to their probability of being used by the
      * destroy methods to increase ALNS solution size
@@ -85,10 +85,10 @@ public class ALNS extends Orienteering {
         super(o);
         this.alnsProperties = ALNSParams;
         this.controller = c;
-        
+
         // Setting up the Cluster Roulette
         clusterRoulette = new ClusterRoulette(instance.cloneClusters());
-        
+
         // Keeping track of all implemented repair and destroy methods
         destroyMethods = new ObjectDistribution<>();
 
@@ -425,7 +425,7 @@ public class ALNS extends Orienteering {
         try {
             // Send the controller a message saying we're starting
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING);
-            env.message("\nALNSLOG, "+elapsedTime+": optimizeALNS starting.\n");
+            env.message("\nALNSLOG, " + elapsedTime + ": optimizeALNS starting.\n");
 
             // Setup the Excel logger
             ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
@@ -506,8 +506,8 @@ public class ALNS extends Orienteering {
             do {
                 // Send the controller a message saying we're running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
-                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" started. q = "+q+"\n");
-                
+                env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " started. q = " + q + "\n");
+
                 temperature = initialTtemperature;
 
                 // Reset heuristic weights
@@ -541,9 +541,9 @@ public class ALNS extends Orienteering {
                         && iterationsWithoutImprovement < alnsProperties.getMaxIterationsWithoutImprovement()
                         && !this.isCancelled(); // thread check
                         iterations++) {
-                    
-                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", without improvement "+iterationsWithoutImprovement+"\n");
-                    
+
+                    env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", without improvement " + iterationsWithoutImprovement + "\n");
+
                     // Setup of boolean values to evaluate solution quality
                     solutionIsAccepted = false;
                     solutionIsNewGlobalOptimum = false;
@@ -555,26 +555,27 @@ public class ALNS extends Orienteering {
                     // Picking a destroy and a repair method
                     destroyMethod = pickDestroyMethod();
                     repairMethod = pickRepairMethod();
-                    
+
                     // Apply the destruction method on the solution
-                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", destroy: "+destroyMethods.getLabel(destroyMethod)+"\n");
+                    env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", destroy: " + destroyMethods.getLabel(destroyMethod) + "\n");
                     xNew = destroyMethod.apply(xOld, q);
-                    
+
                     // CLUSTER COOLDOWN: Get the newly inserted clusters (hot clusters)
                     List<Cluster> xHotClusters = new ArrayList<>(xNew);
                     xHotClusters.removeAll(xOld);
                     // CLUSTER COOLDOWN: Cool down hot clusters, warm up the others
                     clusterRoulette.cooldown(alnsProperties.getCooldownGamma(), xHotClusters);
                     clusterRoulette.warmup(alnsProperties.getWarmupGamma(), xHotClusters);
-                    
+
                     //If the new solution is infeasible, apply the repair method
                     if (!testSolution(xNew, false)) {
-                        env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", repair: "+repairMethods.getLabel(repairMethod)+"\n");
+                        env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", repair: " + repairMethods.getLabel(repairMethod) + "\n");
                         xNew = repairBackToFeasibility4(xNew, repairMethod);
                         repairMethodWasUsed = true;
+                    } else {
+                        env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", no repair method needed.\n");
                     }
-                    else env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", no repair method needed.\n");
-                    
+
                     // Check if we entered feasibility. If we didn't,
                     // gather the value of the objective function for the new solution
                     // obtained through the chosen methods
@@ -589,13 +590,12 @@ public class ALNS extends Orienteering {
                         // 2 - Update the elapsed time
                         // 3 - Log the results to XLSX
                         // 4 - discard the solution (set xNew = xOld), penalize the two heuristics
-                        
                         // 1 - CLUSTER COOLDOWN: heavily penalize the infeasible cluster
                         clusterRoulette.downscale(alnsProperties.getPunishmentGamma(), xNew);
-                        
+
                         // 2 - Update the elapsed time
                         elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTimeInNanos);
-                        
+
                         // 3 - Log the results to XLSX
                         String[] logLine = {
                             segments + "", iterations + "", elapsedTime + "",
@@ -603,7 +603,7 @@ public class ALNS extends Orienteering {
                             repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod) + "",
                             repairMethodWasUsed ? "1" : "0",
                             temperature + "",
-                            simulatedAnnealingBarrier+"",
+                            simulatedAnnealingBarrier + "",
                             q + "",
                             csvFormatSolution(xOld), oldObjectiveValue + "",
                             csvFormatSolution(xNew), "infeasible", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "1",
@@ -615,8 +615,8 @@ public class ALNS extends Orienteering {
                         xlsxLogger.writeRow(logLine);
                         // Send the controller a message saying we're still running
                         notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
-                        env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", repaired solution infeasible and discarded.\n");
-                        
+                        env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", repaired solution infeasible and discarded.\n");
+
                         // 4 - discard the solution (set xNew = xOld), penalize the two heuristics
                         // Update heuristic weights with the worst possible score
                         updateHeuristicMethodsWeight(
@@ -628,13 +628,13 @@ public class ALNS extends Orienteering {
                                 true, // the new solution is worse than the old one and is rejected
                                 repairMethodWasUsed
                         );
-                        
+
                         // Update temperature, just like at the end of every iteration
                         temperature *= alnsProperties.getAlpha();
-                        
+
                         // Update the count of iterations without improvement
                         iterationsWithoutImprovement++;
-                        
+
                         // proceed with the next iteration
                         continue;
 
@@ -659,11 +659,13 @@ public class ALNS extends Orienteering {
                         if (!solutionIsBetterThanOld) {
                             solutionIsWorseButAccepted = true;
                         }
-                    } else solutionIsWorseAndRejected = true;
+                    } else {
+                        solutionIsWorseAndRejected = true;
+                    }
 
                     // Check if the solution is a new global optimum
                     solutionIsNewGlobalOptimum = newObjectiveValue > bestGlobalObjectiveValue;
-                    
+
                     // Anyway, if the solution is better or equal than the current best for the segment
                     // save it as xBest, and its objective value in bestObjectiveValue
                     if (newObjectiveValue >= bestObjectiveValueInSegment) {
@@ -694,7 +696,7 @@ public class ALNS extends Orienteering {
                         repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod) + "",
                         repairMethodWasUsed ? "1" : "0",
                         temperature + "",
-                        simulatedAnnealingBarrier+"",
+                        simulatedAnnealingBarrier + "",
                         q + "",
                         csvFormatSolution(xOld), oldObjectiveValue + "",
                         csvFormatSolution(xNew), newObjectiveValue + "", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "0",
@@ -706,7 +708,7 @@ public class ALNS extends Orienteering {
                     xlsxLogger.writeRow(logLine);
                     // Send the controller a message to notify we're still running
                     notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
-                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+" end.\n");
+                    env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + " end.\n");
 
                     // Update the heuristic weights
                     updateHeuristicMethodsWeight(
@@ -721,7 +723,7 @@ public class ALNS extends Orienteering {
                     if (solutionIsAccepted) {
                         xOld = xNew;
                         oldObjectiveValue = newObjectiveValue;
-                        env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+" solution accepted.\n");
+                        env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + " solution accepted.\n");
                     }
 
                     // Update the elapsed time
@@ -744,7 +746,7 @@ public class ALNS extends Orienteering {
                 //            
                 // We check whether there was an improvement from last segment to this one
                 if (bestObjectiveValueInSegment > bestGlobalObjectiveValue) {
-                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" ended with an improvement!\n");
+                    env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " ended with an improvement!\n");
                     // There was an improvement! Save the best solution found in the iterations
                     bestGlobalObjectiveValue = bestObjectiveValueInSegment;
                     xGlobalBest = xBest;
@@ -753,7 +755,7 @@ public class ALNS extends Orienteering {
                 } else {
                     // There was no improvement: update the no-improvement counter
                     segmentsWithoutImprovement++;
-                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" ended without an improvement.\n");
+                    env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " ended without an improvement.\n");
                 }
 
                 // Check and log why the segment has ended
@@ -778,7 +780,7 @@ public class ALNS extends Orienteering {
                     segments + "", "*" + "", elapsedTime + "",
                     "*", "*", "*", "*", "*",
                     temperature + "",
-                    simulatedAnnealingBarrier+"",
+                    simulatedAnnealingBarrier + "",
                     q + "",
                     "*", "*",
                     "*", "*", "*", "*", "*",
@@ -790,13 +792,13 @@ public class ALNS extends Orienteering {
                 xlsxLogger.writeRow(logLineSegmentEnd);
                 // Send the controller a message to notify we're still running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
-                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" end cause: "+segmentEndCause+"\n");
+                env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " end cause: " + segmentEndCause + "\n");
 
                 // Reset the StringBuffer that logs the reason why a segment has ended
                 segmentEndCause = new StringBuffer();
 
                 // Let's try a local search run, if we have time for it
-                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" local search...\n");
+                env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " local search...\n");
                 List<Cluster> xLocalSearch = this.localSearch(
                         xGlobalBest,
                         elapsedTime,
@@ -842,7 +844,7 @@ public class ALNS extends Orienteering {
                     segments + "", "*" + "", elapsedTime + "",
                     "*", "*", "*", "*", "*",
                     temperature + "",
-                    simulatedAnnealingBarrier+"",
+                    simulatedAnnealingBarrier + "",
                     q + "",
                     "*", "*",
                     "*", "*", "*", "*", "*",
@@ -854,7 +856,7 @@ public class ALNS extends Orienteering {
                 xlsxLogger.writeRow(logLine);
                 // Send the controller a message to notify we're still running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
-                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" local search result: "+localSearchComment+"\n");
+                env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " local search result: " + localSearchComment + "\n");
 
                 // Prepare solutions for the next segment
                 xOld = xGlobalBest;
@@ -867,24 +869,22 @@ public class ALNS extends Orienteering {
                 // Update q and the segment counter
                 // q will cycle: if it becomes bigger than qMax, it starts again
                 q = (q + alnsProperties.getqDelta()) % qMax;
-                
+
                 // Segments will increase
                 segments++;
             } // do: Stopping criteria. If not verified, go on with the next segment
-            while (
-                    elapsedTime <= alnsProperties.getTimeLimitALNS()
+            while (elapsedTime <= alnsProperties.getTimeLimitALNS()
                     && q >= qMin
                     && q <= qMax // We should never exit because of this unless qStart was wrong
                     && segments < alnsProperties.getMaxSegments()
                     && segmentsWithoutImprovement < alnsProperties.getMaxSegmentsWithoutImprovement()
-                    && !this.isCancelled()
-                    );
+                    && !this.isCancelled());
 
             // Close the excel logger gracefully
             xlsxLogger.close();
             // Send the controller a message to notify we're stopping
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STOPPING);
-            env.message("\nALNSLOG, "+elapsedTime+": ALNS run completed. Final solution test...\n");
+            env.message("\nALNSLOG, " + elapsedTime + ": ALNS run completed. Final solution test...\n");
 
             // Final test to set variables in the model and log vehicle paths
             testSolution(xGlobalBest, true);
@@ -948,7 +948,8 @@ public class ALNS extends Orienteering {
      * can be chosen with probability <br>
      * exp((newObjectiveValue - oldObjectiveValue)/temperature)
      *
-     * @param simulatedAnnealingBarrier the probability barrier to beat to accept a solution
+     * @param simulatedAnnealingBarrier the probability barrier to beat to
+     * accept a solution
      * @return <tt>true</tt> if the new solution is accepted.
      * @throws GRBException if there are problems with sending Gurobi
      * environment messages.
@@ -991,9 +992,8 @@ public class ALNS extends Orienteering {
          * specified probability if a pejorative solution is found.
          *
          * Let's define: DIFF = newObjectiveValue - oldObjectiveValue > 0 T>0
-         * So, if we improve our solution we get that
-         * DIFF>=0 and P=exp(DIFF/T) >= 1
-         * => the solution is always accepted If the solution is worse
+         * So, if we improve our solution we get that DIFF>=0 and P=exp(DIFF/T)
+         * >= 1 => the solution is always accepted If the solution is worse
          * DIFF<0 and 0 < P=exp(DIFF/T) < 1 => the solution is accepted with
          * probability P
          */
@@ -1005,7 +1005,7 @@ public class ALNS extends Orienteering {
             return false;
         }
     }
-    
+
     /**
      * Simulated annealing acceptance criterion.
      * <br>The acceptance criterion is a Simulated Annealing process, repurposed
@@ -1026,7 +1026,6 @@ public class ALNS extends Orienteering {
             double temperature) {
         return Math.exp((newObjectiveValue - oldObjectiveValue) / temperature);
     }
-    
 
     // DESTROY HEURISTICS
     /**
@@ -1303,9 +1302,8 @@ public class ALNS extends Orienteering {
                         if (!streaks.isEmpty()) {
                             streaks.sort(Streak.SIZE_COMPARATOR.reversed());
                             int streakSize = streaks.get(0).size();
-                            
+
                             // PROBLEMA: sto prendendo la lunghezza dello streak invece della sua durata!
-                            
                             // If the streak we've found is bigger than the previous one
                             // update biggestStreakSize and firstVehicle
                             if (streakSize > biggestStreakSize) {
@@ -1669,8 +1667,8 @@ public class ALNS extends Orienteering {
      * solution into feasibility. It operates by removing the minimum number of
      * clusters to bring the starting solution back to feasibility. This
      * implementation is different than the previous ones because it will test
-     * different "degrees of destruction" q until it finds the smallest one
-     * that works.
+     * different "degrees of destruction" q until it finds the smallest one that
+     * works.
      * <br>If the solution is irreparable, the smallest infeasible solution will
      * be returned.
      * <br>Feasibility is tested again at the end of the method, so you can
@@ -1780,8 +1778,8 @@ public class ALNS extends Orienteering {
     /**
      * Return a list of available clusters which have not been chosen for the
      * given solution. Clusters are chosen with a probability that varies on
-     * their past behaviour through a special "roulette system"
-     * (those who bring us to infeasibility have a lesser chance of being chosen).
+     * their past behaviour through a special "roulette system" (those who bring
+     * us to infeasibility have a lesser chance of being chosen).
      *
      * @param solution the solution to analyze
      * @return a list of available clusters which have not been chosen for the
@@ -1792,7 +1790,7 @@ public class ALNS extends Orienteering {
         availableClusters.removeAll(solution);
         return availableClusters;
     }
-    
+
     /**
      * Converts a proposed solution (a list of clusters) to a string of comma
      * separated values.

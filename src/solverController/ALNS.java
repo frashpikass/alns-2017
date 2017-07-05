@@ -609,7 +609,7 @@ public class ALNS extends Orienteering {
                             csvFormatSolution(xNew), "infeasible", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "1",
                             csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                             csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                            clusterRoulette.toString(),
+                            clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
                             "Infeasible and discarded."
                         };
                         xlsxLogger.writeRow(logLine);
@@ -702,7 +702,7 @@ public class ALNS extends Orienteering {
                         csvFormatSolution(xNew), newObjectiveValue + "", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "0",
                         csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                         csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                        clusterRoulette.toString(),
+                        clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
                         ""
                     };
                     xlsxLogger.writeRow(logLine);
@@ -786,7 +786,7 @@ public class ALNS extends Orienteering {
                     "*", "*", "*", "*", "*",
                     csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                     csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                    clusterRoulette.toString(),
+                    clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
                     "End of the segment. Reason: " + segmentEndCause.toString()
                 };
                 xlsxLogger.writeRow(logLineSegmentEnd);
@@ -850,7 +850,7 @@ public class ALNS extends Orienteering {
                     "*", "*", "*", "*", "*",
                     csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                     csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                    clusterRoulette.toString(),
+                    clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
                     "Local search results. " + localSearchComment.toString()
                 };
                 xlsxLogger.writeRow(logLine);

@@ -80,20 +80,6 @@ public class Controller
                 // Proceed with the optimization
                 this.optimize(path);
 
-                currentALNS.execute();
-                
-                //DEBUG1:
-                currentALNS.get();
-                /*
-                try{
-                    currentALNS.get();
-                }
-                catch(ExecutionException e){
-                    System.out.println("Controller - ALNS has thrown ExecutionException: "+e.getMessage());
-                }
-                */
-                //DEBUG1_end
-
                 // Update the batch number
                 this.lastInstanceNumber++;
             }
@@ -405,11 +391,21 @@ public class Controller
                     pb.getALNSproperties(),
                     this
         );
-
-        // Initialize a new ALNS object starting from the current modelPath
-        // and Orienteering object
-        // SwingUtilities.invokeLater(currentALNS);
         
+        currentALNS.execute();
+
+        //DEBUG1:
+        currentALNS.get();
+        /*
+        try{
+            currentALNS.get();
+        }
+        catch(ExecutionException e){
+            System.out.println("Controller - ALNS has thrown ExecutionException: "+e.getMessage());
+        }
+        */
+        //DEBUG1_end
+
         // Now go back to "doInBackground()" and wait for the optimization to complete
     }
     

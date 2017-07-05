@@ -124,10 +124,24 @@ public class ALNSPropertiesBean {
      * <br>Must be a small double in range [0,1].
      * <br><li>A hot (freshly selected) cluster will have a new probability of
      * being chosen which is cooldownGamma times smaller</li>
-     * <br><li>A cold cluster (not amongst the freshly selected ones) will have
-     * a new probability which is cooldownGamma times bigger.
+     *
+     * <br>Probability for hot clusters is downscaled like
+     * <br><li><i>newProbability</i> = (1 -
+     * <i>cooldownGamma</i>)*<i>oldProbability</i></li>
      */
-    private double cooldownGamma = 0.05;
+    private double cooldownGamma = 0.1;
+
+    /**
+     * This parameter is the scaling factor used in the warmup process.
+     * <br>Must be a small double in range [0,1].
+     * <br><li>A cold (not freshly selected) cluster will have a new probability
+     * of being chosen which is warmupGamma times bigger</li>
+     *
+     * <br>Probability for cold clusters is upscaled like
+     * <br><li><i>newProbability</i> = (1 -
+     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>
+     */
+    private double warmupGamma = 0.001;
 
     /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
@@ -600,7 +614,7 @@ public class ALNSPropertiesBean {
         double oldGamma = this.punishmentGamma;
         double newGamma;
 
-        // Lambda setup - values out of range [0,1] clip to values close to range boundaries
+        // setup - values out of range [0,1] clip to values close to range boundaries
         // we want the temperature to always decrease if not explicitly stated otherwise
         if (punishmentGamma <= 0) {
             newGamma = 0.0;
@@ -619,8 +633,10 @@ public class ALNSPropertiesBean {
      * <br>Must be a small double in range [0,1].
      * <br><li>A hot (freshly selected) cluster will have a new probability of
      * being chosen which is cooldownGamma times smaller</li>
-     * <br><li>A cold cluster (not amongst the freshly selected ones) will have
-     * a new probability which is cooldownGamma times smaller.
+     *
+     * <br>Probability for hot clusters is downscaled like
+     * <br><li><i>newProbability</i> = (1 -
+     * <i>cooldownGamma</i>)*<i>oldProbability</i></li>
      *
      * @return the cooldownGamma
      */
@@ -633,8 +649,10 @@ public class ALNSPropertiesBean {
      * <br>Must be a small double in range [0,1].
      * <br><li>A hot (freshly selected) cluster will have a new probability of
      * being chosen which is cooldownGamma times smaller</li>
-     * <br><li>A cold cluster (not amongst the freshly selected ones) will have
-     * a new probability which is cooldownGamma times bigger.
+     *
+     * <br>Probability for hot clusters is downscaled like
+     * <br><li><i>newProbability</i> = (1 -
+     * <i>cooldownGamma</i>)*<i>oldProbability</i></li>
      *
      * @param cooldownGamma the cooldownGamma to set
      */
@@ -642,7 +660,7 @@ public class ALNSPropertiesBean {
         double oldCooldownGamma = this.cooldownGamma;
         double newGamma;
 
-        // Lambda setup - values out of range [0,1] clip to values close to range boundaries
+        // setup - values out of range [0,1] clip to values close to range boundaries
         // we want the temperature to always decrease if not explicitly stated otherwise
         if (cooldownGamma <= 0) {
             newGamma = 0.0;
@@ -654,6 +672,52 @@ public class ALNSPropertiesBean {
 
         this.cooldownGamma = newGamma;
         propertyChangeSupport.firePropertyChange(PROP_COOLDOWNGAMMA, oldCooldownGamma, newGamma);
+    }
+
+    /**
+     * This parameter is the scaling factor used in the warmup process.
+     * <br>Must be a small double in range [0,1].
+     * <br><li>A cold (not freshly selected) cluster will have a new probability
+     * of being chosen which is warmupGamma times bigger</li>
+     *
+     * <br>Probability for cold clusters is upscaled like
+     * <br><li><i>newProbability</i> = (1 -
+     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>
+     *
+     * @return the warmupGamma
+     */
+    public double getWarmupGamma() {
+        return warmupGamma;
+    }
+
+    /**
+     * This parameter is the scaling factor used in the warmup process.
+     * <br>Must be a small double in range [0,1].
+     * <br><li>A cold (not freshly selected) cluster will have a new probability
+     * of being chosen which is warmupGamma times bigger</li>
+     *
+     * <br>Probability for cold clusters is upscaled like
+     * <br><li><i>newProbability</i> = (1 -
+     * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>
+     *
+     * @param warmupGamma the warmupGamma to set
+     */
+    public void setWarmupGamma(double warmupGamma) {
+        double oldWarmupGamma = this.warmupGamma;
+        double newGamma;
+
+        // setup - values out of range [0,1] clip to values close to range boundaries
+        // we want the temperature to always decrease if not explicitly stated otherwise
+        if (warmupGamma <= 0) {
+            newGamma = 0.0;
+        } else if (warmupGamma >= 1) {
+            newGamma = 1;
+        } else {
+            newGamma = warmupGamma;
+        }
+
+        this.warmupGamma = warmupGamma;
+        propertyChangeSupport.firePropertyChange(PROP_WARMUPGAMMA, oldWarmupGamma, newGamma);
     }
 
     /**
@@ -832,6 +896,7 @@ public class ALNSPropertiesBean {
     public static final String PROP_ALPHA = "alpha";
     public static final String PROP_PUNISHMENTGAMMA = "punishmentGamma";
     public static final String PROP_COOLDOWNGAMMA = "cooldownGamma";
+    public static final String PROP_WARMUPGAMMA = "warmupGamma";
     public static final String PROP_TIMELIMITALNS = "timeLimitALNS";
     public static final String PROP_TIMELIMITLOCALSEARCH = "timeLimitLocalSearch";
     public static final String PROP_REWARDFORBESTSEGMENTHEURISTICS = "rewardForBestSegmentHeuristics";

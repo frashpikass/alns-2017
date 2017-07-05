@@ -145,6 +145,19 @@ public class ALNSPropertiesBean {
     private double warmupGamma = 0.001;
 
     /**
+     * Clusters that have had a "chance of being chosen" less than the average
+     * for more than nerfBarrier% of the time in a segment will be surely
+     * punished to make them less available in the following segment.
+     *
+     * <br>This will also impact on the local search: clusters that have a
+     * probability of selection below the average won't be included in those
+     * available for the local search.
+     *
+     * <br>Must be a double in range [0,1].
+     */
+    private double nerfBarrier = 0.55;
+
+    /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
      */
     private long timeLimitALNS = 1800;
@@ -724,6 +737,42 @@ public class ALNSPropertiesBean {
     }
 
     /**
+     * Clusters that have had a "chance of being chosen" less than the average
+     * for more than nerfBarrier% of the time in a segment will be surely
+     * punished to make them less available in the following segment.
+     *
+     * <br>This will also impact on the local search: clusters that have a
+     * probability of selection below the average won't be included in those
+     * available for the local search.
+     *
+     * <br>Must be a double in range [0,1].
+     *
+     * @return the nerfBarrier
+     */
+    public double getNerfBarrier() {
+        return nerfBarrier;
+    }
+
+    /**
+     * Clusters that have had a "chance of being chosen" less than the average
+     * for more than nerfBarrier% of the time in a segment will be surely
+     * punished to make them less available in the following segment.
+     *
+     * <br>This will also impact on the local search: clusters that have a
+     * probability of selection below the average won't be included in those
+     * available for the local search.
+     *
+     * <br>Must be a double in range [0,1].
+     *
+     * @param nerfBarrier the nerfBarrier to set
+     */
+    public void setNerfBarrier(double nerfBarrier) {
+        double oldNerfBarrier = this.nerfBarrier;
+        this.nerfBarrier = nerfBarrier;
+        propertyChangeSupport.firePropertyChange(PROP_NERFBARRIER, oldNerfBarrier, nerfBarrier);
+    }
+
+    /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
      *
      * @return the timeLimitALNS
@@ -900,6 +949,7 @@ public class ALNSPropertiesBean {
     public static final String PROP_PUNISHMENTGAMMA = "punishmentGamma";
     public static final String PROP_COOLDOWNGAMMA = "cooldownGamma";
     public static final String PROP_WARMUPGAMMA = "warmupGamma";
+    public static final String PROP_NERFBARRIER = "nerfBarrier";
     public static final String PROP_TIMELIMITALNS = "timeLimitALNS";
     public static final String PROP_TIMELIMITLOCALSEARCH = "timeLimitLocalSearch";
     public static final String PROP_REWARDFORBESTSEGMENTHEURISTICS = "rewardForBestSegmentHeuristics";

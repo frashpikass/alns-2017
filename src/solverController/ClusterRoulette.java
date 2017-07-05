@@ -151,36 +151,53 @@ public class ClusterRoulette {
 
     /**
      * A hot cluster is a cluster which has been just selected. The cooldown
-     * process makes it a little less likely to select a hot cluster.
-     * <br>The inverse of the same process makes it a little more likely to
-     * chose a cluster which wasn't amidst the selected hot clusters.
+     * process makes it a little less likely to select a hot cluster again.
      *
-     * <br>The cooldownGamma factor is applied in a downscaling fashion to hot
-     * clusters and in an upscaling fashion to all the other clusters in this
-     * structure.
+     * <br>The <i>cooldownGamma</i> factor is applied in a downscaling fashion
+     * to hot clusters.
      *
      * @param cooldownGamma the cooldown factor. Should be a small double in
      * range [0,1]. Represents the decrease in probability,
-     * <br>e.g.: cooldownGamma = 0.1
+     * <br>e.g.: <i>cooldownGamma</i> = 0.1
      * <br> =&gt; the new probability for hot clusters will be 10% less than the
      * old one
-     * <br> =&gt; the new probability for cold clusters will be 10% more than
-     * the old one
      * @param hotClusters clusters that have just been chosen
      */
     public void cooldown(double cooldownGamma, List<Cluster> hotClusters) {
         // Make sure the cooldown gamma is in range [0,1]
         cooldownGamma = gammaFilter(cooldownGamma);
 
+        // Cooldown hot clusters
+        this.downscale((1 - cooldownGamma), hotClusters);
+    }
+
+    /**
+     * A hot cluster is a cluster which has been just selected. Other
+     * non-selected clusters are called cold clusters.
+     *
+     * <br>The warmup process makes it a little more likely to chose a cold
+     * cluster in the next extraction.
+     *
+     * <br>The <i>warmupGamma</i> factor is applied in an upscaling fashion to
+     * cold clusters.
+     *
+     * @param warmupGamma the cooldown factor. Should be a small double in range
+     * [0,1]. Represents the decrease in probability,
+     * <br>e.g.: <i>warmupGamma</i> = 0.1
+     * <br> =&gt; the new probability for cold clusters will be 10% more than
+     * the old one
+     * @param hotClusters clusters that have just been chosen
+     */
+    public void warmup(double warmupGamma, List<Cluster> hotClusters) {
+        // Make sure the cooldown gamma is in range [0,1]
+        warmupGamma = gammaFilter(warmupGamma);
+
         // Make a list of cold clusters
         List<Cluster> coldClusters = new ArrayList<>(clusters);
         coldClusters.removeAll(hotClusters);
 
-        // Cooldown hot clusters
-        this.downscale((1 - cooldownGamma), hotClusters);
-
         // Warm up cold clusters
-        this.upscale((1 - cooldownGamma), coldClusters);
+        this.upscale((1 - warmupGamma), coldClusters);
     }
 
     /**

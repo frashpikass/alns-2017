@@ -20,6 +20,42 @@ public class ALNSPropertiesBean {
     public ALNSPropertiesBean() {
 
     }
+    
+    /**
+     * Cloning method: clones all attributes from given bean
+     * 
+     * @param apb the ALNSPropertiesBean to clone from
+     */
+    public void cloneFrom(ALNSPropertiesBean apb){
+        this.maxHistorySize = apb.getMaxHistorySize();
+        this.qStart = apb.getqStart();
+        this.qDelta = apb.getqDelta();
+        this.segmentSize = apb.getSegmentSize();
+        this.maxSegments = apb.getMaxSegments();
+        this.maxSegmentsWithoutImprovement = apb.getMaxSegmentsWithoutImprovement();
+        this.useDestroyGreedyCostInsertion = apb.isUseDestroyGreedyCostInsertion();
+        this.useDestroyGreedyBestInsertion = apb.isUseDestroyGreedyBestInsertion();
+        this.useDestroyGreedyProfitInsertion = apb.isUseDestroyGreedyProfitInsertion();
+        this.useDestroyRandomInsertion = apb.isUseDestroyRandomInsertion();
+        this.useRepairHighCostRemoval = apb.isUseRepairHighCostRemoval();
+        this.useRepairRandomRemoval = apb.isUseRepairRandomRemoval();
+        this.useRepairTravelTime = apb.isUseRepairTravelTime();
+        this.useRepairVehicleTime = apb.isUseRepairVehicleTime();
+        this.useRepairWorstRemoval = apb.isUseRepairWorstRemoval();
+        this.lambda = apb.getLambda();
+        this.alpha = apb.getAlpha();
+        this.punishmentGamma = apb.getPunishmentGamma();
+        this.cooldownGamma = apb.getCooldownGamma();
+        this.warmupGamma = apb.getWarmupGamma();
+        this.nerfBarrier = apb.getNerfBarrier();
+        this.timeLimitALNS = apb.getTimeLimitALNS();
+        this.timeLimitLocalSearch = apb.getTimeLimitLocalSearch();
+        this.heuristicScores = apb.getHeuristicScores();
+        this.rewardForBestSegmentHeuristics = apb.getRewardForBestSegmentHeuristics();
+        this.punishmentForWorstSegmentHeuristics = apb.getPunishmentForWorstSegmentHeuristics();
+        this.maxMIPSNodesForFeasibilityCheck = apb.getMaxMIPSNodesForFeasibilityCheck();
+        this.maxIterationsWithoutImprovement = apb.getMaxIterationsWithoutImprovement();
+    }
 
     /**
      * Maximum size of the past history
@@ -957,5 +993,5 @@ public class ALNSPropertiesBean {
     public static final String PROP_HEURISTICSCORES = "heuristicScores";
     public static final String PROP_MAXMIPSNODESFORFEASIBILITYCHECK = "maxMIPSNodesForFeasibilityCheck";
     public static final String PROP_MAXITERATIONSWITHOUTIMPROVEMENT = "maxIterationsWithoutImprovement";
-
+    
 }

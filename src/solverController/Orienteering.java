@@ -5,38 +5,21 @@
  */
 package solverController;
 
-import solverController.OrienteeringPropertiesBean;
-import solverController.ALNSPropertiesBean;
 import gurobi.*;
 import java.io.File;
-//import java.io.File;
-//import java.io.FileInputStream;
-//import java.io.FileNotFoundException;
-//import java.io.FileOutputStream;
-//import java.io.IOException;
-//import java.io.ObjectInputStream;
-//import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import solverController.Controller;
-import solverController.Controller.Solvers;
-import solverController.LogRedirector;
-import solverController.OptimizationStatusMessage;
 import solverModel.Cluster;
 import solverModel.InstanceCTOPWSS;
 import solverModel.InstanceCTOPWSSReader;
 import solverModel.Node;
 import solverModel.Streak;
 import solverModel.Vehicle;
-import sun.rmi.log.ReliableLog;
 
 /**
  * Class to solve an instance of the Orienteering problem.

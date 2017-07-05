@@ -46,7 +46,9 @@ public class Main {
 
                 // Run the controller, if it was created correctly
                 if (cnt != null) {
-                    SwingUtilities.invokeAndWait(cnt);
+                    //SwingUtilities.invokeAndWait(cnt);
+                    cnt.execute();
+                    cnt.get();
                 }
             }
         } catch (ParseException e) {
@@ -67,7 +69,7 @@ public class Main {
      * Launches the gui
      */
     public static void launchGui() {
-        /* Set the Nimbus look and feel */
+                /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 

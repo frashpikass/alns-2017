@@ -43,6 +43,20 @@ public class ClusterRoulette {
      * List of probabilities (one for each cluster)
      */
     private List<Double> probabilities;
+    
+    /**
+     * List of frequencies of clusters being below average.
+     * Every time it's updated, if a cluster has a probability below average,
+     * its entry is increased by one.
+     */
+    private List<Double> nerfOccurrences;
+    
+    /**
+     * Indicates how many times the nerf list was updated.
+     */
+    private double nerfNumberOfUpdates;
+    
+    
 
     /**
      * Constructor for class ClusterRoulette.
@@ -57,6 +71,13 @@ public class ClusterRoulette {
         // Init probabilities to 1.0
         clusters.forEach((_item) -> {
             probabilities.add(1.0);
+        });
+        
+        // Init nerf mechanism
+        this.nerfOccurrences = new ArrayList<>();
+        this.nerfNumberOfUpdates = 0;
+        clusters.forEach((_item) -> {
+            nerfOccurrences.add(0.0);
         });
     }
 
@@ -234,6 +255,52 @@ public class ClusterRoulette {
         ret.append("]");
 
         return ret.toString();
+    }
+    
+    /**
+     * Resets every nerf candidate occurrence counter to 0.
+     * Also resets to 0 the counter for the number of updates.
+     */
+    public void resetNerfOccurrences(){
+        nerfOccurrences.forEach((d) -> {
+            d = 0.0;
+        });
+        nerfNumberOfUpdates = 0.0;
+    }
+    
+    /**
+     * Updates the list of nerf candidates by counting whether in this update
+     * the candidate's probability was below average.
+     * Also updates the counter for the number of updates.
+     */
+    public void updateNerfOccurrences(){
+        double avgProbability = this.getAverageProbability();
+        this.nerfNumberOfUpdates += 1.0;
+        
+        for(int i = 0; i < clusters.size(); i++){
+            if(probabilities.get(i) < avgProbability){
+                nerfOccurrences.set(i, nerfOccurrences.get(i)+1.0);
+            }
+        }
+    }
+    
+    /**
+     * Queries the nerf candidate list and returns the clusters which have
+     * been less probable than the average for more than nerfBarrier% of the
+     * times recorded.
+     * @param nerfBarrier double in range [0,1]
+     * @return a list of improbable clusters
+     */
+    public List<Cluster> queryNerfCandidates(double nerfBarrier){
+        List<Cluster> ret = new ArrayList<>();
+        
+        for(int i = 0; i < clusters.size(); i++){
+            if(nerfOccurrences.get(i)/nerfNumberOfUpdates >= nerfBarrier){
+                ret.add(clusters.get(i));
+            }
+        }
+        
+        return ret;
     }
 
 }

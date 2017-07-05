@@ -315,12 +315,15 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         // Read the instance file from text
         this.instance = InstanceCTOPWSSReader.read(modelPath);
         
-        // Setup the log redirector to redirect the log to stdout
-        this.logRedirector = new LogRedirector(logFilePath);
-        
         // Setup the model's variables, constraints and objective function
         this.setupEnvironment(logFilePath);
         
+        // Setup the log redirector to redirect the log to stdout
+        this.logRedirector = new LogRedirector(logFilePath);
+        
+        // Start redirecting the log to the output
+        logRedirector.execute();
+        //SwingUtilities.invokeLater(logRedirector);
         
         //Try to serialize the produced constraints
         model.write(orienteeringProperties.getOutputFolderPath()+File.separator+instance.getName()+".lp");
@@ -345,10 +348,6 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     private void setupEnvironment(String logname) throws Exception
     {
         try {
-            // Start redirecting the log to the output
-            logRedirector.execute();
-            //SwingUtilities.invokeLater(logRedirector);
-            
             this.env = new GRBEnv(logname);
             
             this.env.set(GRB.DoubleParam.TimeLimit, orienteeringProperties.getTimeLimit());

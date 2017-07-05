@@ -81,7 +81,7 @@ public class ALNSExcelLogger {
         "xNew", "xNewObj", "Accepted?","Worse but accepted?", "Infeasible & Discarded?",
         "xBest", "xBestObj",
         "xBestInSegments", "xBestInSegmentsObj",
-        "Updated Cluster Roulette",
+        "Updated Cluster Roulette","Cluster Roulette avg. p",
         "Comment"
     };
     

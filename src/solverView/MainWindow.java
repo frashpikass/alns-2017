@@ -48,11 +48,11 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         initComponents();
         redirectSystemStreams();
-
+        
         // Setup a smart scroller on the output text area
         new SmartScroller(jScrollPaneTextAreaOutput);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -158,6 +158,8 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel22 = new javax.swing.JLabel();
         jTextFieldWarmupGamma = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
+        jTextFieldNerfBarrier = new javax.swing.JTextField();
+        jLabel24 = new javax.swing.JLabel();
         jPanelActions = new javax.swing.JPanel();
         jButtonSaveParameters = new javax.swing.JButton();
         jButtonLoadParameters = new javax.swing.JButton();
@@ -455,7 +457,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSParameters.setBorder(javax.swing.BorderFactory.createTitledBorder("ALNS parameters"));
         java.awt.GridBagLayout jPanelALNSParametersLayout = new java.awt.GridBagLayout();
         jPanelALNSParametersLayout.columnWidths = new int[] {0, 10, 0};
-        jPanelALNSParametersLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0};
+        jPanelALNSParametersLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0};
         jPanelALNSParameters.setLayout(jPanelALNSParametersLayout);
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -526,7 +528,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel10.setText("ALNS solver time limit");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 38;
+        gridBagConstraints.gridy = 40;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel10, gridBagConstraints);
@@ -535,7 +537,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel11.setText("Local search time limit");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel11, gridBagConstraints);
@@ -544,7 +546,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel12.setText("Reward for best segment heuristics");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 26;
+        gridBagConstraints.gridy = 28;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel12, gridBagConstraints);
@@ -553,7 +555,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel13.setText("Punishment for worst segment heuristics");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 28;
+        gridBagConstraints.gridy = 30;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel13, gridBagConstraints);
@@ -562,7 +564,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel14.setText("Max MIPS nodes to solve in feasibility check");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 22;
+        gridBagConstraints.gridy = 24;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel14, gridBagConstraints);
@@ -580,7 +582,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel16.setText("Heuristic scores (values for psi)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 24;
+        gridBagConstraints.gridy = 26;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel16, gridBagConstraints);
@@ -671,7 +673,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 38;
+        gridBagConstraints.gridy = 40;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSParameters.add(jTextFieldTimeLimitALNS, gridBagConstraints);
@@ -689,7 +691,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSParameters.add(jTextFieldTimeLimitLocalSearch, gridBagConstraints);
@@ -707,7 +709,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 26;
+        gridBagConstraints.gridy = 28;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSParameters.add(jTextFieldRewardForBestSegmentHeuristics, gridBagConstraints);
@@ -725,7 +727,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 28;
+        gridBagConstraints.gridy = 30;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSParameters.add(jTextFieldPunishmentForWorstSegmentHeuristics, gridBagConstraints);
@@ -744,7 +746,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 22;
+        gridBagConstraints.gridy = 24;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSParameters.add(jTextFieldMaxMIPSNodesForFeasibilityCheck, gridBagConstraints);
@@ -771,7 +773,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel20.setText("Active Heuristics:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 44;
+        gridBagConstraints.gridy = 46;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -866,7 +868,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 24;
+        gridBagConstraints.gridy = 26;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanelALNSParameters.add(jPanelPsi, gridBagConstraints);
 
@@ -874,7 +876,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel2.setText("Max segments for an ALNS run");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 34;
+        gridBagConstraints.gridy = 36;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel2, gridBagConstraints);
@@ -892,7 +894,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 34;
+        gridBagConstraints.gridy = 36;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSParameters.add(jTextFieldMaxSegments, gridBagConstraints);
@@ -910,7 +912,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel18.setText("Termination criteria:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 32;
+        gridBagConstraints.gridy = 34;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
@@ -929,7 +931,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 36;
+        gridBagConstraints.gridy = 38;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSParameters.add(jTextFieldMaxSegmentsWithoutImprovement, gridBagConstraints);
@@ -937,19 +939,19 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel19.setText("Max segments without improvement");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 36;
+        gridBagConstraints.gridy = 38;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelALNSParameters.add(jLabel19, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 30;
+        gridBagConstraints.gridy = 32;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelALNSParameters.add(jSeparator1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 42;
+        gridBagConstraints.gridy = 44;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelALNSParameters.add(jSeparator2, gridBagConstraints);
@@ -1129,13 +1131,12 @@ public class MainWindow extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 46;
+        gridBagConstraints.gridy = 48;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanelALNSParameters.add(jPanel1, gridBagConstraints);
 
         jTextFieldPunishmentGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldPunishmentGamma.setText("0.0");
         jTextFieldPunishmentGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the scaling factor to change the chance of bad clusters\n(infeasible clusters) being chosen for insertion heuristics.\n<br>Must be a double in range [0,1].\n<br>Probability for bad clusters is downscaled like\n<br><li><tt>newProbability</tt> = <tt>punishmentGamma</tt>*<tt>oldProbability</tt></li>");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${punishmentGamma}"), jTextFieldPunishmentGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "punishmentGamma");
@@ -1188,7 +1189,6 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSParameters.add(jLabel22, gridBagConstraints);
 
         jTextFieldWarmupGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldWarmupGamma.setText("0.01");
         jTextFieldWarmupGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the scaling factor used in the warmup process.\n<br>Must be a small double in range [0,1].\n<br><li>A cold (not freshly selected) cluster will have a new probability\nof being chosen which is <i>warmupGamma</i> times bigger</li>\n\n<br>Probability for cold clusters is upscaled like\n<br><li><i>newProbability</i> = (1 -\n<i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${warmupGamma}"), jTextFieldWarmupGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "warmupGamma");
@@ -1213,6 +1213,33 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelALNSParameters.add(jLabel23, gridBagConstraints);
+
+        jTextFieldNerfBarrier.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldNerfBarrier.setToolTipText("<html>\n<b>Cooldown - Bad Cluster Nerfing at segment end</b>\n<br>Clusters that have had a \"chance of being chosen\" less than the average\nfor more than nerfBarrier% of the time in a segment will be surely\npunished to make them less available in the following segment.\n\n<br>This will also impact on the local search: clusters that have a\nprobability of selection below the average won't be included in those\navailable for the local search.\n\n<br>Must be a double in range [0,1].");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${nerfBarrier}"), jTextFieldNerfBarrier, org.jdesktop.beansbinding.BeanProperty.create("text"), "nerfBarrier");
+        bindingGroup.addBinding(binding);
+
+        jTextFieldNerfBarrier.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldNerfBarrierFocusLost(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 20;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        jPanelALNSParameters.add(jTextFieldNerfBarrier, gridBagConstraints);
+
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel24.setText("Nerf Barrier");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 20;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        jPanelALNSParameters.add(jLabel24, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1710,6 +1737,11 @@ public class MainWindow extends javax.swing.JFrame {
         //updateParametersBean();
     }//GEN-LAST:event_updatePsiBeanC
 
+    private void jTextFieldNerfBarrierFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNerfBarrierFocusLost
+        // TODO add your handling code here:
+        updateParametersBean();
+    }//GEN-LAST:event_jTextFieldNerfBarrierFocusLost
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -2003,6 +2035,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2046,6 +2079,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldMaxMIPSNodesForFeasibilityCheck;
     private javax.swing.JTextField jTextFieldMaxSegments;
     private javax.swing.JTextField jTextFieldMaxSegmentsWithoutImprovement;
+    private javax.swing.JTextField jTextFieldNerfBarrier;
     private javax.swing.JTextField jTextFieldNumThreads;
     private javax.swing.JTextField jTextFieldOutputFolderPath;
     private javax.swing.JTextField jTextFieldPsi0;
@@ -2105,6 +2139,7 @@ public class MainWindow extends javax.swing.JFrame {
         alnsPropertiesBean.setTimeLimitLocalSearch(Long.valueOf(jTextFieldTimeLimitLocalSearch.getText()));
         alnsPropertiesBean.setWarmupGamma(Double.valueOf(jTextFieldWarmupGamma.getText()));
         alnsPropertiesBean.setqDelta(Integer.valueOf(jTextFieldQDelta.getText()));
+        alnsPropertiesBean.setNerfBarrier(Double.valueOf(jTextFieldNerfBarrier.getText()));
         
         alnsPropertiesBean.setUseDestroyGreedyBestInsertion(jCheckBoxDestroyGreedyBestInsertion.isSelected());
         alnsPropertiesBean.setUseDestroyGreedyCostInsertion(jCheckBoxDestroyGreedyCostInsertion.isSelected());
@@ -2154,6 +2189,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldPunishmentGamma.setText(String.valueOf(alnsPropertiesBean.getPunishmentGamma()));
         jTextFieldCooldownGamma.setText(String.valueOf(alnsPropertiesBean.getCooldownGamma()));
         jTextFieldWarmupGamma.setText(String.valueOf(alnsPropertiesBean.getWarmupGamma()));
+        jTextFieldNerfBarrier.setText(String.valueOf(alnsPropertiesBean.getNerfBarrier()));
         jTextFieldTimeLimitALNS.setText(String.valueOf(alnsPropertiesBean.getTimeLimitALNS()));
         jTextFieldTimeLimitLocalSearch.setText(String.valueOf(alnsPropertiesBean.getTimeLimitLocalSearch()));
         jTextFieldRewardForBestSegmentHeuristics.setText(String.valueOf(alnsPropertiesBean.getRewardForBestSegmentHeuristics()));

@@ -346,6 +346,11 @@ public class MainWindow extends javax.swing.JFrame {
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimit}"), jTextFieldTimeLimit, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimit");
         bindingGroup.addBinding(binding);
 
+        jTextFieldTimeLimit.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         jTextFieldTimeLimit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldTimeLimitActionPerformed(evt);
@@ -362,6 +367,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${numThreads}"), jTextFieldNumThreads, org.jdesktop.beansbinding.BeanProperty.create("text"), "numThreads");
         bindingGroup.addBinding(binding);
 
+        jTextFieldNumThreads.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -381,6 +391,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "outputFolderPath");
         bindingGroup.addBinding(binding);
 
+        jTextFieldOutputFolderPath.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         jTextFieldOutputFolderPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldOutputFolderPathActionPerformed(evt);
@@ -398,6 +413,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints, org.jdesktop.beansbinding.BeanProperty.create("selected"), "forceHeuristicConstraints");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxForceHeuristicConstraints.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
@@ -451,6 +471,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${segmentSize}"), jTextFieldSegmentSize, org.jdesktop.beansbinding.BeanProperty.create("text"), "segmentSize");
         bindingGroup.addBinding(binding);
 
+        jTextFieldSegmentSize.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -564,6 +589,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${qDelta}"), jTextFieldQDelta, org.jdesktop.beansbinding.BeanProperty.create("text"), "qDelta");
         bindingGroup.addBinding(binding);
 
+        jTextFieldQDelta.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -577,6 +607,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${qStart}"), jTextFieldQStart, org.jdesktop.beansbinding.BeanProperty.create("text"), "qStart");
         bindingGroup.addBinding(binding);
 
+        jTextFieldQStart.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -590,6 +625,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${lambda}"), jTextFieldLambda, org.jdesktop.beansbinding.BeanProperty.create("text"), "lambda");
         bindingGroup.addBinding(binding);
 
+        jTextFieldLambda.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
@@ -603,6 +643,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${alpha}"), jTextFieldAlpha, org.jdesktop.beansbinding.BeanProperty.create("text"), "alpha");
         bindingGroup.addBinding(binding);
 
+        jTextFieldAlpha.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
@@ -617,6 +662,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimitALNS}"), jTextFieldTimeLimitALNS, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitALNS");
         bindingGroup.addBinding(binding);
 
+        jTextFieldTimeLimitALNS.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 36;
@@ -630,6 +680,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimitLocalSearch}"), jTextFieldTimeLimitLocalSearch, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitLocalSearch");
         bindingGroup.addBinding(binding);
 
+        jTextFieldTimeLimitLocalSearch.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 18;
@@ -643,6 +698,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${rewardForBestSegmentHeuristics}"), jTextFieldRewardForBestSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "rewardForBestSegmentHeuristics");
         bindingGroup.addBinding(binding);
 
+        jTextFieldRewardForBestSegmentHeuristics.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 24;
@@ -656,6 +716,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${punishmentForWorstSegmentHeuristics}"), jTextFieldPunishmentForWorstSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "punishmentForWorstSegmentHeuristics");
         bindingGroup.addBinding(binding);
 
+        jTextFieldPunishmentForWorstSegmentHeuristics.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 26;
@@ -670,6 +735,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxMIPSNodesForFeasibilityCheck}"), jTextFieldMaxMIPSNodesForFeasibilityCheck, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxMIPSNodesForFeasibilityCheck");
         bindingGroup.addBinding(binding);
 
+        jTextFieldMaxMIPSNodesForFeasibilityCheck.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 20;
@@ -683,6 +753,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxIterationsWithoutImprovement}"), jTextFieldMaxIterationsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxIterationsWithoutImprovement");
         bindingGroup.addBinding(binding);
 
+        jTextFieldMaxIterationsWithoutImprovement.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -808,6 +883,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxSegments}"), jTextFieldMaxSegments, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxSegments");
         bindingGroup.addBinding(binding);
 
+        jTextFieldMaxSegments.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 32;
@@ -840,6 +920,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${maxSegmentsWithoutImprovement}"), jTextFieldMaxSegmentsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxSegmentsWithoutImprovement");
         bindingGroup.addBinding(binding);
 
+        jTextFieldMaxSegmentsWithoutImprovement.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 34;
@@ -879,6 +964,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairHighCostRemoval}"), jCheckBoxRepairHighCostRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairHighCostRemoval");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxRepairHighCostRemoval.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -891,6 +981,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairRandomRemoval}"), jCheckBoxRepairRandomRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairRandomRemoval");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxRepairRandomRemoval.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -903,6 +998,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairTravelTime}"), jCheckBoxRepairTravelTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairTravelTime");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxRepairTravelTime.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -915,6 +1015,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairVehicleTime}"), jCheckBoxRepairVehicleTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairVehicleTime");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxRepairVehicleTime.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -927,6 +1032,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useRepairWorstRemoval}"), jCheckBoxRepairWorstRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairWorstRemoval");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxRepairWorstRemoval.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -945,6 +1055,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyGreedyCostInsertion}"), jCheckBoxDestroyGreedyCostInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyCostInsertion");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxDestroyGreedyCostInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -957,6 +1072,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyGreedyBestInsertion}"), jCheckBoxDestroyGreedyBestInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyBestInsertion");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxDestroyGreedyBestInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -969,6 +1089,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyGreedyProfitInsertion}"), jCheckBoxDestroyGreedyProfitInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyProfitInsertion");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxDestroyGreedyProfitInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -981,6 +1106,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyRandomInsertion}"), jCheckBoxDestroyRandomInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyRandomInsertion");
         bindingGroup.addBinding(binding);
 
+        jCheckBoxDestroyRandomInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
         jCheckBoxDestroyRandomInsertion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxDestroyRandomInsertionActionPerformed(evt);
@@ -1008,6 +1138,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${punishmentGamma}"), jTextFieldPunishmentGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "punishmentGamma");
         bindingGroup.addBinding(binding);
 
+        jTextFieldPunishmentGamma.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 14;
@@ -1021,6 +1156,11 @@ public class MainWindow extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${cooldownGamma}"), jTextFieldCooldownGamma, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
+        jTextFieldCooldownGamma.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                updatePsiBean(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 16;
@@ -1531,6 +1671,15 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.out.println("Execution paused");
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_updatePsiBean
+        updatePsiBean();
+    }//GEN-LAST:event_updatePsiBean
+
+    private void updatePsiBeanC(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_updatePsiBeanC
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_updatePsiBeanC
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

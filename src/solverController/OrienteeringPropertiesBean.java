@@ -37,6 +37,20 @@ public class OrienteeringPropertiesBean implements Serializable {
      */
     public OrienteeringPropertiesBean() {
     }
+    
+    /**
+     * Cloning method: clones all attributes from given bean
+     * 
+     * @param opb the OrienteeringPropertiesBean to clone from
+     */
+    public void cloneFrom(OrienteeringPropertiesBean opb){
+        this.setForceHeuristicConstraints(opb.isForceHeuristicConstraints());
+        this.setNumThreads(opb.getNumThreads());
+        this.setOutputFolderPath(opb.getOutputFolderPath());
+        this.setTimeLimit(opb.getTimeLimit());
+    }
+    
+    
 
     /**
      * Path to the output folder.

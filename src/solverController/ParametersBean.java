@@ -132,6 +132,7 @@ public class ParametersBean implements Serializable {
     /**
      * Deserializes the parameters bean specified at the specific path and uses it
      * to initialize the current one.
+     * 
      * @param inputPath path to the input JSON file for properties
      * @throws IOException if there are problems with opening the file.
      */
@@ -141,7 +142,7 @@ public class ParametersBean implements Serializable {
         String content = new String(Files.readAllBytes(Paths.get(inputPath)));
         ParametersBean out = gson.fromJson(content, ParametersBean.class);
         
-        this.setOrienteeringProperties(out.getOrienteeringProperties());
-        this.setALNSproperties(out.getALNSproperties());
+        this.OrienteeringProperties.cloneFrom(out.getOrienteeringProperties());
+        this.ALNSproperties.cloneFrom(out.getALNSproperties());
     }
 }

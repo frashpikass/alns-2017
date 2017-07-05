@@ -565,6 +565,7 @@ public class ALNS extends Orienteering {
                     xHotClusters.removeAll(xOld);
                     // CLUSTER COOLDOWN: Cool down hot clusters, warm up the others
                     clusterRoulette.cooldown(alnsProperties.getCooldownGamma(), xHotClusters);
+                    clusterRoulette.warmup(alnsProperties.getWarmupGamma(), xHotClusters);
                     
                     //If the new solution is infeasible, apply the repair method
                     if (!testSolution(xNew, false)) {

@@ -224,9 +224,12 @@ public class ClusterRoulette {
     @Override
     public String toString() {
         StringBuffer ret = new StringBuffer("[");
+        double avgProbability = this.getAverageProbability();
 
         for (int i = 0; i < clusters.size(); i++) {
             ret.append(" " + clusters.get(i) + ":" + probabilities.get(i));
+            if(probabilities.get(i) >= avgProbability)
+                ret.append("*");
         }
         ret.append("]");
 

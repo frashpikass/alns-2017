@@ -425,6 +425,7 @@ public class ALNS extends Orienteering {
         try {
             // Send the controller a message saying we're starting
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING);
+            env.message("\nALNSLOG, "+elapsedTime+": optimizeALNS starting.\n");
 
             // Setup the Excel logger
             ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
@@ -440,6 +441,8 @@ public class ALNS extends Orienteering {
             // a pejorative solution
             double initialTtemperature = 2 * relaxedModel.get(GRB.DoubleAttr.ObjBound);
             double temperature;
+            // The probability barrier to pass to accept a pejorative solution
+            double simulatedAnnealingBarrier = -1;
 
             // Memory cleanup
             relaxedModel.dispose();
@@ -503,6 +506,8 @@ public class ALNS extends Orienteering {
             do {
                 // Send the controller a message saying we're running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" started. q = "+q+"\n");
+                
                 temperature = initialTtemperature;
 
                 // Reset heuristic weights
@@ -531,12 +536,14 @@ public class ALNS extends Orienteering {
                 int iterationsWithoutImprovement = 0;
                 for (iterations = 0;
                         iterations < alnsProperties.getSegmentSize()
-                        && xOld.size() > 1
+                        && xOld.size() >= 1
                         && elapsedTime <= alnsProperties.getTimeLimitALNS()
                         && iterationsWithoutImprovement < alnsProperties.getMaxIterationsWithoutImprovement()
                         && !this.isCancelled(); // thread check
                         iterations++) {
-
+                    
+                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", without improvement "+iterationsWithoutImprovement+"\n");
+                    
                     // Setup of boolean values to evaluate solution quality
                     solutionIsAccepted = false;
                     solutionIsNewGlobalOptimum = false;
@@ -550,6 +557,7 @@ public class ALNS extends Orienteering {
                     repairMethod = pickRepairMethod();
                     
                     // Apply the destruction method on the solution
+                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", destroy: "+destroyMethods.getLabel(destroyMethod)+"\n");
                     xNew = destroyMethod.apply(xOld, q);
                     
                     // CLUSTER COOLDOWN: Get the newly inserted clusters (hot clusters)
@@ -560,9 +568,11 @@ public class ALNS extends Orienteering {
                     
                     //If the new solution is infeasible, apply the repair method
                     if (!testSolution(xNew, false)) {
+                        env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", repair: "+repairMethods.getLabel(repairMethod)+"\n");
                         xNew = repairBackToFeasibility4(xNew, repairMethod);
                         repairMethodWasUsed = true;
                     }
+                    else env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", no repair method needed.\n");
                     
                     // Check if we entered feasibility. If we didn't,
                     // gather the value of the objective function for the new solution
@@ -591,7 +601,9 @@ public class ALNS extends Orienteering {
                             destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod) + "",
                             repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod) + "",
                             repairMethodWasUsed ? "1" : "0",
-                            temperature + "", q + "",
+                            temperature + "",
+                            simulatedAnnealingBarrier+"",
+                            q + "",
                             csvFormatSolution(xOld), oldObjectiveValue + "",
                             csvFormatSolution(xNew), "infeasible", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "1",
                             csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
@@ -602,6 +614,7 @@ public class ALNS extends Orienteering {
                         xlsxLogger.writeRow(logLine);
                         // Send the controller a message saying we're still running
                         notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+                        env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+", repaired solution infeasible and discarded.\n");
                         
                         // 4 - discard the solution (set xNew = xOld), penalize the two heuristics
                         // Update heuristic weights with the worst possible score
@@ -639,7 +652,8 @@ public class ALNS extends Orienteering {
 
                     // In case the solution is accepted, keep track of whether
                     // it's improving the objective
-                    solutionIsAccepted = acceptSolution(oldObjectiveValue, newObjectiveValue, temperature);
+                    simulatedAnnealingBarrier = simulatedAnnealingMaximization(oldObjectiveValue, newObjectiveValue, temperature);
+                    solutionIsAccepted = acceptSolution(simulatedAnnealingBarrier);
                     if (solutionIsAccepted) {
                         if (!solutionIsBetterThanOld) {
                             solutionIsWorseButAccepted = true;
@@ -678,7 +692,9 @@ public class ALNS extends Orienteering {
                         destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod) + "",
                         repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod) + "",
                         repairMethodWasUsed ? "1" : "0",
-                        temperature + "", q + "",
+                        temperature + "",
+                        simulatedAnnealingBarrier+"",
+                        q + "",
                         csvFormatSolution(xOld), oldObjectiveValue + "",
                         csvFormatSolution(xNew), newObjectiveValue + "", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "0",
                         csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
@@ -689,6 +705,7 @@ public class ALNS extends Orienteering {
                     xlsxLogger.writeRow(logLine);
                     // Send the controller a message to notify we're still running
                     notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+" end.\n");
 
                     // Update the heuristic weights
                     updateHeuristicMethodsWeight(
@@ -703,6 +720,7 @@ public class ALNS extends Orienteering {
                     if (solutionIsAccepted) {
                         xOld = xNew;
                         oldObjectiveValue = newObjectiveValue;
+                        env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+", iteration "+iterations+" solution accepted.\n");
                     }
 
                     // Update the elapsed time
@@ -725,6 +743,7 @@ public class ALNS extends Orienteering {
                 //            
                 // We check whether there was an improvement from last segment to this one
                 if (bestObjectiveValueInSegment > bestGlobalObjectiveValue) {
+                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" ended with an improvement!\n");
                     // There was an improvement! Save the best solution found in the iterations
                     bestGlobalObjectiveValue = bestObjectiveValueInSegment;
                     xGlobalBest = xBest;
@@ -733,13 +752,14 @@ public class ALNS extends Orienteering {
                 } else {
                     // There was no improvement: update the no-improvement counter
                     segmentsWithoutImprovement++;
+                    env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" ended without an improvement.\n");
                 }
 
                 // Check and log why the segment has ended
                 if (iterations >= alnsProperties.getSegmentSize()) {
                     segmentEndCause.append(" Max segment size reached (" + iterations + ")!");
                 }
-                if (xOld.size() <= 1) {
+                if (xOld.size() < 1) {
                     segmentEndCause.append(" xOld is too small to work with (size=" + xOld.size() + ")!");
                 }
                 if (elapsedTime > alnsProperties.getTimeLimitALNS()) {
@@ -756,7 +776,9 @@ public class ALNS extends Orienteering {
                 String[] logLineSegmentEnd = {
                     segments + "", "*" + "", elapsedTime + "",
                     "*", "*", "*", "*", "*",
-                    temperature + "", q + "",
+                    temperature + "",
+                    simulatedAnnealingBarrier+"",
+                    q + "",
                     "*", "*",
                     "*", "*", "*", "*", "*",
                     csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
@@ -767,11 +789,13 @@ public class ALNS extends Orienteering {
                 xlsxLogger.writeRow(logLineSegmentEnd);
                 // Send the controller a message to notify we're still running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" end cause: "+segmentEndCause+"\n");
 
                 // Reset the StringBuffer that logs the reason why a segment has ended
                 segmentEndCause = new StringBuffer();
 
                 // Let's try a local search run, if we have time for it
+                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" local search...\n");
                 List<Cluster> xLocalSearch = this.localSearch(
                         xGlobalBest,
                         elapsedTime,
@@ -816,7 +840,9 @@ public class ALNS extends Orienteering {
                 String[] logLine = {
                     segments + "", "*" + "", elapsedTime + "",
                     "*", "*", "*", "*", "*",
-                    temperature + "", q + "",
+                    temperature + "",
+                    simulatedAnnealingBarrier+"",
+                    q + "",
                     "*", "*",
                     "*", "*", "*", "*", "*",
                     csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
@@ -824,10 +850,10 @@ public class ALNS extends Orienteering {
                     clusterRoulette.toString(),
                     "Local search results. " + localSearchComment.toString()
                 };
-                //            logger.writeNext(logLine);
                 xlsxLogger.writeRow(logLine);
                 // Send the controller a message to notify we're still running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
+                env.message("\nALNSLOG, "+elapsedTime+": segment "+segments+" local search result: "+localSearchComment+"\n");
 
                 // Prepare solutions for the next segment
                 xOld = xGlobalBest;
@@ -857,6 +883,7 @@ public class ALNS extends Orienteering {
             xlsxLogger.close();
             // Send the controller a message to notify we're stopping
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STOPPING);
+            env.message("\nALNSLOG, "+elapsedTime+": ALNS run completed. Final solution test...\n");
 
             // Final test to set variables in the model and log vehicle paths
             testSolution(xGlobalBest, true);
@@ -920,16 +947,12 @@ public class ALNS extends Orienteering {
      * can be chosen with probability <br>
      * exp((newObjectiveValue - oldObjectiveValue)/temperature)
      *
-     * @param oldObjectiveValue old best value of the objective function
-     * @param newObjectiveValue new value of the objective function, obtained
-     * through the new solution
-     * @param temperature a weighting parameter which should be made slowly
-     * decreasing by the caller
+     * @param simulatedAnnealingBarrier the probability barrier to beat to accept a solution
      * @return <tt>true</tt> if the new solution is accepted.
      * @throws GRBException if there are problems with sending Gurobi
      * environment messages.
      */
-    private boolean acceptSolution(double oldObjectiveValue, double newObjectiveValue, double temperature)
+    private boolean acceptSolution(double simulatedAnnealingBarrier)
             throws GRBException {
         /**
          * The following text defines simulated annealing for a minimum problem
@@ -973,7 +996,7 @@ public class ALNS extends Orienteering {
          * DIFF<0 and 0 < P=exp(DIFF/T) < 1 => the solution is accepted with
          * probability P
          */
-        if (r.nextDouble() < Math.exp((newObjectiveValue - oldObjectiveValue) / temperature)) {
+        if (r.nextDouble() < simulatedAnnealingBarrier) {
             env.message("\nSolution accepted!\n");
             return true;
         } else {
@@ -981,6 +1004,28 @@ public class ALNS extends Orienteering {
             return false;
         }
     }
+    
+    /**
+     * Simulated annealing acceptance criterion.
+     * <br>The acceptance criterion is a Simulated Annealing process, repurposed
+     * for a maximization problem. A new solution that improves the maximization
+     * of the objective function is always accepted, while a pejorative solution
+     * can be chosen with probability <br>
+     * exp((newObjectiveValue - oldObjectiveValue)/temperature)
+     *
+     * @param oldObjectiveValue old best value of the objective function
+     * @param newObjectiveValue new value of the objective function, obtained
+     * through the new solution
+     * @param temperature a weighting parameter which should be made slowly
+     * decreasing by the caller
+     */
+    private double simulatedAnnealingMaximization(
+            double oldObjectiveValue,
+            double newObjectiveValue,
+            double temperature) {
+        return Math.exp((newObjectiveValue - oldObjectiveValue) / temperature);
+    }
+    
 
     // DESTROY HEURISTICS
     /**

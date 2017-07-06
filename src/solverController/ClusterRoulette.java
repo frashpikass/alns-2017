@@ -292,6 +292,26 @@ public class ClusterRoulette {
         }
         nerfNumberOfUpdates = 0.0;
     }
+    
+    /**
+     * Set the probability of being chosen to 0 for nerf candidates,
+     * to 1 to other clusters.
+     * 
+     * @param nerfBarrier double in range [0,1]
+     */
+    public void punishNerfCandidatesAndResetOthers(double nerfBarrier){
+        nerfBarrier = gammaFilter(nerfBarrier);
+        
+        List<Cluster> nerfCandidates = this.queryNerfCandidates(nerfBarrier);
+        
+        for(int i = 0; i < clusters.size(); i++){
+            if(nerfCandidates.contains(clusters.get(i))){
+                probabilities.set(i, 0.0);
+            }
+            else probabilities.set(i, 1.0);
+        }
+        
+    }
 
     /**
      * Updates the list of nerf candidates by counting whether in this update
@@ -318,6 +338,7 @@ public class ClusterRoulette {
      * @return a list of improbable clusters
      */
     public List<Cluster> queryNerfCandidates(double nerfBarrier) {
+        nerfBarrier = gammaFilter(nerfBarrier);
         List<Cluster> ret = new ArrayList<>();
 
         for (int i = 0; i < clusters.size(); i++) {
@@ -338,6 +359,7 @@ public class ClusterRoulette {
      * @return a list of improbable clusters
      */
     public List<Cluster> queryNotNerfCandidates(double nerfBarrier) {
+        nerfBarrier = gammaFilter(nerfBarrier);
         List<Cluster> ret = new ArrayList<>();
 
         for (int i = 0; i < clusters.size(); i++) {

@@ -201,16 +201,19 @@ public class ObjectDistribution<T> {
      */
     public boolean addAll(List<T> objectList){
         boolean ret = true;
-        for(T o : objectList){
-            ret = ret
-                    && objects.add(o)
-                    && weights.add(DEFAULT_WEIGHT)
-                    && bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))
-                    && labels.add(o.toString());
+        if(objectList != null && !objectList.isEmpty()){
+            for(T o : objectList){
+                ret = ret
+                        && objects.add(o)
+                        && weights.add(DEFAULT_WEIGHT)
+                        && bins.add(new Bin(DEFAULT_BIN_INF, DEFAULT_BIN_SUP))
+                        && labels.add(o.toString());
+            }
+            if(ret){
+                this.updateBins();
+            }
         }
-        if(ret){
-            this.updateBins();
-        }
+        else ret = false;
         return ret;
     }
     
@@ -543,14 +546,18 @@ public class ObjectDistribution<T> {
      */
     public boolean scaleAllWeightsOf(List<T> toScale, double factor){
         boolean ret = false;
-        for(T o : toScale){
-            int i = objects.indexOf(o);
-            if(i>=0){
-                weights.set(i, Math.abs(factor)*weights.get(i));
-                ret = true;
+        
+        if(toScale != null && !toScale.isEmpty()){
+            for(T o : toScale){
+                int i = objects.indexOf(o);
+                if(i>=0){
+                    weights.set(i, Math.abs(factor)*weights.get(i));
+                    ret = true;
+                }
             }
+            updateBins();
         }
-        updateBins();
+    
         return ret;
     }
     

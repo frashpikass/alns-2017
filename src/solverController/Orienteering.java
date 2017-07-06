@@ -1049,6 +1049,34 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     }
     
     /**
+     * A counter that keeps track of how many solutions have been excluded from
+     * the model.
+     */
+    protected int excludedSolutionsCounter = 0;
+    
+    /**
+     * If a solution is thought to be infeasible or bad for the model, we can
+     * make sure it's not tested for again by adding constraints that exclude
+     * that solution from available ones.
+     * 
+     * @param toExclude the solution to remember not to test for again
+     */
+    protected void excludeSolutionFromModel(List<Cluster> toExclude) throws GRBException{
+        if(toExclude != null && !toExclude.isEmpty()){
+            int size = toExclude.size();
+            
+            // Create the left hand side of the expression
+            GRBLinExpr lhs = new GRBLinExpr();
+            for(Cluster c : toExclude){
+                lhs.addTerm(1.0, y[c.getId()]);
+            }
+
+            model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1, "Supposedly_Infeasible_"+excludedSolutionsCounter++);
+            model.update();
+        }
+    }
+    
+    /**
      * This method adds all heuristic constraints that tighten the relaxed model.
      * @throws GRBException if anything goes wrong
      */

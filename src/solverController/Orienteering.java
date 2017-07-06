@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1109,76 +1110,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @throws GRBException if anything goes wrong
      */
     protected void toggleHeuristicConstraintsOn() throws GRBException, Exception {
-        // Some useful constants for constraint definition
-        int firstNodeID = 0;
-        int lastNodeID = instance.getNum_nodes() - 1;
-        //Note: getNum_nodes() returns nmax. nmax-1 is the final node. 0 is the initial node.
-
-        // add all heuristic constraints
-        // Expression 13 (HEURISTIC):
-        // All arcs that go from any node (but the last) of any cluster to
-        // the final deposit should be removed (this makes it impossible for
-        // a vehicle to "wait" inside of a cluster).
-        for (int c = 0; c < instance.getNum_clusters(); c++) {
-            // Retrieve the list of nodes in the cluster
-            List<Integer> nodesInCluster = instance.getClusterNodeIDs(c);
-            for (int i = 0; i < nodesInCluster.size() - 1; i++) {
-                for (int v = 0; v < this.instance.getNum_vehicles(); v++) {
-                    heuristicConstraints.add(model.addConstr(x[v][nodesInCluster.get(i)][lastNodeID], GRB.EQUAL, 0.0, "c13_c" + c + "_n" + nodesInCluster.get(i) + "_v" + v));
-                }
-            }
-        }
-
-        // Expression 15:
-        /**
-         * -Streak optimization heuristic- A streak is a set of nodes in a
-         * cluster that can be served all at once by the same vehicle. We want
-         * to impose that if a vehicle enters a streak in a cluster, it can not
-         * exit the cluster until its current streak has not been fully served.
-         * To do so, for each cluster we get its ordered list of services. Then,
-         * for each vehicle, we look for every streak it can serve in that
-         * particular cluster. At this point, for each streak of a specific
-         * vehicle, we remove all arcs that go from a node in the middle of a
-         * streak to another node which is different from the next one in the
-         * streak. Arcs to the initial node of a streak and from the final node
-         * of a streak are left unaltered. This set of constraints might not
-         * work for every instance, thus it's an heuristic.
-         */
-        // For each cluster
-        for (int c = 0; c < instance.getNum_clusters(); c++) {
-            Cluster cluster = instance.getCluster(c);
-            // For each vehicle
-            for (int v = 0; v < instance.getNum_vehicles(); v++) {
-                Vehicle vehicle = instance.getVehicle(v);
-                // Find all streaks for vehicle in cluster
-                List<Streak> streaks = cluster.getStreaks(vehicle);
-
-                // For each streak for this vehicle in the cluster
-                for (Streak streak : streaks) {
-                    // If the streak has more than two nodes
-                    if (streak.size() > 1) {
-                        // For each node in the streak but the last one
-                        for (int s = 0; s < streak.size() - 1; s++) {
-                            Node currentNode = streak.get(s);
-                            Node nextNode = streak.get(s + 1);
-
-                            // Remove all arcs that go from the current node
-                            // to a node which is not the next one in the
-                            // streak, for the current vehicle
-                            // Note: less-than-or equal makes us avoid exiting
-                            // a streak, not even to go to the last node
-                            for (int i = 0; i <= lastNodeID; i++) {
-                                if (i != nextNode.getId()) {
-                                    heuristicConstraints.add(model.addConstr(x[v][currentNode.getId()][i], GRB.EQUAL, 0.0, "c15_c" + c + "_arc(" + currentNode.getId() + "," + i + ")_v" + v));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        model.update();
+        setSpecificHeuristicConstraints(allHeuristicConstraints);
     }
 
     /**
@@ -1332,6 +1264,104 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         model.setCallback(null);
 
         return isFeasible;
+    }
+    
+    /**
+     * A list containing all available heuristic IDs
+     * NOTE: Update it every time you add an heuristic contraint!
+     */
+    protected List<Integer> allHeuristicConstraints = Arrays.asList(0, 1);
+    
+    /**
+     * Sets all the heuristic constraints specified in the list of constraints for
+     * the current model.
+     * 
+     * @param toSet a list of constraint IDs
+     * @throws gurobi.GRBException if problems arise while handling the model
+     * @throws Exception if there problems arise while handling the instance
+     */
+    public void setSpecificHeuristicConstraints(List<Integer> toSet)
+            throws GRBException, Exception{
+        // Some useful constants for constraint definition
+        int firstNodeID = 0;
+        int lastNodeID = instance.getNum_nodes() - 1;
+        //Note: getNum_nodes() returns nmax. nmax-1 is the final node. 0 is the initial node.
+        
+        
+        for(int constraintId : toSet){
+            switch(constraintId){
+                case 0:
+                    // add all heuristic constraints
+                    // Expression 13 (HEURISTIC):
+                    // All arcs that go from any node (but the last) of any cluster to
+                    // the final deposit should be removed (this makes it impossible for
+                    // a vehicle to "wait" inside of a cluster).
+                    for (int c = 0; c < instance.getNum_clusters(); c++) {
+                        // Retrieve the list of nodes in the cluster
+                        List<Integer> nodesInCluster = instance.getClusterNodeIDs(c);
+                        for (int i = 0; i < nodesInCluster.size() - 1; i++) {
+                            for (int v = 0; v < this.instance.getNum_vehicles(); v++) {
+                                heuristicConstraints.add(model.addConstr(x[v][nodesInCluster.get(i)][lastNodeID], GRB.EQUAL, 0.0, "c13_c" + c + "_n" + nodesInCluster.get(i) + "_v" + v));
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 1:
+                    // Expression 15:
+                    /**
+                     * -Streak optimization heuristic- A streak is a set of nodes in a
+                     * cluster that can be served all at once by the same vehicle. We want
+                     * to impose that if a vehicle enters a streak in a cluster, it can not
+                     * exit the cluster until its current streak has not been fully served.
+                     * To do so, for each cluster we get its ordered list of services. Then,
+                     * for each vehicle, we look for every streak it can serve in that
+                     * particular cluster. At this point, for each streak of a specific
+                     * vehicle, we remove all arcs that go from a node in the middle of a
+                     * streak to another node which is different from the next one in the
+                     * streak. Arcs to the initial node of a streak and from the final node
+                     * of a streak are left unaltered. This set of constraints might not
+                     * work for every instance, thus it's an heuristic.
+                     */
+                    // For each cluster
+                    for (int c = 0; c < instance.getNum_clusters(); c++) {
+                        Cluster cluster = instance.getCluster(c);
+                        // For each vehicle
+                        for (int v = 0; v < instance.getNum_vehicles(); v++) {
+                            Vehicle vehicle = instance.getVehicle(v);
+                            // Find all streaks for vehicle in cluster
+                            List<Streak> streaks = cluster.getStreaks(vehicle);
+
+                            // For each streak for this vehicle in the cluster
+                            for (Streak streak : streaks) {
+                                // If the streak has more than two nodes
+                                if (streak.size() > 1) {
+                                    // For each node in the streak but the last one
+                                    for (int s = 0; s < streak.size() - 1; s++) {
+                                        Node currentNode = streak.get(s);
+                                        Node nextNode = streak.get(s + 1);
+
+                                        // Remove all arcs that go from the current node
+                                        // to a node which is not the next one in the
+                                        // streak, for the current vehicle
+                                        // Note: less-than-or equal makes us avoid exiting
+                                        // a streak, not even to go to the last node
+                                        for (int i = 0; i <= lastNodeID; i++) {
+                                            if (i != nextNode.getId()) {
+                                                heuristicConstraints.add(model.addConstr(x[v][currentNode.getId()][i], GRB.EQUAL, 0.0, "c15_c" + c + "_arc(" + currentNode.getId() + "," + i + ")_v" + v));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+
+        }
+
+        model.update();
     }
 
     /**

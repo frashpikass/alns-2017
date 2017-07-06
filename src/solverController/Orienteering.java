@@ -153,6 +153,13 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     public InstanceCTOPWSS getInstance() {
         return instance;
     }
+    
+    /**
+     * This value holds the smallest value found for the objective function of
+     * the relaxed model, which works as an upper bound for every integer
+     * solution (it speeds up certain feasibility checks)
+     */
+    protected double minimumObjOfRelaxedModel = Double.MAX_VALUE;
 
     /**
      * Retrieve the hash of the instance file for this problem model.
@@ -1221,25 +1228,33 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     ) throws GRBException, Exception {
 
         boolean isFeasible = false;
+        
+        // See if the sum of profits in the proposed solution is above the
+        // objective of the relaxed. If it is, the solution is clearly
+        // infeasible
+        double profitForSolution = proposedSolution.stream().mapToDouble(c -> c.getProfit()).sum();
+        if(profitForSolution <= this.minimumObjOfRelaxedModel){
+            // If the basic check succeeds, proceed with the Gurobi check
+            
+            // Reset the model to an unsolved state, this will allow us to test our solutions freely
+            model.reset();
 
-        // Reset the model to an unsolved state, this will allow us to test our solutions freely
-        model.reset();
+            // Clear the solution in the model: no cluster will be choseable at the beginning
+            clearSolution(model);
 
-        // Clear the solution in the model: no cluster will be choseable at the beginning
-        clearSolution(model);
+            // Place the selected clusters in solution
+            putInSolution(model, proposedSolution);
 
-        // Place the selected clusters in solution
-        putInSolution(model, proposedSolution);
+            // Setting up the callback
+            model.setCallback(new FeasibilityCallback(maxMIPSNodes));
 
-        // Setting up the callback
-        model.setCallback(new FeasibilityCallback(maxMIPSNodes));
-
-        // Test the solution
-        model.optimize();
-        if (model.get(GRB.IntAttr.SolCount) > 0) {
-            isFeasible = true;
+            // Test the solution
+            model.optimize();
+            if (model.get(GRB.IntAttr.SolCount) > 0) {
+                isFeasible = true;
+            }
         }
-
+        
         if (log) {
             env.message("\nTesting solution with clusters: [");
 

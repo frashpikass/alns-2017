@@ -1390,7 +1390,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @param guineaPigSolution a solution to test the model for feasibility with
      * @param maxMIPSNodes maximum number of MIPS nodes to solve in a
      * feasibility check
-     * @return the smallest list of feasible heuristic constraints for the current model.
+     * @return the smallest list of feasible heuristic constraints for the current model. (Could be an empty list)
      * @throws Exception if anything goes wrong
      */
     public List<Integer> getLargestFeasibleCombinationOfHeuristicConstraints(

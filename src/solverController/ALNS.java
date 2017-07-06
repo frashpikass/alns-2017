@@ -154,7 +154,7 @@ public class ALNS extends Orienteering {
             newSolution.add(c);
 
             // Let's use gurobi to check the feasibility of the new solution
-            isFeasible = this.testSolutionForFeasibility(newSolution, true);
+            isFeasible = this.testSolutionForFeasibility(newSolution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
             // If the new solution is feasible, update the old solution
             if (isFeasible) {
                 solution = new ArrayList<>(newSolution);
@@ -163,7 +163,7 @@ public class ALNS extends Orienteering {
 
         // Now solution holds the list of clusters found by our constructive algorithm.
         // Let's update the model so that it cointains the current solution
-        testSolution(this.model, solution, true);
+        testSolution(this.model, solution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
         env.message("\nALNSConstructiveSolution log end, time " + LocalDateTime.now() + "\n");
         if (this.isCancelled()) {
             throw new InterruptedException("optimizeALNS() interrupted in the constructive solution building phase.");
@@ -171,232 +171,6 @@ public class ALNS extends Orienteering {
         return solution;
     }
     
-    /**
-     * This variable holds the objective value as computed by the last
-     * feasibility check. Value is -1 if the last check was infeasible.
-     */
-    private double objectiveValueFromLastFeasibilityCheck = -1.0;
-    
-    /**
-     * 
-     * Use Gurobi to check whether the proposed solution is feasible or not for
-     * this model.
-     * If the solution is infeasible, a constraint will be added to remove this
-     * solution from the pool, but solution information data might (such as
-     * variable state) might not be available for future calls to the model.
-     * 
-     * <br>The last objective value is however available in the variable
-     * <code>objectiveValueFromLastFeasibilityCheck</code>.
-     *
-     * @param proposedSolution the solution we want to test
-     * @param log true will produce a visible log
-     * @return true is the solution is feasible
-     */
-    protected boolean testSolutionForFeasibility(
-            List<Cluster> proposedSolution,
-            boolean log
-    ) throws GRBException, Exception {
-        boolean isFeasible = testSolution(this.model, proposedSolution, log);
-        
-        
-        // If the solution was infeasible for the current model, remove it
-        // by adding new constraints to this model
-        if(isFeasible){
-            // Save the objective value for later use by other methods.
-            objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
-        }
-        else{
-            super.excludeSolutionFromModel(proposedSolution);
-            // Set an "error" objective value
-            objectiveValueFromLastFeasibilityCheck = -1.0;
-        }
-        
-        return isFeasible;
-    }
-
-    /**
-     * use Gurobi to check whether the proposed solution is feasible or not for
-     * the specified model.
-     *
-     * @param model the model to test the solution on
-     * @param proposedSolution the solution we want to test
-     * @param log true will produce a visible log
-     * @return true is the solution is feasible
-     */
-    protected boolean testSolution(
-            GRBModel model,
-            List<Cluster> proposedSolution,
-            boolean log) throws GRBException, Exception {
-
-        boolean isFeasible = false;
-
-        // Reset the model to an unsolved state, this will allow us to test our solutions freely
-        model.reset();
-
-        // Clear the solution in the model: no cluster will be choseable at the beginning
-        clearSolution(model);
-
-        // Place the selected clusters in solution
-        putInSolution(model, proposedSolution);
-
-        // Setting up the callback
-        model.setCallback(new feasibilityCallback(alnsProperties.getMaxMIPSNodesForFeasibilityCheck()));
-        
-        // Test the solution
-        model.optimize();
-        if (model.get(GRB.IntAttr.SolCount) > 0) {
-            isFeasible = true;
-        }
-                
-        if (log) {
-            env.message("\nTesting solution with clusters: [");
-
-            proposedSolution.forEach(c -> {
-                try {
-                    env.message(c.getId() + " ");
-                } catch (GRBException ex) {
-                    Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-
-            if (isFeasible) {
-                env.message("]: FEASIBLE integer solution found!");
-                this.logVisitedClusters();
-                this.logVehiclePaths();
-            } else {
-                env.message("]: INFEASIBLE.\n\n");
-            }
-        }
-
-        // Resetting the callback
-        model.setCallback(null);
-
-        return isFeasible;
-    }
-
-    /**
-     * Adds the selected cluster to the solution.
-     *
-     * @param c the cluster to put into solution.
-     * @throws GRBException if anything goes wrong with setting the upper bound.
-     */
-    private void putInSolution(Cluster c) throws GRBException {
-        y[c.getId()].set(GRB.DoubleAttr.LB, 1.0);
-        y[c.getId()].set(GRB.DoubleAttr.UB, 1.0);
-        model.update();
-    }
-
-    /**
-     * Remove the selected cluster from the solution.
-     *
-     * @param c the cluster to remove from solution.
-     * @throws GRBException
-     */
-    private void removeFromSolution(Cluster c) throws GRBException {
-        y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);
-        y[c.getId()].set(GRB.DoubleAttr.UB, 0.0);
-        model.update();
-    }
-
-    /**
-     * Adds the selected clusters to the solution.
-     *
-     * @param l the list of clusters to put into solution.
-     * @throws GRBException if anything goes wrong with updating the model.
-     */
-    private void putInSolution(List<Cluster> l) throws GRBException {
-        l.forEach(c -> {
-            try {
-                y[c.getId()].set(GRB.DoubleAttr.LB, 1.0);
-                y[c.getId()].set(GRB.DoubleAttr.UB, 1.0);
-            } catch (GRBException ex) {
-                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        model.update();
-    }
-
-    /**
-     * Adds the selected clusters to the solution for the model specified.
-     *
-     * @param model the model to update
-     * @param l the list of clusters to put into solution.
-     * @throws GRBException if anything goes wrong with updating the model.
-     */
-    private void putInSolution(GRBModel model, List<Cluster> l) throws GRBException {
-        l.forEach(c -> {
-            try {
-                GRBVar var = model.getVarByName("y_c" + c);
-                var.set(GRB.DoubleAttr.LB, 1.0);
-                var.set(GRB.DoubleAttr.UB, 1.0);
-            } catch (GRBException ex) {
-                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        model.update();
-    }
-
-    /**
-     * Remove the selected clusters from the solution.
-     *
-     * @param l the list of clusters to remove from the solution.
-     * @throws GRBException if anything goes wrong with updating the model.
-     */
-    private void removeFromSolution(List<Cluster> l) throws GRBException {
-        l.forEach(c -> {
-            try {
-                y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);
-                y[c.getId()].set(GRB.DoubleAttr.UB, 0.0);
-            } catch (GRBException ex) {
-                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        model.update();
-    }
-
-    /**
-     * Reset the solution: all clusters will be free to be chosen
-     *
-     * @throws GRBException if setting the bounds goes wrong
-     */
-    private void resetSolution() throws GRBException {
-        for (int c = 0; c < instance.getNum_clusters(); c++) {
-            y[c].set(GRB.DoubleAttr.LB, 0.0);
-            y[c].set(GRB.DoubleAttr.UB, 1.0);
-        }
-
-        model.update();
-    }
-
-    /**
-     * Clear the solution: no clusters will be selectable by the solver
-     *
-     * @throws GRBException if setting the bounds goes wrong
-     */
-    private void clearSolution() throws GRBException {
-        for (int c = 0; c < instance.getNum_clusters(); c++) {
-            y[c].set(GRB.DoubleAttr.LB, 0.0);
-            y[c].set(GRB.DoubleAttr.UB, 0.0);
-        }
-        model.update();
-    }
-
-    /**
-     * Clear the solution of a specific model: no clusters will be selectable by
-     * the solver
-     *
-     * @param model the model we want to update
-     * @throws GRBException if setting the bounds goes wrong
-     */
-    private void clearSolution(GRBModel model) throws GRBException {
-        for (int c = 0; c < instance.getNum_clusters(); c++) {
-            GRBVar var = model.getVarByName("y_c" + c);
-            var.set(GRB.DoubleAttr.LB, 0.0);
-            var.set(GRB.DoubleAttr.UB, 0.0);
-        }
-        model.update();
-    }
-
     /**
      * Automatically picks a solver from the controller selection, and optimizes
      * the current model using it.
@@ -606,7 +380,7 @@ public class ALNS extends Orienteering {
                     clusterRoulette.warmup(alnsProperties.getWarmupGamma(), xHotClusters);
 
                     //If the new solution is infeasible, apply the repair method
-                    if (!testSolutionForFeasibility(xNew, false)) {
+                    if (!testSolutionForFeasibility(xNew, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                         env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", repair: " + repairMethods.getLabel(repairMethod) + "\n");
                         xNew = repairBackToFeasibility4(xNew, repairMethod, false);
                         repairMethodWasUsed = true;
@@ -617,7 +391,7 @@ public class ALNS extends Orienteering {
                     // Check if we entered feasibility. If we didn't,
                     // gather the value of the objective function for the new solution
                     // obtained through the chosen methods
-                    if (testSolutionForFeasibility(xNew, false)) {
+                    if (testSolutionForFeasibility(xNew, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                         newObjectiveValue = objectiveValueFromLastFeasibilityCheck;
                     } else { // INFEASIBLE SOLUTION HANDLING
                         // If we're here, it means that the repaired solution was still infeasible,
@@ -949,7 +723,7 @@ public class ALNS extends Orienteering {
             env.message("\nALNSLOG, " + elapsedTime + ": ALNS run completed. Final solution test...\n");
 
             // Final test to set variables in the model and log vehicle paths
-            testSolution(this.model, xGlobalBest, true);
+            testSolution(this.model, xGlobalBest, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
 
             // Save the solution to file
             super.writeSolution();
@@ -1564,7 +1338,7 @@ public class ALNS extends Orienteering {
         List<Cluster> output = new ArrayList<>(inputSolution);
 
         // 0. Check feasibility and start cycling until we have a feasible solution
-        boolean isFeasible = testSolutionForFeasibility(output, true);
+        boolean isFeasible = testSolutionForFeasibility(output, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
         while (!isFeasible && output.size() > 1) {
             // 1. Compute the feasibilityRelaxation so that we can retrieve some information on z and Tmax
             GRBModel clone = new GRBModel(model);
@@ -1626,7 +1400,7 @@ public class ALNS extends Orienteering {
             //clone.write("feasibilitySubmodel.lp");
             // Let's test the solution on the feasibility relaxation model (clone)
             //if(true){
-            if (this.testSolution(clone, output, false)) {
+            if (this.testSolution(clone, output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                 // If it worked, we're very happy because we can start looking for the maximum value of Z
                 double maxZ = -1;
                 double tempZ;
@@ -1662,7 +1436,7 @@ public class ALNS extends Orienteering {
                 output.remove(toRemove);
 
                 // 7. Goto 0 (test feasibility)
-                isFeasible = testSolutionForFeasibility(output, true);
+                isFeasible = testSolutionForFeasibility(output, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
             } // In case the feasibility relaxation did not work, something went VERY wrong
             else {
                 throw new Exception("PROBLEM: the feasibility relaxation was infeasible!");
@@ -1690,7 +1464,7 @@ public class ALNS extends Orienteering {
         // Setup the output
         List<Cluster> output = new ArrayList<>(inputSolution);
 
-        while (!testSolutionForFeasibility(output, false)) {
+        while (!testSolutionForFeasibility(output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
             output = this.repairWorstRemoval(output, 1);
         }
 
@@ -1717,7 +1491,7 @@ public class ALNS extends Orienteering {
         // Setup the output
         List<Cluster> output = new ArrayList<>(inputSolution);
 
-        while (output.size() > 1 && !testSolutionForFeasibility(output, false)) {
+        while (output.size() > 1 && !testSolutionForFeasibility(output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
             output = repairMethod.apply(output, 1);
         }
 
@@ -1771,7 +1545,7 @@ public class ALNS extends Orienteering {
             env.message("\nALNSLOG, trying to repair solution with q="+q+"...\n");
             // Try repairing the input solution with the given heuristic and the given q
             output = repairMethod.apply(inputClone, q);
-            isFeasible = testSolutionForFeasibility(output, false);
+            isFeasible = testSolutionForFeasibility(output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
 
             if (!isFeasible) {
                 // Increase q
@@ -1992,7 +1766,7 @@ public class ALNS extends Orienteering {
             GRBModel toSolve = new GRBModel(this.model);
             
             // Test the solution on the clone model so that we can gather informations on the warm solution
-            if (this.testSolution(clone, inputSolution, true)) { // DEBUG: LOCAL SEARCH CRASHES BECAUSE IT DOESN'T ENTER HERE?
+            if (this.testSolution(clone, inputSolution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) { // DEBUG: LOCAL SEARCH CRASHES BECAUSE IT DOESN'T ENTER HERE?
                 // Gather informations on the solution
                 GRBVar[] cloneVars = clone.getVars();
 
@@ -2037,7 +1811,7 @@ public class ALNS extends Orienteering {
 
         // To finish, we shall test the solution found, so that the model shall
         // come loaded with the new solution
-        this.testSolution(this.model, output, true);
+        this.testSolution(this.model, output, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
         return output;
     }
 
@@ -2140,60 +1914,6 @@ public class ALNS extends Orienteering {
          */
     }
 } // end of class ALNS
-
-/**
- * Inner class to handle callbacks that check for the first feasible solution
- *
- * @author Frash
- */
-class feasibilityCallback extends GRBCallback {
-
-    /**
-     * Number of solution nodes to visit before the solver gives up on searching
-     * for a feasible solution
-     */
-    private final static double NODES_BEFORE_ABORT = 5000;
-
-    /**
-     * Determines the maximum number of mips nodes to check before giving up a
-     * feasibility check.
-     */
-    private double maxMIPSNodesForFeasibilityCheck;
-
-    /**
-     * Constructor for class feasibilityCallback
-     *
-     * @param maximumMIPSNodesForFeasibilityCheck maximum number of mips nodes
-     * to check before giving up a feasibility check.
-     */
-    public feasibilityCallback(double maximumMIPSNodesForFeasibilityCheck) {
-        super();
-        this.maxMIPSNodesForFeasibilityCheck = maximumMIPSNodesForFeasibilityCheck;
-    }
-
-    /**
-     * Constructor for class feasibilityCallback
-     */
-    public feasibilityCallback() {
-        super();
-        this.maxMIPSNodesForFeasibilityCheck = feasibilityCallback.NODES_BEFORE_ABORT;
-    }
-
-    @Override
-    protected void callback() {
-        try {
-            if (where == GRB.CB_MIP) {
-                if (getIntInfo(GRB.CB_MIP_SOLCNT) > 0 || getDoubleInfo(GRB.CB_MIP_NODCNT) > maxMIPSNodesForFeasibilityCheck) {
-                    abort();
-                }
-            } else if (where == GRB.CB_MIPSOL) {
-                abort();
-            }
-        } catch (GRBException ex) {
-            Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-}
 
 /**
  * Inner class to handle callbacks that solve the model for a given amount of

@@ -1196,4 +1196,235 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     protected Boolean doInBackground() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    /**
+     * This variable holds the objective value as computed by the last
+     * feasibility check. Value is -1 if the last check was infeasible.
+     */
+    protected double objectiveValueFromLastFeasibilityCheck = -1.0;
+    
+    /**
+     * 
+     * Use Gurobi to check whether the proposed solution is feasible or not for
+     * this model.
+     * If the solution is infeasible, a constraint will be added to remove this
+     * solution from the pool, but solution information data might (such as
+     * variable state) might not be available for future calls to the model.
+     * 
+     * <br>The last objective value is however available in the variable
+     * <code>objectiveValueFromLastFeasibilityCheck</code>.
+     *
+     * @param proposedSolution the solution we want to test
+     * @param log true will produce a visible log
+     * @param maxMIPSNodes maximum number of MIPS nodes to solve in a feasibility check
+     * @return true is the solution is feasible
+     */
+    protected boolean testSolutionForFeasibility(
+            List<Cluster> proposedSolution,
+            boolean log,
+            double maxMIPSnodes
+    ) throws GRBException, Exception {
+        boolean isFeasible = testSolution(this.model, proposedSolution, log, maxMIPSnodes);
+        
+        
+        // If the solution was infeasible for the current model, remove it
+        // by adding new constraints to this model
+        if(isFeasible){
+            // Save the objective value for later use by other methods.
+            objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
+        }
+        else{
+            excludeSolutionFromModel(proposedSolution);
+            // Set an "error" objective value
+            objectiveValueFromLastFeasibilityCheck = -1.0;
+        }
+        
+        return isFeasible;
+    }
+
+    /**
+     * use Gurobi to check whether the proposed solution is feasible or not for
+     * the specified model.
+     *
+     * @param model the model to test the solution on
+     * @param proposedSolution the solution we want to test
+     * @param log true will produce a visible log
+     * @param maxMIPSNodes maximum number of MIPS nodes to solve in a feasibility check
+     * @return true is the solution is feasible
+     */
+    protected boolean testSolution(
+            GRBModel model,
+            List<Cluster> proposedSolution,
+            boolean log,
+            double maxMIPSNodes
+            ) throws GRBException, Exception {
+
+        boolean isFeasible = false;
+
+        // Reset the model to an unsolved state, this will allow us to test our solutions freely
+        model.reset();
+
+        // Clear the solution in the model: no cluster will be choseable at the beginning
+        clearSolution(model);
+
+        // Place the selected clusters in solution
+        putInSolution(model, proposedSolution);
+
+        // Setting up the callback
+        model.setCallback(new FeasibilityCallback(maxMIPSNodes));
+        
+        // Test the solution
+        model.optimize();
+        if (model.get(GRB.IntAttr.SolCount) > 0) {
+            isFeasible = true;
+        }
+                
+        if (log) {
+            env.message("\nTesting solution with clusters: [");
+
+            proposedSolution.forEach(c -> {
+                try {
+                    env.message(c.getId() + " ");
+                } catch (GRBException ex) {
+                    Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+
+            if (isFeasible) {
+                env.message("]: FEASIBLE integer solution found!");
+                this.logVisitedClusters();
+                this.logVehiclePaths();
+            } else {
+                env.message("]: INFEASIBLE.\n\n");
+            }
+        }
+
+        // Resetting the callback
+        model.setCallback(null);
+
+        return isFeasible;
+    }
+
+    /**
+     * Adds the selected cluster to the solution.
+     *
+     * @param c the cluster to put into solution.
+     * @throws GRBException if anything goes wrong with setting the upper bound.
+     */
+    protected void putInSolution(Cluster c) throws GRBException {
+        y[c.getId()].set(GRB.DoubleAttr.LB, 1.0);
+        y[c.getId()].set(GRB.DoubleAttr.UB, 1.0);
+        model.update();
+    }
+
+    /**
+     * Remove the selected cluster from the solution.
+     *
+     * @param c the cluster to remove from solution.
+     * @throws GRBException
+     */
+    protected void removeFromSolution(Cluster c) throws GRBException {
+        y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);
+        y[c.getId()].set(GRB.DoubleAttr.UB, 0.0);
+        model.update();
+    }
+
+    /**
+     * Adds the selected clusters to the solution.
+     *
+     * @param l the list of clusters to put into solution.
+     * @throws GRBException if anything goes wrong with updating the model.
+     */
+    protected void putInSolution(List<Cluster> l) throws GRBException {
+        l.forEach(c -> {
+            try {
+                y[c.getId()].set(GRB.DoubleAttr.LB, 1.0);
+                y[c.getId()].set(GRB.DoubleAttr.UB, 1.0);
+            } catch (GRBException ex) {
+                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        model.update();
+    }
+
+    /**
+     * Adds the selected clusters to the solution for the model specified.
+     *
+     * @param model the model to update
+     * @param l the list of clusters to put into solution.
+     * @throws GRBException if anything goes wrong with updating the model.
+     */
+    protected void putInSolution(GRBModel model, List<Cluster> l) throws GRBException {
+        l.forEach(c -> {
+            try {
+                GRBVar var = model.getVarByName("y_c" + c);
+                var.set(GRB.DoubleAttr.LB, 1.0);
+                var.set(GRB.DoubleAttr.UB, 1.0);
+            } catch (GRBException ex) {
+                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        model.update();
+    }
+
+    /**
+     * Remove the selected clusters from the solution.
+     *
+     * @param l the list of clusters to remove from the solution.
+     * @throws GRBException if anything goes wrong with updating the model.
+     */
+    protected void removeFromSolution(List<Cluster> l) throws GRBException {
+        l.forEach(c -> {
+            try {
+                y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);
+                y[c.getId()].set(GRB.DoubleAttr.UB, 0.0);
+            } catch (GRBException ex) {
+                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        model.update();
+    }
+
+    /**
+     * Reset the solution: all clusters will be free to be chosen
+     *
+     * @throws GRBException if setting the bounds goes wrong
+     */
+    protected void resetSolution() throws GRBException {
+        for (int c = 0; c < instance.getNum_clusters(); c++) {
+            y[c].set(GRB.DoubleAttr.LB, 0.0);
+            y[c].set(GRB.DoubleAttr.UB, 1.0);
+        }
+
+        model.update();
+    }
+
+    /**
+     * Clear the solution: no clusters will be selectable by the solver
+     *
+     * @throws GRBException if setting the bounds goes wrong
+     */
+    protected void clearSolution() throws GRBException {
+        for (int c = 0; c < instance.getNum_clusters(); c++) {
+            y[c].set(GRB.DoubleAttr.LB, 0.0);
+            y[c].set(GRB.DoubleAttr.UB, 0.0);
+        }
+        model.update();
+    }
+
+    /**
+     * Clear the solution of a specific model: no clusters will be selectable by
+     * the solver
+     *
+     * @param model the model we want to update
+     * @throws GRBException if setting the bounds goes wrong
+     */
+    protected void clearSolution(GRBModel model) throws GRBException {
+        for (int c = 0; c < instance.getNum_clusters(); c++) {
+            GRBVar var = model.getVarByName("y_c" + c);
+            var.set(GRB.DoubleAttr.LB, 0.0);
+            var.set(GRB.DoubleAttr.UB, 0.0);
+        }
+        model.update();
+    }
 }

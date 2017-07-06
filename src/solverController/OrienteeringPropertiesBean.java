@@ -16,7 +16,7 @@ public class OrienteeringPropertiesBean implements Serializable {
     /**
      * Path to the output folder.
      */
-    private String outputFolderPath = "./niceOutputFolder/";
+    private String outputFolderPath = System.getProperty("user.home");
     /**
      * Define the timeLimit for the MIPS solver in MIPS solver mode.
      */

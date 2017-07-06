@@ -65,13 +65,16 @@ public class ClusterRoulette {
      * @param clusters list of clusters to start from
      */
     public ClusterRoulette(List<Cluster> clusters) {
-        this.clusters = clusters;
+        if(clusters != null && !clusters.isEmpty())
+            this.clusters = clusters;
+        else this.clusters = new ArrayList<>();
         this.probabilities = new ArrayList<>();
 
         // Init probabilities to 1.0
-        clusters.forEach((_item) -> {
-            probabilities.add(1.0);
-        });
+        if(clusters != null && !clusters.isEmpty())
+            clusters.forEach((_item) -> {
+                probabilities.add(1.0);
+            });
         
         // Init nerf mechanism
         this.nerfOccurrences = new ArrayList<>();
@@ -127,12 +130,13 @@ public class ClusterRoulette {
      */
     public void upscale(double gamma, List<Cluster> toUpdate) {
         gamma = gammaFilter(gamma);
-        for (Cluster t : toUpdate) {
-            if (clusters.contains(t)) {
-                int index = this.clusters.indexOf(t);
-                probabilities.set(index, probabilities.get(index) * gamma + (1.0 - gamma));
+        if(toUpdate != null && !toUpdate.isEmpty())
+            for (Cluster t : toUpdate) {
+                if (clusters.contains(t)) {
+                    int index = this.clusters.indexOf(t);
+                    probabilities.set(index, probabilities.get(index) * gamma + (1.0 - gamma));
+                }
             }
-        }
     }
 
     /**
@@ -146,12 +150,13 @@ public class ClusterRoulette {
      */
     public void downscale(double gamma, List<Cluster> toUpdate) {
         gamma = gammaFilter(gamma);
-        for (Cluster t : toUpdate) {
-            if (clusters.contains(t)) {
-                int index = clusters.indexOf(t);
-                probabilities.set(index, probabilities.get(index) * gamma);
+        if(toUpdate != null && !toUpdate.isEmpty())
+            for (Cluster t : toUpdate) {
+                if (clusters.contains(t)) {
+                    int index = clusters.indexOf(t);
+                    probabilities.set(index, probabilities.get(index) * gamma);
+                }
             }
-        }
     }
 
     /**
@@ -215,7 +220,8 @@ public class ClusterRoulette {
 
         // Make a list of cold clusters
         List<Cluster> coldClusters = new ArrayList<>(clusters);
-        coldClusters.removeAll(hotClusters);
+        if(hotClusters != null && !hotClusters.isEmpty())
+            coldClusters.removeAll(hotClusters);
 
         // Warm up cold clusters
         this.upscale((1 - warmupGamma), coldClusters);
@@ -244,16 +250,30 @@ public class ClusterRoulette {
      */
     @Override
     public String toString() {
-        StringBuffer ret = new StringBuffer("[");
+        StringBuffer ret = new StringBuffer();
         double avgProbability = this.getAverageProbability();
 
         for (int i = 0; i < clusters.size(); i++) {
             ret.append(" " + clusters.get(i) + ":" + probabilities.get(i));
             if(probabilities.get(i) >= avgProbability)
-                ret.append("*");
+                ret.append("!");
         }
-        ret.append("]");
 
+        return ret.toString();
+    }
+    
+    /**
+     * Return a string representation of the nerf occurrences list
+     * 
+     * @return a string representation of the nerf occurrences list
+     */
+    public String nerfOccurrencesString(){
+        StringBuffer ret = new StringBuffer();
+        
+        for (int i = 0; i < clusters.size(); i++) {
+            ret.append(nerfOccurrences.get(i)+" ");
+        }
+        
         return ret.toString();
     }
     
@@ -262,9 +282,9 @@ public class ClusterRoulette {
      * Also resets to 0 the counter for the number of updates.
      */
     public void resetNerfOccurrences(){
-        nerfOccurrences.forEach((d) -> {
-            d = 0.0;
-        });
+        for(int i = 0; i<clusters.size(); i++){
+            nerfOccurrences.set(i, 0.0);
+        }
         nerfNumberOfUpdates = 0.0;
     }
     
@@ -296,6 +316,25 @@ public class ClusterRoulette {
         
         for(int i = 0; i < clusters.size(); i++){
             if(nerfOccurrences.get(i)/nerfNumberOfUpdates >= nerfBarrier){
+                ret.add(clusters.get(i));
+            }
+        }
+        
+        return ret;
+    }
+    
+    /**
+     * Queries the nerf candidate list and returns the clusters which have
+     * been more probable than the average for more than nerfBarrier% of the
+     * times recorded.
+     * @param nerfBarrier double in range [0,1]
+     * @return a list of improbable clusters
+     */
+    public List<Cluster> queryNotNerfCandidates(double nerfBarrier){
+        List<Cluster> ret = new ArrayList<>();
+        
+        for(int i = 0; i < clusters.size(); i++){
+            if(nerfOccurrences.get(i)/nerfNumberOfUpdates < nerfBarrier){
                 ret.add(clusters.get(i));
             }
         }

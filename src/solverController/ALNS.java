@@ -173,9 +173,9 @@ public class ALNS extends Orienteering {
     
     /**
      * This variable holds the objective value as computed by the last
-     * feasibility check.
+     * feasibility check. Value is -1 if the last check was infeasible.
      */
-    private double objectiveValueFromLastFeasibilityCheck = 0.0;
+    private double objectiveValueFromLastFeasibilityCheck = -1.0;
     
     /**
      * 
@@ -192,19 +192,24 @@ public class ALNS extends Orienteering {
      * @param log true will produce a visible log
      * @return true is the solution is feasible
      */
-    private boolean testSolutionForFeasibility(
+    protected boolean testSolutionForFeasibility(
             List<Cluster> proposedSolution,
             boolean log
     ) throws GRBException, Exception {
         boolean isFeasible = testSolution(this.model, proposedSolution, log);
         
-        // Save the objective value for later use by other methods.
-        objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
         
         // If the solution was infeasible for the current model, remove it
         // by adding new constraints to this model
-        if(!isFeasible)
+        if(isFeasible){
+            // Save the objective value for later use by other methods.
+            objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
+        }
+        else{
             super.excludeSolutionFromModel(proposedSolution);
+            // Set an "error" objective value
+            objectiveValueFromLastFeasibilityCheck = -1.0;
+        }
         
         return isFeasible;
     }
@@ -218,7 +223,7 @@ public class ALNS extends Orienteering {
      * @param log true will produce a visible log
      * @return true is the solution is feasible
      */
-    private boolean testSolution(
+    protected boolean testSolution(
             GRBModel model,
             List<Cluster> proposedSolution,
             boolean log) throws GRBException, Exception {
@@ -856,6 +861,8 @@ public class ALNS extends Orienteering {
                         segmentsWithoutImprovement
                 );
                 double localSearchObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+// DEBUG: this throws grbexception because the local search said the model was infeasible (which it wasn't)
+// DEBUG: xLocalSearch was 9 2 12 4 for instance 1.4.q
 
                 // If the local search was successful, save the new solution as the best in segments
                 if (localSearchObjectiveValue >= bestGlobalObjectiveValue) {
@@ -1985,7 +1992,7 @@ public class ALNS extends Orienteering {
             GRBModel toSolve = new GRBModel(this.model);
             
             // Test the solution on the clone model so that we can gather informations on the warm solution
-            if (this.testSolution(clone, inputSolution, false)) {
+            if (this.testSolution(clone, inputSolution, true)) { // DEBUG: LOCAL SEARCH CRASHES BECAUSE IT DOESN'T ENTER HERE?
                 // Gather informations on the solution
                 GRBVar[] cloneVars = clone.getVars();
 

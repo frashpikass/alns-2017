@@ -10,11 +10,14 @@ import java.awt.Container;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -76,6 +79,7 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserSaveParameters = new javax.swing.JFileChooser();
         jFileChooserSaveOutput = new javax.swing.JFileChooser();
         parametersBean = new solverController.ParametersBean();
+        pathCacheBean = new solverView.PathCacheBean();
         jPanelMain = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanelControls = new javax.swing.JPanel();
@@ -180,6 +184,10 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserInstances.setMultiSelectionEnabled(true);
         jFileChooserInstances.setSelectedFiles(null);
 
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, pathCacheBean, org.jdesktop.beansbinding.ELProperty.create("${pathToLastDirectory}"), jFileChooserInstances, org.jdesktop.beansbinding.BeanProperty.create("currentDirectory"), "pathToLastDirectory1");
+        binding.setSourceNullValue(Paths.get(System.getProperty("user.home")).toFile());
+        bindingGroup.addBinding(binding);
+
         jTextField19.setText("jTextField19");
 
         jFileChooserOutputFolderPath.setAcceptAllFileFilterUsed(false);
@@ -187,11 +195,15 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserOutputFolderPath.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         jFileChooserOutputFolderPath.setToolTipText("Choose the output directory");
 
+        jFileChooserLoadParameters.setDialogTitle("Load parameters from JSON");
+
         jFileChooserSaveParameters.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        jFileChooserSaveParameters.setDialogTitle("Save parameters to JSON");
         jFileChooserSaveParameters.setSelectedFile(new java.io.File("C:\\Program Files\\NetBeans 8.2\\myparams.json"));
-        jFileChooserSaveParameters.setToolTipText("");
+        jFileChooserSaveParameters.setToolTipText(null);
 
         jFileChooserSaveOutput.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        jFileChooserSaveOutput.setDialogTitle("Choose a destination for the output file");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -347,7 +359,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldTimeLimit.setToolTipText("Sets how long (in seconds) should the MIPS solver run for");
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimit}"), jTextFieldTimeLimit, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimit");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimit}"), jTextFieldTimeLimit, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimit");
         bindingGroup.addBinding(binding);
 
         jTextFieldTimeLimit.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1469,7 +1481,7 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
-        // TODO add your handling code here:
+        jFileChooserSaveParameters.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
         updateParametersBean();
         int result = jFileChooserSaveParameters.showOpenDialog(jPanelGeneralParameters);
         File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
@@ -1481,6 +1493,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
             System.out.println("Parameters saved to '"+outputFilePath.getAbsolutePath()+"'");
         }
+        
+        if(outputFilePath != null){
+            pathCacheBean.setPathToLastDirectory(outputFilePath.toPath().getParent().toFile());
+            if(pathCacheBean.getPathToLastDirectory() == null)
+                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
+        }
+        
+        
 
     }//GEN-LAST:event_jButtonSaveParametersActionPerformed
 
@@ -1525,21 +1545,29 @@ public class MainWindow extends javax.swing.JFrame {
             jListInstances.setSelectedIndex(Math.max(toMoveUp - 1, 0));
         }
     }//GEN-LAST:event_btnMoveInstanceUpActionPerformed
-
+        
     private void btnAddInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInstanceActionPerformed
-        // TODO add your handling code here:
-        jFileChooserInstances.showOpenDialog(jPanelMain);
-        File[] selected = jFileChooserInstances.getSelectedFiles();
-        DefaultListModel dlm = new DefaultListModel();
-        for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
-            dlm.addElement(jListInstances.getModel().getElementAt(i));
-        }
-        for (File f : selected) {
-            String path = f.getAbsolutePath();
-            dlm.addElement(path);
-        }
+        jFileChooserInstances.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
+        int result = jFileChooserInstances.showOpenDialog(jPanelMain);
+        if(JFileChooser.APPROVE_OPTION == result){
+            File[] selected = jFileChooserInstances.getSelectedFiles();
+            DefaultListModel dlm = new DefaultListModel();
+            for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
+                dlm.addElement(jListInstances.getModel().getElementAt(i));
+            }
+            for (File f : selected) {
+                String path = f.getAbsolutePath();
+                dlm.addElement(path);
+            }
 
-        jListInstances.setModel(dlm);
+            jListInstances.setModel(dlm);
+        }
+        
+        if(jFileChooserInstances.getSelectedFiles().length != 0){
+            pathCacheBean.setPathToLastDirectory(jFileChooserInstances.getSelectedFiles()[0].toPath().getParent().toFile());
+            if(pathCacheBean.getPathToLastDirectory() == null)
+                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
+        }
     }//GEN-LAST:event_btnAddInstanceActionPerformed
 
     private void jRadioButtonRelaxedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonRelaxedActionPerformed
@@ -1610,11 +1638,18 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
 
     private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
+        jFileChooserOutputFolderPath.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
         int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
         if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
             orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
+        }
+        
+        if(outputFolderPath != null){
+            pathCacheBean.setPathToLastDirectory(outputFolderPath);
+            if(pathCacheBean.getPathToLastDirectory() == null)
+                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
         }
     }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
 
@@ -1707,7 +1742,8 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonLoadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersActionPerformed
-        // TODO add your handling code here:
+        jFileChooserLoadParameters.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
+        
         int result = jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
         File inputFile = jFileChooserLoadParameters.getSelectedFile();
         if (inputFile != null && result == JFileChooser.APPROVE_OPTION) {
@@ -1720,6 +1756,12 @@ public class MainWindow extends javax.swing.JFrame {
                 System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
             }
             System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
+        }
+        
+        if(inputFile != null){
+            pathCacheBean.setPathToLastDirectory(inputFile.toPath().getParent().toFile());
+            if(pathCacheBean.getPathToLastDirectory() == null)
+                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
         }
     }//GEN-LAST:event_jButtonLoadParametersActionPerformed
 
@@ -2098,6 +2140,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldWarmupGamma;
     private solverController.OrienteeringPropertiesBean orienteeringPropertiesBean;
     private solverController.ParametersBean parametersBean;
+    private solverView.PathCacheBean pathCacheBean;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

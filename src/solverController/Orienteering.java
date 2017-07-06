@@ -1060,6 +1060,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * that solution from available ones.
      * 
      * @param toExclude the solution to remember not to test for again
+     * @throws gurobi.GRBException if updating the model goes wrong
      */
     protected void excludeSolutionFromModel(List<Cluster> toExclude) throws GRBException{
         if(toExclude != null && !toExclude.isEmpty()){

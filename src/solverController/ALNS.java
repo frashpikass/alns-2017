@@ -154,7 +154,7 @@ public class ALNS extends Orienteering {
             newSolution.add(c);
 
             // Let's use gurobi to check the feasibility of the new solution
-            isFeasible = this.testSolution(newSolution, true);
+            isFeasible = this.testSolutionForFeasibility(newSolution, true);
             // If the new solution is feasible, update the old solution
             if (isFeasible) {
                 solution = new ArrayList<>(newSolution);
@@ -163,23 +163,50 @@ public class ALNS extends Orienteering {
 
         // Now solution holds the list of clusters found by our constructive algorithm.
         // Let's update the model so that it cointains the current solution
-        testSolution(solution, true);
+        testSolution(this.model, solution, true);
         env.message("\nALNSConstructiveSolution log end, time " + LocalDateTime.now() + "\n");
         if (this.isCancelled()) {
             throw new InterruptedException("optimizeALNS() interrupted in the constructive solution building phase.");
         }
         return solution;
     }
-
+    
     /**
-     * use Gurobi to check whether the proposed solution is feasible or not.
+     * This variable holds the objective value as computed by the last
+     * feasibility check.
+     */
+    private double objectiveValueFromLastFeasibilityCheck = 0.0;
+    
+    /**
+     * 
+     * Use Gurobi to check whether the proposed solution is feasible or not for
+     * this model.
+     * If the solution is infeasible, a constraint will be added to remove this
+     * solution from the pool, but solution information data might (such as
+     * variable state) might not be available for future calls to the model.
+     * 
+     * <br>The last objective value is however available in the variable
+     * <code>objectiveValueFromLastFeasibilityCheck</code>.
      *
      * @param proposedSolution the solution we want to test
      * @param log true will produce a visible log
      * @return true is the solution is feasible
      */
-    private boolean testSolution(List<Cluster> proposedSolution, boolean log) throws GRBException, Exception {
-        return testSolution(this.model, proposedSolution, log);
+    private boolean testSolutionForFeasibility(
+            List<Cluster> proposedSolution,
+            boolean log
+    ) throws GRBException, Exception {
+        boolean isFeasible = testSolution(this.model, proposedSolution, log);
+        
+        // Save the objective value for later use by other methods.
+        objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
+        
+        // If the solution was infeasible for the current model, remove it
+        // by adding new constraints to this model
+        if(!isFeasible)
+            super.excludeSolutionFromModel(proposedSolution);
+        
+        return isFeasible;
     }
 
     /**
@@ -209,11 +236,13 @@ public class ALNS extends Orienteering {
 
         // Setting up the callback
         model.setCallback(new feasibilityCallback(alnsProperties.getMaxMIPSNodesForFeasibilityCheck()));
+        
+        // Test the solution
         model.optimize();
         if (model.get(GRB.IntAttr.SolCount) > 0) {
             isFeasible = true;
         }
-
+                
         if (log) {
             env.message("\nTesting solution with clusters: [");
 
@@ -572,9 +601,9 @@ public class ALNS extends Orienteering {
                     clusterRoulette.warmup(alnsProperties.getWarmupGamma(), xHotClusters);
 
                     //If the new solution is infeasible, apply the repair method
-                    if (!testSolution(xNew, false)) {
+                    if (!testSolutionForFeasibility(xNew, false)) {
                         env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", repair: " + repairMethods.getLabel(repairMethod) + "\n");
-                        xNew = repairBackToFeasibility4(xNew, repairMethod);
+                        xNew = repairBackToFeasibility4(xNew, repairMethod, false);
                         repairMethodWasUsed = true;
                     } else {
                         env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", no repair method needed.\n");
@@ -583,8 +612,8 @@ public class ALNS extends Orienteering {
                     // Check if we entered feasibility. If we didn't,
                     // gather the value of the objective function for the new solution
                     // obtained through the chosen methods
-                    if (testSolution(xNew, false)) {
-                        newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+                    if (testSolutionForFeasibility(xNew, false)) {
+                        newObjectiveValue = objectiveValueFromLastFeasibilityCheck;
                     } else { // INFEASIBLE SOLUTION HANDLING
                         // If we're here, it means that the repaired solution was still infeasible,
                         // which is pretty bad and shouldn't happen (too often)
@@ -913,7 +942,7 @@ public class ALNS extends Orienteering {
             env.message("\nALNSLOG, " + elapsedTime + ": ALNS run completed. Final solution test...\n");
 
             // Final test to set variables in the model and log vehicle paths
-            testSolution(xGlobalBest, true);
+            testSolution(this.model, xGlobalBest, true);
 
             // Save the solution to file
             super.writeSolution();
@@ -1528,7 +1557,7 @@ public class ALNS extends Orienteering {
         List<Cluster> output = new ArrayList<>(inputSolution);
 
         // 0. Check feasibility and start cycling until we have a feasible solution
-        boolean isFeasible = testSolution(output, true);
+        boolean isFeasible = testSolutionForFeasibility(output, true);
         while (!isFeasible && output.size() > 1) {
             // 1. Compute the feasibilityRelaxation so that we can retrieve some information on z and Tmax
             GRBModel clone = new GRBModel(model);
@@ -1626,7 +1655,7 @@ public class ALNS extends Orienteering {
                 output.remove(toRemove);
 
                 // 7. Goto 0 (test feasibility)
-                isFeasible = testSolution(output, true);
+                isFeasible = testSolutionForFeasibility(output, true);
             } // In case the feasibility relaxation did not work, something went VERY wrong
             else {
                 throw new Exception("PROBLEM: the feasibility relaxation was infeasible!");
@@ -1654,7 +1683,7 @@ public class ALNS extends Orienteering {
         // Setup the output
         List<Cluster> output = new ArrayList<>(inputSolution);
 
-        while (!testSolution(output, false)) {
+        while (!testSolutionForFeasibility(output, false)) {
             output = this.repairWorstRemoval(output, 1);
         }
 
@@ -1681,7 +1710,7 @@ public class ALNS extends Orienteering {
         // Setup the output
         List<Cluster> output = new ArrayList<>(inputSolution);
 
-        while (output.size() > 1 && !testSolution(output, false)) {
+        while (output.size() > 1 && !testSolutionForFeasibility(output, false)) {
             output = repairMethod.apply(output, 1);
         }
 
@@ -1703,12 +1732,14 @@ public class ALNS extends Orienteering {
      *
      * @param inputSolution an infeasible solution
      * @param repairMethod the repair heuristic to use
+     * @param isFeasible the result of the last feasibility check
      * @return the repaired solution, which can be feasible or infeasible.
      * @throws Exception if testing the solution breaks somewhere
      */
     private List<Cluster> repairBackToFeasibility4(
             List<Cluster> inputSolution,
-            BiFunction<List<Cluster>, Integer, List<Cluster>> repairMethod
+            BiFunction<List<Cluster>, Integer, List<Cluster>> repairMethod,
+            boolean isFeasible
     ) throws Exception {
         // Clone the input
         List<Cluster> inputClone = new ArrayList<>(inputSolution);
@@ -1721,17 +1752,19 @@ public class ALNS extends Orienteering {
 
         // Setup the initial degree of reparation
         int q = 1;
-
-        boolean isFeasible = testSolution(output, false);
+        
+        // Debug: check if we really need to check again for feasibility (WASTE)
+        // boolean isFeasible = testSolutionForFeasibility(output, false);
 
         // Cycle while q is smaller than the size of the input (we don't want to
         // test empty solutions) and
         // the solution is infeasible (we want to exit the cycle when the solution
         // is either too small or feasible)
         while (!isFeasible && q < inputSize) {
+            env.message("\nALNSLOG, trying to repair solution with q="+q+"...\n");
             // Try repairing the input solution with the given heuristic and the given q
             output = repairMethod.apply(inputClone, q);
-            isFeasible = testSolution(output, false);
+            isFeasible = testSolutionForFeasibility(output, false);
 
             if (!isFeasible) {
                 // Increase q
@@ -1950,7 +1983,7 @@ public class ALNS extends Orienteering {
             // Clone the original model with the heuristic constraints
             GRBModel clone = new GRBModel(this.model);
             GRBModel toSolve = new GRBModel(this.model);
-
+            
             // Test the solution on the clone model so that we can gather informations on the warm solution
             if (this.testSolution(clone, inputSolution, false)) {
                 // Gather informations on the solution
@@ -1997,7 +2030,7 @@ public class ALNS extends Orienteering {
 
         // To finish, we shall test the solution found, so that the model shall
         // come loaded with the new solution
-        this.testSolution(output, true);
+        this.testSolution(this.model, output, true);
         return output;
     }
 

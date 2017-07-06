@@ -1360,8 +1360,57 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             }
 
         }
-
         model.update();
+    }
+    
+    /**
+     * Tests the given heuristic constraints on the current model to see if the
+     * constrained model is still feasible or not.
+     * 
+     * @param toTest a list of heuristic constraint IDs to test
+     * @param guineaPigSolution a solution to test the model for feasibility with
+     * @param maxMIPSNodes maximum number of MIPS nodes to solve in a
+     * feasibility check
+     * @return true if the constrained model is still feasible
+     * @throws gurobi.GRBException if there are problems while handling the model
+     * @throws Exception if other problems arise
+     */
+    public boolean testConstraints(List<Integer> toTest, List<Cluster> guineaPigSolution, double maxMIPSNodes)
+            throws GRBException, Exception{
+        toggleHeuristicConstraintsOff();
+        setSpecificHeuristicConstraints(toTest);
+        boolean isFeasible = testSolution(model, guineaPigSolution, true, maxMIPSNodes);
+        return isFeasible;
+    }
+    
+    /**
+     * Returns the smallest list of feasible heuristic constraints for the current model.
+     * 
+     * @param toTest a list of heuristic constraint IDs to test
+     * @param guineaPigSolution a solution to test the model for feasibility with
+     * @param maxMIPSNodes maximum number of MIPS nodes to solve in a
+     * feasibility check
+     * @return the smallest list of feasible heuristic constraints for the current model.
+     * @throws Exception if anything goes wrong
+     */
+    public List<Integer> getLargestFeasibleCombinationOfHeuristicConstraints(
+            List<Integer> toTest,
+            List<Cluster> guineaPigSolution,
+            double maxMIPSNodes
+    ) throws Exception {
+        List<Integer> newConstraints = new ArrayList<>();
+        
+        // Check if the given constraints, all together, are feasible
+        boolean areFeasible = testConstraints(toTest, guineaPigSolution, maxMIPSNodes);
+        
+        if(!areFeasible){
+            for(Integer c : toTest){
+                List<Integer> toTestNew = new ArrayList<>(toTest);
+                toTest.remove(c);
+                newConstraints = getLargestFeasibleCombinationOfHeuristicConstraints(toTestNew, guineaPigSolution, maxMIPSNodes);
+            }
+        }  
+        return newConstraints;
     }
 
     /**

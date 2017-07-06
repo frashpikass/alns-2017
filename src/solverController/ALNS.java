@@ -507,8 +507,12 @@ public class ALNS extends Orienteering {
                 // Send the controller a message saying we're running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
                 env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " started. q = " + q + "\n");
-
+                
+                // Reset temperature
                 temperature = initialTtemperature;
+                
+                // Reset the nerf list
+                clusterRoulette.resetNerfOccurrences();
 
                 // Reset heuristic weights
                 // If we aren't in the first iteration, give a prize and a punishment
@@ -581,17 +585,19 @@ public class ALNS extends Orienteering {
                     // obtained through the chosen methods
                     if (testSolution(xNew, false)) {
                         newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-                    } else {
+                    } else { // INFEASIBLE SOLUTION HANDLING
                         // If we're here, it means that the repaired solution was still infeasible,
                         // which is pretty bad and shouldn't happen (too often)
 
                         // CHOICE 1:
-                        // 1 - heavily penalize the infeasible cluster
+                        // 1 - heavily penalize the infeasible cluster, update nerf list
                         // 2 - Update the elapsed time
                         // 3 - Log the results to XLSX
                         // 4 - discard the solution (set xNew = xOld), penalize the two heuristics
-                        // 1 - CLUSTER COOLDOWN: heavily penalize the infeasible cluster
+                        
+                        // 1 - CLUSTER COOLDOWN PUNISHMENT: heavily penalize the infeasible cluster, update nerf list
                         clusterRoulette.downscale(alnsProperties.getPunishmentGamma(), xNew);
+                        clusterRoulette.updateNerfOccurrences();
 
                         // 2 - Update the elapsed time
                         elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTimeInNanos);
@@ -609,7 +615,7 @@ public class ALNS extends Orienteering {
                             csvFormatSolution(xNew), "infeasible", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "1",
                             csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                             csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                            clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
+                            clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),clusterRoulette.nerfOccurrencesString(),
                             "Infeasible and discarded."
                         };
                         xlsxLogger.writeRow(logLine);
@@ -643,7 +649,7 @@ public class ALNS extends Orienteering {
                         //                    // CHOICE 3: bring the solution back to feasibility and go on
                         //                    xNew = repairBackToFeasibility2(xNew);
                         //                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-                    }
+                    } // end of infeasible solution handling
 
                     // In any case, now the model has been updated and it stores data
                     // about the current solution
@@ -655,6 +661,8 @@ public class ALNS extends Orienteering {
                     // it's improving the objective
                     simulatedAnnealingBarrier = simulatedAnnealingMaximization(oldObjectiveValue, newObjectiveValue, temperature);
                     solutionIsAccepted = acceptSolution(simulatedAnnealingBarrier);
+                    
+                    // Proceed with evaluation
                     if (solutionIsAccepted) {
                         if (!solutionIsBetterThanOld) {
                             solutionIsWorseButAccepted = true;
@@ -677,8 +685,14 @@ public class ALNS extends Orienteering {
                         // If there was a real improvement reset the no-improvement counter
                         if (solutionIsBetterThanOld) {
                             iterationsWithoutImprovement = 0;
+                            
+                            // Warmup the good clusters of the good solution which caused an improvement
+                            // so that the cooldown has no effect on them (this will make us save the better clusters)
+                            clusterRoulette.upscale((1.0-alnsProperties.getCooldownGamma()), xNew);
                         }
+                        
                     } else {
+                        // if the solution was without improvement
                         iterationsWithoutImprovement++;
                     }
 
@@ -702,7 +716,7 @@ public class ALNS extends Orienteering {
                         csvFormatSolution(xNew), newObjectiveValue + "", solutionIsAccepted ? "1" : "0", solutionIsWorseButAccepted ? "1" : "0", "0",
                         csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                         csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                        clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
+                        clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),clusterRoulette.nerfOccurrencesString(),
                         ""
                     };
                     xlsxLogger.writeRow(logLine);
@@ -718,6 +732,9 @@ public class ALNS extends Orienteering {
                             solutionIsWorseButAccepted,
                             solutionIsWorseAndRejected,
                             repairMethodWasUsed);
+                    
+                    // Update the nerfing weights to keep track of ill behaving clusters
+                    clusterRoulette.updateNerfOccurrences();
 
                     // If the new solution was accepted, use it as a starting point for the next iteration
                     if (solutionIsAccepted) {
@@ -786,7 +803,7 @@ public class ALNS extends Orienteering {
                     "*", "*", "*", "*", "*",
                     csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                     csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                    clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
+                    clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),clusterRoulette.nerfOccurrencesString(),
                     "End of the segment. Reason: " + segmentEndCause.toString()
                 };
                 xlsxLogger.writeRow(logLineSegmentEnd);
@@ -796,6 +813,10 @@ public class ALNS extends Orienteering {
 
                 // Reset the StringBuffer that logs the reason why a segment has ended
                 segmentEndCause = new StringBuffer();
+                
+                // Nerf all clusters which have been underperforming for at
+                // least nerfBarrier% of the segment, promote the others.
+                clusterRoulette.punishNerfCandidatesAndResetOthers(alnsProperties.getNerfBarrier());
 
                 // Let's try a local search run, if we have time for it
                 env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " local search...\n");
@@ -811,6 +832,11 @@ public class ALNS extends Orienteering {
                 if (localSearchObjectiveValue >= bestGlobalObjectiveValue) {
                     xGlobalBest = xLocalSearch;
                     bestGlobalObjectiveValue = localSearchObjectiveValue;
+                    
+                    // If the solution was a real improvement over the best old
+                    // one, warm it up
+                    if(localSearchObjectiveValue > bestGlobalObjectiveValue)
+                        clusterRoulette.warmup(alnsProperties.getWarmupGamma(), xLocalSearch);
                 }
 
                 // Anyway, let's log the local search results
@@ -850,7 +876,7 @@ public class ALNS extends Orienteering {
                     "*", "*", "*", "*", "*",
                     csvFormatSolution(xBest), bestObjectiveValueInSegment + "",
                     csvFormatSolution(xGlobalBest), bestGlobalObjectiveValue + "",
-                    clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),
+                    clusterRoulette.toString(),String.valueOf(clusterRoulette.getAverageProbability()),clusterRoulette.nerfOccurrencesString(),
                     "Local search results. " + localSearchComment.toString()
                 };
                 xlsxLogger.writeRow(logLine);
@@ -1777,9 +1803,20 @@ public class ALNS extends Orienteering {
 
     /**
      * Return a list of available clusters which have not been chosen for the
-     * given solution. Clusters are chosen with a probability that varies on
+     * given solution.
+     * 
+     * <br>Clusters are chosen with a probability that varies on
      * their past behaviour through a special "roulette system" (those who bring
      * us to infeasibility have a lesser chance of being chosen).
+     * 
+     * <br>If no clusters are chosen through this method,
+     * there are different fallback alternatives,
+     * such as querying for all available clusters which are not nerf
+     * candidates, querying for available clusters with a probability above the 
+     * average for the current iteration and returning all available clusters in
+     * the problem.
+     * 
+     * <br>In the worst case scenario, an empty list is returned.
      *
      * @param solution the solution to analyze
      * @return a list of available clusters which have not been chosen for the
@@ -1788,6 +1825,51 @@ public class ALNS extends Orienteering {
     private List<Cluster> getClustersNotInSolution(List<Cluster> solution) {
         List<Cluster> availableClusters = clusterRoulette.query();
         availableClusters.removeAll(solution);
+        
+        if(availableClusters.isEmpty()){
+            try {
+                env.message(
+                        "\nALNSLOG: no clusters have been extracted! "
+                                + "\nQuerying for clusters which have been above "
+                                + "average more than the "
+                                + alnsProperties.getNerfBarrier()*100
+                                + "% of the time...\n"
+                );
+            } catch (GRBException ex) {
+                Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            availableClusters = clusterRoulette.queryNotNerfCandidates(alnsProperties.getNerfBarrier());
+            availableClusters.removeAll(solution);
+
+            if(availableClusters.isEmpty()){
+                try {
+                    env.message("\nALNSLOG: no clusters have been extracted (again)!"
+                            + "\nQuerying for clusters above average in the current iteration...\n");
+                } catch (GRBException ex) {
+                    Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                availableClusters = clusterRoulette.queryHighPass(clusterRoulette.getAverageProbability());
+                availableClusters.removeAll(solution);
+
+                if(availableClusters.isEmpty()){
+                    try {
+                        env.message("\nALNSLOG: no clusters have been extracted (again)!"
+                                + "\nUsing all available clusters as a last resort...");
+                    } catch (GRBException ex) {
+                        Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    availableClusters = instance.cloneClusters();
+                    availableClusters.removeAll(solution);
+                    if(availableClusters.isEmpty()){
+                        try {
+                            env.message("\nALNSLOG: no clusters available for insertion! ALNS is giving up!\n");
+                        } catch (GRBException ex) {
+                            Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }
         return availableClusters;
     }
 
@@ -1844,14 +1926,24 @@ public class ALNS extends Orienteering {
                 && timeLimitForLocalSearch + elapsedTime <= alnsProperties.getTimeLimitALNS()
                 && segmentsWithoutImprovement < 1.0) {
             // Log the beginning of the search
-            env.message("Local search started at " + elapsedTime + "s - " + LocalDateTime.now().toString());
+            env.message("\nALNSLOG: Local search started at " + elapsedTime + "s - " + LocalDateTime.now().toString() + "\n");
 
             // Make sure all clusters can be selected by the solver
             this.resetSolution();
 
             // Reset the model so that it's fresh
             model.reset();
-
+            
+            // Remove nerfed clusters from the local search model
+            List<Cluster> nerfedClusters = clusterRoulette.queryNerfCandidates(alnsProperties.getNerfBarrier());
+            int nerfSize = nerfedClusters.size();
+            // ... but keep all the nerfed clusters which are in the current best solution (there should be none, but let's make sure)
+            nerfedClusters.removeAll(inputSolution);
+            this.removeFromSolution(nerfedClusters);
+            
+            nerfSize -= nerfedClusters.size();
+            env.message("\nALNSLOG: there were "+nerfSize+" nerfed clusters in inputSolution for local search. Local search starting.\n");
+            
             // Apply heuristic constraints
             this.toggleHeuristicConstraintsOn();
 
@@ -1880,26 +1972,27 @@ public class ALNS extends Orienteering {
                 // Update and optimizeALNS
                 toSolve.update();
                 toSolve.optimize();
-
+                
                 // Now the model should be optimized. If we've found a solution,
                 // let's save it to the output variable
                 output = this.getClustersInCurrentModelSolution(toSolve);
-
+                
                 // Let's remove the callback from the model
                 //model.setCallback(null);
             }
 
             // Let's clear the model from the added constraints
             this.toggleHeuristicConstraintsOff();
+            resetSolution();
 
             // Free the memory
             clone.dispose();
             toSolve.dispose();
 
             // Log the end of the search
-            env.message("Local search started at " + elapsedTime + "s ended at " + LocalDateTime.now().toString());
+            env.message("ALNSLOG: Local search started at " + elapsedTime + "s ended at " + LocalDateTime.now().toString());
         } else {
-            env.message("Local search aborted at " + elapsedTime + "s - " + LocalDateTime.now().toString());
+            env.message("ALNSLOG: Local search aborted at " + elapsedTime + "s - " + LocalDateTime.now().toString());
         }
 
         // To finish, we shall test the solution found, so that the model shall
@@ -1913,7 +2006,7 @@ public class ALNS extends Orienteering {
         try {
             this.optimize();
         } catch (InterruptedException e) {
-            env.message("Optimization interrupted by user.\n");
+            env.message("ALNSLOG: Optimization interrupted by user.\n");
             env.message(e.getMessage());
             this.cleanup();
             //DEBUG: uncomment later
@@ -1924,7 +2017,6 @@ public class ALNS extends Orienteering {
             if (logRedirector == null) {
                 System.out.println("Logredirector is null!");
             }
-            //logRedirector.finish();
             logRedirector.cancel(true);
         }
         // We're done!

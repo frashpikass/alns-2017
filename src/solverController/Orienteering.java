@@ -1093,9 +1093,12 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * that solution from available ones.
      *
      * @param toExclude the solution to remember not to test for again
+     * @return the constraint that was added to the model
      * @throws gurobi.GRBException if updating the model goes wrong
      */
-    protected void excludeSolutionFromModel(List<Cluster> toExclude) throws GRBException {
+    protected GRBConstr excludeSolutionFromModel(List<Cluster> toExclude) throws GRBException {
+        GRBConstr constraint = null;
+        
         if (toExclude != null && !toExclude.isEmpty()) {
             int size = toExclude.size();
 
@@ -1104,10 +1107,39 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             for (Cluster c : toExclude) {
                 lhs.addTerm(1.0, y[c.getId()]);
             }
-
-            model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1, "Supposedly_Infeasible_" + excludedSolutionsCounter++);
+            
+            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1, "Supposedly_Infeasible_" + excludedSolutionsCounter++);
             model.update();
         }
+        
+        return constraint;
+    }
+    
+    /**
+     * Add a constraint to exclude a specific solution from a given model.
+     *
+     * @param toExclude the solution to remember not to test for again
+     * @param model the model to remove the solution from
+     * @return the constraint that was added to the model
+     * @throws gurobi.GRBException if updating the model goes wrong
+     */
+    protected GRBConstr excludeSolutionFromModel(List<Cluster> toExclude, GRBModel model) throws GRBException {
+        GRBConstr constraint = null;
+        
+        if (toExclude != null && !toExclude.isEmpty()) {
+            int size = toExclude.size();
+
+            // Create the left hand side of the expression
+            GRBLinExpr lhs = new GRBLinExpr();
+            for (Cluster c : toExclude) {
+                lhs.addTerm(1.0, y[c.getId()]);
+            }
+            
+            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1, "Excluded_Solution_" + System.currentTimeMillis());
+            model.update();
+        }
+        
+        return constraint;
     }
 
     /**
@@ -1297,12 +1329,15 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      */
     public void setSpecificHeuristicConstraints(List<Integer> toSet)
             throws GRBException, Exception{
+        // Let's start by eventually removing leftover constraints
+        toggleHeuristicConstraintsOff();
+
         // Some useful constants for constraint definition
         int firstNodeID = 0;
         int lastNodeID = instance.getNum_nodes() - 1;
         //Note: getNum_nodes() returns nmax. nmax-1 is the final node. 0 is the initial node.
         
-        
+        // Let's set up constraints, one by one
         for(int constraintId : toSet){
             switch(constraintId){
                 case 0:
@@ -1402,7 +1437,8 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * Returns the smallest list of feasible heuristic constraints for the current model.
      * 
      * @param toTest a list of heuristic constraint IDs to test
-     * @param guineaPigSolution a solution to test the model for feasibility with
+     * @param guineaPigSolution a FEASIBLE solution to test the model for feasibility with.
+     * <b>IMPORTANT:</b> It <b>MUST</b> be feasible, otherwise the results of this method might be problematic!!!
      * @param maxMIPSNodes maximum number of MIPS nodes to solve in a
      * feasibility check
      * @return the smallest list of feasible heuristic constraints for the current model. (Could be an empty list)

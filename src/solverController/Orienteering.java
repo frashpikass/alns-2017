@@ -1317,7 +1317,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * A list containing all available heuristic IDs
      * NOTE: Update it every time you add an heuristic contraint!
      */
-    protected List<Integer> allHeuristicConstraints = Arrays.asList(0, 1);
+    protected List<Integer> allHeuristicConstraints = Arrays.asList(0, 1, 2, 3);
     
     /**
      * Sets all the heuristic constraints specified in the list of constraints for
@@ -1351,7 +1351,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                         List<Integer> nodesInCluster = instance.getClusterNodeIDs(c);
                         for (int i = 0; i < nodesInCluster.size() - 1; i++) {
                             for (int v = 0; v < this.instance.getNum_vehicles(); v++) {
-                                heuristicConstraints.add(model.addConstr(x[v][nodesInCluster.get(i)][lastNodeID], GRB.EQUAL, 0.0, "c13_c" + c + "_n" + nodesInCluster.get(i) + "_v" + v));
+                                heuristicConstraints.add(model.addConstr(x[v][nodesInCluster.get(i)][lastNodeID], GRB.EQUAL, 0.0, "hc13_c" + c + "_n" + nodesInCluster.get(i) + "_v" + v));
                             }
                         }
                     }
@@ -1398,7 +1398,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                                         // a streak, not even to go to the last node
                                         for (int i = 0; i <= lastNodeID; i++) {
                                             if (i != nextNode.getId()) {
-                                                heuristicConstraints.add(model.addConstr(x[v][currentNode.getId()][i], GRB.EQUAL, 0.0, "c15_c" + c + "_arc(" + currentNode.getId() + "," + i + ")_v" + v));
+                                                heuristicConstraints.add(model.addConstr(x[v][currentNode.getId()][i], GRB.EQUAL, 0.0, "hc15_c" + c + "_arc(" + currentNode.getId() + "," + i + ")_v" + v));
                                             }
                                         }
                                     }
@@ -1407,6 +1407,48 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                         }
                     }
                     break;
+                    
+                case 2:
+                    // Expression 17
+                    /**
+                     * Since we want to put to good use all of our vehicles,
+                     * let's make sure that we get at least one cluster for each
+                     * vehicle in the instance.
+                     */
+                    GRBLinExpr lhs17 = new GRBLinExpr();
+                    for (int c = 0; c < instance.getNum_clusters(); c++) {
+                        lhs17.addTerm(1.0, y[c]);
+                    }
+                    heuristicConstraints.add(model.addConstr(lhs17, GRB.GREATER_EQUAL, (double) instance.getNum_vehicles(), "hc17"));
+                    break;
+                
+                case 3:
+                    // Expression 18
+                    /**
+                     * By looking at relaxed solutions, we've noticed that they
+                     * often feature some arcs for some vehicles which are taken
+                     * even if their z value happens to be 0.
+                     * To avoid this, we've thought of this constraint.
+                     * 
+                     * It means that for every arc, the x value of the vehicle
+                     * crossing that arc must be less than the z for that arc,
+                     * divided by the service with the smallest (non null)
+                     * service time in the instance (or a very small number)
+                     */
+                    double scaleFactor = 1 / model.get(GRB.DoubleParam.OptimalityTol);
+                    for(int i = firstNodeID; i <= lastNodeID; i++){
+                        for(int j = firstNodeID; j <= lastNodeID; j++){
+                            // For each arc
+                            GRBLinExpr lhs18 = new GRBLinExpr();
+                            for(int v = 0; v< instance.getNum_vehicles(); v++){
+                                lhs18.addTerm(1.0,x[v][i][j]);
+                            }
+                            GRBLinExpr rhs18 = new GRBLinExpr();
+                            rhs18.addTerm(scaleFactor, z[i][j]);
+                            
+                            heuristicConstraints.add(model.addConstr(lhs18, GRB.LESS_EQUAL, rhs18, "hc18_"+i+"_"+j));
+                        }
+                    }
             }
 
         }

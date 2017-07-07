@@ -210,8 +210,8 @@ public class ClusterRoulette {
      * <br>The <i>warmupGamma</i> factor is applied in an upscaling fashion to
      * cold clusters.
      *
-     * @param warmupGamma the cooldown factor. Should be a small double in range
-     * [0,1]. Represents the decrease in probability,
+     * @param warmupGamma the warmup factor. Should be a small double in range
+     * [0,1]. Represents the increase in probability,
      * <br>e.g.: <i>warmupGamma</i> = 0.1
      * <br> =&gt; the new probability for cold clusters will be 10% more than
      * the old one

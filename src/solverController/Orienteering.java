@@ -892,35 +892,37 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         model.optimize();
 
         // Save the solution to file
-        writeSolution();
+        writeSolution(model);
 
         // Get/log the paths of vehicles
-        logVehiclePaths();
+        logVehiclePaths(model);
 
         // Log visited clusters
-        logVisitedClusters();
+        logVisitedClusters(model);
     }
 
     /**
      * Write the solver solution for the current model to a file. The file will
      * be placed in the output folder path specified.
      *
+     * @param model the freshly solved model to write the solution of
      * @throws gurobi.GRBException if there are problems while retrieving the
      * solution or writing it to a file
      */
-    protected void writeSolution() throws GRBException {
+    protected void writeSolution(GRBModel model) throws GRBException {
         model.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + ".sol");
     }
 
     /**
-     * After an integer solution has been computed, this method can get a list
+     * Analyzes a freshly solved model and logs, a list
      * of paths for each vehicle from the current solution.
      *
+     * @param model the freshly solved model to log the paths of
      * @return the list of paths, one per vehicle
      * @throws Exception if a subtour is found
      * @throws GRBException if there are problems when accessing the variable x
      */
-    protected List<List<Integer>> logVehiclePaths() throws GRBException, Exception {
+    protected List<List<Integer>> logVehiclePaths(GRBModel model) throws GRBException, Exception {
         List<List<Integer>> paths = new ArrayList<>();
         int firstNodeID = 0;
 
@@ -931,7 +933,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
 
             for (int i = firstNodeID; i < instance.getNum_nodes(); i++) {
                 for (int j = firstNodeID; j < instance.getNum_nodes(); j++) {
-                    if (x[v][i][j].get(GRB.DoubleAttr.X) == 1.0) {
+                    if (model.getVarByName(x[v][i][j].get(GRB.StringAttr.VarName)).get(GRB.DoubleAttr.X) == 1.0) {
                         // Look for subtours
                         if (path.contains(j)) {
                             // We've found a subtour
@@ -958,31 +960,36 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     }
 
     /**
-     * Logs for every visited cluster all of its nodes and whether they have
-     * been visited or not.
+     * Analyzes a freshly solved model and logs, for every visited cluster, all
+     * of its nodes and whether they have been visited or not.
      *
+     * @param model the freshly solved model to log the paths of
      * @return the list of strings describing the clusters
      * @throws GRBException if there are problems while retrieving variables
      * @throws Exception if there are problems while retrieving the nodes in the
      * cluster
      */
-    protected List<String> logVisitedClusters() throws GRBException, Exception {
+    protected List<String> logVisitedClusters(GRBModel model) throws GRBException, Exception {
         List<String> ret = new ArrayList<>();
         int countVisited = 0;
 
         env.message("\nList of visited clusters (a * indicates that the node has been visited):");
         for (int c = 0; c < instance.getNum_clusters(); c++) {
             StringBuffer line = new StringBuffer("Cluster " + c + ": [");
-
-            if (y[c].get(GRB.DoubleAttr.X) != 0) {
+            
+            if (model.getVarByName(y[c].get(GRB.StringAttr.VarName)).get(GRB.DoubleAttr.X) != 0) {
                 countVisited++;
                 for (int n : instance.getClusterNodeIDs(c)) {
                     line.append(n);
                     if (isVisited(n)) {
                         line.append("*");
-                        line.append(z[findPreviousNodeInSolution(n)][n].get(GRB.DoubleAttr.X));
+                        line.append(
+                                model.getVarByName(
+                                        z[findPreviousNodeInSolution(n)][n].get(GRB.StringAttr.VarName)
+                                ).get(GRB.DoubleAttr.X)
+                        );
                     }
-
+                    
                     line.append(" ");
                 }
                 line.append("]");
@@ -1239,7 +1246,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     }
 
     /**
-     * use Gurobi to check whether the proposed solution is feasible or not for
+     * Use Gurobi to check whether the proposed solution is feasible or not for
      * the specified model.
      *
      * @param model the model to test the solution on
@@ -1300,8 +1307,8 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
 
             if (isFeasible) {
                 env.message("]: FEASIBLE integer solution found!");
-                this.logVisitedClusters();
-                this.logVehiclePaths();
+                this.logVisitedClusters(model);
+                this.logVehiclePaths(model);
             } else {
                 env.message("]: INFEASIBLE.\n\n");
             }
@@ -1471,7 +1478,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             throws GRBException, Exception{
         toggleHeuristicConstraintsOff();
         setSpecificHeuristicConstraints(toTest);
-        boolean isFeasible = testSolution(model, guineaPigSolution, true, maxMIPSNodes);
+        boolean isFeasible = testSolution(model, guineaPigSolution, false, maxMIPSNodes);
         return isFeasible;
     }
     
@@ -1493,16 +1500,27 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     ) throws Exception {
         List<Integer> newConstraints = new ArrayList<>();
         
-        // Check if the given constraints, all together, are feasible
-        boolean areFeasible = testConstraints(toTest, guineaPigSolution, maxMIPSNodes);
-        
-        if(!areFeasible){
-            for(Integer c : toTest){
-                List<Integer> toTestNew = new ArrayList<>(toTest);
-                toTest.remove(c);
-                newConstraints = getLargestFeasibleCombinationOfHeuristicConstraints(toTestNew, guineaPigSolution, maxMIPSNodes);
+        // If we're testing an empty set of constraints, return an empty set
+        if(toTest != null && !toTest.isEmpty()){
+            // Check if the given constraints, all together, are feasible
+            boolean areFeasible = testConstraints(toTest, guineaPigSolution, maxMIPSNodes);
+
+            if(!areFeasible){
+                // if constraints toTest are not feasible, remove them
+                // one by one and keep the largest feasible set of them
+                for(Integer c : toTest){
+                    List<Integer> toTestNew = new ArrayList<>(toTest);
+                    toTestNew.remove(c);
+                    List<Integer> subset = getLargestFeasibleCombinationOfHeuristicConstraints(toTestNew, guineaPigSolution, maxMIPSNodes);
+                    if(subset.size() > newConstraints.size()){
+                        newConstraints = subset;
+                    }
+                }
             }
-        }  
+            // in case of feasible constraints, return them
+            else newConstraints = new ArrayList<>(toTest);
+        } // else, if they're empty, return an empty list
+        
         return newConstraints;
     }
 

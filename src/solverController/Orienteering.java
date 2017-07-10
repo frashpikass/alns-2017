@@ -981,11 +981,11 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                 countVisited++;
                 for (int n : instance.getClusterNodeIDs(c)) {
                     line.append(n);
-                    if (isVisited(n)) {
+                    if (isVisited(model, n)) {
                         line.append("*");
                         line.append(
                                 model.getVarByName(
-                                        z[findPreviousNodeInSolution(n)][n].get(GRB.StringAttr.VarName)
+                                        z[findPreviousNodeInSolution(model, n)][n].get(GRB.StringAttr.VarName)
                                 ).get(GRB.DoubleAttr.X)
                         );
                     }
@@ -1043,17 +1043,18 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     /**
      * Finds the ID of the previous node in the path described by the solution.
      *
+     * @param model the solved model to analyze
      * @param node the ID of the node we want to find the predecessor of in the
      * solution path
      * @return the ID of the previous node
      * @throws GRBException if there are problems while retrieving the value of
      * the z variable
      */
-    protected int findPreviousNodeInSolution(int node) throws GRBException {
+    protected int findPreviousNodeInSolution(GRBModel model, int node) throws GRBException {
         int previousNode = 0;
 
         for (int i = 0; i < instance.getNum_nodes(); i++) {
-            if (z[i][node].get(GRB.DoubleAttr.X) != 0) {
+            if (model.getVarByName(z[i][node].get(GRB.StringAttr.VarName)).get(GRB.DoubleAttr.X) != 0) {
                 previousNode = i;
                 break;
             }
@@ -1063,19 +1064,21 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     }
 
     /**
-     * Returns true if the given node has been visited.
+     * Returns true if the given node has been visited in the solution for the
+     * given model.
      *
+     * @param model the solved model to check
      * @param node the node to check
      * @return true if the node has been visited
      * @throws GRBException if there are problems while retrieving the value of
      * the variable x
      */
-    protected boolean isVisited(int node) throws GRBException {
+    protected boolean isVisited(GRBModel model, int node) throws GRBException {
         boolean ret = false;
 
         for (int v = 0; v < instance.getNum_vehicles(); v++) {
             for (int i = 0; i < instance.getNum_nodes(); i++) {
-                if (x[v][i][node].get(GRB.DoubleAttr.X) != 0) {
+                if (model.getVarByName(x[v][i][node].get(GRB.StringAttr.VarName)).get(GRB.DoubleAttr.X) != 0) {
                     ret = true;
                     break;
                 }
@@ -1115,8 +1118,9 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                 lhs.addTerm(1.0, y[c.getId()]);
             }
             
-            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1, "Supposedly_Infeasible_" + excludedSolutionsCounter++);
+            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1.0, "Supposedly_Infeasible_" + excludedSolutionsCounter++);
             model.update();
+            model.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_constrained.lp");
         }
         
         return constraint;
@@ -1237,7 +1241,8 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             // Save the objective value for later use by other methods.
             objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
         } else {
-            excludeSolutionFromModel(proposedSolution);
+            excludeSolutionFromModel(proposedSolution); //DEBUG: to test
+            
             // Set an "error" objective value
             objectiveValueFromLastFeasibilityCheck = -1.0;
         }

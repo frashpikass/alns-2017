@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -230,15 +231,16 @@ public class ALNS extends Orienteering {
      * @throws Exception if anything else goes wrong
      */
     public void optimizeALNS() throws IOException, GRBException, InterruptedException, Exception {
+        // Setup the Excel logger
+        ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
+                orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_ALNS.xlsx",
+                instance.getName());
+        
         try {
             // Send the controller a message saying we're starting
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING);
             env.message("\nALNSLOG, " + elapsedTime + ": optimizeALNS starting.\n");
 
-            // Setup the Excel logger
-            ALNSExcelLogger xlsxLogger = new ALNSExcelLogger(
-                    orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_ALNS.xlsx",
-                    instance.getName());
 
             // This is a generic ALNS implementation
             GRBModel relaxedModel = model.relax();
@@ -312,15 +314,14 @@ public class ALNS extends Orienteering {
 
             // ALNS START: Cycles every segment
             do {
+                /* ------------------------------------------- SEGMENT START! */
+                
                 // Send the controller a message saying we're running
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.RUNNING);
                 env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " started. q = " + q + "\n");
                 
-                // Reset temperature
+                // Initialize/reset temperature
                 temperature = initialTtemperature;
-                
-                // Reset the nerf list
-                clusterRoulette.resetNerfOccurrences();
 
                 // Reset heuristic weights
                 // If we aren't in the first iteration, give a prize and a punishment
@@ -335,14 +336,14 @@ public class ALNS extends Orienteering {
                     // Reset all heuristic weights
                     resetHeuristicMethodsWeight();
 
-                    // Reward and punish
+                    // Reward and punish respectively the best and the worst heuristics
                     destroyMethods.scaleAllWeightsOf(bestDestroys, alnsProperties.getRewardForBestSegmentHeuristics());
                     destroyMethods.scaleAllWeightsOf(worstDestroys, alnsProperties.getPunishmentForWorstSegmentHeuristics());
                     repairMethods.scaleAllWeightsOf(bestRepairs, alnsProperties.getRewardForBestSegmentHeuristics());
                     repairMethods.scaleAllWeightsOf(worstRepairs, alnsProperties.getPunishmentForWorstSegmentHeuristics());
                 }
 
-                // Iterations inside a segment (SEGMENT START)
+                // Iterations inside a segment
                 int iterations;
                 // Keeping track of the number of iterations without improvement in the segment
                 int iterationsWithoutImprovement = 0;
@@ -353,7 +354,9 @@ public class ALNS extends Orienteering {
                         && iterationsWithoutImprovement < alnsProperties.getMaxIterationsWithoutImprovement()
                         && !this.isCancelled(); // thread check
                         iterations++) {
-
+                    
+                    /* -------------------------------------- ITERATION START */
+                    
                     env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", without improvement " + iterationsWithoutImprovement + "\n");
 
                     // Setup of boolean values to evaluate solution quality
@@ -393,7 +396,9 @@ public class ALNS extends Orienteering {
                     // obtained through the chosen methods
                     if (testSolutionForFeasibility(xNew, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                         newObjectiveValue = objectiveValueFromLastFeasibilityCheck;
-                    } else { // INFEASIBLE SOLUTION HANDLING
+                    } else {
+                        /* --------------------- INFEASIBLE SOLUTION HANDLING */
+                        
                         // If we're here, it means that the repaired solution was still infeasible,
                         // which is pretty bad and shouldn't happen (too often)
 
@@ -404,6 +409,7 @@ public class ALNS extends Orienteering {
                         // 4 - discard the solution (set xNew = xOld), penalize the two heuristics
                         
                         // 1 - CLUSTER COOLDOWN PUNISHMENT: heavily penalize the infeasible cluster, update nerf list
+                        env.message("\nALNSLOG: Punishing clusters " + String.valueOf(xNew)+"\n");
                         clusterRoulette.downscale(alnsProperties.getPunishmentGamma(), xNew);
                         clusterRoulette.updateNerfOccurrences();
 
@@ -458,6 +464,8 @@ public class ALNS extends Orienteering {
                         //                    xNew = repairBackToFeasibility2(xNew);
                         //                    newObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
                     } // end of infeasible solution handling
+                    
+                    /* -------------------------------- CLOSING THE ITERATION */
 
                     // In any case, now the model has been updated and it stores data
                     // about the current solution
@@ -554,6 +562,8 @@ public class ALNS extends Orienteering {
                     // Update the elapsed time
                     elapsedTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTimeInNanos);
                 } // for: end of all iterations in the segment
+                
+                /* -------------------------------------- CLOSING THE SEGMENT */
 
                 //            // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
                 //            // This would be a nice spot to use some local search algorithm:
@@ -622,10 +632,9 @@ public class ALNS extends Orienteering {
                 // Reset the StringBuffer that logs the reason why a segment has ended
                 segmentEndCause = new StringBuffer();
                 
-                // Nerf all clusters which have been underperforming for at
-                // least nerfBarrier% of the segment, promote the others.
-                clusterRoulette.punishNerfCandidatesAndResetOthers(alnsProperties.getNerfBarrier());
-
+                
+                /* --------------------------------------------- LOCAL SEARCH */
+                
                 // Let's try a local search run, if we have time for it
                 env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " local search...\n");
                 List<Cluster> xLocalSearch = this.localSearch(
@@ -634,19 +643,42 @@ public class ALNS extends Orienteering {
                         alnsProperties.getTimeLimitLocalSearch(),
                         segmentsWithoutImprovement
                 );
-                double localSearchObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-// DEBUG: this throws grbexception because the local search said the model was infeasible (which it wasn't)
-// DEBUG: xLocalSearch was 9 2 12 4 for instance 1.4.q
+                double localSearchObjectiveValue;
+                try{
+                    localSearchObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+                }
+                catch(Exception e){
+                    env.message("\nALNSLOG: PROBLEM - since the local search produced an infeasible solution, fallback to previous best solution\n");
+                    xLocalSearch = xGlobalBest;
+                    localSearchObjectiveValue = bestGlobalObjectiveValue;
+                }
 
-                // If the local search was successful, save the new solution as the best in segments
-                if (localSearchObjectiveValue >= bestGlobalObjectiveValue) {
+                // If the solution was a real improvement over the best old
+                // one, warm it up by the cooldown factor
+                if(localSearchObjectiveValue > bestGlobalObjectiveValue){
+                    env.message("\nALNSLOG: local search solution has improved the current best solution!\n");
+                    clusterRoulette.upscale((1.0-alnsProperties.getCooldownGamma()), xLocalSearch);
+                }
+                // If the local search gave us a positive or zero improvement,
+                // save the new solution as the best in segments
+                // and update xOld to the best in segments, consequently
+                else if (localSearchObjectiveValue >= bestGlobalObjectiveValue) {
                     xGlobalBest = xLocalSearch;
                     bestGlobalObjectiveValue = localSearchObjectiveValue;
-                    
-                    // If the solution was a real improvement over the best old
-                    // one, warm it up
-                    if(localSearchObjectiveValue > bestGlobalObjectiveValue)
-                        clusterRoulette.warmup(alnsProperties.getWarmupGamma(), xLocalSearch);
+                    xOld = xGlobalBest;
+                }
+                /**
+                 * PEJORATIVE SOLUTION FROM LOCAL SEARCH
+                 * If the local search didn't improve the input solution,
+                 * let's look at the solution produced by the local search:
+                 * - if it's empty, keep as xOld = xBestInSegments
+                 * - if it's not empty keep as xOld = xLocalSearch
+                */
+                else {
+                    if(xLocalSearch.isEmpty())
+                        xOld = xGlobalBest;
+                    else
+                        xOld = xLocalSearch;
                 }
 
                 // Anyway, let's log the local search results
@@ -657,7 +689,8 @@ public class ALNS extends Orienteering {
                 // local search to decide whether to start a local search or not)
                 if (!(alnsProperties.getTimeLimitLocalSearch() > 0
                         && alnsProperties.getTimeLimitLocalSearch() + elapsedTime <= alnsProperties.getTimeLimitALNS()
-                        && segmentsWithoutImprovement < 1.0)) {
+                        // && segmentsWithoutImprovement < 1.0
+                        )) {
                     localSearchComment.append("ABORT:");
                     if (alnsProperties.getTimeLimitLocalSearch() <= 0) {
                         localSearchComment.append(" Local search disabled by user!");
@@ -665,9 +698,11 @@ public class ALNS extends Orienteering {
                     if (alnsProperties.getTimeLimitLocalSearch() + elapsedTime > alnsProperties.getTimeLimitALNS()) {
                         localSearchComment.append(" No time left for the local search to run!");
                     }
+                    /* NOTE: now a local search is always executed even if there was no improvement in the segment. See method localSearch for details.
                     if (segmentsWithoutImprovement >= 1.0) {
                         localSearchComment.append(" No improvement since last segment, it's useless to perform a local search!");
                     }
+                    */
                 } else {
                     localSearchComment.append("OK");
                 }
@@ -695,12 +730,21 @@ public class ALNS extends Orienteering {
                 env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " local search result: " + localSearchComment + "\n");
 
                 // Prepare solutions for the next segment
-                xOld = xGlobalBest;
                 xNew = xGlobalBest;
                 xBest = xGlobalBest;
                 oldObjectiveValue = bestGlobalObjectiveValue;
                 newObjectiveValue = bestGlobalObjectiveValue;
                 bestObjectiveValueInSegment = bestGlobalObjectiveValue;
+                
+                
+                // Update the nerfing weights to keep track of ill behaving clusters
+                // even after the local search
+                clusterRoulette.updateNerfOccurrences();
+                // Nerf all clusters which have been underperforming for at
+                // least nerfBarrier% of the segment+local search, promote the others.
+                clusterRoulette.punishNerfCandidatesAndResetOthers(alnsProperties.getNerfBarrier());
+                // Reset the nerf occurrences counter for the next segment
+                clusterRoulette.resetNerfOccurrences();
 
                 // Update q and the segment counter
                 // q will cycle: if it becomes bigger than qMax, it starts again
@@ -715,7 +759,9 @@ public class ALNS extends Orienteering {
                     && segments < alnsProperties.getMaxSegments()
                     && segmentsWithoutImprovement < alnsProperties.getMaxSegmentsWithoutImprovement()
                     && !this.isCancelled());
-
+            
+            /* ---------------------------------------- ALL SEGMENTS FINISHED */
+            
             // Close the excel logger gracefully
             xlsxLogger.close();
             // Send the controller a message to notify we're stopping
@@ -725,14 +771,17 @@ public class ALNS extends Orienteering {
             // Final test to set variables in the model and log vehicle paths
             testSolution(this.model, xGlobalBest, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
 
-            // Save the solution to file
-            super.writeSolution();
+            // Save the local search solution to file
+            super.writeSolution(this.model);
 
             // If we were interrupted by the user, throw an exception
             if (this.isCancelled()) {
                 throw new InterruptedException("optimizeALNS() interrupted in the solver phase.");
             }
         } catch (InterruptedException e) {
+            // Close the excel logger gracefully
+            xlsxLogger.close();
+            
             // Send the controller a message to notify we're stopped
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STOPPED);
             super.cancel(true);
@@ -1542,7 +1591,9 @@ public class ALNS extends Orienteering {
         // the solution is infeasible (we want to exit the cycle when the solution
         // is either too small or feasible)
         while (!isFeasible && q < inputSize) {
-            env.message("\nALNSLOG, trying to repair solution with q="+q+"...\n");
+            env.message("\nALNSLOG: trying to repair solution with "
+                    + repairMethods.getLabel(repairMethod)
+                    + " and q="+q+"...\n");
             // Try repairing the input solution with the given heuristic and the given q
             output = repairMethod.apply(inputClone, q);
             isFeasible = testSolutionForFeasibility(output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
@@ -1726,22 +1777,67 @@ public class ALNS extends Orienteering {
             long timeLimitForLocalSearch,
             long segmentsWithoutImprovement
     ) throws GRBException, Exception {
+        // Setup the output solution
         List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Setup the local search: find compatible heuristic constraints
+        // and a promising input solution.
+        // If the last segment had an improvement over the previous one, use its
+        // best solution as a starting point for the local search.
+        // If the last segment didn't improve
+        long localSearchSetupStartTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
+        env.message("\nALNSLOG, "+elapsedTime+": trying to get a feasible set of h. constraints for the local search...\n");
+        
+        // Setup feasible heuristics
+        List<Integer> heuristicIDs =
+                super.getLargestFeasibleCombinationOfHeuristicConstraints(
+                allHeuristicConstraints,
+                inputSolution,
+                alnsProperties.getMaxMIPSNodesForFeasibilityCheck()
+        );
+        
+        GRBConstr avoidInputSolution = null;
+        // Setup a feasible solution in case there was no improvement
+        if(segmentsWithoutImprovement > 0){
+            // If there was no improvement in the last segment
+            
+            // select a value of q which is the floor of solutionSize/2, so to keep at least
+            // half of the old solution
+            
+            int q = Math.floorDiv(inputSolution.size(), 2);
+            
+            // extract a repair heuristic and apply it to the input solution
+            List<Cluster> newInput = repairMethods.getRandom().apply(inputSolution, q);
+            
+            // use the new input as a starting point for the local search
+            inputSolution = newInput;
+            
+            // Make sure to avoid the original input solution by adding a constraint
+            // avoidInputSolution = super.excludeSolutionFromModel(newInput, model);
+            // At the end of the method, we will re-enable that solution by removing such constraint
+        }
+        
+        
+        long localSearchSetupDuration = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()) - localSearchSetupStartTime;
+        env.message("\nALNSLOG, "
+                + (elapsedTime+localSearchSetupDuration)
+                + ": h. constraints setup ended ("
+                + localSearchSetupDuration
+                + "s elapsed). Starting the local search.\n"
+                + "Heuristics used: " + Arrays.toString(heuristicIDs.toArray()));
 
-        // Perform a local search on the input solution, but only if there is time for it
-        // and if it's likely that it will improve the best solution of the this segment.
-        // If this segment's solution didn't improve the one at the last segment,
-        // this local search run would have the same starting solution as the
-        // local search one at the end of the previous segment.
-        // Since the run time of these local searches would be the same, there would
-        // be no advantage in using the local search with the same parameters
-        // (it would yield the same result and waste precious time)
+        // Perform a local search on the input solution, but only if there is time for it.
         if (timeLimitForLocalSearch > 0
-                && timeLimitForLocalSearch + elapsedTime <= alnsProperties.getTimeLimitALNS()
-                && segmentsWithoutImprovement < 1.0) {
+                && timeLimitForLocalSearch + elapsedTime <= alnsProperties.getTimeLimitALNS() // DEBUG: check if we need to add the heuristicSearchDuration or if it's negligibly short
+                && !this.isCancelled() // thread check
+                /* NOTE: Now we accept to do a local search even if the segment was w/o improvement
+                && segmentsWithoutImprovement < 1.0
+                */
+                )
+        {
             // Log the beginning of the search
-            env.message("\nALNSLOG: Local search started at " + elapsedTime + "s - " + LocalDateTime.now().toString() + "\n");
-
+            env.message("\nALNSLOG: Local search started at " + (elapsedTime+localSearchSetupDuration) + "s - " + LocalDateTime.now().toString() + "\n");
+            
             // Make sure all clusters can be selected by the solver
             this.resetSolution();
 
@@ -1750,17 +1846,20 @@ public class ALNS extends Orienteering {
             
             // Remove nerfed clusters from the local search model
             List<Cluster> nerfedClusters = clusterRoulette.queryNerfCandidates(alnsProperties.getNerfBarrier());
+            
             int nerfSize = nerfedClusters.size();
-            // ... but keep all the nerfed clusters which are in the current best solution (there should be none, but let's make sure)
+            // ...but keep all the nerfed clusters which are in the current best solution (there should be none, but let's make sure)
             nerfedClusters.removeAll(inputSolution);
             this.removeFromSolution(nerfedClusters);
             
             nerfSize -= nerfedClusters.size();
-            env.message("\nALNSLOG: there were "+nerfSize+" nerfed clusters in inputSolution for local search. Local search starting.\n");
+            env.message("\nALNSLOG: there were "+nerfSize+" nerfed clusters (out of "+nerfedClusters.size()+" nerfed) in inputSolution for local search."
+                    + "\nIdeally we want zero nerfed clusters in our input solution for the local search."
+                    + "\nLocal search starting.\n");
             
             // Apply heuristic constraints
-            this.toggleHeuristicConstraintsOn();
-
+            this.setSpecificHeuristicConstraints(heuristicIDs);
+            
             // Clone the original model with the heuristic constraints
             GRBModel clone = new GRBModel(this.model);
             GRBModel toSolve = new GRBModel(this.model);
@@ -1780,9 +1879,10 @@ public class ALNS extends Orienteering {
 
                 // Now the model is ready to be run for the given time using our
                 // heuristic constraints
-                // model.setCallback(new localSearchCallback(timeLimitForLocalSearch));
-                toSolve.set(GRB.DoubleParam.TimeLimit, (double) timeLimitForLocalSearch);
-
+                // DEBUG: Maybe we could subtract heuristicSearchDuration from timeLimitForLocalSearch here to have a tighter local search time
+                // toSolve.set(GRB.DoubleParam.TimeLimit, (double) (timeLimitForLocalSearch - heuristicSearchDuration));
+                toSolve.set(GRB.DoubleParam.TimeLimit, (double) (timeLimitForLocalSearch)); // DEBUG: substitute later
+                
                 // Update and optimizeALNS
                 toSolve.update();
                 toSolve.optimize();
@@ -1804,14 +1904,26 @@ public class ALNS extends Orienteering {
             toSolve.dispose();
 
             // Log the end of the search
-            env.message("ALNSLOG: Local search started at " + elapsedTime + "s ended at " + LocalDateTime.now().toString());
+            env.message("ALNSLOG: Local search started at " + elapsedTime + "s ended at " + LocalDateTime.now().toString() + "\n");
         } else {
-            env.message("ALNSLOG: Local search aborted at " + elapsedTime + "s - " + LocalDateTime.now().toString());
+            env.message("ALNSLOG: Local search aborted at " + elapsedTime + "s - " + LocalDateTime.now().toString() + "\n");
         }
-
+        
+        // Re-enable the solution that we removed at the beginning
+//        if(avoidInputSolution != null){
+//            this.model.remove(avoidInputSolution);
+//            this.model.update(); // DEBUG: maybe I don't need this
+//        }
+        
+        env.message("\nALNSLOG: Testing the solution produced by local search.\n");
         // To finish, we shall test the solution found, so that the model shall
         // come loaded with the new solution
-        this.testSolution(this.model, output, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
+        boolean solutionFeasible = this.testSolution(this.model, output, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
+        
+        if(!solutionFeasible)
+            env.message("\nALNSLOG: PROBLEM - local search solution infeasible!!\n");
+        else env.message("\nALNSLOG: the local search solution was feasible, as expected.\n");
+        
         return output;
     }
 

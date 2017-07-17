@@ -6987,7 +6987,7 @@
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                  <GridBagConstraints gridX="0" gridY="0" gridWidth="7" gridHeight="1" fill="1" ipadX="1157" ipadY="238" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="10" anchor="18" weightX="1.0" weightY="1.0"/>
+                  <GridBagConstraints gridX="0" gridY="0" gridWidth="7" gridHeight="1" fill="1" ipadX="1157" ipadY="30" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="10" anchor="18" weightX="1.0" weightY="1.0"/>
                 </Constraint>
               </Constraints>
 
@@ -7006,7 +7006,7 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="0" green="ff" red="ff" type="rgb"/>
                     </Property>
-                    <Property name="rows" type="int" value="8"/>
+                    <Property name="rows" type="int" value="4"/>
                     <Property name="tabSize" type="int" value="4"/>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="null" type="code"/>
@@ -7315,7 +7315,7 @@
               <Parameters>
                 <CodeExpression id="408">
                   <ExpressionOrigin>
-                    <Value type="int" value="238"/>
+                    <Value type="int" value="30"/>
                   </ExpressionOrigin>
                 </CodeExpression>
               </Parameters>

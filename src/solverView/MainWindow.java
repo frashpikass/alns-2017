@@ -1392,7 +1392,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTextAreaOutput.setColumns(15);
         jTextAreaOutput.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jTextAreaOutput.setForeground(new java.awt.Color(255, 255, 0));
-        jTextAreaOutput.setRows(8);
+        jTextAreaOutput.setRows(4);
         jTextAreaOutput.setTabSize(4);
         jTextAreaOutput.setToolTipText(null);
         jTextAreaOutput.setAutoscrolls(false);
@@ -1407,7 +1407,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 1157;
-        gridBagConstraints.ipady = 238;
+        gridBagConstraints.ipady = 30;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;

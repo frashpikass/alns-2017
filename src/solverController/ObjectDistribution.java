@@ -218,6 +218,16 @@ public class ObjectDistribution<T> {
     }
     
     /**
+     * Returns the number of elements in this object distribution. If this
+     * object distribution contains more than Integer.MAX_VALUE elements,
+     * returns Integer.MAX_VALUE.
+     * @return the number of elements in this object distribution
+     */
+    public int size(){
+        return this.objects.size();
+    }
+    
+    /**
      * Tries to remove the first occurence of an object from the distribution
      * and updates all bins, labels and weights consequently.
      * If this distribution does not contain the element, it is unchanged.
@@ -672,13 +682,19 @@ public class ObjectDistribution<T> {
  * @author Frash
  */
 class Bin{
+    /**
+     * Lower bound for the bin
+     */
     private double inf;
+    /**
+     * Upper bound for the bin
+     */
     private double sup;
     
     /**
      * Constructor for inner class Bin
-     * @param inf
-     * @param sup 
+     * @param inf Lower bound for the bin
+     * @param sup Upper bound for the bin
      */
     public Bin(double inf, double sup){
         this.inf = inf;

@@ -1039,7 +1039,7 @@ public class ALNS extends Orienteering {
         clustersToInsert.addAll(getClustersNotInSolution(output));
 
         // Insert q clusters not in the solution, picking them randomly
-        for (int i = 0; q > 0 && i < q; i++) {
+        for (int i = 0; q > 0 && i < q && i<clustersToInsert.size(); i++) {
             Cluster c = clustersToInsert.getRandom();
             output.add(c);
             clustersToInsert.remove(c);
@@ -1698,7 +1698,7 @@ public class ALNS extends Orienteering {
                                 + "\nQuerying for clusters which have been above "
                                 + "average more than the "
                                 + alnsProperties.getNerfBarrier()*100
-                                + "% of the time...\n"
+                                + "%% of the time...\n"
                 );
             } catch (GRBException ex) {
                 Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);

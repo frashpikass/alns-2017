@@ -1145,10 +1145,10 @@ public class ALNS extends Orienteering {
      * ratio, then removes the other q-1 clusters which are the most similar to
      * the first one. The similarity criterion is computed as follows:
      * <ul>
-     * <li>Find v as the vehicle with the longest streak in the first
+     * <li>Find v as the vehicle with the longest service time in the first
      * cluster</li>
      * <li>For every node n in the first cluster get the duration of services
-     * servable by v. Sum all the values.</li>
+     * servable by v. Sum all the values to get the total service time.</li>
      * <li>Divide the previous value by the total duration of services in the
      * clusters</li>
      * <li>Take the absolute value of the difference between the ratio for the
@@ -1173,37 +1173,51 @@ public class ALNS extends Orienteering {
 
             if (q > 1) {
                 Vehicle firstVehicle = null;
-                int biggestStreakSize = 0;
+                double firstClusterCost = firstClusterRemoved.getTotalCost();
+//                int biggestStreakSize = 0;
 
                 // Stores clusters and their ratios
                 LinkedHashMap<Cluster, Double> clustersRatios = new LinkedHashMap<>();
-
-                // Find v as the vehicle with the longest streak in the first cluster
+                
+                // Find v as the vehicle with the biggest service cost in the
+                // firstClusterRemoved
+                double maxCost = 0;
                 for (Vehicle v : instance.getVehicles()) {
-                    if (v.canServe(firstClusterRemoved)) {
-                        // Get the biggest streak of v in first
-                        List<Streak> streaks = firstClusterRemoved.getStreaks(v);
-                        // If there are streaks for vehicle v in the first cluster removed
-                        if (!streaks.isEmpty()) {
-                            streaks.sort(Streak.SIZE_COMPARATOR.reversed());
-                            int streakSize = streaks.get(0).size();
-
-                            // PROBLEMA: sto prendendo la lunghezza dello streak invece della sua durata!
-                            // If the streak we've found is bigger than the previous one
-                            // update biggestStreakSize and firstVehicle
-                            if (streakSize > biggestStreakSize) {
-                                biggestStreakSize = streakSize;
-                                firstVehicle = v;
-                            }
+                    if (v.canServe(firstClusterRemoved)){
+                        double newCost = firstClusterRemoved.getTotalCostForVehicle(v);
+                        if(newCost >= maxCost){
+                            maxCost = newCost;
+                            firstVehicle = v;
                         }
                     }
                 }
+                
+//                // Find v as the vehicle with the longest streak in the first cluster
+//                for (Vehicle v : instance.getVehicles()) {
+//                    if (v.canServe(firstClusterRemoved)) {
+//                        // Get the biggest streak of v in first
+//                        List<Streak> streaks = firstClusterRemoved.getStreaks(v);
+//                        // If there are streaks for vehicle v in the first cluster removed
+//                        if (!streaks.isEmpty()) {
+//                            streaks.sort(Streak.SIZE_COMPARATOR.reversed());
+//                            int streakSize = streaks.get(0).size();
+//
+//                            // PROBLEMA: sto prendendo la lunghezza dello streak invece della sua durata!
+//                            // If the streak we've found is bigger than the previous one
+//                            // update biggestStreakSize and firstVehicle
+//                            if (streakSize > biggestStreakSize) {
+//                                biggestStreakSize = streakSize;
+//                                firstVehicle = v;
+//                            }
+//                        }
+//                    }
+//                }
 
                 if (firstVehicle != null) {
                     // Calculate the ratio for the first cluster
-                    double firstClusterRatio = firstClusterRemoved.getTotalCostForVehicle(firstVehicle) / (1 + firstClusterRemoved.getTotalCost());
+                    double firstClusterRatio = maxCost / (1 + firstClusterCost);
 
-                    // Populate the map that holds cluster IDs (in the output) and their ratios
+                    // Populate the map that holds cluster IDs (in the output) and their absolute ratio distance
                     for (int i = 0; i < output.size(); i++) {
                         Cluster c = output.get(i);
                         clustersRatios.put(
@@ -1218,7 +1232,7 @@ public class ALNS extends Orienteering {
                             .stream()
                             .sorted(Map.Entry.comparingByValue())
                             .forEachOrdered(entry -> removeOrder.add(entry.getKey()));
-
+                    
                     // Now the map is sorted by value (which is the ratio)
                     // in a growing order
                     // Remove the first q-1 elements of the map from the output

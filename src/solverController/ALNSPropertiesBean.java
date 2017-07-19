@@ -33,6 +33,7 @@ public class ALNSPropertiesBean {
         this.segmentSize = apb.getSegmentSize();
         this.maxSegments = apb.getMaxSegments();
         this.maxSegmentsWithoutImprovement = apb.getMaxSegmentsWithoutImprovement();
+        this.useDestroyCloseToBarycenter = apb.isUseDestroyCloseToBarycenter();
         this.useDestroyGreedyCostInsertion = apb.isUseDestroyGreedyCostInsertion();
         this.useDestroyGreedyBestInsertion = apb.isUseDestroyGreedyBestInsertion();
         this.useDestroyGreedyProfitInsertion = apb.isUseDestroyGreedyProfitInsertion();
@@ -86,7 +87,12 @@ public class ALNSPropertiesBean {
      * Number of segments without improvement before ALNS termination
      */
     private long maxSegmentsWithoutImprovement = 10000;
-
+    
+    /**
+     * Determines whether to use this heuristic.
+     */
+    private boolean useDestroyCloseToBarycenter = true;
+    
     /**
      * Determines whether to use this heuristic.
      */
@@ -971,6 +977,7 @@ public class ALNSPropertiesBean {
     public static final String PROP_SEGMENTSIZE = "segmentSize";
     public static final String PROP_MAXSEGMENTS = "maxSegments";
     public static final String PROP_MAXSEGMENTSWITHOUTIMPROVEMENT = "maxSegmentsWithoutImprovement";
+    public static final String PROP_USEDESTROYCLOSETOBARYCENTER = "useDestroyCloseToBarycenter";
     public static final String PROP_USEDESTROYGREEDYCOSTINSERTION = "useDestroyGreedyCostInsertion";
     public static final String PROP_USEDESTROYGREEDYBESTINSERTION = "useDestroyGreedyBestInsertion";
     public static final String PROP_USEDESTROYGREEDYPROFITINSERTION = "useDestroyGreedyProfitInsertion";
@@ -993,5 +1000,23 @@ public class ALNSPropertiesBean {
     public static final String PROP_HEURISTICSCORES = "heuristicScores";
     public static final String PROP_MAXMIPSNODESFORFEASIBILITYCHECK = "maxMIPSNodesForFeasibilityCheck";
     public static final String PROP_MAXITERATIONSWITHOUTIMPROVEMENT = "maxIterationsWithoutImprovement";
+
+    /**
+     * Determines whether to use this heuristic.
+     * @return the useDestroyCloseToBarycenter
+     */
+    public boolean isUseDestroyCloseToBarycenter() {
+        return useDestroyCloseToBarycenter;
+    }
+
+    /**
+     * Determines whether to use this heuristic.
+     * @param useDestroyCloseToBarycenter the useDestroyCloseToBarycenter to set
+     */
+    public void setUseDestroyCloseToBarycenter(boolean useDestroyCloseToBarycenter) {
+        boolean oldUseDestroyCloseToBarycenter = this.useDestroyCloseToBarycenter;
+        this.useDestroyCloseToBarycenter = useDestroyCloseToBarycenter;
+        propertyChangeSupport.firePropertyChange(PROP_USEDESTROYCLOSETOBARYCENTER, oldUseDestroyCloseToBarycenter, useDestroyCloseToBarycenter);
+    }
     
 }

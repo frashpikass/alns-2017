@@ -93,6 +93,7 @@ public class ALNS extends Orienteering {
         // Keeping track of all implemented repair and destroy methods
         destroyMethods = new ObjectDistribution<>();
 
+        destroyMethods.add(this::destroyCloseToBarycenter, ALNSParams.isUseDestroyCloseToBarycenter(), "CloseToBarycenter");
         destroyMethods.add(this::destroyGreedyCostInsertion, ALNSParams.isUseDestroyGreedyCostInsertion(), "GreedyCostInsertion");
         destroyMethods.add(this::destroyGreedyBestInsertion, ALNSParams.isUseDestroyGreedyBestInsertion(), "GreedyBestInsertion");
         destroyMethods.add(this::destroyGreedyProfitInsertion, ALNSParams.isUseDestroyGreedyProfitInsertion(), "GreedyProfitInsertion");
@@ -935,6 +936,114 @@ public class ALNS extends Orienteering {
         // Add q available clusters (or as many clusters as possible) to the solution
         for (int i = 0; i < q && i < availableClusters.size(); i++) {
             output.add(availableClusters.get(i));
+        }
+
+        // return the destroyed input
+        return output;
+    }
+    
+    /**
+     * Computes the barycenter of the input solution, where all the coordinates
+     * are weighted according to the cost of service for each cluster.
+     * If some cluster in the input solution  has cost 0, use the geometric
+     * center instead.
+     * If the inputSolution is null or empty, default the barycenter to the
+     * start deposit.
+     * 
+     * @param inputSolution the solution to get the center of
+     * @return the virtual node with the coordinates of the barycenter
+     */
+    Node barycenterOfSolution(List<Cluster> inputSolution){
+        Node firstNode = instance.getNode(0);
+        // Default the barycenter to the start deposit
+        Node out = new Node(-1, firstNode.getX(), firstNode.getY());
+        double totalMass = 0.0;
+        
+        // Check that the solution isn't null or empty
+        if(inputSolution != null && inputSolution.size() > 0){
+            
+            double outX = 0.0;
+            double outY = 0.0;
+            boolean useMassCenter = true;
+            
+            // Try computing the centre of mass
+            for(Cluster c : inputSolution){
+                double x = c.getX();
+                double y = c.getY();
+                double mass = c.getTotalCost();
+
+                if(mass > 0.0){
+                    outX = (outX*totalMass+x*mass)/(totalMass+mass);
+                    outY = (outY*totalMass+y*mass)/(totalMass+mass);
+                    totalMass += mass;
+                }
+                else{
+                    useMassCenter = false;
+                    totalMass = 0.0;
+                    break;
+                }
+            }
+
+            // If some cluster has zero mass, let's switch to a normal average
+            // instead
+            if(!useMassCenter){
+                // Setup the barycenter to the coordinates of the first node
+                // in solution
+                outX = inputSolution.get(0).getX();
+                outY = inputSolution.get(0).getY();
+                
+                // Update the barycenter for each other node in the solution
+                for(int i = 1; i < inputSolution.size(); i++){
+                    double x = inputSolution.get(i).getX();
+                    double y = inputSolution.get(i).getY();
+                    outX = (outX + x)/2.0;
+                    outY = (outY + y)/2.0;
+                }
+            }
+            
+            // Prepare the node to return
+            out = new Node(-1, outX, outY);
+        }
+        
+        return out;
+    }
+    
+    /**
+     * This is a destroy (insertion) heuristic.
+     * It inserts the q available clusters which are closest to the barycenter
+     * of the input solution, as computed by the
+     * <code>barycenterOfSolution</code> method.
+     *
+     * @param inputSolution the solution to destroy
+     * @param q the number of clusters to insert
+     * @return the destroyed solution
+     */
+    private List<Cluster> destroyCloseToBarycenter(List<Cluster> inputSolution, int q) {
+        // Initialize available clusters
+        List<Cluster> availableClusters = this.getClustersNotInSolution(inputSolution);
+
+        // Initialize the output
+        List<Cluster> output = new ArrayList<>(inputSolution);
+        
+        // Get the barycenter of the input solution
+        Node barycenter = barycenterOfSolution(inputSolution);
+        
+        // Prepare the map of available clusters to add to the input solution
+        LinkedHashMap<Cluster, Double> clustersMap = new LinkedHashMap<>();
+        for(Cluster c : availableClusters){
+            clustersMap.put(c, c.distance(barycenter));
+        }
+        
+        // Sort the available clusters so that the closest clusters come first
+        List<Cluster> insertOrder = new ArrayList<>();
+        clustersMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .forEachOrdered(entry -> insertOrder.add(entry.getKey()));
+
+        // Add q available clusters (or as many clusters as possible) to the solution
+        for (int i = 0; i < q && i < insertOrder.size(); i++) {
+            output.add(insertOrder.get(i));
         }
 
         // return the destroyed input

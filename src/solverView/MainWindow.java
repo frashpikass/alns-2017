@@ -156,6 +156,7 @@ public class MainWindow extends javax.swing.JFrame {
         jCheckBoxDestroyGreedyBestInsertion = new javax.swing.JCheckBox();
         jCheckBoxDestroyGreedyProfitInsertion = new javax.swing.JCheckBox();
         jCheckBoxDestroyRandomInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyCloseToBarycenter = new javax.swing.JCheckBox();
         jTextFieldPunishmentGamma = new javax.swing.JTextField();
         jTextFieldCooldownGamma = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
@@ -1078,7 +1079,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyCostInsertion, gridBagConstraints);
@@ -1095,7 +1096,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyBestInsertion, gridBagConstraints);
@@ -1112,7 +1113,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyProfitInsertion, gridBagConstraints);
@@ -1134,10 +1135,22 @@ public class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelDestroyHeuristics.add(jCheckBoxDestroyRandomInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyCloseToBarycenter.setText("DestroyCloseToBarycenter");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${useDestroyCloseToBarycenter}"), jCheckBoxDestroyCloseToBarycenter, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyCloseToBarycenter");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyCloseToBarycenter, gridBagConstraints);
 
         jPanel1.add(jPanelDestroyHeuristics);
 
@@ -2046,6 +2059,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSaveParameters;
     private javax.swing.JButton jButtonStop;
     private javax.swing.JButton jButtonTestBean;
+    private javax.swing.JCheckBox jCheckBoxDestroyCloseToBarycenter;
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyBestInsertion;
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyCostInsertion;
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyProfitInsertion;
@@ -2184,6 +2198,7 @@ public class MainWindow extends javax.swing.JFrame {
         alnsPropertiesBean.setqDelta(Integer.valueOf(jTextFieldQDelta.getText()));
         alnsPropertiesBean.setNerfBarrier(Double.valueOf(jTextFieldNerfBarrier.getText()));
         
+        alnsPropertiesBean.setUseDestroyCloseToBarycenter(jCheckBoxDestroyCloseToBarycenter.isSelected());
         alnsPropertiesBean.setUseDestroyGreedyBestInsertion(jCheckBoxDestroyGreedyBestInsertion.isSelected());
         alnsPropertiesBean.setUseDestroyGreedyCostInsertion(jCheckBoxDestroyGreedyCostInsertion.isSelected());
         alnsPropertiesBean.setUseDestroyGreedyProfitInsertion(jCheckBoxDestroyGreedyProfitInsertion.isSelected());
@@ -2216,6 +2231,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxSegments.setText(String.valueOf(alnsPropertiesBean.getMaxSegments()));
         jTextFieldMaxSegmentsWithoutImprovement.setText(String.valueOf(alnsPropertiesBean.getMaxSegmentsWithoutImprovement()));
         
+        jCheckBoxDestroyCloseToBarycenter.setSelected(alnsPropertiesBean.isUseDestroyCloseToBarycenter());
         jCheckBoxDestroyGreedyCostInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyCostInsertion());
         jCheckBoxDestroyGreedyBestInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyBestInsertion());
         jCheckBoxDestroyGreedyProfitInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyProfitInsertion());

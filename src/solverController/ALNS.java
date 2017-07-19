@@ -156,7 +156,7 @@ public class ALNS extends Orienteering {
             newSolution.add(c);
 
             // Let's use gurobi to check the feasibility of the new solution
-            isFeasible = this.testSolutionForFeasibility(newSolution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
+            isFeasible = this.testSolutionForFeasibility(newSolution, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
             // If the new solution is feasible, update the old solution
             if (isFeasible) {
                 solution = new ArrayList<>(newSolution);
@@ -374,7 +374,9 @@ public class ALNS extends Orienteering {
 
                     // Apply the destruction method on the solution
                     env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", destroy: " + destroyMethods.getLabel(destroyMethod) + "\n");
+                    env.message("\nALNSLOG, "+"xOld ="+String.valueOf(xOld)+", q="+q);
                     xNew = destroyMethod.apply(xOld, q);
+                    env.message("\nALNSLOG, "+"xNewD="+String.valueOf(xNew)+", q="+q);
 
                     // CLUSTER COOLDOWN: Get the newly inserted clusters (hot clusters)
                     List<Cluster> xHotClusters = new ArrayList<>(xNew);
@@ -387,19 +389,21 @@ public class ALNS extends Orienteering {
                     if (!testSolutionForFeasibility(xNew, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                         env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", repair: " + repairMethods.getLabel(repairMethod) + "\n");
                         xNew = repairBackToFeasibility4(xNew, repairMethod, false);
+                        env.message("\nALNSLOG, "+"xNewR="+String.valueOf(xNew)+", q="+q);
                         repairMethodWasUsed = true;
                     } else {
                         env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", no repair method needed.\n");
                     }
 
-                    // Check if we entered feasibility. If we didn't,
+                    // Check if we entered feasibility. If we did,
                     // gather the value of the objective function for the new solution
                     // obtained through the chosen methods
                     if (testSolutionForFeasibility(xNew, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                         newObjectiveValue = objectiveValueFromLastFeasibilityCheck;
+                        env.message("\nALNSLOG, "+"xNew was feasible. Objective value = "+newObjectiveValue);
                     } else {
                         /* --------------------- INFEASIBLE SOLUTION HANDLING */
-                        
+                        env.message("\nALNSLOG, "+"xNew was infeasible (despite repairing).");
                         // If we're here, it means that the repaired solution was still infeasible,
                         // which is pretty bad and shouldn't happen (too often)
 
@@ -410,7 +414,7 @@ public class ALNS extends Orienteering {
                         // 4 - discard the solution (set xNew = xOld), penalize the two heuristics
                         
                         // 1 - CLUSTER COOLDOWN PUNISHMENT: heavily penalize the infeasible cluster, update nerf list
-                        env.message("\nALNSLOG: Punishing clusters " + String.valueOf(xNew)+"\n");
+                        env.message("\nALNSLOG, punishing clusters " + String.valueOf(xNew)+"\n");
                         clusterRoulette.downscale(alnsProperties.getPunishmentGamma(), xNew);
                         clusterRoulette.updateNerfOccurrences();
 

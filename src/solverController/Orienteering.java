@@ -1528,6 +1528,49 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         
         return newConstraints;
     }
+    
+//    /**
+//     * Returns the smallest list of feasible heuristic constraints for the current model.
+//     * 
+//     * @param toTest a list of heuristic constraint IDs to test
+//     * @param guineaPigSolution a FEASIBLE solution to test the model for feasibility with.
+//     * <b>IMPORTANT:</b> It <b>MUST</b> be feasible, otherwise the results of this method might be problematic!!!
+//     * @param maxMIPSNodes maximum number of MIPS nodes to solve in a
+//     * feasibility check
+//     * @return the smallest list of feasible heuristic constraints for the current model. (Could be an empty list)
+//     * @throws GRBException if anything goes wrong
+//     * @throws Exception if anything goes wrong
+//     */
+//    public List<Integer> getLargestFeasibleCombinationOfHeuristicConstraints2(
+//            List<Integer> toTest,
+//            List<Cluster> guineaPigSolution,
+//            double maxMIPSNodes
+//    ) throws GRBException, Exception
+//    {
+//        List<Integer> newConstraints = new ArrayList<>();
+//        
+//        // If we're testing an empty set of constraints, return an empty set
+//        if(toTest != null && !toTest.isEmpty()){
+//            // Check if the given constraints, all together, are feasible
+//            boolean areFeasible = testConstraints(toTest, guineaPigSolution, maxMIPSNodes);
+//            
+//            // Test every constraint by itself
+//            for(int constr : toTest){
+//                List<Integer> combination = new ArrayList<>();
+//                combination.add(constr);
+//                boolean isFeasible = testConstraints(combination, guineaPigSolution, maxMIPSNodes);
+//                if(isFeasible) newConstraints.add(constr);
+//            }
+//        }
+//        
+//        boolean areFeasible = testConstraints(newConstraints, guineaPigSolution, maxMIPSNodes);
+//        
+//        // If the combination is infeasible, signal it with -1
+//        // TODO: change -1 to an empty arraylist, this is for debugging purposes
+//        if(!areFeasible) newConstraints.add(-1);
+//     
+//        return newConstraints;
+//    }
 
     /**
      * Adds the selected cluster to the solution.

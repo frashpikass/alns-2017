@@ -936,6 +936,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                     if (model.getVarByName(x[v][i][j].get(GRB.StringAttr.VarName)).get(GRB.DoubleAttr.X) == 1.0) {
                         // Look for subtours
                         if (path.contains(j)) {
+                            path.add(j);
                             // We've found a subtour
                             throw new Exception("Subtour in the path for vehicle "
                                     + v + "!\n Path: " + path.toString());
@@ -1100,7 +1101,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     /**
      * If a solution is thought to be infeasible or bad for the model, we can
      * make sure it's not tested for again by adding constraints that exclude
-     * that solution from available ones.
+     * that solution (and only that one) from the available ones.
      *
      * @param toExclude the solution to remember not to test for again
      * @return the constraint that was added to the model
@@ -1110,19 +1111,41 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         GRBConstr constraint = null;
         
         if (toExclude != null && !toExclude.isEmpty()) {
-            int size = toExclude.size();
+            // Get a list of clusters not to exclude from future solutions
+            List<Cluster> notToExclude = instance.cloneClusters();
+            notToExclude.removeAll(toExclude);
 
             // Create the left hand side of the expression
+            // this will consider all clusters to exclude
             GRBLinExpr lhs = new GRBLinExpr();
             for (Cluster c : toExclude) {
+                lhs.addConstant(1.0);
+                lhs.addTerm(-1.0, y[c.getId()]);
+            }
+            
+            // this will consider all clusters to include
+            for (Cluster c : notToExclude) {
                 lhs.addTerm(1.0, y[c.getId()]);
             }
             
-            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1.0, "Supposedly_Infeasible_" + excludedSolutionsCounter++);
+            // add the constraint and update the model
+            constraint = model.addConstr(lhs, GRB.GREATER_EQUAL, 1.0, "Supposedly_Infeasible_Solution" + excludedSolutionsCounter++);
             model.update();
-            model.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_constrained.lp");
+            
+//            int size = toExclude.size();
+//
+//            // Create the left hand side of the expression
+//            GRBLinExpr lhs = new GRBLinExpr();
+//            for (Cluster c : toExclude) {
+//                lhs.addTerm(1.0, y[c.getId()]);
+//            }
+//            
+//            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1.0, "Supposedly_Infeasible_" + excludedSolutionsCounter++);
+//            model.update();
+//            model.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_constrained.lp");
         }
         
+        // Return the new constraint
         return constraint;
     }
     
@@ -1213,8 +1236,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * Use Gurobi to check whether the proposed solution is feasible or not for
      * this model. If the solution is infeasible, a constraint will be added to
      * remove this solution from the pool, but solution information data might
-     * (such as variable state) might not be available for future calls to the
-     * model.
+     * (such as variable state) not be available for future calls to the model.
      *
      * <br>The last objective value is however available in the variable
      * <code>objectiveValueFromLastFeasibilityCheck</code>.
@@ -1242,7 +1264,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
         } else {
             excludeSolutionFromModel(proposedSolution); //DEBUG: to test
-            
+            env.message("TESTSOLUTION LOG: excluded solution "+String.valueOf(proposedSolution));
             // Set an "error" objective value
             objectiveValueFromLastFeasibilityCheck = -1.0;
         }

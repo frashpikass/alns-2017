@@ -420,8 +420,8 @@ public class ALNS extends Orienteering {
                         // 3 - Log the results to XLSX
                         String[] logLine = {
                             segments + "", iterations + "", elapsedTime + "",
-                            destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod) + "",
-                            repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod) + "",
+                            destroyMethods.getLabel(destroyMethod), destroyMethods.toString() + "",
+                            repairMethods.getLabel(repairMethod), repairMethods.toString() + "",
                             repairMethodWasUsed ? "1" : "0",
                             temperature + "",
                             simulatedAnnealingBarrier + "",
@@ -523,8 +523,8 @@ public class ALNS extends Orienteering {
                     // Log at the end of the iteration
                     String[] logLine = {
                         segments + "", iterations + "", elapsedTime + "",
-                        destroyMethods.getLabel(destroyMethod), destroyMethods.getWeightOf(destroyMethod) + "",
-                        repairMethods.getLabel(repairMethod), repairMethods.getWeightOf(repairMethod) + "",
+                        destroyMethods.getLabel(destroyMethod), destroyMethods.toString() + "",
+                        repairMethods.getLabel(repairMethod), repairMethods.toString() + "",
                         repairMethodWasUsed ? "1" : "0",
                         temperature + "",
                         simulatedAnnealingBarrier + "",

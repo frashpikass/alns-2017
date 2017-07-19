@@ -358,7 +358,7 @@ public class ALNS extends Orienteering {
                     /* -------------------------------------- ITERATION START */
                     
                     env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", without improvement " + iterationsWithoutImprovement + "\n");
-
+                    
                     // Setup of boolean values to evaluate solution quality
                     solutionIsAccepted = false;
                     solutionIsNewGlobalOptimum = false;
@@ -1809,6 +1809,9 @@ public class ALNS extends Orienteering {
                 inputSolution,
                 alnsProperties.getMaxMIPSNodesForFeasibilityCheck()
         );
+        
+        // Logging constraints used
+        env.message("\nALNSLOG, "+elapsedTime+": LS constr="+String.valueOf(heuristicIDs)+"\n");
         
         GRBConstr avoidInputSolution = null;
         // Setup a feasible solution in case there was no improvement

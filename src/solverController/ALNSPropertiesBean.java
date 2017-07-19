@@ -225,9 +225,13 @@ public class ALNSPropertiesBean {
      * This constant holds the possible values of psi, the function that prizes
      * good heuristics and penalizes the bad ones.
      * <br>The default value for it is:
-     * <br><tt>{3.0, 2.0, 1.0, 0.1}</tt>
+     * <br><tt>{2.0, 1.5, 0.5, 0.1}</tt>
+     * value 0: if the solution is a new global optimum
+     * value 1: if the solution is an improvement over xOld
+     * value 2: if the solution is worse than xOld but is accepted
+     * value 3: if the solution is worse than xOld and rejected
      */
-    public final static double[] DEFAULT_HEURISTIC_SCORES = {3.0, 2.0, 1.0, 0.0};
+    public final static double[] DEFAULT_HEURISTIC_SCORES = {2.0, 1.5, 0.5, 0.1};
 
     /**
      * This constant holds the number of possible output values for function

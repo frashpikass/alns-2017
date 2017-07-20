@@ -2568,7 +2568,7 @@
                             <Component class="javax.swing.JTextField" name="jTextFieldPunishmentGamma">
                               <Properties>
                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the scaling factor to change the chance of bad clusters&#xa;(infeasible clusters) being chosen for insertion heuristics.&#xa;&lt;br&gt;Must be a double in range [0,1].&#xa;&lt;br&gt;Probability for bad clusters is downscaled like&#xa;&lt;br&gt;&lt;li&gt;&lt;tt&gt;newProbability&lt;/tt&gt; = &lt;tt&gt;punishmentGamma&lt;/tt&gt;*&lt;tt&gt;oldProbability&lt;/tt&gt;&lt;/li&gt;"/>
+                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the new probability of being chosen for nerfed&#xa;&lt;br&gt;clusters (clusters which haven&apos;t behaved well in the segment).&#xa;&lt;br&gt;Must be a double in range [0,1]."/>
                               </Properties>
                               <BindingProperties>
                                 <BindingProperty name="text" source="alnsPropertiesBean" sourcePath="${punishmentGamma}" target="jTextFieldPunishmentGamma" targetPath="text" updateStrategy="0" immediately="false">

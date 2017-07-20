@@ -1162,7 +1162,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSParameters.add(jPanel1, gridBagConstraints);
 
         jTextFieldPunishmentGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldPunishmentGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the scaling factor to change the chance of bad clusters\n(infeasible clusters) being chosen for insertion heuristics.\n<br>Must be a double in range [0,1].\n<br>Probability for bad clusters is downscaled like\n<br><li><tt>newProbability</tt> = <tt>punishmentGamma</tt>*<tt>oldProbability</tt></li>");
+        jTextFieldPunishmentGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the new probability of being chosen for nerfed\n<br>clusters (clusters which haven't behaved well in the segment).\n<br>Must be a double in range [0,1].");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, alnsPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${punishmentGamma}"), jTextFieldPunishmentGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "punishmentGamma");
         bindingGroup.addBinding(binding);

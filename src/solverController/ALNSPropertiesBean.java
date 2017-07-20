@@ -153,12 +153,9 @@ public class ALNSPropertiesBean {
     private double alpha = 0.85;
 
     /**
-     * This parameter is the scaling factor to change the chance of bad clusters
-     * being chosen for insertion heuristics.
+     * This parameter is the new probability of being chosen for nerfed
+     * clusters (clusters which haven't behaved well in the segment).
      * <br>Must be a double in range [0,1].
-     * <br>Probability for bad clusters is downscaled like
-     * <br><i>newProbability</i> =
-     * <i>punishmentGamma</i>*<i>oldProbability</i>
      */
     private double punishmentGamma = 0.60;
 
@@ -649,12 +646,9 @@ public class ALNSPropertiesBean {
     }
 
     /**
-     * This parameter is the scaling factor to change the chance of bad clusters
-     * being chosen for insertion heuristics.
+     * This parameter is the new probability of being chosen for nerfed
+     * clusters (clusters which haven't behaved well in the segment).
      * <br>Must be a double in range [0,1].
-     * <br>Probability for bad clusters is downscaled like
-     * <br><i>newProbability</i> =
-     * <i>punishmentGamma</i>*<i>oldProbability</i>
      *
      * @return the punishmentGamma
      */
@@ -663,12 +657,9 @@ public class ALNSPropertiesBean {
     }
 
     /**
-     * This parameter is the scaling factor to change the chance of bad clusters
-     * being chosen for insertion heuristics.
+     * This parameter is the new probability of being chosen for nerfed
+     * clusters (clusters which haven't behaved well in the segment).
      * <br>Must be a double in range [0,1].
-     * <br>Probability for bad clusters is downscaled like
-     * <br><i>newProbability</i> =
-     * <i>punishmentGamma</i>*<i>oldProbability</i>
      *
      * @param punishmentGamma the punishmentGamma to set
      */

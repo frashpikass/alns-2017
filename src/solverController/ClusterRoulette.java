@@ -40,7 +40,9 @@ public class ClusterRoulette {
     private List<Cluster> clusters;
 
     /**
-     * List of probabilities (one for each cluster)
+     * List of probabilities (one for each cluster).
+     * Note: a cluster with probability -1.0 is automatically excluded from
+     * select and update queries.
      */
     private List<Double> probabilities;
 
@@ -95,7 +97,8 @@ public class ClusterRoulette {
         List<Cluster> ret = new ArrayList<>();
         Random r = new Random();
         for (int i = 0; i < clusters.size(); i++) {
-            if (r.nextDouble() <= probabilities.get(i)) {
+            double probabilityOfI = probabilities.get(i);
+            if (probabilityOfI != -1.0 && r.nextDouble() <= probabilityOfI) {
                 ret.add(clusters.get(i));
             }
         }
@@ -112,7 +115,8 @@ public class ClusterRoulette {
     public List<Cluster> queryHighPass(double barrier) {
         List<Cluster> ret = new ArrayList<>();
         for (int i = 0; i < clusters.size(); i++) {
-            if (probabilities.get(i) >= barrier) {
+            double probabilityOfI = probabilities.get(i);
+            if (probabilityOfI != -1.0 && probabilityOfI >= barrier) {
                 ret.add(clusters.get(i));
             }
         }
@@ -135,7 +139,9 @@ public class ClusterRoulette {
             for (Cluster t : toUpdate) {
                 if (clusters.contains(t)) {
                     int index = this.clusters.indexOf(t);
-                    probabilities.set(index, probabilities.get(index) * gamma + (1.0 - gamma));
+                    double probabilityOfI = probabilities.get(index);
+                    if(probabilityOfI != -1.0)
+                        probabilities.set(index, probabilityOfI * gamma + (1.0 - gamma));
                 }
             }
         }
@@ -156,7 +162,9 @@ public class ClusterRoulette {
             for (Cluster t : toUpdate) {
                 if (clusters.contains(t)) {
                     int index = clusters.indexOf(t);
-                    probabilities.set(index, probabilities.get(index) * gamma);
+                    double probabilityOfI = probabilities.get(index);
+                    if(probabilityOfI != -1.0)
+                        probabilities.set(index, probabilityOfI * gamma);
                 }
             }
         }
@@ -238,7 +246,10 @@ public class ClusterRoulette {
      * clusters has some elements; 0.5 otherwise.
      */
     public double getAverageProbability() {
-        OptionalDouble ret = probabilities.stream().mapToDouble(a -> a).average();
+        OptionalDouble ret = probabilities
+                .stream()
+                .filter(p -> p != -1.0).mapToDouble(a -> a)
+                .average();
         if (ret.isPresent()) {
             return ret.getAsDouble();
         } else {
@@ -258,10 +269,11 @@ public class ClusterRoulette {
         double avgProbability = this.getAverageProbability();
 
         for (int i = 0; i < clusters.size(); i++) {
-            ret.append(" " + clusters.get(i) + ":" + probabilities.get(i));
+            ret.append(probabilities.get(i));
             if (probabilities.get(i) >= avgProbability) {
                 ret.append("!");
             }
+            if(i != clusters.size()-1)ret.append(", ");
         }
 
         return ret.toString();
@@ -294,21 +306,25 @@ public class ClusterRoulette {
     }
     
     /**
-     * Set the probability of being chosen to 0 for nerf candidates,
-     * to 1 to other clusters.
+     * Set the probability of being chosen to punishmentGamma for nerf
+     * candidates, to 1 for other clusters.
      * 
      * @param nerfBarrier double in range [0,1]
+     * @param punishmentGamma the new probability value for nerfed clusters
      */
-    public void punishNerfCandidatesAndResetOthers(double nerfBarrier){
+    public void punishNerfCandidatesAndResetOthers(double nerfBarrier, double punishmentGamma){
         nerfBarrier = gammaFilter(nerfBarrier);
         
         List<Cluster> nerfCandidates = this.queryNerfCandidates(nerfBarrier);
         
         for(int i = 0; i < clusters.size(); i++){
-            if(nerfCandidates.contains(clusters.get(i))){
-                probabilities.set(i, 0.0);
+            double probabilityOfI = probabilities.get(i);
+            if(probabilityOfI != -1.0){
+                if(nerfCandidates.contains(clusters.get(i))){
+                    probabilities.set(i, punishmentGamma);
+                }
+                else probabilities.set(i, 1.0);
             }
-            else probabilities.set(i, 1.0);
         }
         
     }
@@ -323,7 +339,8 @@ public class ClusterRoulette {
         this.nerfNumberOfUpdates += 1.0;
 
         for (int i = 0; i < clusters.size(); i++) {
-            if (probabilities.get(i) < avgProbability) {
+            double probabilityOfI = probabilities.get(i);
+            if (probabilityOfI < avgProbability) {
                 nerfOccurrences.set(i, nerfOccurrences.get(i) + 1.0);
             }
         }
@@ -363,12 +380,52 @@ public class ClusterRoulette {
         List<Cluster> ret = new ArrayList<>();
 
         for (int i = 0; i < clusters.size(); i++) {
-            if (nerfOccurrences.get(i) / nerfNumberOfUpdates < nerfBarrier) {
+            double probabilityOfI = probabilities.get(i);
+            if (probabilityOfI != -1.0 && nerfOccurrences.get(i) / nerfNumberOfUpdates < nerfBarrier) {
                 ret.add(clusters.get(i));
             }
         }
 
         return ret;
+    }
+    
+    /**
+     * Mark a cluster as ignored. It won't be returned by queries, nor touched
+     * by probability updates.
+     * 
+     * @param c the cluster to ignore.
+     */
+    public void ignoreCluster(Cluster c){
+        int index = -1;
+        try{
+            index = clusters.indexOf(c);
+            if(index != -1){
+                probabilities.set(index, -1.0);
+            }
+        }
+        catch(NullPointerException e){
+            System.out.println("ignoreCluster: cluster "+c.toString()+" can't be ignored!");
+        }
+    }
+    
+    /**
+     * Restore an ignored cluster.
+     * Its new probability is set to the average probability for any cluster.
+     * 
+     * @param c the ignored cluster to restore.
+     */
+    public void unignoreCluster(Cluster c){
+        int index = -1;
+        try{
+            index = clusters.indexOf(c);
+            if(index != -1){
+                if(probabilities.get(index) == -1.0)
+                    probabilities.set(index, getAverageProbability());
+            }
+        }
+        catch(NullPointerException e){
+            System.out.println("ignoreCluster: cluster "+c.toString()+" can't be ignored!");
+        }
     }
 
 }

@@ -562,6 +562,44 @@ public class Cluster {
         }
         return this.weightedProfit;
     }
+    
+    /**
+     * Computes the minimum cost (service time) of any vehicle that serves this
+     * cluster.
+     * If no vehicle serves the cluster, Double.MAX_VALUE is returned.
+     * 
+     * @param vehicles the vehicles to find the minimum cost of
+     * @return the minimum cost of any vehicle that serves this cluster.
+     */
+    public double getMinCostForVehicle(List<Vehicle> vehicles){
+        double ret = Double.MAX_VALUE;
+        for(Vehicle v : vehicles){
+            if(v.canServe(this)){
+                double cost = getTotalCostForVehicle(v);
+                if(cost<ret)
+                    ret=cost;
+            }
+        }
+        return ret;
+    }
+    
+    /**
+     * Computes the maximum cost (service time) for any vehicle to serve this
+     * cluster.
+     * If no vehicle serves the cluster, Double.MIN_VALUE is returned.
+     * 
+     * @param vehicles the vehicles to find the maximum cost of
+     * @return the maximum cost of any vehicle that serves this cluster
+     */
+    public double getMaxCostForVehicle(List<Vehicle> vehicles){
+        double ret = Double.MIN_VALUE;
+        for(Vehicle v : vehicles){
+            double cost = getTotalCostForVehicle(v);
+            if(cost>ret)
+                ret=cost;
+        }
+        return ret;
+    }
 
     /**
      * Sets the instanceVehicles for this cluster and updates all cluster parameters

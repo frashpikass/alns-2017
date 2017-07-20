@@ -1099,15 +1099,16 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     protected int excludedSolutionsCounter = 0;
 
     /**
-     * If a solution is thought to be infeasible or bad for the model, we can
-     * make sure it's not tested for again by adding constraints that exclude
+     * This methos makes sure that a specific solution for the specific model
+     * is discarded by adding constraints which exclude
      * that solution (and only that one) from the available ones.
      *
      * @param toExclude the solution to remember not to test for again
+     * @param model the model to remove the solution from
      * @return the constraint that was added to the model
      * @throws gurobi.GRBException if updating the model goes wrong
      */
-    protected GRBConstr excludeSolutionFromModel(List<Cluster> toExclude) throws GRBException {
+    protected GRBConstr excludeSolutionFromModel(List<Cluster> toExclude, GRBModel model) throws GRBException {
         GRBConstr constraint = null;
         
         if (toExclude != null && !toExclude.isEmpty()) {
@@ -1129,7 +1130,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             }
             
             // add the constraint and update the model
-            constraint = model.addConstr(lhs, GRB.GREATER_EQUAL, 1.0, "Supposedly_Infeasible_Solution" + excludedSolutionsCounter++);
+            constraint = model.addConstr(lhs, GRB.GREATER_EQUAL, 1.0, "Excluded_Solution" + excludedSolutionsCounter++);
             model.update();
             
 //            int size = toExclude.size();
@@ -1150,14 +1151,15 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     }
     
     /**
-     * Add a constraint to exclude a specific solution from a given model.
+     * Add a constraint to exclude a specific solution and all the solutions
+     * that contain it from a specific model.
      *
      * @param toExclude the solution to remember not to test for again
      * @param model the model to remove the solution from
      * @return the constraint that was added to the model
      * @throws gurobi.GRBException if updating the model goes wrong
      */
-    protected GRBConstr excludeSolutionFromModel(List<Cluster> toExclude, GRBModel model) throws GRBException {
+    protected GRBConstr excludeSolutionAndSupersetsFromModel(List<Cluster> toExclude, GRBModel model) throws GRBException {
         GRBConstr constraint = null;
         
         if (toExclude != null && !toExclude.isEmpty()) {
@@ -1169,7 +1171,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                 lhs.addTerm(1.0, y[c.getId()]);
             }
             
-            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1, "Excluded_Solution_" + System.currentTimeMillis());
+            constraint = model.addConstr(lhs, GRB.LESS_EQUAL, (double) size - 1, "Supposedly_Infeasible_Solution_" + System.currentTimeMillis());
             model.update();
         }
         
@@ -1257,14 +1259,16 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     ) throws GRBException, Exception {
         boolean isFeasible = testSolution(this.model, proposedSolution, log, maxMIPSNodes);
 
-        // If the solution was infeasible for the current model, remove it
-        // by adding new constraints to this model
+        // If the solution was feasible
         if (isFeasible) {
             // Save the objective value for later use by other methods.
             objectiveValueFromLastFeasibilityCheck = model.get(GRB.DoubleAttr.ObjVal);
         } else {
-            excludeSolutionFromModel(proposedSolution); //DEBUG: to test
-            env.message("TESTSOLUTION LOG: excluded solution "+String.valueOf(proposedSolution));
+            // If the model was infeasible, exclude the solution
+            if(model.get(GRB.IntAttr.Status) == GRB.INFEASIBLE){
+                excludeSolutionFromModel(proposedSolution, model); //DEBUG: to test
+                env.message("TESTSOLUTION LOG: excluded solution "+String.valueOf(proposedSolution));
+            }
             // Set an "error" objective value
             objectiveValueFromLastFeasibilityCheck = -1.0;
         }
@@ -1616,6 +1620,28 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);
         y[c.getId()].set(GRB.DoubleAttr.UB, 0.0);
         model.update();
+    }
+    
+    /**
+     * Makes sure the given cluster can't be placed in solution and physically
+     * cuts all arcs connecting to it.
+     * 
+     * @param c the cluster to unwire from the model
+     * @throws GRBException if there are problems while setting bounds on x
+     */
+    protected void unwireClusterFromModel(Cluster c) throws GRBException{
+        List<Node> toUnwire = c.getNodes();
+        
+        for(Node n : toUnwire){
+            for(int i = 0; i < instance.getNum_nodes(); i++){
+                for(int v = 0; i < instance.getNum_vehicles(); i++){
+                    x[v][n.getId()][i].set(GRB.DoubleAttr.UB, 0.0);
+                    x[v][i][n.getId()].set(GRB.DoubleAttr.UB, 0.0);
+                }
+            }
+        }
+        
+        removeFromSolution(c);
     }
 
     /**

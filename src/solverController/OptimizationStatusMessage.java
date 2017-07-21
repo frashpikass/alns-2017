@@ -26,6 +26,11 @@ public class OptimizationStatusMessage {
     private double elapsedTime;
     
     /**
+     * Current best objective value
+     */
+    private double bestObj;
+    
+    /**
      * Number of the instance in the batch
      */
     private int instanceNumber;
@@ -51,12 +56,14 @@ public class OptimizationStatusMessage {
      * @param progress Current progress (an in between [0,100])
      * @param elapsedTime Currently elapsed time
      * @param status solver status
+     * @param bestObj current value of the best objective
      */
     public OptimizationStatusMessage(
             String instancePath,
             int progress,
             double elapsedTime,
-            Status status){
+            Status status,
+            double bestObj){
         this.instancePath = instancePath;
         this.progress = progress;
         this.elapsedTime = elapsedTime;
@@ -73,6 +80,7 @@ public class OptimizationStatusMessage {
      * @param instanceNumber number of the instance in the batch
      * @param batchSize size of the batch
      * @param status solver status
+     * @param bestObj current value of the best objective
      */
     public OptimizationStatusMessage(
             String instancePath,
@@ -80,13 +88,15 @@ public class OptimizationStatusMessage {
             double elapsedTime,
             int instanceNumber,
             int batchSize,
-            Status status){
+            Status status,
+            double bestObj){
         this.instancePath = instancePath;
         this.progress = progress;
         this.elapsedTime = elapsedTime;
         this.instanceNumber = instanceNumber;
         this.batchSize = batchSize;
         this.status = status;
+        this.bestObj = bestObj;
     }
 
     /**
@@ -128,6 +138,14 @@ public class OptimizationStatusMessage {
     public int getBatchSize() {
         return batchSize;
     }
+    
+    /**
+     * Current best objective value
+     * @return the bestObj
+     */
+    public double getBestObj() {
+        return bestObj;
+    }
 
     /**
      * Optimization status
@@ -138,6 +156,16 @@ public class OptimizationStatusMessage {
     }
     
     public String toString(){
-        return elapsedTime+"s: Current Instance '"+instancePath+"' @ "+progress+"%, batch "+instanceNumber+"/"+batchSize+" done, status: "+status;
+        return elapsedTime
+                + "s: Current Instance '"
+                + instancePath
+                + "' @ "
+                + progress
+                + "%, batch "
+                + instanceNumber+"/"+batchSize
+                + " done, status: "
+                + status
+                + ", BestObj:"
+                + bestObj;
     }
 }

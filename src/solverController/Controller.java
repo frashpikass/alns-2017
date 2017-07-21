@@ -74,7 +74,9 @@ public class Controller
                         lastModelPath, 0, 0,
                         lastInstanceNumber,
                         modelPaths.size(),
-                        OptimizationStatusMessage.Status.STARTING)
+                        OptimizationStatusMessage.Status.STARTING,
+                        0.0
+                    )
                 );
 
                 // Proceed with the optimization
@@ -409,6 +411,10 @@ public class Controller
         // Now go back to "doInBackground()" and wait for the optimization to complete
     }
     
+    /**
+     * When a message is received from ALNS, add information about the batch
+     * progress and publish it as a standard OptimizationStatusMessage.
+     */
     private void messageReceived(){
         // Here I should publish the message I've received and add information
         // on the batch size and instance number in the batch
@@ -421,7 +427,8 @@ public class Controller
                     messageFromALNS.getElapsedTime(),
                     this.lastInstanceNumber,
                     this.modelPaths.size(),
-                    messageFromALNS.getStatus()
+                    messageFromALNS.getStatus(),
+                    messageFromALNS.getBestObj()
             );
             publish(newMessage);
         }
@@ -467,7 +474,8 @@ public class Controller
                             osm.getElapsedTime(),
                             osm.getInstanceNumber(),
                             osm.getBatchSize(),
-                            realState
+                            realState,
+                            osm.getBestObj()
                     )
             );
         }

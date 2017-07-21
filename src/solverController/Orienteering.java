@@ -1185,7 +1185,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @throws GRBException if anything goes wrong
      */
     protected void toggleHeuristicConstraintsOn() throws GRBException, Exception {
-        setSpecificHeuristicConstraints(allHeuristicConstraints);
+        setSpecificHeuristicConstraints(allHeuristicConstraints, this.model);
     }
 
     /**
@@ -1362,10 +1362,11 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * the current model.
      * 
      * @param toSet a list of constraint IDs
+     * @param model the model to update
      * @throws gurobi.GRBException if problems arise while handling the model
      * @throws Exception if there problems arise while handling the instance
      */
-    public void setSpecificHeuristicConstraints(List<Integer> toSet)
+    public void setSpecificHeuristicConstraints(List<Integer> toSet, GRBModel model)
             throws GRBException, Exception{
         // Let's start by eventually removing leftover constraints
         toggleHeuristicConstraintsOff();
@@ -1508,7 +1509,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     public boolean testConstraints(List<Integer> toTest, List<Cluster> guineaPigSolution, double maxMIPSNodes)
             throws GRBException, Exception{
         toggleHeuristicConstraintsOff();
-        setSpecificHeuristicConstraints(toTest);
+        setSpecificHeuristicConstraints(toTest, model);
         boolean isFeasible = testSolution(model, guineaPigSolution, false, maxMIPSNodes);
         return isFeasible;
     }
@@ -1689,15 +1690,38 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @throws GRBException if anything goes wrong with updating the model.
      */
     protected void removeFromSolution(List<Cluster> l) throws GRBException {
-        l.forEach(c -> {
-            try {
-                y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);
-                y[c.getId()].set(GRB.DoubleAttr.UB, 0.0);
-            } catch (GRBException ex) {
-                Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        model.update();
+        if(l != null && !l.isEmpty()){
+            l.forEach(c -> {
+                try {
+                    y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);
+                    y[c.getId()].set(GRB.DoubleAttr.UB, 0.0);
+                } catch (GRBException ex) {
+                    Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            model.update();
+        }
+    }
+    
+    /**
+     * Remove the selected clusters from the solution of the specified model.
+     *
+     * @param l the list of clusters to remove from the solution.
+     * @param model the model to update
+     * @throws GRBException if anything goes wrong with updating the model.
+     */
+    protected void removeFromSolution(List<Cluster> l, GRBModel model) throws GRBException {
+        if(l != null && !l.isEmpty()){
+            l.forEach(c -> {
+                try {
+                    model.getVarByName(y[c.getId()].get(GRB.StringAttr.VarName)).set(GRB.DoubleAttr.LB, 0.0);
+                    model.getVarByName(y[c.getId()].get(GRB.StringAttr.VarName)).set(GRB.DoubleAttr.UB, 0.0);
+                } catch (GRBException ex) {
+                    Logger.getLogger(Orienteering.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            model.update();
+        }
     }
 
     /**
@@ -1709,6 +1733,21 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         for (int c = 0; c < instance.getNum_clusters(); c++) {
             y[c].set(GRB.DoubleAttr.LB, 0.0);
             y[c].set(GRB.DoubleAttr.UB, 1.0);
+        }
+
+        model.update();
+    }
+    
+    /**
+     * Reset the solution: all clusters will be free to be chosen
+     *
+     * @param model the model to reset the solution of
+     * @throws GRBException if setting the bounds goes wrong
+     */
+    protected void resetSolution(GRBModel model) throws GRBException {
+        for (int c = 0; c < instance.getNum_clusters(); c++) {
+            model.getVarByName(y[c].get(GRB.StringAttr.VarName)).set(GRB.DoubleAttr.LB, 0.0);
+            model.getVarByName(y[c].get(GRB.StringAttr.VarName)).set(GRB.DoubleAttr.UB, 1.0);
         }
 
         model.update();
@@ -1741,5 +1780,24 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             var.set(GRB.DoubleAttr.UB, 0.0);
         }
         model.update();
+    }
+    
+    /**
+     * Logs the solution to the given model and saves it to disk.
+     * 
+     * @param model the model to save the solution of
+     * @throws GRBException if the model hasn't been solved
+     * @throws Exception if there are problems while logging the vehicle paths
+     * or the visited clusters.
+     */
+    protected void saveAndLogSolution(GRBModel model) throws GRBException, Exception{
+        // Save the solution to file
+        writeSolution(model);
+
+        // Get/log the paths of vehicles
+        logVehiclePaths(model);
+
+        // Log visited clusters
+        logVisitedClusters(model);
     }
 }

@@ -177,7 +177,11 @@ public class MainWindow extends javax.swing.JFrame {
         jTextAreaOutput = new javax.swing.JTextArea();
         jButtonReset = new javax.swing.JButton();
         jPanelStatusBar = new javax.swing.JPanel();
+        jPanelSBTop = new javax.swing.JPanel();
         jLabelStatus = new javax.swing.JLabel();
+        jPanelSBBottom = new javax.swing.JPanel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabelBestObj = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
 
         jFileChooserInstances.setAccessory(btnAddInstance);
@@ -1441,17 +1445,33 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelStatusBar.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
         jPanelStatusBar.setForeground(java.awt.SystemColor.windowText);
-        jPanelStatusBar.setLayout(new java.awt.GridLayout(1, 0));
+        jPanelStatusBar.setLayout(new java.awt.BorderLayout());
+
+        jPanelSBTop.setLayout(new javax.swing.BoxLayout(jPanelSBTop, javax.swing.BoxLayout.LINE_AXIS));
 
         jLabelStatus.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabelStatus.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelStatus.setText("Ready.");
         jLabelStatus.setToolTipText(jLabelStatus.getText());
-        jPanelStatusBar.add(jLabelStatus);
+        jPanelSBTop.add(jLabelStatus);
+
+        jPanelStatusBar.add(jPanelSBTop, java.awt.BorderLayout.PAGE_START);
+
+        jPanelSBBottom.setLayout(new java.awt.GridLayout());
+
+        jLabel25.setText("Best objective:");
+        jPanelSBBottom.add(jLabel25);
+
+        jLabelBestObj.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabelBestObj.setText("0.0");
+        jPanelSBBottom.add(jLabelBestObj);
 
         jProgressBar1.setToolTipText(null);
         jProgressBar1.setBorder(null);
         jProgressBar1.setStringPainted(true);
-        jPanelStatusBar.add(jProgressBar1);
+        jPanelSBBottom.add(jProgressBar1);
+
+        jPanelStatusBar.add(jPanelSBBottom, java.awt.BorderLayout.PAGE_END);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
@@ -1749,6 +1769,8 @@ public class MainWindow extends javax.swing.JFrame {
         // Reset the progress bar
         jProgressBar1.setIndeterminate(false);
         jProgressBar1.setValue(0);
+        
+        jLabelBestObj.setText("0.0");
 
         // Update the status text
         updateStatusLabel("Ready.");
@@ -1846,6 +1868,8 @@ public class MainWindow extends javax.swing.JFrame {
             OptimizationStatusMessage osm
     ){
         if(osm != null){
+            this.jLabelBestObj.setText(String.valueOf(osm.getBestObj()));
+            
             switch(osm.getStatus()){
                 case STARTING:
                     this.updateSolverStatusTemporary("Starting. Please wait...");
@@ -2092,6 +2116,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2099,6 +2124,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelBestObj;
     private javax.swing.JLabel jLabelOutputFolderPath;
     private javax.swing.JLabel jLabelStatus;
     private javax.swing.JList<String> jListInstances;
@@ -2114,6 +2140,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelParametersEnvelope;
     private javax.swing.JPanel jPanelPsi;
     private javax.swing.JPanel jPanelRepairHeuristics;
+    private javax.swing.JPanel jPanelSBBottom;
+    private javax.swing.JPanel jPanelSBTop;
     private javax.swing.JPanel jPanelSolver;
     private javax.swing.JPanel jPanelStatusBar;
     private javax.swing.JPanel jPanelnstances;

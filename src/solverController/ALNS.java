@@ -179,6 +179,9 @@ public class ALNS extends Orienteering {
             }
         }
         
+        // Increase j so that we get a new cluster
+        j++;
+        
         // Now get the other clusters
         for (int i = j; i < clusters.size() && isFeasible && !this.isCancelled(); i++) {
             Cluster c = clusters.get(i);

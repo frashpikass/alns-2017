@@ -70,10 +70,11 @@ public class OptimizationStatusMessage {
         this.instanceNumber = 0;
         this.batchSize = 1;
         this.status = status;
+        this.bestObj = bestObj;
     }
     
     /**
-     * Constructor.
+     * Constructor which keeps track of batches.
      * @param instancePath Path to the instance currently being solved
      * @param progress Current progress (an int between [0,100])
      * @param elapsedTime Currently elapsed time

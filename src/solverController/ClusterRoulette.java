@@ -427,5 +427,20 @@ public class ClusterRoulette {
             System.out.println("ignoreCluster: cluster "+c.toString()+" can't be ignored!");
         }
     }
+    
+    /**
+     * Returns the list of clusters which haven't been ignored.
+     * 
+     * @return the list of clusters which haven't been ignored.
+     */
+    public List<Cluster> getAvailableClusters(){
+        List<Cluster> ret = new ArrayList<>();
+        for(int i = 0; i < clusters.size(); i++){
+            if(probabilities.get(i) != -1.0){
+                ret.add(clusters.get(i));
+            }
+        }
+        return ret;
+    }
 
 }

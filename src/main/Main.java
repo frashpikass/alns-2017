@@ -36,7 +36,7 @@ public class Main {
      *
      * @param args input arguments from the command line
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException, Exception {
         try {
             if (args.length == 0) {
                 launchGui();
@@ -54,11 +54,11 @@ public class Main {
         } catch (ParseException e) {
             // Bad ending 1
             System.out.println("Parsing Error: " + e.getMessage());
-            return;
+            throw e;
         } catch (Exception e) {
             // Bad ending 2
             System.out.println("Execution Error: " + e.getMessage());
-            return;
+            throw e;
         }
 
         // Good ending

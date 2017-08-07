@@ -1267,7 +1267,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             // If the model was infeasible, exclude the solution
             if(model.get(GRB.IntAttr.Status) == GRB.INFEASIBLE){
                 excludeSolutionFromModel(proposedSolution, model); //DEBUG: to test
-                env.message("TESTSOLUTION LOG: excluded solution "+String.valueOf(proposedSolution));
+                env.message("TESTSOLUTION LOG: excluded solution "+String.valueOf(proposedSolution)+"\n");
             }
             // Set an "error" objective value
             objectiveValueFromLastFeasibilityCheck = -1.0;

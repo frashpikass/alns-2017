@@ -256,13 +256,14 @@ public class ALNS extends Orienteering {
     private void removeAllInfeasibleClustersFromModel() throws Exception{
         int countRemoved = 0;
         List<Cluster> availableClusters = clusterRoulette.getAvailableClusters();
-        
+        env.message("\nALNSLOG: trying to remove all infeasible clusters from model.\n"
+                + "Original clusters: \n" + availableClusters.toString()+"\n");
         for(int i = 0; i < availableClusters.size(); i++){
             Cluster c = availableClusters.get(i);
             List<Cluster> toTest = new ArrayList<>();
             toTest.add(c);
             
-            if(!testSolutionForFeasibility(toTest, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())){
+            if(!testSolutionForFeasibility(toTest, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())){
                 // The cluster is infeasible
                 // Remove it and update counter
                 unwireClusterFromModel(c);
@@ -270,6 +271,9 @@ public class ALNS extends Orienteering {
                 countRemoved++;
             }
         }
+        availableClusters = clusterRoulette.getAvailableClusters();
+        env.message("\nALNSLOG: Removed "+countRemoved+"clusters from model.\n"
+                + "New status: \n" + availableClusters.toString()+"\n");
         
         stopwatchUpdate();
         env.message("\nALNSLOG, "

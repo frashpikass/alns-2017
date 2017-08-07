@@ -2405,7 +2405,7 @@ public class ALNS extends Orienteering {
      * 
      * <br>EXPRESSION 19<br>
      * (Triangle Inequality)
-     *   For each cluster, if its minimum cost for a vehicle that serves it plus its distance from either
+     *   For each cluster, if its service cost plus its distance from either
      *   of the deposit nodes is more than Tmax, or if the distance from both
      *   deposits is more than tMax, unwire the cluster from
      *   the graph because it is surely infeasible.
@@ -2418,11 +2418,11 @@ public class ALNS extends Orienteering {
         int countRemoved = 0;
         for(int i = 0; i < instance.getNum_clusters(); i++){
             Cluster c = instance.getCluster(i);
-            double minCostForVehicle = c.getMinCostForVehicle(instance.getVehicles());
+            double serviceCost = c.getTotalCost(); // DEBUG: making it tighter
             double distanceFromFirst = c.distance(firstNode);
             double distanceFromLast = c.distance(lastNode);
             
-            if(minCostForVehicle
+            if(serviceCost
                     + distanceFromFirst
                     + distanceFromLast > instance.getTmax()){
                 clusterRoulette.ignoreCluster(c);

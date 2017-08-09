@@ -598,18 +598,6 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             // Expression 11: binary conditions on the y variable
             // ...Those were already specified in the model variable declarations.
             // OUR CONSTRAINTS
-            // Expression 12:
-            // All arcs that go from the starting deposit to any node of any cluster but the first should be removed
-            for (int c = 0; c < instance.getNum_clusters(); c++) {
-                // Retrieve the list of nodes in the cluster
-                List<Integer> nodesInCluster = instance.getClusterNodeIDs(c);
-                for (int i = 1; i < nodesInCluster.size(); i++) {
-                    for (int v = 0; v < this.instance.getNum_vehicles(); v++) {
-                        model.addConstr(x[v][firstNodeID][nodesInCluster.get(i)], GRB.EQUAL, 0.0, "c12_c" + c + "_n" + nodesInCluster.get(i) + "_v" + v);
-                    }
-                }
-            }
-
             // Expression 14:
             // All arcs inside of a cluster that go in any direction but the one
             // specified by precedence should be removed
@@ -1355,7 +1343,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * A list containing all available heuristic IDs
      * NOTE: Update it every time you add an heuristic contraint!
      */
-    protected List<Integer> allHeuristicConstraints = Arrays.asList(0, 1, 2, 3);
+    protected List<Integer> allHeuristicConstraints = Arrays.asList(0, 1, 2, 3, 4);
     
     /**
      * Sets all the heuristic constraints specified in the list of constraints for
@@ -1488,6 +1476,23 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
                             heuristicConstraints.add(model.addConstr(lhs18, GRB.LESS_EQUAL, rhs18, "hc18_"+i+"_"+j));
                         }
                     }
+                    break;
+                    
+                case 4:
+                    // Expression 12:
+                    // All arcs that go from the starting deposit to any node of any cluster but the first should be removed
+                    // This is an heuristic constraint because there might be instances in which a vehicle should go from
+                    // the starting node to a node which is not the first one in the cluster.
+                    for (int c = 0; c < instance.getNum_clusters(); c++) {
+                        // Retrieve the list of nodes in the cluster
+                        List<Integer> nodesInCluster = instance.getClusterNodeIDs(c);
+                        for (int i = 1; i < nodesInCluster.size(); i++) {
+                            for (int v = 0; v < this.instance.getNum_vehicles(); v++) {
+                                model.addConstr(x[v][firstNodeID][nodesInCluster.get(i)], GRB.EQUAL, 0.0, "c12_c" + c + "_n" + nodesInCluster.get(i) + "_v" + v);
+                            }
+                        }
+                    }
+                    break;
             }
 
         }

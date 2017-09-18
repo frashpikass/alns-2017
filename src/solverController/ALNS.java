@@ -151,7 +151,7 @@ public class ALNS extends Orienteering {
         // sorting criterion: decreasing order of profit/(number of vehicles in cluster * service duration)
         clusters.sort(Cluster.WEIGHTED_PROFIT_COMPARATOR.reversed());
 
-        // Then let's sort clusters by node number in increasing order
+        // Then let's sort clusters by number of nodes in increasing order
         clusters.sort(Cluster.NODE_NUMBER_COMPARATOR);
 
         // Finally, let's sort clusters by maximum vehicle number in increasing order
@@ -164,18 +164,23 @@ public class ALNS extends Orienteering {
         boolean isFeasible = false;
         
         // Make sure you pick at least the first cluster
+        env.message("\nALNSConstructiveSolution looking for the first cluster\n");
         int j = 0;
-        while(!isFeasible && !this.isCancelled()){
+        while(!isFeasible && !this.isCancelled() && j < clusters.size()){
             // Pick a cluster from the available ones
             Cluster c = clusters.get(j);
             // Add it to the solution
             newSolution.add(c);
             // Test it
-            isFeasible = this.testSolutionForFeasibility(newSolution, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
+            isFeasible = this.testSolutionForFeasibility(newSolution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
             // If it's not feasible, remove it from the solution and increase j
             if(!isFeasible){
                 newSolution.remove(c);
                 j++;
+            }
+            else{
+                solution = new ArrayList<>(newSolution); // Save the single cluster solution
+                env.message("\nALNSConstructiveSolution first cluster found, looking for others...\n");
             }
         }
         
@@ -190,7 +195,7 @@ public class ALNS extends Orienteering {
             newSolution.add(c);
 
             // Let's use gurobi to check the feasibility of the new solution
-            isFeasible = this.testSolutionForFeasibility(newSolution, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
+            isFeasible = this.testSolutionForFeasibility(newSolution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
             // If the new solution is feasible, update the old solution
             if (isFeasible) {
                 solution = new ArrayList<>(newSolution);
@@ -334,18 +339,19 @@ public class ALNS extends Orienteering {
             env.message("\nALNSLOG, " + elapsedTime + ": optimizeALNS starting.\n");
             
             // Removing all infeasible clusters from model
-            removeAllInfeasibleClustersFromModel();
+            //removeAllInfeasibleClustersFromModel();
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING, bestGlobalObjectiveValue);
 
 
             // This is a generic ALNS implementation
             GRBModel relaxedModel = model.relax();
             relaxedModel.optimize();
+            super.minimumObjOfRelaxedModel = relaxedModel.get(GRB.DoubleAttr.ObjVal);
 
             // Temperature mitigates the effects of the simulated annealing process
             // A lower temperature will make it less likely for the proccess to accept
             // a pejorative solution
-            double initialTtemperature = 2 * relaxedModel.get(GRB.DoubleAttr.ObjBound);
+            double initialTtemperature = 2 * minimumObjOfRelaxedModel;
             double temperature;
             // The probability barrier to pass to accept a pejorative solution
             double simulatedAnnealingBarrier = -1;
@@ -356,6 +362,9 @@ public class ALNS extends Orienteering {
             // STEP 1: generate a CONSTRUCTIVE SOLUTION
             // xOld stores the previous solution, the starting point of any iteration
             List<Cluster> xOld = this.ALNSConstructiveSolution();
+            // old value of the objective function, generated through the old (constructive) solution
+            double oldObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+            
             stopwatchUpdate();
             
             // Setup the local search
@@ -381,9 +390,7 @@ public class ALNS extends Orienteering {
             List<Cluster> xBest = xOld;
             // stores the best solution found throughout segments
             List<Cluster> xGlobalBest = xOld;
-
-            // old value of the objective function, generated through the old solution
-            double oldObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+            
             // new value of the objective function produced by the current iteration
             double newObjectiveValue = oldObjectiveValue;
             // best value of the objective function throughout iterations in a segment

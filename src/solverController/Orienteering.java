@@ -500,7 +500,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             //               In this case, the time z_(i,j) required to reach
             //               any node i from the starting node 0 is equal to the
             //               travel time t_(0,i) between node 0 and node i
-            for (int i = firstNodeID + 1; i < instance.getNum_nodes(); i++) {
+            for (int i = firstNodeID + 1; i < instance.getNum_nodes()-1; i++) { // Added -1 to exclude the last node
                 GRBLinExpr expr6 = new GRBLinExpr();
                 for (int v = 0; v < instance.getNum_vehicles(); v++) {
                     expr6.addTerm(instance.getDistance(firstNodeID, i), x[v][firstNodeID][i]);

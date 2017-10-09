@@ -2412,9 +2412,8 @@ public class ALNS extends Orienteering {
      * 
      * <br>EXPRESSION 19<br>
      * (Triangle Inequality)
-     *   For each cluster, if its service cost plus its distance from either
-     *   of the deposit nodes is more than Tmax, or if the distance from both
-     *   deposits is more than tMax, unwire the cluster from
+     *   For each cluster, if its service cost plus its distance from both
+     *   of the deposit nodes is more than Tmax unwire the cluster from
      *   the graph because it is surely infeasible.
      * 
      * @throws GRBException if there are problems while adding constraints.

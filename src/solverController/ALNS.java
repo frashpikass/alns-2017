@@ -351,7 +351,7 @@ public class ALNS extends Orienteering {
             // Temperature mitigates the effects of the simulated annealing process
             // A lower temperature will make it less likely for the proccess to accept
             // a pejorative solution
-            double initialTtemperature = 2 * minimumObjOfRelaxedModel;
+            double initialTemperature = 2 * minimumObjOfRelaxedModel;
             double temperature;
             // The probability barrier to pass to accept a pejorative solution
             double simulatedAnnealingBarrier = -1;
@@ -444,7 +444,7 @@ public class ALNS extends Orienteering {
                 env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " started. q = " + q + "\n");
                 
                 // Initialize/reset temperature
-                temperature = initialTtemperature;
+                temperature = initialTemperature;
 
                 // Reset heuristic weights
                 // If we aren't in the first iteration, give a prize and a punishment
@@ -956,6 +956,7 @@ public class ALNS extends Orienteering {
                 // Update q and the segment counter
                 // q will cycle: if it becomes bigger than qMax, it starts again
                 q = (q + alnsProperties.getqDelta()) % qMax;
+                if(q == 0) q = qMin; // Check to avoid q == 0
 
                 // Segments will increase
                 segments++;

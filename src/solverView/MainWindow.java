@@ -80,6 +80,7 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserSaveOutput = new javax.swing.JFileChooser();
         parametersBean = new solverController.ParametersBean();
         pathCacheBean = new solverView.PathCacheBean();
+        jFileChooserWorkingDirectory = new javax.swing.JFileChooser();
         jPanelMain = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanelControls = new javax.swing.JPanel();
@@ -171,6 +172,8 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonRun = new javax.swing.JButton();
         jButtonTestBean = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel26 = new javax.swing.JLabel();
+        jTextFieldWorkingDirectory = new javax.swing.JTextField();
         jPanelOutput = new javax.swing.JPanel();
         jButtonStop = new javax.swing.JButton();
         jScrollPaneTextAreaOutput = new javax.swing.JScrollPane();
@@ -209,6 +212,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         jFileChooserSaveOutput.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
         jFileChooserSaveOutput.setDialogTitle("Choose a destination for the output file");
+
+        jFileChooserWorkingDirectory.setDialogTitle("Choose the working directory");
+        jFileChooserWorkingDirectory.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -1352,25 +1358,44 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridy = 8;
         jPanelActions.add(jButton1, gridBagConstraints);
 
+        jLabel26.setText("Working directory: ");
+
+        jTextFieldWorkingDirectory.setText(System.getProperty("user.home"));
+        jTextFieldWorkingDirectory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldWorkingDirectoryMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelControlsLayout = new javax.swing.GroupLayout(jPanelControls);
         jPanelControls.setLayout(jPanelControlsLayout);
         jPanelControlsLayout.setHorizontalGroup(
             jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelControlsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelnstances, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanelSolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelActions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelControlsLayout.createSequentialGroup()
+                        .addComponent(jPanelnstances, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanelSolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanelActions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanelControlsLayout.createSequentialGroup()
+                        .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextFieldWorkingDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 1065, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanelControlsLayout.setVerticalGroup(
             jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelControlsLayout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(jTextFieldWorkingDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanelnstances, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1457,7 +1482,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelStatusBar.add(jPanelSBTop, java.awt.BorderLayout.PAGE_START);
 
-        jPanelSBBottom.setLayout(new java.awt.GridLayout());
+        jPanelSBBottom.setLayout(new java.awt.GridLayout(1, 0));
 
         jLabel25.setText("Best objective:");
         jPanelSBBottom.add(jLabel25);
@@ -1502,7 +1527,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1514,7 +1539,7 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
-        jFileChooserSaveParameters.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
+        jFileChooserSaveParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         updateParametersBean();
         int result = jFileChooserSaveParameters.showOpenDialog(jPanelGeneralParameters);
         File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
@@ -1525,16 +1550,8 @@ public class MainWindow extends javax.swing.JFrame {
                 System.out.println("Can't save to '"+outputFilePath.getAbsolutePath()+"': "+ex.getMessage());
             }
             System.out.println("Parameters saved to '"+outputFilePath.getAbsolutePath()+"'");
+            updateWorkingDirectory(outputFilePath.toPath().getParent().toFile());
         }
-        
-        if(outputFilePath != null){
-            pathCacheBean.setPathToLastDirectory(outputFilePath.toPath().getParent().toFile());
-            if(pathCacheBean.getPathToLastDirectory() == null)
-                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
-        }
-        
-        
-
     }//GEN-LAST:event_jButtonSaveParametersActionPerformed
 
     private void btnMoveInstanceDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveInstanceDownActionPerformed
@@ -1580,7 +1597,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMoveInstanceUpActionPerformed
         
     private void btnAddInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInstanceActionPerformed
-        jFileChooserInstances.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
+        jFileChooserInstances.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         int result = jFileChooserInstances.showOpenDialog(jPanelMain);
         if(JFileChooser.APPROVE_OPTION == result){
             File[] selected = jFileChooserInstances.getSelectedFiles();
@@ -1597,9 +1614,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
         
         if(jFileChooserInstances.getSelectedFiles().length != 0){
-            pathCacheBean.setPathToLastDirectory(jFileChooserInstances.getSelectedFiles()[0].toPath().getParent().toFile());
-            if(pathCacheBean.getPathToLastDirectory() == null)
-                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
+            updateWorkingDirectory(jFileChooserInstances.getSelectedFiles()[0].toPath().getParent().toFile());
         }
     }//GEN-LAST:event_btnAddInstanceActionPerformed
 
@@ -1671,18 +1686,13 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
 
     private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
-        jFileChooserOutputFolderPath.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
+        jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
         if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
             orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
-        }
-        
-        if(outputFolderPath != null){
-            pathCacheBean.setPathToLastDirectory(outputFolderPath);
-            if(pathCacheBean.getPathToLastDirectory() == null)
-                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
+            updateWorkingDirectory(outputFolderPath);
         }
     }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
 
@@ -1777,7 +1787,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonLoadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersActionPerformed
-        jFileChooserLoadParameters.setCurrentDirectory(Paths.get(jTextFieldOutputFolderPath.getText()).toFile());
+        jFileChooserLoadParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         
         int result = jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
         File inputFile = jFileChooserLoadParameters.getSelectedFile();
@@ -1791,12 +1801,7 @@ public class MainWindow extends javax.swing.JFrame {
                 System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
             }
             System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
-        }
-        
-        if(inputFile != null){
-            pathCacheBean.setPathToLastDirectory(inputFile.toPath().getParent().toFile());
-            if(pathCacheBean.getPathToLastDirectory() == null)
-                pathCacheBean.setPathToLastDirectory(Paths.get(System.getProperty("user.home")).toFile());
+            updateWorkingDirectory(inputFile.toPath().getParent().toFile());
         }
     }//GEN-LAST:event_jButtonLoadParametersActionPerformed
 
@@ -1819,6 +1824,28 @@ public class MainWindow extends javax.swing.JFrame {
         updateParametersBean();
     }//GEN-LAST:event_jTextFieldNerfBarrierFocusLost
 
+    private void jTextFieldWorkingDirectoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldWorkingDirectoryMouseClicked
+        // TODO add your handling code here:
+        jFileChooserWorkingDirectory.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
+        int result = jFileChooserWorkingDirectory.showOpenDialog(jPanel1);
+        File workingDirectoryPath = jFileChooserWorkingDirectory.getSelectedFile();
+        if (workingDirectoryPath != null && result == JFileChooser.APPROVE_OPTION) {
+            updateWorkingDirectory(workingDirectoryPath);
+        }
+    }//GEN-LAST:event_jTextFieldWorkingDirectoryMouseClicked
+    
+    /**
+     * Update the cached path to the working directory to the specified one, if
+     * it isn't null. 
+     * @param newWorkingDirectory path to the new working directory
+     */
+    private void updateWorkingDirectory(File newWorkingDirectory){
+        if(newWorkingDirectory != null){
+            pathCacheBean.setPathToLastDirectory(newWorkingDirectory);
+            jTextFieldWorkingDirectory.setText(newWorkingDirectory.getAbsolutePath());
+        }
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -2099,6 +2126,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JFileChooser jFileChooserOutputFolderPath;
     private javax.swing.JFileChooser jFileChooserSaveOutput;
     private javax.swing.JFileChooser jFileChooserSaveParameters;
+    private javax.swing.JFileChooser jFileChooserWorkingDirectory;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2117,6 +2145,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2180,6 +2209,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldTimeLimitALNS;
     private javax.swing.JTextField jTextFieldTimeLimitLocalSearch;
     private javax.swing.JTextField jTextFieldWarmupGamma;
+    private javax.swing.JTextField jTextFieldWorkingDirectory;
     private solverController.OrienteeringPropertiesBean orienteeringPropertiesBean;
     private solverController.ParametersBean parametersBean;
     private solverView.PathCacheBean pathCacheBean;
@@ -2224,6 +2254,7 @@ public class MainWindow extends javax.swing.JFrame {
         alnsPropertiesBean.setTimeLimitLocalSearch(Long.valueOf(jTextFieldTimeLimitLocalSearch.getText()));
         alnsPropertiesBean.setWarmupGamma(Double.valueOf(jTextFieldWarmupGamma.getText()));
         alnsPropertiesBean.setqDelta(Integer.valueOf(jTextFieldQDelta.getText()));
+        alnsPropertiesBean.setqStart(Integer.valueOf(jTextFieldQStart.getText()));
         alnsPropertiesBean.setNerfBarrier(Double.valueOf(jTextFieldNerfBarrier.getText()));
         
         alnsPropertiesBean.setUseDestroyCloseToBarycenter(jCheckBoxDestroyCloseToBarycenter.isSelected());

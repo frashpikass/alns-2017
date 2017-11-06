@@ -513,13 +513,18 @@ public class ALNS extends Orienteering {
                     //If the new solution is infeasible, apply the repair method
                     if (!testSolutionForFeasibility(xNew, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                         env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", repair: " + repairMethods.getLabel(repairMethod) + "\n");
+                        List<Cluster> removedClusters = new ArrayList<>(xNew);
                         xNew = repairBackToFeasibility4(xNew, repairMethod, false);
+                        removedClusters.removeAll(xNew);
                         env.message("\nALNSLOG, "+"xNewR="+String.valueOf(xNew)+", q="+q+"\n");
                         repairMethodWasUsed = true;
+                        // TODO: If a repair method was used, we could punish clusters which brought the solution into infeasibility
+                        // CLUSTER COOLDOWN: Cool down freshly removed clusters since they brought the solution into infeasibility
+                        clusterRoulette.cooldown(alnsProperties.getCooldownGamma(), removedClusters);
                     } else {
                         env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + ", iteration " + iterations + ", no repair method needed.\n");
                     }
-
+                    
                     // Check if we entered feasibility. If we did,
                     // gather the value of the objective function for the new solution
                     // obtained through the chosen methods
@@ -542,7 +547,7 @@ public class ALNS extends Orienteering {
                         env.message("\nALNSLOG, punishing clusters " + String.valueOf(xNew)+"\n");
                         //DEBUG: downscaling the infeas. cluster is useless since we will kill it
                         //clusterRoulette.downscale(alnsProperties.getPunishmentGamma(), xNew);
-                        clusterRoulette.updateNerfOccurrences();
+                        //clusterRoulette.updateNerfOccurrences();
                         // Make sure the clusters are physically unwired from the model
                         // and removed from the cluster roulette
                         for(Cluster c : xNew){

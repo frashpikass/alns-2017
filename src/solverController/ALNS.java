@@ -288,10 +288,10 @@ public class ALNS extends Orienteering {
                 +" infeasible clusters using removeAllInfeasibleClustersFromModel\n");
     }
     
-    /**
-     * Stores the current best value for the objective function.
-     */
-    private double bestGlobalObjectiveValue = 0.0;
+//    /**
+//     * Stores the current best value for the objective function.
+//     */
+//    private double bestGlobalObjectiveValue = 0.0;
     
     /**
      * Stores a list of feasible heuristics for the current problem 
@@ -340,7 +340,7 @@ public class ALNS extends Orienteering {
             
             // Removing all infeasible clusters from model
             //removeAllInfeasibleClustersFromModel();
-            notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING, bestGlobalObjectiveValue);
+            // notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING, bestGlobalObjectiveValue);
 
 
             // This is a generic ALNS implementation
@@ -365,7 +365,12 @@ public class ALNS extends Orienteering {
             // old value of the objective function, generated through the old (constructive) solution
             double oldObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
             
+            // Update the stopwatch        
             stopwatchUpdate();
+            
+            // At first the best value is the one found by the constructive algorithm
+            this.bestGlobalObjectiveValue = oldObjectiveValue;
+            notifyController(elapsedTime, OptimizationStatusMessage.Status.STARTING, bestGlobalObjectiveValue);
             
             // Setup the local search
             // Save and log the constructive solution
@@ -647,10 +652,9 @@ public class ALNS extends Orienteering {
                     if(solutionIsNewGlobalOptimum){
                         // Save and log the new global best
                         env.message("\nALNSLOG: saving the new global best solution.\n");
+                        bestGlobalObjectiveValue = newObjectiveValue;
                         saveAndLogSolution(model);
                         
-                        //
-                        bestGlobalObjectiveValue = newObjectiveValue;
                         xGlobalBest = xNew;
                         
                         // Send updates to the controller
@@ -993,6 +997,9 @@ public class ALNS extends Orienteering {
             notifyController(elapsedTime, OptimizationStatusMessage.Status.STOPPED, bestGlobalObjectiveValue);
             super.cancel(true);
             throw new InterruptedException(e.getMessage());
+        }
+        finally{
+            env.message("\nThis is the best solution found:\n"+bestSolution.toString());
         }
     }
     

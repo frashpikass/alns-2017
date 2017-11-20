@@ -7,6 +7,7 @@ package solverController;
 
 import gurobi.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -91,6 +92,16 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * Path to the model file to read
      */
     private String modelPath;
+    
+    /**
+     * Best solution to the current instance.
+     */
+    protected Solution bestSolution;
+    
+    /**
+     * Stores the current best value for the objective function.
+     */
+    protected double bestGlobalObjectiveValue = 0.0;
 
     /**
      * Redirects the output of the log file to console
@@ -235,6 +246,9 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.heuristicConstraints = new ArrayList<>();
         this.constraint8 = new ArrayList<>();
         this.constraint8Variables = new ArrayList<>();
+        
+        // Setup best solution cache
+        this.bestSolution = new Solution();
 
         // Go for preprocessing
         instancePreprocessing();
@@ -280,6 +294,8 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.y = o.getY();
         this.z = o.getZ();
         this.logRedirector = o.logRedirector;
+        this.bestSolution = o.bestSolution;
+        this.bestGlobalObjectiveValue = o.bestGlobalObjectiveValue;
     }
 
 //    /**
@@ -878,15 +894,12 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
 
         // Optimize the model
         model.optimize();
-
-        // Save the solution to file
-        writeSolution(model);
-
-        // Get/log the paths of vehicles
-        logVehiclePaths(model);
-
-        // Log visited clusters
-        logVisitedClusters(model);
+        
+        // Retrieve the best objective value
+        this.bestGlobalObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+        
+        // Save and log solution
+        this.saveAndLogSolution(model);
     }
 
     /**
@@ -895,14 +908,14 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      *
      * @param model the freshly solved model to write the solution of
      * @throws gurobi.GRBException if there are problems while retrieving the
-     * solution or writing it to a file
+     * solution from the model or writing it to a file
      */
-    protected void writeSolution(GRBModel model) throws GRBException {
+    protected void writeSolution(GRBModel model) throws GRBException{
         model.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + ".sol");
     }
 
     /**
-     * Analyzes a freshly solved model and logs, a list
+     * Analyzes a freshly solved model and logs a list
      * of paths for each vehicle from the current solution.
      *
      * @param model the freshly solved model to log the paths of
@@ -1796,13 +1809,23 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * or the visited clusters.
      */
     protected void saveAndLogSolution(GRBModel model) throws GRBException, Exception{
-        // Save the solution to file
-        writeSolution(model);
 
         // Get/log the paths of vehicles
-        logVehiclePaths(model);
+        List<List<Integer>> vehiclePaths = logVehiclePaths(model);
 
         // Log visited clusters
-        logVisitedClusters(model);
+        List<String> visitedClusters = logVisitedClusters(model);
+        
+        // Update the best solution
+        bestSolution.update(vehiclePaths, visitedClusters, bestGlobalObjectiveValue);
+        
+        // Save the solution to file
+        writeSolution(model);
+        
+        // Save the new best solution to a file
+        bestSolution.saveToTextFile(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_SOLUTION.txt");
+        
+        // Notify of the new solution
+        env.message("\nBest solution saved. \n"+bestSolution.toString());
     }
 }

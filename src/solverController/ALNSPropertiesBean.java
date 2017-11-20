@@ -71,12 +71,12 @@ public class ALNSPropertiesBean {
     /**
      * The increment of q at the end of every segment
      */
-    private int qDelta = 5;
+    private int qDelta = 2;
 
     /**
      * Number of iterations in an optimization segment
      */
-    private int segmentSize = 100;
+    private int segmentSize = 50;
 
     /**
      * Maximum number of segments in an ALNS run
@@ -140,7 +140,7 @@ public class ALNSPropertiesBean {
      * <br>where psi is a value that indicates the relative score to give to an
      * heuristic.
      */
-    private double lambda = 0.55;
+    private double lambda = 0.7;
 
     /**
      * This is the decay parameter of the update process for Temperature.
@@ -150,7 +150,7 @@ public class ALNSPropertiesBean {
      * <br>so that a slowly decreasing temperature (alpha-&gt;1) will make
      * fluctuations in accepted solutions much stronger
      */
-    private double alpha = 0.85;
+    private double alpha = 0.7;
 
     /**
      * This parameter is the new probability of being chosen for nerfed
@@ -169,7 +169,7 @@ public class ALNSPropertiesBean {
      * <br><i>newProbability</i> = (1 -
      * <i>cooldownGamma</i>)*<i>oldProbability</i>
      */
-    private double cooldownGamma = 0.1;
+    private double cooldownGamma = 0.05;
 
     /**
      * This parameter is the scaling factor used in the warmup process.
@@ -181,7 +181,7 @@ public class ALNSPropertiesBean {
      * <br><i>newProbability</i> = (1 -
      * <i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i>
      */
-    private double warmupGamma = 0.001;
+    private double warmupGamma = 0.005;
 
     /**
      * Clusters that have had a "chance of being chosen" less than the average
@@ -194,7 +194,7 @@ public class ALNSPropertiesBean {
      *
      * <br>Must be a double in range [0,1].
      */
-    private double nerfBarrier = 0.55;
+    private double nerfBarrier = 0.38;
 
     /**
      * Maximum runtime for the ALNS heuristic algorithm (in seconds)
@@ -204,19 +204,19 @@ public class ALNSPropertiesBean {
     /**
      * Maximum runtime for the local search process (in seconds)
      */
-    private long timeLimitLocalSearch = 120;
+    private long timeLimitLocalSearch = 200;
 
     /**
      * A scaling factor that's applied to the weight of the best heuristics at
      * the beginning of every segment
      */
-    private double rewardForBestSegmentHeuristics = 1.3;
+    private double rewardForBestSegmentHeuristics = 1.4;
 
     /**
      * A scaling factor that's applied to the weight of the worst heuristics at
      * the beginning of every segment
      */
-    private double punishmentForWorstSegmentHeuristics = 0.7;
+    private double punishmentForWorstSegmentHeuristics = 0.6;
 
     /**
      * This constant holds the possible values of psi, the function that prizes
@@ -247,14 +247,14 @@ public class ALNSPropertiesBean {
      * Determines the maximum number of mips nodes to check before giving up a
      * feasibility check.
      */
-    private double maxMIPSNodesForFeasibilityCheck = 5000;
+    private double maxMIPSNodesForFeasibilityCheck = 10000;
 
     /**
      * Determines how many ALNS iterations without improvement should be
      * accepted before the algorithm moves on to a new segment. Ideally it
      * should be the same as the number of iterations per segment.
      */
-    private int maxIterationsWithoutImprovement = 50;
+    private int maxIterationsWithoutImprovement = 16;
 
     /**
      * Maximum size of the past history

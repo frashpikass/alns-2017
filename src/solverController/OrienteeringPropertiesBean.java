@@ -20,7 +20,7 @@ public class OrienteeringPropertiesBean implements Serializable {
     /**
      * Define the timeLimit for the MIPS solver in MIPS solver mode.
      */
-    private double timeLimit = 600.0;
+    private double timeLimit = 1800.0;
     /**
      * Defines the number of threads to be used by the MIPS solver.
      * A value of 0 indicates "Use as many as the number of cores".

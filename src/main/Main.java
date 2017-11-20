@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -146,10 +145,10 @@ public class Main {
                 .type(Boolean.class)
                 .build();
 
-        Option modelPathsOpt = Option.builder("i")
+        Option modelPathsOpt = Option.builder("f")
                 .argName("pathToInstance1> <pathToInstance2> <...")
-                .desc("list of space separated instance paths")
-                .longOpt("instances")
+                .desc("list of space separated instance paths (filenames)")
+                .longOpt("filenames")
                 .optionalArg(false)
                 .numberOfArgs(Option.UNLIMITED_VALUES)
                 .required()
@@ -159,12 +158,11 @@ public class Main {
 
         Option parametersOpt = Option.builder("p")
                 .argName("parametersPath")
-                .desc("path to the run parameters JSON file")
+                .desc("path to the JSON file which stores the run parameters")
                 .hasArg()
                 .longOpt("parameters")
                 .numberOfArgs(1)
                 .optionalArg(false)
-                .required()
                 .type(String.class)
                 .build();
 
@@ -178,11 +176,35 @@ public class Main {
                 .required(false)
                 .type(Controller.Solvers.class)
                 .build();
+        
+        Option timeOpt = Option.builder("t")
+                .argName("time")
+                .desc("maximum time for a solver run (in seconds)")
+                .hasArg()
+                .longOpt("time")
+                .numberOfArgs(1)
+                .optionalArg(false)
+                .required(false)
+                .type(Long.class)
+                .build();
+        
+        Option outputOpt = Option.builder("o")
+                .argName("output")
+                .desc("path to the output folder (default: current working directory)")
+                .hasArg()
+                .longOpt("output")
+                .numberOfArgs(1)
+                .optionalArg(false)
+                .required(false)
+                .type(String.class)
+                .build();
 
         options.addOption(helpOpt);
         options.addOption(modelPathsOpt);
         options.addOption(parametersOpt);
         options.addOption(solverOpt);
+        options.addOption(timeOpt);
+        options.addOption(outputOpt);
 
         // Parsing command line options
         try {
@@ -194,30 +216,46 @@ public class Main {
             ParametersBean pb = new ParametersBean();
             Solvers solver = Solvers.SOLVE_ALNS;
 
-            if (cmd.hasOption("h")) {
+            if (cmd.hasOption("h") || cmd.hasOption("help")) {
                 hf.printHelp(appName, appDescription, options, footer, true);
             } else {
-                if (cmd.hasOption("i")) {
-                    String[] modelPathss = cmd.getOptionValues("i");
+                if (cmd.hasOption("f") || cmd.hasOption("filenames")) {
+                    String[] modelPathss = cmd.getOptionValues("f");
                     modelPaths = Arrays.asList(modelPathss);
                 }
-                if (cmd.hasOption("p")) {
+                if (cmd.hasOption("p") || cmd.hasOption("parameters")) {
                     pb.deserializeFromJSON(cmd.getOptionValue("p")); // Throws IOException
                 }
-                if (cmd.hasOption("s")) {
+                if (cmd.hasOption("s")  || cmd.hasOption("solver")) {
                     solver = Solvers.valueOf(cmd.getOptionValue("s")); // Throws IllegalArgumentException - if this enum type has no constant with the specified name
+                }
+                if (cmd.hasOption("t") || cmd.hasOption("time")){
+                    pb.getALNSproperties().setTimeLimitALNS(Long.valueOf(cmd.getOptionValue("time")));
+                    pb.getOrienteeringProperties().setTimeLimit(Long.valueOf(cmd.getOptionValue("time")));
+                }
+                
+                if (cmd.hasOption("o") || cmd.hasOption("output")){
+                    pb.getOrienteeringProperties().setOutputFolderPath(cmd.getOptionValue("output"));
+                }
+                else{
+                    pb.getOrienteeringProperties().setOutputFolderPath(System.getProperty("user.dir"));
                 }
 
                 // Create the new Controller
                 ret = new Controller(modelPaths, pb, solver, null, null);
+                
+                //DEBUG: PRINTING THE PARAMETERS BEAN
+                System.out.println("\nPARAMETERS USED FOR THIS RUN:\n"+pb.toJSON()+"\n");
             }
         } catch (ParseException e) {
-            hf.printHelp(appName, "", options, footer);
-            throw e;
+            hf.printHelp(appName, "The program was called with the wrong arguments. See the help:\n", options, footer);
+//            throw e;
         } catch (IOException e) {
-            throw new ParseException("IO error - " + e.getMessage());
+            System.err.println("Input/Output error - " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            throw new ParseException("Illegal argument error - " + e.getMessage());
+            System.err.println("Illegal argument error - " + e.getMessage());
+            hf.printHelp(appName, "The program was called with the wrong arguments. See the help:\n", options, footer);
+//            throw e;
         }
 
         return ret;

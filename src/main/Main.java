@@ -131,7 +131,7 @@ public class Main {
         String footer = "Launch with no arguments to run the GUI."
                 + "\nRequires an active installation of Gurobi on the current machine to run."
                 + "\nSee http://www.gurobi.com";
-        String appName = args[0];
+        String appName = "java -jar CTOWSS_alns.jar";
 
         // Building command line options
         Options options = new Options();
@@ -151,7 +151,6 @@ public class Main {
                 .longOpt("filenames")
                 .optionalArg(false)
                 .numberOfArgs(Option.UNLIMITED_VALUES)
-                .required()
                 .type(String.class)
                 .valueSeparator(' ')
                 .build();
@@ -198,6 +197,17 @@ public class Main {
                 .required(false)
                 .type(String.class)
                 .build();
+        
+        Option coresOpt = Option.builder("c")
+                .argName("cores")
+                .desc("number of physical cores/threads for the solver to use. If your processor has hyperthreading, use only half of the available cores (eg: 8 virtual cores -> 4 real cores)!")
+                .hasArg()
+                .longOpt("cores")
+                .numberOfArgs(1)
+                .optionalArg(false)
+                .required(false)
+                .type(Integer.class)
+                .build();
 
         options.addOption(helpOpt);
         options.addOption(modelPathsOpt);
@@ -205,6 +215,7 @@ public class Main {
         options.addOption(solverOpt);
         options.addOption(timeOpt);
         options.addOption(outputOpt);
+        options.addOption(coresOpt);
 
         // Parsing command line options
         try {
@@ -223,6 +234,10 @@ public class Main {
                     String[] modelPathss = cmd.getOptionValues("f");
                     modelPaths = Arrays.asList(modelPathss);
                 }
+                else {
+                    throw new ParseException("Missing required option: f");
+                }
+                
                 if (cmd.hasOption("p") || cmd.hasOption("parameters")) {
                     pb.deserializeFromJSON(cmd.getOptionValue("p")); // Throws IOException
                 }
@@ -240,6 +255,10 @@ public class Main {
                 else{
                     pb.getOrienteeringProperties().setOutputFolderPath(System.getProperty("user.dir"));
                 }
+                
+                if (cmd.hasOption("c") || cmd.hasOption("cores")){
+                    pb.getOrienteeringProperties().setNumThreads(Integer.parseInt(cmd.getOptionValue("c")));
+                }
 
                 // Create the new Controller
                 ret = new Controller(modelPaths, pb, solver, null, null);
@@ -248,6 +267,7 @@ public class Main {
                 System.out.println("\nPARAMETERS USED FOR THIS RUN:\n"+pb.toJSON()+"\n");
             }
         } catch (ParseException e) {
+            System.err.println("Parameter error " + e.getMessage());
             hf.printHelp(appName, "The program was called with the wrong arguments. See the help:\n", options, footer);
 //            throw e;
         } catch (IOException e) {

@@ -17,7 +17,7 @@ So you will need to provide those in order to run.
 ### Hardware
 A multicore processor is highly advised in order to solve orienteering problems faster.
 
-**An important note on hyperthreading:** Hyperthreading has been proven to be useless, so if you have an i7 processor which appears to have 8 logical cores in place of 4 physical cores, choose 4 threads only!
+**An important note on hyperthreading:** Hyperthreading has been proven to be useless, so if you have an i7 processor which appears to have 8 logical cores in place of 4 physical cores, choose 4 threads only! 
 
 **TL;DR: Hyperthreading => threads = cores / 2**
 
@@ -34,6 +34,7 @@ A multicore processor is highly advised in order to solve orienteering problems 
 ### CLI
 1. Open a terminal or a command prompt located in your JAR folder
 2. Run the software with the following command: `java -jar "CTOWSS_alns.jar" [options]`
+
 For CLI options, follows these instructions:
 ```
 usage: java -jar CTOWSS_alns.jar [-c <cores>] [-f <pathToInstance1>
@@ -96,7 +97,6 @@ Launch with no arguments to run the GUI.
 A few notes on this:
 - Make sure the output folder path exists before you start a run.
 - Instance0.txt is a test instance we included in the distribution binaries.
-
 
 ### Parameters
 The default parameters have been tested on about 20 instances found in literature and are thought to work fine on these.

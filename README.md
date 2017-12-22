@@ -1,6 +1,11 @@
 # alns-2017
+## Version 1.0, December 22 2017
 Solve the given instances for a Clustered Team Orienteering problem With Services Sequence (CTOWSS) using either an ALNS (Adaptive Large Neighborhood Search) algorithm, a regular MIPS solver or the MIPS solver on the model's relaxation.
+
 (C) 2017 Francesco Piazza
+
+## Where to download
+
 
 ## Minimum system requirements
 ### Software
@@ -11,7 +16,10 @@ So you will need to provide those in order to run.
 
 ### Hardware
 A multicore processor is highly advised in order to solve orienteering problems faster.
-**A note on hyperthreading:** Hyperthreading has been proven to be useless, so if you have an i7 processor which appears to have 8 logical cores in place of 4 physical cores, choose 4 threads only! **TL;DR: Hyperthreading => threads = cores / 2**
+
+**An important note on hyperthreading:** Hyperthreading has been proven to be useless, so if you have an i7 processor which appears to have 8 logical cores in place of 4 physical cores, choose 4 threads only! 
+
+**TL;DR: Hyperthreading => threads = cores / 2**
 
 ## How to use
 ### GUI
@@ -26,6 +34,7 @@ A multicore processor is highly advised in order to solve orienteering problems 
 ### CLI
 1. Open a terminal or a command prompt located in your JAR folder
 2. Run the software with the following command: `java -jar "CTOWSS_alns.jar" [options]`
+
 For CLI options, follows these instructions:
 ```
 usage: java -jar CTOWSS_alns.jar [-c <cores>] [-f <pathToInstance1>
@@ -82,10 +91,18 @@ usage: java -jar CTOWSS_alns.jar [-c <cores>] [-f <pathToInstance1>
 Launch with no arguments to run the GUI.
 ```
 
+#### Usage example
+`java -jar "CTOWSS_alns.jar" --f Instance0.txt -o "out" -t 100 -c 4`
+
+A few notes on this:
+- Make sure the output folder path exists before you start a run.
+- Instance0.txt is a test instance we included in the distribution binaries.
+
 ### Parameters
 The default parameters have been tested on about 20 instances found in literature and are thought to work fine on these.
 Parameters are self explanatory if you know the theory behind the algorithm, but will be more thoroughly explained in the future.
 
 ## Known issues
-Unfortunately batch processing doesn't work as of December 2017. The GUI interface is ugly, however everything should work.
+- Unfortunately batch processing doesn't work as of December 2017.
+- The GUI interface is ugly, however everything should work.
 If you find any unreported issues, feel free to report them.

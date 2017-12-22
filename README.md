@@ -1,11 +1,13 @@
 # alns-2017
-## Version 1.0, December 22 2017
+## Version 1.0, December 22nd 2017
 Solve the given instances for a Clustered Team Orienteering problem With Services Sequence (CTOWSS) using either an ALNS (Adaptive Large Neighborhood Search) algorithm, a regular MIPS solver or the MIPS solver on the model's relaxation.
 
 (C) 2017 Francesco Piazza
 
 ## Where to download
+You can always find all available builds at https://github.com/frashpikass/alns-2017/tree/master/builds.
 
+The current stable version is 1.0, built on December 22nd 2017.
 
 ## Minimum system requirements
 ### Software

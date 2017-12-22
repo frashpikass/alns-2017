@@ -18,6 +18,8 @@ import java.nio.file.Paths;
  * @author Frash
  */
 public class ParametersBean implements Serializable {
+    static final long serialVersionUID = 0;
+    
     /**
      * A Javabean that holds all general parameters.
      */

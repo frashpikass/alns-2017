@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author Frash
  */
 public class OrienteeringPropertiesBean implements Serializable {
+    static final long serialVersionUID = 0;
     
     /**
      * Path to the output folder.

@@ -13,6 +13,7 @@ import java.beans.PropertyChangeSupport;
  * @author Frash
  */
 public class ALNSPropertiesBean {
+    static final long serialVersionUID = 0;
 
     /**
      * Empty constructor.

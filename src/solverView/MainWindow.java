@@ -172,8 +172,6 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonRun = new javax.swing.JButton();
         jButtonTestBean = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jLabel26 = new javax.swing.JLabel();
-        jTextFieldWorkingDirectory = new javax.swing.JTextField();
         jPanelOutput = new javax.swing.JPanel();
         jButtonStop = new javax.swing.JButton();
         jScrollPaneTextAreaOutput = new javax.swing.JScrollPane();
@@ -1358,44 +1356,25 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridy = 8;
         jPanelActions.add(jButton1, gridBagConstraints);
 
-        jLabel26.setText("Working directory: ");
-
-        jTextFieldWorkingDirectory.setText(System.getProperty("user.home"));
-        jTextFieldWorkingDirectory.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTextFieldWorkingDirectoryMouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanelControlsLayout = new javax.swing.GroupLayout(jPanelControls);
         jPanelControls.setLayout(jPanelControlsLayout);
         jPanelControlsLayout.setHorizontalGroup(
             jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelControlsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelControlsLayout.createSequentialGroup()
-                        .addComponent(jPanelnstances, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanelSolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanelActions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanelControlsLayout.createSequentialGroup()
-                        .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextFieldWorkingDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 1065, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jPanelnstances, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.DEFAULT_SIZE, 784, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanelSolver, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelActions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelControlsLayout.setVerticalGroup(
             jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelControlsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel26)
-                    .addComponent(jTextFieldWorkingDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(14, 14, 14)
                 .addGroup(jPanelControlsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanelParametersEnvelope, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanelnstances, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1527,7 +1506,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1537,6 +1516,112 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+        
+    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
+        // TODO add your handling code here:
+
+        // Kill the controller thread and triggers the garbage collector
+        if (controllerTask != null) {
+            controllerTask.cancel(true);
+            controllerTask = null;
+            System.gc();
+        }
+        
+        enableControlPanel(true);
+
+        // Update the status text
+        updateStatusLabel("Stopped.");
+    }//GEN-LAST:event_jButtonStopActionPerformed
+
+    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
+        // TODO add your handling code here:
+        // Cleanup the output area
+        jTextAreaOutput.setText("");
+        
+        // Reset the progress bar
+        jProgressBar1.setIndeterminate(false);
+        jProgressBar1.setValue(0);
+        
+        jLabelBestObj.setText("0.0");
+
+        // Update the status text
+        updateStatusLabel("Ready.");
+    }//GEN-LAST:event_jButtonResetActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        System.out.println("Execution paused");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButtonTestBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestBeanActionPerformed
+        updateParametersBean();
+        jTextAreaOutput.append("Current properties bean:\n");
+        jTextAreaOutput.append(parametersBean.toJSON());
+    }//GEN-LAST:event_jButtonTestBeanActionPerformed
+
+    private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
+        // TODO add your handling code here:
+        System.out.println("Who are you running from? Don't be silly!\n");
+
+        // Update the parameters
+        updateParametersBean();
+
+        // Retrieve all instances to run
+        List<String> modelPaths = new ArrayList<>();
+        for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
+            modelPaths.add(jListInstances.getModel().getElementAt(i));
+        }
+
+        if (!modelPaths.isEmpty()) {
+            // Disable all control windows
+            this.enableControlPanel(false);
+
+            // Retrieve information on which solver to use
+            Controller.Solvers solver = Controller.Solvers.SOLVE_RELAXED;
+            if (jRadioButtonALNS.isSelected()) {
+                solver = Controller.Solvers.SOLVE_ALNS;
+            } else if (jRadioButtonMIPS.isSelected()) {
+                solver = Controller.Solvers.SOLVE_MIPS;
+            } else if (jRadioButtonRelaxed.isSelected()) {
+                solver = Controller.Solvers.SOLVE_RELAXED;
+            }
+            // Update the status bar
+            updateStatusLabel("Running.");
+            jProgressBar1.setIndeterminate(false);
+            jProgressBar1.setValue(0);
+
+            // Setup a new instance of controller
+            controllerTask = new Controller(modelPaths,
+                orienteeringPropertiesBean,
+                alnsPropertiesBean,
+                solver,
+                textAreaOutputStream,
+                this
+            );
+            controllerTask.execute();
+        } else {
+            updateStatusLabel("No instances to solve! Ready.");
+        }
+    }//GEN-LAST:event_jButtonRunActionPerformed
+
+    private void jButtonLoadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersActionPerformed
+        jFileChooserLoadParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
+
+        int result = jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
+        File inputFile = jFileChooserLoadParameters.getSelectedFile();
+        if (inputFile != null && result == JFileChooser.APPROVE_OPTION) {
+            try {
+                this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
+                this.alnsPropertiesBean = parametersBean.getALNSproperties();
+                this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
+                this.updateParametersGUI();
+            } catch (IOException ex) {
+                System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
+            }
+            System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
+            updateWorkingDirectory(inputFile.toPath().getParent().toFile());
+        }
+    }//GEN-LAST:event_jButtonLoadParametersActionPerformed
 
     private void jButtonSaveParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersActionPerformed
         jFileChooserSaveParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
@@ -1553,6 +1638,88 @@ public class MainWindow extends javax.swing.JFrame {
             updateWorkingDirectory(outputFilePath.toPath().getParent().toFile());
         }
     }//GEN-LAST:event_jButtonSaveParametersActionPerformed
+
+    private void jTextFieldNerfBarrierFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNerfBarrierFocusLost
+        // TODO add your handling code here:
+        updateParametersBean();
+    }//GEN-LAST:event_jTextFieldNerfBarrierFocusLost
+
+    private void updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_updatePsiBean
+        updateParametersBean();
+    }//GEN-LAST:event_updatePsiBean
+
+    private void jCheckBoxDestroyRandomInsertionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDestroyRandomInsertionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxDestroyRandomInsertionActionPerformed
+
+    private void updatePsiBeanC(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_updatePsiBeanC
+        // TODO add your handling code here:
+        //updateParametersBean();
+    }//GEN-LAST:event_updatePsiBeanC
+
+    private void updatePsiGui(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_updatePsiGui
+        // TODO add your handling code here:
+        updatePsiGui();
+    }//GEN-LAST:event_updatePsiGui
+
+    private void jTextFieldPsi3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi3ActionPerformed
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi3ActionPerformed
+
+    private void jTextFieldPsi3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi3FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi3FocusLost
+
+    private void jTextFieldPsi2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi2ActionPerformed
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi2ActionPerformed
+
+    private void jTextFieldPsi2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi2FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi2FocusLost
+
+    private void jTextFieldPsi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi1ActionPerformed
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi1ActionPerformed
+
+    private void jTextFieldPsi1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi1FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi1FocusLost
+
+    private void jTextFieldPsi0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi0ActionPerformed
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi0ActionPerformed
+
+    private void jTextFieldPsi0FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi0FocusLost
+        // TODO add your handling code here:
+        updatePsiBean();
+    }//GEN-LAST:event_jTextFieldPsi0FocusLost
+
+    private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
+        jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
+        int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
+        File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
+        if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
+            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
+            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
+            updateWorkingDirectory(outputFolderPath);
+        }
+    }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
+
+    private void jTextFieldOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPathActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
+
+    private void jTextFieldTimeLimitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTimeLimitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldTimeLimitActionPerformed
 
     private void btnMoveInstanceDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveInstanceDownActionPerformed
         // TODO add your handling code here:
@@ -1595,7 +1762,21 @@ public class MainWindow extends javax.swing.JFrame {
             jListInstances.setSelectedIndex(Math.max(toMoveUp - 1, 0));
         }
     }//GEN-LAST:event_btnMoveInstanceUpActionPerformed
-        
+
+    private void btnRemoveInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInstanceActionPerformed
+        // TODO add your handling code here:
+        if (!jListInstances.isSelectionEmpty()) {
+            int toRemove = jListInstances.getSelectedIndex();
+            DefaultListModel dlm = new DefaultListModel();
+            for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
+                if (i != toRemove) {
+                    dlm.addElement(jListInstances.getModel().getElementAt(i));
+                }
+            }
+            jListInstances.setModel(dlm);
+        }
+    }//GEN-LAST:event_btnRemoveInstanceActionPerformed
+
     private void btnAddInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInstanceActionPerformed
         jFileChooserInstances.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         int result = jFileChooserInstances.showOpenDialog(jPanelMain);
@@ -1612,7 +1793,7 @@ public class MainWindow extends javax.swing.JFrame {
 
             jListInstances.setModel(dlm);
         }
-        
+
         if(jFileChooserInstances.getSelectedFiles().length != 0){
             updateWorkingDirectory(jFileChooserInstances.getSelectedFiles()[0].toPath().getParent().toFile());
         }
@@ -1621,218 +1802,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void jRadioButtonRelaxedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonRelaxedActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonRelaxedActionPerformed
-
-    private void btnRemoveInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveInstanceActionPerformed
-        // TODO add your handling code here:
-        if (!jListInstances.isSelectionEmpty()) {
-            int toRemove = jListInstances.getSelectedIndex();
-            DefaultListModel dlm = new DefaultListModel();
-            for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
-                if (i != toRemove) {
-                    dlm.addElement(jListInstances.getModel().getElementAt(i));
-                }
-            }
-            jListInstances.setModel(dlm);
-        }
-    }//GEN-LAST:event_btnRemoveInstanceActionPerformed
-
-    private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
-        // TODO add your handling code here:
-        System.out.println("Who are you running from? Don't be silly!\n");
-
-        // Update the parameters
-        updateParametersBean();
-
-        // Retrieve all instances to run
-        List<String> modelPaths = new ArrayList<>();
-        for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
-            modelPaths.add(jListInstances.getModel().getElementAt(i));
-        }
-
-        if (!modelPaths.isEmpty()) {
-            // Disable all control windows
-            this.enableControlPanel(false);
-
-            // Retrieve information on which solver to use
-            Controller.Solvers solver = Controller.Solvers.SOLVE_RELAXED;
-            if (jRadioButtonALNS.isSelected()) {
-                solver = Controller.Solvers.SOLVE_ALNS;
-            } else if (jRadioButtonMIPS.isSelected()) {
-                solver = Controller.Solvers.SOLVE_MIPS;
-            } else if (jRadioButtonRelaxed.isSelected()) {
-                solver = Controller.Solvers.SOLVE_RELAXED;
-            }
-            // Update the status bar
-            updateStatusLabel("Running.");
-            jProgressBar1.setIndeterminate(false);
-            jProgressBar1.setValue(0);
-
-            // Setup a new instance of controller
-            controllerTask = new Controller(modelPaths,
-                    orienteeringPropertiesBean,
-                    alnsPropertiesBean,
-                    solver,
-                    textAreaOutputStream,
-                    this
-            );
-            controllerTask.execute();
-        } else {
-            updateStatusLabel("No instances to solve! Ready.");
-        }
-    }//GEN-LAST:event_jButtonRunActionPerformed
-
-    private void jTextFieldOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPathActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
-
-    private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
-        jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
-        int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelGeneralParameters);
-        File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
-        if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
-            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
-            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
-            updateWorkingDirectory(outputFolderPath);
-        }
-    }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
-
-    private void jTextFieldTimeLimitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTimeLimitActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldTimeLimitActionPerformed
-
-    private void jButtonTestBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestBeanActionPerformed
-        updateParametersBean();
-        jTextAreaOutput.append("Current properties bean:\n");
-        jTextAreaOutput.append(parametersBean.toJSON());
-    }//GEN-LAST:event_jButtonTestBeanActionPerformed
-
-    private void jCheckBoxDestroyRandomInsertionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDestroyRandomInsertionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBoxDestroyRandomInsertionActionPerformed
-
-    private void updatePsiGui(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_updatePsiGui
-        // TODO add your handling code here:
-        updatePsiGui();
-    }//GEN-LAST:event_updatePsiGui
-
-    private void jTextFieldPsi0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi0ActionPerformed
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi0ActionPerformed
-
-    private void jTextFieldPsi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi1ActionPerformed
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi1ActionPerformed
-
-    private void jTextFieldPsi2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi2ActionPerformed
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi2ActionPerformed
-
-    private void jTextFieldPsi3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi3ActionPerformed
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi3ActionPerformed
-
-    private void jTextFieldPsi0FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi0FocusLost
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi0FocusLost
-
-    private void jTextFieldPsi1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi1FocusLost
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi1FocusLost
-
-    private void jTextFieldPsi2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi2FocusLost
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi2FocusLost
-
-    private void jTextFieldPsi3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi3FocusLost
-        // TODO add your handling code here:
-        updatePsiBean();
-    }//GEN-LAST:event_jTextFieldPsi3FocusLost
-
-    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
-        // TODO add your handling code here:
-
-        // Kill the controller thread and triggers the garbage collector
-        if (controllerTask != null) {
-            controllerTask.cancel(true);
-            controllerTask = null;
-            System.gc();
-        }
-        
-        enableControlPanel(true);
-
-        // Update the status text
-        updateStatusLabel("Stopped.");
-    }//GEN-LAST:event_jButtonStopActionPerformed
-
-    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
-        // TODO add your handling code here:
-        // Cleanup the output area
-        jTextAreaOutput.setText("");
-        
-        // Reset the progress bar
-        jProgressBar1.setIndeterminate(false);
-        jProgressBar1.setValue(0);
-        
-        jLabelBestObj.setText("0.0");
-
-        // Update the status text
-        updateStatusLabel("Ready.");
-    }//GEN-LAST:event_jButtonResetActionPerformed
-
-    private void jButtonLoadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersActionPerformed
-        jFileChooserLoadParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
-        
-        int result = jFileChooserLoadParameters.showOpenDialog(jPanelGeneralParameters);
-        File inputFile = jFileChooserLoadParameters.getSelectedFile();
-        if (inputFile != null && result == JFileChooser.APPROVE_OPTION) {
-            try {
-                this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
-                this.alnsPropertiesBean = parametersBean.getALNSproperties();
-                this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
-                this.updateParametersGUI();
-            } catch (IOException ex) {
-                System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
-            }
-            System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
-            updateWorkingDirectory(inputFile.toPath().getParent().toFile());
-        }
-    }//GEN-LAST:event_jButtonLoadParametersActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        System.out.println("Execution paused");
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_updatePsiBean
-        updateParametersBean();
-    }//GEN-LAST:event_updatePsiBean
-
-    private void updatePsiBeanC(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_updatePsiBeanC
-        // TODO add your handling code here:
-        //updateParametersBean();
-    }//GEN-LAST:event_updatePsiBeanC
-
-    private void jTextFieldNerfBarrierFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNerfBarrierFocusLost
-        // TODO add your handling code here:
-        updateParametersBean();
-    }//GEN-LAST:event_jTextFieldNerfBarrierFocusLost
-
-    private void jTextFieldWorkingDirectoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldWorkingDirectoryMouseClicked
-        // TODO add your handling code here:
-        jFileChooserWorkingDirectory.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
-        int result = jFileChooserWorkingDirectory.showOpenDialog(jPanel1);
-        File workingDirectoryPath = jFileChooserWorkingDirectory.getSelectedFile();
-        if (workingDirectoryPath != null && result == JFileChooser.APPROVE_OPTION) {
-            updateWorkingDirectory(workingDirectoryPath);
-        }
-    }//GEN-LAST:event_jTextFieldWorkingDirectoryMouseClicked
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -2145,7 +2114,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2209,7 +2177,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldTimeLimitALNS;
     private javax.swing.JTextField jTextFieldTimeLimitLocalSearch;
     private javax.swing.JTextField jTextFieldWarmupGamma;
-    private javax.swing.JTextField jTextFieldWorkingDirectory;
     private solverController.OrienteeringPropertiesBean orienteeringPropertiesBean;
     private solverController.ParametersBean parametersBean;
     private solverView.PathCacheBean pathCacheBean;

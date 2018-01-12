@@ -5,6 +5,8 @@
  */
 package solverController;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
 /**
@@ -120,4 +122,27 @@ public class OrienteeringPropertiesBean implements Serializable {
     public void setForceHeuristicConstraints(boolean forceHeuristicConstraints) {
         this.forceHeuristicConstraints = forceHeuristicConstraints;
     }
+    
+    // <editor-fold defaultstate="collapsed" desc="PropertyChange Stuff">
+    /**
+     * Property change support object.
+     */
+    private final transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    
+    /**
+     * Adds a PropertyChangeListener to start listening to events
+     * @param listener the listener to add
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    /**
+     * Removes a PropertyChangeListener to stop listening to events
+     * @param listener the listener to remove
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+    // </editor-fold>
 }

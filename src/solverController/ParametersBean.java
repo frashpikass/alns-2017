@@ -7,6 +7,8 @@ package solverController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -147,4 +149,27 @@ public class ParametersBean implements Serializable {
         this.OrienteeringProperties.cloneFrom(out.getOrienteeringProperties());
         this.ALNSproperties.cloneFrom(out.getALNSproperties());
     }
+    
+    // <editor-fold defaultstate="collapsed" desc="PropertyChange Stuff">
+    /**
+     * Property change support object.
+     */
+    private final transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    
+    /**
+     * Adds a PropertyChangeListener to start listening to events
+     * @param listener the listener to add
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    /**
+     * Removes a PropertyChangeListener to stop listening to events
+     * @param listener the listener to remove
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+    // </editor-fold>
 }

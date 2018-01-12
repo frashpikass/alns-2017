@@ -6,6 +6,7 @@
 package solverController;
 
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
 
 /**
  * Java Bean to hold all the properties and parameters for the ALNS optimizer.
@@ -966,7 +967,29 @@ public class ALNSPropertiesBean {
         propertyChangeSupport.firePropertyChange(PROP_MAXITERATIONSWITHOUTIMPROVEMENT, oldMaxIterationsWithoutImprovement, maxIterationsWithoutImprovement);
     }
 
-    private final transient PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+    // <editor-fold defaultstate="collapsed" desc="PropertyChange Stuff">
+    /**
+     * Property change support object.
+     */
+    private final transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    
+    /**
+     * Adds a PropertyChangeListener to start listening to events
+     * @param listener the listener to add
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    /**
+     * Removes a PropertyChangeListener to stop listening to events
+     * @param listener the listener to remove
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+    // </editor-fold>
+    
     public static final String PROP_MAXHISTORYSIZE = "maxHistorySize";
     public static final String PROP_QSTART = "qStart";
     public static final String PROP_QDELTA = "qDelta";

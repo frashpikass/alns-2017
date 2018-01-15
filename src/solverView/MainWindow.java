@@ -81,6 +81,7 @@ public class MainWindow extends javax.swing.JFrame {
         parametersBean = new solverController.ParametersBean();
         pathCacheBean = new solverView.PathCacheBean();
         jFileChooserWorkingDirectory = new javax.swing.JFileChooser();
+        doubleConverter1 = new solverView.DoubleConverter();
         jPanelMain = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanelControls = new javax.swing.JPanel();
@@ -166,6 +167,19 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         jTextFieldNerfBarrier = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
+        jTabbedPaneSolvers = new javax.swing.JTabbedPane();
+        jPanelMIPS = new javax.swing.JPanel();
+        jLabel26 = new javax.swing.JLabel();
+        jTextFieldTimeLimit1 = new javax.swing.JTextField();
+        jTextFieldNumThreads1 = new javax.swing.JTextField();
+        jLabelOutputFolderPath1 = new javax.swing.JLabel();
+        jTextFieldOutputFolderPath1 = new javax.swing.JTextField();
+        jCheckBoxForceHeuristicConstraints1 = new javax.swing.JCheckBox();
+        jLabel27 = new javax.swing.JLabel();
+        jButtonOutputFolderPath1 = new javax.swing.JButton();
+        jButtonRun1 = new javax.swing.JButton();
+        jPanelALNS = new javax.swing.JPanel();
+        jPanelRelaxed = new javax.swing.JPanel();
         jPanelActions = new javax.swing.JPanel();
         jButtonSaveParameters = new javax.swing.JButton();
         jButtonLoadParameters = new javax.swing.JButton();
@@ -368,7 +382,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldTimeLimit.setToolTipText("Sets how long (in seconds) should the MIPS solver run for");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${timeLimit}"), jTextFieldTimeLimit, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimit");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.timeLimit}"), jTextFieldTimeLimit, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimit");
+        binding.setConverter(doubleConverter1);
         bindingGroup.addBinding(binding);
 
         jTextFieldTimeLimit.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1281,6 +1296,188 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         jPanelParameters.add(jPanelALNSParameters, gridBagConstraints);
 
+        jTabbedPaneSolvers.setToolTipText("Use a MIPS solver");
+
+        jPanelMIPS.setLayout(new java.awt.GridBagLayout());
+
+        jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel26.setText("Global time limit for MIPS");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(14, 0, 0, 0);
+        jPanelMIPS.add(jLabel26, gridBagConstraints);
+
+        jTextFieldTimeLimit1.setToolTipText("Sets how long (in seconds) should the MIPS solver run for");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.timeLimit}"), jTextFieldTimeLimit1, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding.setConverter(doubleConverter1);
+        bindingGroup.addBinding(binding);
+
+        jTextFieldTimeLimit1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldTimeLimit1updatePsiBean(evt);
+            }
+        });
+        jTextFieldTimeLimit1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldTimeLimit1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 212;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        jPanelMIPS.add(jTextFieldTimeLimit1, gridBagConstraints);
+
+        jTextFieldNumThreads1.setToolTipText("<html>\nSelect how many threads should be used by the MIPS solver (also affects ALNS).\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${numThreads}"), jTextFieldNumThreads1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS_numThreads");
+        bindingGroup.addBinding(binding);
+
+        jTextFieldNumThreads1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldNumThreads1updatePsiBean(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 212;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        jPanelMIPS.add(jTextFieldNumThreads1, gridBagConstraints);
+
+        jLabelOutputFolderPath1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelOutputFolderPath1.setText("Output folder");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 67;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        jPanelMIPS.add(jLabelOutputFolderPath1, gridBagConstraints);
+
+        jTextFieldOutputFolderPath1.setToolTipText("Choose the output directory");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        jTextFieldOutputFolderPath1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldOutputFolderPath1updatePsiBean(evt);
+            }
+        });
+        jTextFieldOutputFolderPath1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldOutputFolderPath1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 212;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 0, 0);
+        jPanelMIPS.add(jTextFieldOutputFolderPath1, gridBagConstraints);
+
+        jCheckBoxForceHeuristicConstraints1.setText("Force heuristic constraints in MIPS");
+        jCheckBoxForceHeuristicConstraints1.setToolTipText("If checked, heuristic constraints will always be used every time the MIPS solver is run (also affects ALNS)");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints1, org.jdesktop.beansbinding.BeanProperty.create("selected"), "MIPS_forceHeuristicConstraints");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxForceHeuristicConstraints1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxForceHeuristicConstraints1updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        jPanelMIPS.add(jCheckBoxForceHeuristicConstraints1, gridBagConstraints);
+
+        jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel27.setText("Number of threads");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 35;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(14, 0, 0, 0);
+        jPanelMIPS.add(jLabel27, gridBagConstraints);
+
+        jButtonOutputFolderPath1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/openSmall.png"))); // NOI18N
+        jButtonOutputFolderPath1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOutputFolderPath1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanelMIPS.add(jButtonOutputFolderPath1, gridBagConstraints);
+
+        jButtonRun1.setText("Run!");
+        buttonGroupActions.add(jButtonRun1);
+        jButtonRun1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRun1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 31, 0, 0);
+        jPanelMIPS.add(jButtonRun1, gridBagConstraints);
+
+        jTabbedPaneSolvers.addTab("MIPS", jPanelMIPS);
+
+        javax.swing.GroupLayout jPanelALNSLayout = new javax.swing.GroupLayout(jPanelALNS);
+        jPanelALNS.setLayout(jPanelALNSLayout);
+        jPanelALNSLayout.setHorizontalGroup(
+            jPanelALNSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 521, Short.MAX_VALUE)
+        );
+        jPanelALNSLayout.setVerticalGroup(
+            jPanelALNSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 170, Short.MAX_VALUE)
+        );
+
+        jTabbedPaneSolvers.addTab("ALNS", jPanelALNS);
+
+        javax.swing.GroupLayout jPanelRelaxedLayout = new javax.swing.GroupLayout(jPanelRelaxed);
+        jPanelRelaxed.setLayout(jPanelRelaxedLayout);
+        jPanelRelaxedLayout.setHorizontalGroup(
+            jPanelRelaxedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 521, Short.MAX_VALUE)
+        );
+        jPanelRelaxedLayout.setVerticalGroup(
+            jPanelRelaxedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 170, Short.MAX_VALUE)
+        );
+
+        jTabbedPaneSolvers.addTab("Relaxed", jPanelRelaxed);
+
+        jPanelParameters.add(jTabbedPaneSolvers, new java.awt.GridBagConstraints());
+        jTabbedPaneSolvers.getAccessibleContext().setAccessibleName("MIPS");
+        jTabbedPaneSolvers.getAccessibleContext().setAccessibleDescription("MIPS Solver panel");
+
         jScrollPane3.setViewportView(jPanelParameters);
 
         jPanelParametersEnvelope.add(jScrollPane3);
@@ -1802,6 +1999,38 @@ public class MainWindow extends javax.swing.JFrame {
     private void jRadioButtonRelaxedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonRelaxedActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonRelaxedActionPerformed
+
+    private void jTextFieldTimeLimit1updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldTimeLimit1updatePsiBean
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldTimeLimit1updatePsiBean
+
+    private void jTextFieldTimeLimit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTimeLimit1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldTimeLimit1ActionPerformed
+
+    private void jTextFieldNumThreads1updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNumThreads1updatePsiBean
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNumThreads1updatePsiBean
+
+    private void jTextFieldOutputFolderPath1updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPath1updatePsiBean
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldOutputFolderPath1updatePsiBean
+
+    private void jTextFieldOutputFolderPath1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPath1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldOutputFolderPath1ActionPerformed
+
+    private void jCheckBoxForceHeuristicConstraints1updatePsiBeanC(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxForceHeuristicConstraints1updatePsiBeanC
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxForceHeuristicConstraints1updatePsiBeanC
+
+    private void jButtonOutputFolderPath1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPath1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonOutputFolderPath1ActionPerformed
+
+    private void jButtonRun1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRun1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonRun1ActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -1811,7 +2040,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void updateWorkingDirectory(File newWorkingDirectory){
         if(newWorkingDirectory != null){
             pathCacheBean.setPathToLastDirectory(newWorkingDirectory);
-            jTextFieldWorkingDirectory.setText(newWorkingDirectory.getAbsolutePath());
         }
     }
     
@@ -2071,11 +2299,14 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupActions;
     private javax.swing.ButtonGroup buttonGroupInstance;
     private javax.swing.ButtonGroup buttonGroupSolver;
+    private solverView.DoubleConverter doubleConverter1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonLoadParameters;
     private javax.swing.JButton jButtonOutputFolderPath;
+    private javax.swing.JButton jButtonOutputFolderPath1;
     private javax.swing.JButton jButtonReset;
     private javax.swing.JButton jButtonRun;
+    private javax.swing.JButton jButtonRun1;
     private javax.swing.JButton jButtonSaveParameters;
     private javax.swing.JButton jButtonStop;
     private javax.swing.JButton jButtonTestBean;
@@ -2085,6 +2316,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyProfitInsertion;
     private javax.swing.JCheckBox jCheckBoxDestroyRandomInsertion;
     private javax.swing.JCheckBox jCheckBoxForceHeuristicConstraints;
+    private javax.swing.JCheckBox jCheckBoxForceHeuristicConstraints1;
     private javax.swing.JCheckBox jCheckBoxRepairHighCostRemoval;
     private javax.swing.JCheckBox jCheckBoxRepairRandomRemoval;
     private javax.swing.JCheckBox jCheckBoxRepairTravelTime;
@@ -2114,6 +2346,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2123,19 +2357,23 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelBestObj;
     private javax.swing.JLabel jLabelOutputFolderPath;
+    private javax.swing.JLabel jLabelOutputFolderPath1;
     private javax.swing.JLabel jLabelStatus;
     private javax.swing.JList<String> jListInstances;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelALNS;
     private javax.swing.JPanel jPanelALNSParameters;
     private javax.swing.JPanel jPanelActions;
     private javax.swing.JPanel jPanelControls;
     private javax.swing.JPanel jPanelDestroyHeuristics;
     private javax.swing.JPanel jPanelGeneralParameters;
+    private javax.swing.JPanel jPanelMIPS;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JPanel jPanelOutput;
     private javax.swing.JPanel jPanelParameters;
     private javax.swing.JPanel jPanelParametersEnvelope;
     private javax.swing.JPanel jPanelPsi;
+    private javax.swing.JPanel jPanelRelaxed;
     private javax.swing.JPanel jPanelRepairHeuristics;
     private javax.swing.JPanel jPanelSBBottom;
     private javax.swing.JPanel jPanelSBTop;
@@ -2151,6 +2389,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPaneTextAreaOutput;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTabbedPane jTabbedPaneSolvers;
     private javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JTextField jTextField19;
     private javax.swing.JTextField jTextFieldAlpha;
@@ -2162,7 +2401,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldMaxSegmentsWithoutImprovement;
     private javax.swing.JTextField jTextFieldNerfBarrier;
     private javax.swing.JTextField jTextFieldNumThreads;
+    private javax.swing.JTextField jTextFieldNumThreads1;
     private javax.swing.JTextField jTextFieldOutputFolderPath;
+    private javax.swing.JTextField jTextFieldOutputFolderPath1;
     private javax.swing.JTextField jTextFieldPsi0;
     private javax.swing.JTextField jTextFieldPsi1;
     private javax.swing.JTextField jTextFieldPsi2;
@@ -2174,6 +2415,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldRewardForBestSegmentHeuristics;
     private javax.swing.JTextField jTextFieldSegmentSize;
     private javax.swing.JTextField jTextFieldTimeLimit;
+    private javax.swing.JTextField jTextFieldTimeLimit1;
     private javax.swing.JTextField jTextFieldTimeLimitALNS;
     private javax.swing.JTextField jTextFieldTimeLimitLocalSearch;
     private javax.swing.JTextField jTextFieldWarmupGamma;
@@ -2199,6 +2441,7 @@ public class MainWindow extends javax.swing.JFrame {
      * Necessary before parameter visualization/serialization.
      */
     private void updateParametersBean() {
+        /* TEMP: UNCOMMENT LATER
         orienteeringPropertiesBean.setForceHeuristicConstraints(jCheckBoxForceHeuristicConstraints.isSelected());
         orienteeringPropertiesBean.setNumThreads(Integer.valueOf(jTextFieldNumThreads.getText()));
         orienteeringPropertiesBean.setOutputFolderPath(jTextFieldOutputFolderPath.getText());
@@ -2237,6 +2480,8 @@ public class MainWindow extends javax.swing.JFrame {
         alnsPropertiesBean.setUseRepairWorstRemoval(jCheckBoxRepairWorstRemoval.isSelected());
         
         parametersBean = new ParametersBean(orienteeringPropertiesBean, alnsPropertiesBean);
+        
+        TEMP */
     }
     
     /**

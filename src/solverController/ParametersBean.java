@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- *
+ * A JavaBean that holds parameters for both ALNS and Orienteering
  * @author Frash
  */
 public class ParametersBean implements Serializable {
@@ -69,7 +69,9 @@ public class ParametersBean implements Serializable {
      * @param OrienteeringProperties the OrienteeringProperties to set
      */
     public void setOrienteeringProperties(OrienteeringPropertiesBean OrienteeringProperties) {
+        OrienteeringPropertiesBean oldOrienteeringProperties = this.OrienteeringProperties;
         this.OrienteeringProperties = OrienteeringProperties;
+        this.propertyChangeSupport.firePropertyChange(PROP_ORIENTEERINGPROPERTIES, oldOrienteeringProperties, OrienteeringProperties);
     }
 
     /**
@@ -85,7 +87,9 @@ public class ParametersBean implements Serializable {
      * @param ALNSproperties the ALNSproperties to set
      */
     public void setALNSproperties(ALNSPropertiesBean ALNSproperties) {
+        ALNSPropertiesBean oldALNSProperties = this.ALNSproperties;
         this.ALNSproperties = ALNSproperties;
+        this.propertyChangeSupport.firePropertyChange(PROP_ALNSPROPERTIES, oldALNSProperties, ALNSproperties);
     }
     
     /**
@@ -149,6 +153,9 @@ public class ParametersBean implements Serializable {
         this.OrienteeringProperties.cloneFrom(out.getOrienteeringProperties());
         this.ALNSproperties.cloneFrom(out.getALNSproperties());
     }
+    
+    public static final String PROP_ALNSPROPERTIES = "ALNSProperties";
+    public static final String PROP_ORIENTEERINGPROPERTIES = "OrienteeringProperties";
     
     // <editor-fold defaultstate="collapsed" desc="PropertyChange Stuff">
     /**

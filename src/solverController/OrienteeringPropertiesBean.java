@@ -68,7 +68,9 @@ public class OrienteeringPropertiesBean implements Serializable {
      * @param outputFolderPath the outputFolderPath to set
      */
     public void setOutputFolderPath(String outputFolderPath) {
+        String oldOutputFolderPath = this.outputFolderPath;
         this.outputFolderPath = outputFolderPath;
+        this.propertyChangeSupport.firePropertyChange(PROP_OUTPUTFOLDERPATH, oldOutputFolderPath, outputFolderPath);
     }
 
     /**
@@ -84,7 +86,9 @@ public class OrienteeringPropertiesBean implements Serializable {
      * @param timeLimit the timeLimit to set
      */
     public void setTimeLimit(double timeLimit) {
+        double oldTimeLimit = this.timeLimit;
         this.timeLimit = timeLimit;
+        this.propertyChangeSupport.firePropertyChange(PROP_TIMELIMIT, oldTimeLimit, timeLimit);
     }
 
     /**
@@ -102,7 +106,9 @@ public class OrienteeringPropertiesBean implements Serializable {
      * @param numThreads the numThreads to set
      */
     public void setNumThreads(int numThreads) {
+        int oldNumThreads = this.numThreads;
         this.numThreads = numThreads;
+        this.propertyChangeSupport.firePropertyChange(PROP_NUMTHREADS, oldNumThreads, numThreads);
     }
 
     /**
@@ -120,8 +126,15 @@ public class OrienteeringPropertiesBean implements Serializable {
      * @param forceHeuristicConstraints the forceHeuristicConstraints to set
      */
     public void setForceHeuristicConstraints(boolean forceHeuristicConstraints) {
+        boolean oldForceHeuristicConstraints = this.forceHeuristicConstraints;
         this.forceHeuristicConstraints = forceHeuristicConstraints;
+        this.propertyChangeSupport.firePropertyChange(PROP_FORCEHEURISTICCONSTRAINTS, oldForceHeuristicConstraints, forceHeuristicConstraints);
     }
+    
+    public static final String PROP_FORCEHEURISTICCONSTRAINTS = "forceHeuristicConstraints";
+    public static final String PROP_NUMTHREADS = "numThreads";
+    public static final String PROP_OUTPUTFOLDERPATH = "outputFolderPath";
+    public static final String PROP_TIMELIMIT = "timeLimit";
     
     // <editor-fold defaultstate="collapsed" desc="PropertyChange Stuff">
     /**

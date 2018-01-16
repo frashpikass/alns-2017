@@ -50,7 +50,12 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
+        
+        // Redirecting all System Streams to jTextAreaOutput (virtual console)
         redirectSystemStreams();
+        
+        // Adding a binding listener to keep track of binding or validation errors
+        bindingGroup.addBindingListener(new ErrorBindingListener(jDialogError, jLabelErrorMessage));
         
         // Setup a smart scroller on the output text area
         new SmartScroller(jScrollPaneTextAreaOutput);
@@ -82,6 +87,10 @@ public class MainWindow extends javax.swing.JFrame {
         pathCacheBean = new solverView.PathCacheBean();
         jFileChooserWorkingDirectory = new javax.swing.JFileChooser();
         doubleConverter1 = new solverView.DoubleConverter();
+        jDialogError = new javax.swing.JDialog();
+        jLabelErrorMessage = new javax.swing.JLabel();
+        jButtonErrorOk = new javax.swing.JButton();
+        jLabelErrorIcon = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanelControls = new javax.swing.JPanel();
@@ -227,6 +236,39 @@ public class MainWindow extends javax.swing.JFrame {
 
         jFileChooserWorkingDirectory.setDialogTitle("Choose the working directory");
         jFileChooserWorkingDirectory.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+
+        jDialogError.setTitle("Error");
+        jDialogError.setIconImage(null);
+        jDialogError.setModal(true);
+        jDialogError.setType(java.awt.Window.Type.POPUP);
+        jDialogError.getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        jLabelErrorMessage.setText("Error message!");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.ipady = 30;
+        jDialogError.getContentPane().add(jLabelErrorMessage, gridBagConstraints);
+
+        jButtonErrorOk.setText("OK");
+        jButtonErrorOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonErrorOkActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        jDialogError.getContentPane().add(jButtonErrorOk, gridBagConstraints);
+
+        jLabelErrorIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/alert.png"))); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        jDialogError.getContentPane().add(jLabelErrorIcon, gridBagConstraints);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -428,7 +470,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldOutputFolderPath.setToolTipText("Choose the output directory");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "outputFolderPath");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "outputFolderPath");
         bindingGroup.addBinding(binding);
 
         jTextFieldOutputFolderPath.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1312,7 +1354,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldTimeLimit1.setToolTipText("Sets how long (in seconds) should the MIPS solver run for");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.timeLimit}"), jTextFieldTimeLimit1, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.timeLimit}"), jTextFieldTimeLimit1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: solver time limit");
         binding.setConverter(doubleConverter1);
         bindingGroup.addBinding(binding);
 
@@ -1337,7 +1379,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldNumThreads1.setToolTipText("<html>\nSelect how many threads should be used by the MIPS solver (also affects ALNS).\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${numThreads}"), jTextFieldNumThreads1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS_numThreads");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${numThreads}"), jTextFieldNumThreads1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: number of threads");
         bindingGroup.addBinding(binding);
 
         jTextFieldNumThreads1.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1367,7 +1409,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldOutputFolderPath1.setToolTipText("Choose the output directory");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: output folder");
         bindingGroup.addBinding(binding);
 
         jTextFieldOutputFolderPath1.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1392,7 +1434,7 @@ public class MainWindow extends javax.swing.JFrame {
         jCheckBoxForceHeuristicConstraints1.setText("Force heuristic constraints in MIPS");
         jCheckBoxForceHeuristicConstraints1.setToolTipText("If checked, heuristic constraints will always be used every time the MIPS solver is run (also affects ALNS)");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints1, org.jdesktop.beansbinding.BeanProperty.create("selected"), "MIPS_forceHeuristicConstraints");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, orienteeringPropertiesBean, org.jdesktop.beansbinding.ELProperty.create("${forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints1, org.jdesktop.beansbinding.BeanProperty.create("selected"), "MIPS: force heuristic constraints");
         bindingGroup.addBinding(binding);
 
         jCheckBoxForceHeuristicConstraints1.addItemListener(new java.awt.event.ItemListener() {
@@ -2031,6 +2073,11 @@ public class MainWindow extends javax.swing.JFrame {
     private void jButtonRun1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRun1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonRun1ActionPerformed
+
+    private void jButtonErrorOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonErrorOkActionPerformed
+        // TODO add your handling code here:
+        jDialogError.setVisible(false);
+    }//GEN-LAST:event_jButtonErrorOkActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -2301,6 +2348,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupSolver;
     private solverView.DoubleConverter doubleConverter1;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonErrorOk;
     private javax.swing.JButton jButtonLoadParameters;
     private javax.swing.JButton jButtonOutputFolderPath;
     private javax.swing.JButton jButtonOutputFolderPath1;
@@ -2322,6 +2370,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBoxRepairTravelTime;
     private javax.swing.JCheckBox jCheckBoxRepairVehicleTime;
     private javax.swing.JCheckBox jCheckBoxRepairWorstRemoval;
+    private javax.swing.JDialog jDialogError;
     private javax.swing.JFileChooser jFileChooserInstances;
     private javax.swing.JFileChooser jFileChooserLoadParameters;
     private javax.swing.JFileChooser jFileChooserOutputFolderPath;
@@ -2356,6 +2405,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelBestObj;
+    private javax.swing.JLabel jLabelErrorIcon;
+    private javax.swing.JLabel jLabelErrorMessage;
     private javax.swing.JLabel jLabelOutputFolderPath;
     private javax.swing.JLabel jLabelOutputFolderPath1;
     private javax.swing.JLabel jLabelStatus;

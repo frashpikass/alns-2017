@@ -109,9 +109,11 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonRun = new javax.swing.JButton();
         jButtonTestBean = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jPanelMain = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanelMain = new javax.swing.JPanel();
+        jSplitPane2 = new javax.swing.JSplitPane();
         jPanelControls = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jPanelnstances = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jListInstances = new javax.swing.JList<>();
@@ -418,14 +420,26 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogDeprecatedOptions.getContentPane().add(jPanelActions);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1230, 650));
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
-        jLabel1.setText("ALNS Solver, by Francesco Piazza, v1.0");
+        jLabel1.setText("CTOWSS ALNS GUI v 1.5");
+        getContentPane().add(jLabel1);
 
-        jPanelControls.setBorder(javax.swing.BorderFactory.createTitledBorder("New Run Configuration"));
+        jPanelMain.setPreferredSize(new java.awt.Dimension(1230, 600));
+        jPanelMain.setLayout(new javax.swing.BoxLayout(jPanelMain, javax.swing.BoxLayout.LINE_AXIS));
+
+        jSplitPane2.setDividerLocation(320);
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jPanelControls.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
         jPanelControls.setToolTipText(null);
-        jPanelControls.setLayout(new javax.swing.BoxLayout(jPanelControls, javax.swing.BoxLayout.LINE_AXIS));
+        jPanelControls.setLayout(new javax.swing.BoxLayout(jPanelControls, javax.swing.BoxLayout.PAGE_AXIS));
+
+        jSplitPane1.setDividerLocation(400);
 
         jPanelnstances.setBorder(javax.swing.BorderFactory.createTitledBorder("1. Add instances to batch"));
+        jPanelnstances.setMinimumSize(new java.awt.Dimension(94, 180));
         jPanelnstances.setLayout(new javax.swing.BoxLayout(jPanelnstances, javax.swing.BoxLayout.LINE_AXIS));
 
         jListInstances.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
@@ -481,9 +495,10 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelnstances.add(jPanelInstancesButtons);
         jPanelnstances.add(filler3);
 
-        jPanelControls.add(jPanelnstances);
+        jSplitPane1.setLeftComponent(jPanelnstances);
 
         jPanelSolversEnvelope.setBorder(javax.swing.BorderFactory.createTitledBorder("2. Select, configure and run a solver"));
+        jPanelSolversEnvelope.setMinimumSize(new java.awt.Dimension(362, 180));
         jPanelSolversEnvelope.setLayout(new javax.swing.BoxLayout(jPanelSolversEnvelope, javax.swing.BoxLayout.LINE_AXIS));
 
         jTabbedPaneSolvers.setToolTipText("Use a MIPS solver");
@@ -1658,7 +1673,11 @@ public class MainWindow extends javax.swing.JFrame {
         jTabbedPaneSolvers.getAccessibleContext().setAccessibleName("MIPS");
         jTabbedPaneSolvers.getAccessibleContext().setAccessibleDescription("MIPS Solver panel");
 
-        jPanelControls.add(jPanelSolversEnvelope);
+        jSplitPane1.setRightComponent(jPanelSolversEnvelope);
+
+        jPanelControls.add(jSplitPane1);
+
+        jSplitPane2.setLeftComponent(jPanelControls);
 
         jPanelOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
         java.awt.GridBagLayout jPanelOutputLayout = new java.awt.GridBagLayout();
@@ -1760,32 +1779,11 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         jPanelOutput.add(jPanelStatusBar, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
-        jPanelMain.setLayout(jPanelMainLayout);
-        jPanelMainLayout.setHorizontalGroup(
-            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addComponent(jPanelControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-        );
-        jPanelMainLayout.setVerticalGroup(
-            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelControls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jSplitPane2.setRightComponent(jPanelOutput);
 
-        getContentPane().add(jPanelMain, java.awt.BorderLayout.CENTER);
+        jPanelMain.add(jSplitPane2);
+
+        getContentPane().add(jPanelMain);
 
         bindingGroup.bind();
 
@@ -2243,7 +2241,7 @@ public class MainWindow extends javax.swing.JFrame {
             public void run() {
                 MainWindow mw = new MainWindow();
                 // Set the title
-                mw.setTitle("ALNS Solver v1.0 (GUI mode)");
+                mw.setTitle("CTOWSS Solver v1.5 (GUI mode)");
 
                 // Make the window appear
                 mw.setVisible(true);
@@ -2581,6 +2579,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPaneALNS;
     private javax.swing.JScrollPane jScrollPaneIMIPS;
     private javax.swing.JScrollPane jScrollPaneTextAreaOutput;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPaneSolvers;
     private javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JTextField jTextField19;

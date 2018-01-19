@@ -141,6 +141,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel27 = new javax.swing.JLabel();
         jTextFieldNumThreads1 = new javax.swing.JTextField();
         jCheckBoxForceHeuristicConstraints1 = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
         jPanelALNS = new javax.swing.JPanel();
         jScrollPaneALNS = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
@@ -680,6 +681,13 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanelMIPSParameters.add(jCheckBoxForceHeuristicConstraints1, gridBagConstraints);
 
+        jLabel3.setText("seconds");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.insets = new java.awt.Insets(11, 0, 0, 0);
+        jPanelMIPSParameters.add(jLabel3, gridBagConstraints);
+
         jPanel5.add(jPanelMIPSParameters);
 
         jScrollPaneIMIPS.setViewportView(jPanel5);
@@ -895,7 +903,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel4.add(jLabel9, gridBagConstraints);
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel10.setText("ALNS solver time limit");
+        jLabel10.setText("ALNS solver time limit (seconds)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 38;
@@ -1729,7 +1737,8 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
         jPanelOutput.add(jScrollPaneTextAreaOutput, gridBagConstraints);
 
-        jButtonReset.setText("Reset");
+        jButtonReset.setText("Clear");
+        jButtonReset.setToolTipText("Clear console ouput, reset status");
         jButtonReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetActionPerformed(evt);
@@ -2528,6 +2537,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

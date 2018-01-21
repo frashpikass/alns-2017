@@ -301,7 +301,6 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogDeprecatedOptions.setBounds(new java.awt.Rectangle(50, 50, 100, 200));
         jDialogDeprecatedOptions.setLocation(new java.awt.Point(50, 50));
         jDialogDeprecatedOptions.setMinimumSize(new java.awt.Dimension(100, 300));
-        jDialogDeprecatedOptions.setPreferredSize(new java.awt.Dimension(100, 300));
         jDialogDeprecatedOptions.setSize(new java.awt.Dimension(200, 400));
         jDialogDeprecatedOptions.setType(java.awt.Window.Type.UTILITY);
         jDialogDeprecatedOptions.getContentPane().setLayout(new javax.swing.BoxLayout(jDialogDeprecatedOptions.getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
@@ -450,7 +449,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelnstances.add(jScrollPane2);
 
-        jPanelInstancesButtons.setAlignmentX(0.5F);
         jPanelInstancesButtons.setLayout(new javax.swing.BoxLayout(jPanelInstancesButtons, javax.swing.BoxLayout.PAGE_AXIS));
 
         btnAddInstance.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/playlist-plus.png"))); // NOI18N
@@ -2074,6 +2072,14 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonOutputFolderPath1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPath1ActionPerformed
         // TODO add your handling code here:
+        jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
+        int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelSolversEnvelope);
+        File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
+        if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
+            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
+            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
+            updateWorkingDirectory(outputFolderPath);
+        }
     }//GEN-LAST:event_jButtonOutputFolderPath1ActionPerformed
 
     private void jButtonErrorOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonErrorOkActionPerformed
@@ -2100,6 +2106,14 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonOutputFolderPath2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPath2ActionPerformed
         // TODO add your handling code here:
+        jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
+        int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelSolversEnvelope);
+        File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
+        if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
+            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
+            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
+            updateWorkingDirectory(outputFolderPath);
+        }
     }//GEN-LAST:event_jButtonOutputFolderPath2ActionPerformed
 
     private void jButtonRunMIPSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunMIPSActionPerformed
@@ -2315,6 +2329,11 @@ public class MainWindow extends javax.swing.JFrame {
         jLabelStatus.setToolTipText(jLabelStatus.getText());
     }
     
+    /**
+     * Sets the progress bar in an indeterminate state and publishes a message
+     * in the status bar.
+     * @param message 
+     */
     public void updateSolverStatusTemporary(String message){
         this.jLabelStatus.setText(message);
         this.jProgressBar1.setIndeterminate(true);

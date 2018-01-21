@@ -143,9 +143,6 @@
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[100, 300]"/>
         </Property>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[100, 300]"/>
-        </Property>
         <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[200, 400]"/>
         </Property>
@@ -1164,9 +1161,6 @@
                           </SubComponents>
                         </Container>
                         <Container class="javax.swing.JPanel" name="jPanelInstancesButtons">
-                          <Properties>
-                            <Property name="alignmentX" type="float" value="0.5"/>
-                          </Properties>
 
                           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
                             <Property name="axis" type="int" value="3"/>

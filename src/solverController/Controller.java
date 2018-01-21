@@ -80,8 +80,25 @@ public class Controller
                 );
 
                 // Proceed with the optimization
-                this.optimize(path);
+                // Save the chosen parameters to the output folder
+                pb.serializeToJSON();
 
+                // Initialize a new Orienteering object starting from the current modelPath
+                lastOrienteering = new Orienteering(
+                        path,
+                        pb.getOrienteeringProperties()
+                );
+
+                currentALNS = new ALNS(
+                            lastOrienteering,
+                            pb.getALNSproperties(),
+                            this
+                );
+
+                currentALNS.execute();
+                
+                // Wait for job completion (the Controller will wait)
+                currentALNS.get();
                 // Update the batch number
                 this.lastInstanceNumber++;
             }
@@ -327,88 +344,6 @@ public class Controller
      */
     public void setSolver(Solvers solver) {
         this.solver = solver;
-    }
-    
-    /**
-     * Optimizes the batch of instances using the solver specified through the
-     * <code>setSolver</code> method.
-     * @throws java.lang.InterruptedException if the solver was interrupted by an external thread
-     * @throws Exception if anything else goes wrong
-     */
-    public void optimize() throws InterruptedException, Exception{
-        // Save the chosen parameters to the output folder
-        pb.serializeToJSON();
-        
-        this.lastInstanceNumber = 0;
-        try{
-            for(int i = 0; i < modelPaths.size() && !this.isCancelled(); i++){
-                String modelPath = modelPaths.get(i);
-                this.lastModelPath = modelPath;
-                // Initialize a new Orienteering object starting from the current modelPath
-                Orienteering o = new Orienteering(
-                        modelPath,
-                        pb.getOrienteeringProperties()
-                );
-
-                // Initialize a new ALNS object starting from the current modelPath
-                // and Orienteering object
-                ALNS a = new ALNS(
-                        o,
-                        pb.getALNSproperties(),
-                        this
-                );
-
-                // ALNS object will automatically pick a solver and apply it
-                a.optimize();
-
-                // Free memory occupied by Gurobi models
-                a.cleanup();
-            }
-        }
-        catch(InterruptedException e){
-            throw new InterruptedException(e.getMessage());
-        }
-    }
-    
-    
-    
-    /**
-     * Optimizes a single instance using the solver specified through the
-     * <code>setSolver</code> method.
-     * @param modelPath path to the model file to optimize
-     * @throws java.lang.Exception if anything goes wrong
-     */
-    public void optimize(String modelPath) throws Exception{
-        // Save the chosen parameters to the output folder
-        pb.serializeToJSON();
-        
-        // Initialize a new Orienteering object starting from the current modelPath
-        lastOrienteering = new Orienteering(
-                modelPath,
-                pb.getOrienteeringProperties()
-        );
-        
-        currentALNS = new ALNS(
-                    lastOrienteering,
-                    pb.getALNSproperties(),
-                    this
-        );
-        
-        currentALNS.execute();
-
-        //DEBUG1:
-        currentALNS.get();
-        /*
-        try{
-            currentALNS.get();
-        }
-        catch(ExecutionException e){
-            System.out.println("Controller - ALNS has thrown ExecutionException: "+e.getMessage());
-        }
-        */
-        //DEBUG1_end
-
-        // Now go back to "doInBackground()" and wait for the optimization to complete
     }
     
     /**

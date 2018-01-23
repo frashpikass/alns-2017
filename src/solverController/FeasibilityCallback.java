@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Inner class to handle callbacks that check for the first feasible solution
+ * Class to handle callbacks that check for the first feasible solution
  *
  * @author Frash
  */
@@ -20,13 +20,13 @@ class FeasibilityCallback extends GRBCallback {
 
     /**
      * Number of solution nodes to visit before the solver gives up on searching
-     * for a feasible solution
+     * for a feasible solution (Default value)
      */
     private final static double NODES_BEFORE_ABORT = 5000;
 
     /**
-     * Determines the maximum number of mips nodes to check before giving up a
-     * feasibility check.
+     * Determines the maximum number of mips nodes to check before giving up on 
+     * a feasibility check.
      */
     private double maxMIPSNodesForFeasibilityCheck;
 

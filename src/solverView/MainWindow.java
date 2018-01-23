@@ -550,11 +550,12 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMIPS.setLayout(new java.awt.BorderLayout());
 
         jScrollPaneIMIPS.setBorder(null);
+        jScrollPaneIMIPS.setMinimumSize(new java.awt.Dimension(300, 18));
 
         jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.PAGE_AXIS));
 
         jPanelMIPSActions.setMinimumSize(new java.awt.Dimension(300, 80));
-        jPanelMIPSActions.setPreferredSize(new java.awt.Dimension(600, 80));
+        jPanelMIPSActions.setPreferredSize(new java.awt.Dimension(300, 80));
 
         jButtonRunMIPS.setText("Solve with MIPS (exact)");
         buttonGroupActions.add(jButtonRunMIPS);
@@ -731,7 +732,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jScrollPaneIMIPS.setViewportView(jPanel5);
 
-        jPanelMIPS.add(jScrollPaneIMIPS, java.awt.BorderLayout.PAGE_START);
+        jPanelMIPS.add(jScrollPaneIMIPS, java.awt.BorderLayout.CENTER);
 
         jTabbedPaneSolvers.addTab("MIPS", jPanelMIPS);
 

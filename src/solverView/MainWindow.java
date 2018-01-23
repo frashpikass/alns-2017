@@ -109,6 +109,14 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonRun = new javax.swing.JButton();
         jButtonTestBean = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jDialogConfirmStop = new javax.swing.JDialog();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15), new java.awt.Dimension(32767, 15));
+        jPanel7 = new javax.swing.JPanel();
+        jButtonYesStop = new javax.swing.JButton();
+        jButtonNoStop = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -297,10 +305,10 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jDialogError.getContentPane().add(jLabelErrorIcon, gridBagConstraints);
 
-        jDialogDeprecatedOptions.setAlwaysOnTop(true);
         jDialogDeprecatedOptions.setBounds(new java.awt.Rectangle(50, 50, 100, 200));
         jDialogDeprecatedOptions.setLocation(new java.awt.Point(50, 50));
         jDialogDeprecatedOptions.setMinimumSize(new java.awt.Dimension(100, 300));
+        jDialogDeprecatedOptions.setPreferredSize(new java.awt.Dimension(100, 300));
         jDialogDeprecatedOptions.setSize(new java.awt.Dimension(200, 400));
         jDialogDeprecatedOptions.setType(java.awt.Window.Type.UTILITY);
         jDialogDeprecatedOptions.getContentPane().setLayout(new javax.swing.BoxLayout(jDialogDeprecatedOptions.getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
@@ -418,6 +426,39 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelActions.add(jButton1, gridBagConstraints);
 
         jDialogDeprecatedOptions.getContentPane().add(jPanelActions);
+
+        jDialogConfirmStop.setTitle("Warning");
+        jDialogConfirmStop.setMinimumSize(new java.awt.Dimension(400, 125));
+        jDialogConfirmStop.setModal(true);
+        jDialogConfirmStop.setPreferredSize(new java.awt.Dimension(400, 125));
+        jDialogConfirmStop.setResizable(false);
+
+        jPanel6.setLayout(new java.awt.BorderLayout());
+
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/alert.png"))); // NOI18N
+        jPanel6.add(jLabel17, java.awt.BorderLayout.CENTER);
+
+        jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel29.setText("<html>Are you sure you want to stop the solver?\n<br />The batch process will also stop.\n</html>");
+        jLabel29.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        jPanel6.add(jLabel29, java.awt.BorderLayout.LINE_END);
+        jPanel6.add(filler4, java.awt.BorderLayout.EAST);
+
+        jDialogConfirmStop.getContentPane().add(jPanel6, java.awt.BorderLayout.CENTER);
+
+        jButtonYesStop.setText("Yes");
+        jButtonYesStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonYesStopActionPerformed(evt);
+            }
+        });
+        jPanel7.add(jButtonYesStop);
+
+        jButtonNoStop.setText("No");
+        jPanel7.add(jButtonNoStop);
+
+        jDialogConfirmStop.getContentPane().add(jPanel7, java.awt.BorderLayout.SOUTH);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1230, 650));
@@ -1762,7 +1803,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelStatusBar.add(jPanelSBTop, java.awt.BorderLayout.PAGE_START);
 
-        jPanelSBBottom.setLayout(new java.awt.GridLayout(1, 0));
+        jPanelSBBottom.setLayout(new java.awt.GridLayout());
 
         jLabel25.setText("Best objective:");
         jPanelSBBottom.add(jLabel25);
@@ -1799,18 +1840,7 @@ public class MainWindow extends javax.swing.JFrame {
         
     private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
         // TODO add your handling code here:
-
-        // Kill the controller thread and triggers the garbage collector
-        if (controllerTask != null) {
-            controllerTask.cancel(true);
-            controllerTask = null;
-            System.gc();
-        }
-        
-        enableControlPanel(true);
-
-        // Update the status text
-        updateStatusLabel("Stopped.");
+        jDialogConfirmStop.setVisible(true);
     }//GEN-LAST:event_jButtonStopActionPerformed
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
@@ -2223,6 +2253,24 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         loadParameters();
     }//GEN-LAST:event_jButtonLoadParametersMIPSActionPerformed
+
+    private void jButtonYesStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonYesStopActionPerformed
+        // TODO add your handling code here:
+        // Kill the controller thread and triggers the garbage collector
+        if (controllerTask != null) {
+            controllerTask.cancel(true);
+            controllerTask = null;
+            System.gc();
+        }
+        
+        enableControlPanel(true);
+
+        // Update the status text
+        updateStatusLabel("Stopped.");
+        
+        // Close the modal dialog
+        jDialogConfirmStop.setVisible(false);
+    }//GEN-LAST:event_jButtonYesStopActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -2499,11 +2547,13 @@ public class MainWindow extends javax.swing.JFrame {
     private solverView.DoubleConverter doubleConverter1;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler3;
+    private javax.swing.Box.Filler filler4;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonErrorOk;
     private javax.swing.JButton jButtonLoadParameters;
     private javax.swing.JButton jButtonLoadParametersALNS;
     private javax.swing.JButton jButtonLoadParametersMIPS;
+    private javax.swing.JButton jButtonNoStop;
     private javax.swing.JButton jButtonOutputFolderPath;
     private javax.swing.JButton jButtonOutputFolderPath1;
     private javax.swing.JButton jButtonOutputFolderPath2;
@@ -2517,6 +2567,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSaveParametersMIPS;
     private javax.swing.JButton jButtonStop;
     private javax.swing.JButton jButtonTestBean;
+    private javax.swing.JButton jButtonYesStop;
     private javax.swing.JCheckBox jCheckBoxDestroyCloseToBarycenter;
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyBestInsertion;
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyCostInsertion;
@@ -2528,6 +2579,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBoxRepairTravelTime;
     private javax.swing.JCheckBox jCheckBoxRepairVehicleTime;
     private javax.swing.JCheckBox jCheckBoxRepairWorstRemoval;
+    private javax.swing.JDialog jDialogConfirmStop;
     private javax.swing.JDialog jDialogDeprecatedOptions;
     private javax.swing.JDialog jDialogError;
     private javax.swing.JFileChooser jFileChooserInstances;
@@ -2544,6 +2596,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
@@ -2556,6 +2609,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2576,6 +2630,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanelALNS;
     private javax.swing.JPanel jPanelALNSActions;
     private javax.swing.JPanel jPanelALNSGeneralParams;

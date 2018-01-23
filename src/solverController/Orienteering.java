@@ -835,24 +835,34 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @throws Exception if there are problems while toggling the constraints
      */
     public void optimizeRelaxed() throws GRBException, Exception {
-        // Reset the model to an unsolved state
-        model.reset();
+        try{
+            // Reset the model to an unsolved state
+            model.reset();
 
-        // Check if the user wants to use heuristic constraints
-        if (orienteeringProperties.isForceHeuristicConstraints()) {
-            toggleHeuristicConstraintsOn();
+            // Check if the user wants to use heuristic constraints
+            if (orienteeringProperties.isForceHeuristicConstraints()) {
+                toggleHeuristicConstraintsOn();
+            }
+
+            GRBModel relaxedModel = model.relax();
+            
+            // Set the callback to allow abort and notification to controller
+            relaxedModel.setCallback(new MIPSCallback(this));
+            
+            // Optimize the relaxed model
+            relaxedModel.optimize();
+
+            // Save the relaxed solution to file
+            relaxedModel.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_relaxed.sol");
+
+            // Dispose of the relaxed model
+            relaxedModel.dispose();
         }
-
-        GRBModel relaxedModel = model.relax();
-
-        // Optimize the relaxed model
-        relaxedModel.optimize();
-
-        // Save the relaxed solution to file
-        relaxedModel.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_relaxed.sol");
-
-        // Dispose of the relaxed model
-        relaxedModel.dispose();
+        catch (InterruptedException e){
+            // Handle a cancellation
+            this.cancel(true);
+            throw new InterruptedException(e.getMessage());
+        }
     }
 
     /**
@@ -884,22 +894,32 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * @throws Exception if there are problems while toggling the constraints
      */
     public void optimizeMIPS() throws GRBException, Exception {
-        // Reset the model to an unsolved state
-        model.reset();
+        try {
+            // Reset the model to an unsolved state
+            model.reset();
 
-        // Check if you want to use heuristic constraints
-        if (orienteeringProperties.isForceHeuristicConstraints()) {
-            toggleHeuristicConstraintsOn();
+            // Check if you want to use heuristic constraints
+            if (orienteeringProperties.isForceHeuristicConstraints()) {
+                toggleHeuristicConstraintsOn();
+            }
+            
+            // Set the callback to allow abort and notification to controller
+            model.setCallback(new MIPSCallback(this));
+
+            // Optimize the model
+            model.optimize();
+
+            // Retrieve the best objective value
+            this.bestGlobalObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
+
+            // Save and log solution
+            this.saveAndLogSolution(model);
         }
-
-        // Optimize the model
-        model.optimize();
-        
-        // Retrieve the best objective value
-        this.bestGlobalObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-        
-        // Save and log solution
-        this.saveAndLogSolution(model);
+        catch (InterruptedException e){
+            // Handle a cancellation
+            this.cancel(true);
+            throw new InterruptedException(e.getMessage());
+        }
     }
 
     /**
@@ -1827,5 +1847,34 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         
         // Notify of the new solution
         env.message("\nBest solution saved. \n"+bestSolution.toString());
+    }
+}
+
+/**
+ * Inner class to handle callbacks that stop the solver if it gets externally
+ * stopped and keeps updating the controller on the status.
+ *
+ * @author Frash
+ */
+class MIPSCallback extends GRBCallback {
+    /**
+     * Reference to the Orienteering thread
+     */
+    private Orienteering thread;
+
+    /**
+     * Constructor for class MIPSCallback
+     *
+     */
+    public MIPSCallback(Orienteering thread) {
+        this.thread = thread;
+    }
+
+    @Override
+    protected void callback() {
+        // double runtime = getDoubleInfo(GRB.CB_RUNTIME);
+        if (thread.isCancelled()) {
+            abort();
+        }
     }
 }

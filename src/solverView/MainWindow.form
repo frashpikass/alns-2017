@@ -6382,9 +6382,6 @@
                         </Component>
                         <Component class="javax.swing.JProgressBar" name="jProgressBar1">
                           <Properties>
-                            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="null" type="code"/>
-                            </Property>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="null"/>
                             </Property>

@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -1813,7 +1814,6 @@ public class MainWindow extends javax.swing.JFrame {
         jLabelBestObj.setText("0.0");
         jPanelSBBottom.add(jLabelBestObj);
 
-        jProgressBar1.setToolTipText(null);
         jProgressBar1.setBorder(null);
         jProgressBar1.setStringPainted(true);
         jPanelSBBottom.add(jProgressBar1);
@@ -1851,6 +1851,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         // Reset the progress bar
         jProgressBar1.setIndeterminate(false);
+        jProgressBar1.setString(null);
         jProgressBar1.setValue(0);
         
         jLabelBestObj.setText("0.0");
@@ -1891,6 +1892,7 @@ public class MainWindow extends javax.swing.JFrame {
             // Update the status bar
             updateStatusLabel("Running.");
             jProgressBar1.setIndeterminate(false);
+            jProgressBar1.setString(null);
             jProgressBar1.setValue(0);
 
             // Setup a new instance of controller
@@ -1936,6 +1938,7 @@ public class MainWindow extends javax.swing.JFrame {
             // Update the status bar
             updateStatusLabel("Running.");
             jProgressBar1.setIndeterminate(false);
+            jProgressBar1.setString(null);
             jProgressBar1.setValue(0);
 
             // Setup a new instance of controller
@@ -2331,9 +2334,13 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public void updateSolverStatusIndicators(
             OptimizationStatusMessage osm
-    ){
+    ){  
         if(osm != null){
             this.jLabelBestObj.setText(String.valueOf(osm.getBestObj()));
+            
+            // Record how much time is left for processing the current instance
+            long timeLeft = (long) osm.getTimelimit()- (long) osm.getElapsedTime();
+            long minutesLeft = TimeUnit.SECONDS.toMinutes(timeLeft);
             
             switch(osm.getStatus()){
                 case STARTING:
@@ -2345,6 +2352,8 @@ public class MainWindow extends javax.swing.JFrame {
                     this.jLabelStatus.setText("Working. Solving instance '"+osm.getInstancePath()
                             +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+" completed.");
                     this.jProgressBar1.setValue(osm.getProgress());
+                    this.jProgressBar1.setString(osm.getProgress()+"%, "
+                            +minutesLeft+" minutes left");
                     break;
                     
                 case STOPPING:
@@ -2356,6 +2365,7 @@ public class MainWindow extends javax.swing.JFrame {
                     this.jLabelStatus.setText("Stopped while solving instance '"+osm.getInstancePath()
                             +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+" completed. Ready.");
                     this.jProgressBar1.setValue(osm.getProgress());
+                    this.jProgressBar1.setString(osm.getProgress()+"%, "+"stopped");
                     // Re-enable the control panel
                     this.enableControlPanel(true);
                     break;
@@ -2366,6 +2376,7 @@ public class MainWindow extends javax.swing.JFrame {
                     updateStatusLabel("Done! Ready.");
                     
                     // Update the progress bar
+                    this.jProgressBar1.setString(null);
                     this.jProgressBar1.setValue(100);
 
                     // Re-enable the control panel

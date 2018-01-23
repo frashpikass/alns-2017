@@ -2385,7 +2385,8 @@ public class ALNS extends Orienteering {
                 this.getProgress(),
                 elapsedTime,
                 realState,
-                bestObj
+                bestObj,
+                this.alnsProperties.getTimeLimitALNS()
         );
 
         controller.setMessageFromALNS(osm);

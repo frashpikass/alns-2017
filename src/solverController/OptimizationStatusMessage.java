@@ -26,6 +26,11 @@ public class OptimizationStatusMessage {
     private double elapsedTime;
     
     /**
+     * Total time limit for the current job.
+     */
+    private double timelimit;
+    
+    /**
      * Current best objective value
      */
     private double bestObj;
@@ -63,7 +68,8 @@ public class OptimizationStatusMessage {
             int progress,
             double elapsedTime,
             Status status,
-            double bestObj){
+            double bestObj,
+            double timelimit){
         this.instancePath = instancePath;
         this.progress = progress;
         this.elapsedTime = elapsedTime;
@@ -71,6 +77,7 @@ public class OptimizationStatusMessage {
         this.batchSize = 1;
         this.status = status;
         this.bestObj = bestObj;
+        this.timelimit = timelimit;
     }
     
     /**
@@ -90,7 +97,8 @@ public class OptimizationStatusMessage {
             int instanceNumber,
             int batchSize,
             Status status,
-            double bestObj){
+            double bestObj,
+            double timelimit){
         this.instancePath = instancePath;
         this.progress = progress;
         this.elapsedTime = elapsedTime;
@@ -98,6 +106,7 @@ public class OptimizationStatusMessage {
         this.batchSize = batchSize;
         this.status = status;
         this.bestObj = bestObj;
+        this.timelimit = timelimit;
     }
 
     /**
@@ -122,6 +131,14 @@ public class OptimizationStatusMessage {
      */
     public double getElapsedTime() {
         return elapsedTime;
+    }
+
+    /**
+     * Total time limit for the current job.
+     * @return Total time limit for the current job.
+     */
+    public double getTimelimit() {
+        return timelimit;
     }
     
     /**
@@ -157,7 +174,7 @@ public class OptimizationStatusMessage {
     }
     
     public String toString(){
-        return elapsedTime
+        return elapsedTime + "/" + timelimit
                 + "s: Current Instance '"
                 + instancePath
                 + "' @ "

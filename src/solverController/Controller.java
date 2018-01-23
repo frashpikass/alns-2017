@@ -66,7 +66,19 @@ public class Controller
             for(String path : this.modelPaths){
                 // Save the current model path
                 this.lastModelPath = path;
-
+                
+                // Get the total timelimit according to the selected solver
+                double timelimit = 1;
+                switch(this.getSolver()){
+                    case SOLVE_ALNS:
+                        timelimit = pb.getALNSproperties().getTimeLimitALNS();
+                        break;
+                        
+                    case SOLVE_MIPS:
+                        timelimit = pb.getOrienteeringProperties().getTimeLimit();
+                        break;
+                }
+                
                 // Initialize progress to 0
                 this.setProgress(0);
                 // Publish information about the initial status
@@ -75,7 +87,8 @@ public class Controller
                         lastInstanceNumber,
                         modelPaths.size(),
                         OptimizationStatusMessage.Status.STARTING,
-                        0.0
+                        0.0,
+                        timelimit
                     )
                 );
 
@@ -363,7 +376,8 @@ public class Controller
                     this.lastInstanceNumber,
                     this.modelPaths.size(),
                     messageFromALNS.getStatus(),
-                    messageFromALNS.getBestObj()
+                    messageFromALNS.getBestObj(),
+                    messageFromALNS.getTimelimit()
             );
             publish(newMessage);
         }
@@ -410,7 +424,8 @@ public class Controller
                             osm.getInstanceNumber(),
                             osm.getBatchSize(),
                             realState,
-                            osm.getBestObj()
+                            osm.getBestObj(),
+                            osm.getTimelimit()
                     )
             );
         }

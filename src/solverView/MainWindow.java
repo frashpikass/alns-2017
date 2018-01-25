@@ -240,6 +240,8 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelSBTop = new javax.swing.JPanel();
         jLabelStatus = new javax.swing.JLabel();
         jPanelSBBottom = new javax.swing.JPanel();
+        jLabel30 = new javax.swing.JLabel();
+        jLabelSelectedSolver = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jLabelBestObj = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
@@ -309,7 +311,6 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogDeprecatedOptions.setBounds(new java.awt.Rectangle(50, 50, 100, 200));
         jDialogDeprecatedOptions.setLocation(new java.awt.Point(50, 50));
         jDialogDeprecatedOptions.setMinimumSize(new java.awt.Dimension(100, 300));
-        jDialogDeprecatedOptions.setPreferredSize(new java.awt.Dimension(100, 300));
         jDialogDeprecatedOptions.setSize(new java.awt.Dimension(200, 400));
         jDialogDeprecatedOptions.setType(java.awt.Window.Type.UTILITY);
         jDialogDeprecatedOptions.getContentPane().setLayout(new javax.swing.BoxLayout(jDialogDeprecatedOptions.getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
@@ -431,7 +432,6 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogConfirmStop.setTitle("Warning");
         jDialogConfirmStop.setMinimumSize(new java.awt.Dimension(400, 125));
         jDialogConfirmStop.setModal(true);
-        jDialogConfirmStop.setPreferredSize(new java.awt.Dimension(400, 125));
         jDialogConfirmStop.setResizable(false);
 
         jPanel6.setLayout(new java.awt.BorderLayout());
@@ -1805,11 +1805,21 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelStatusBar.add(jPanelSBTop, java.awt.BorderLayout.PAGE_START);
 
-        jPanelSBBottom.setLayout(new java.awt.GridLayout());
+        jPanelSBBottom.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel25.setText("Best objective:");
+        jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel30.setText("Solver:  ");
+        jPanelSBBottom.add(jLabel30);
+
+        jLabelSelectedSolver.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabelSelectedSolver.setText("No solver selected");
+        jPanelSBBottom.add(jLabelSelectedSolver);
+
+        jLabel25.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel25.setText("Best objective:  ");
         jPanelSBBottom.add(jLabel25);
 
+        jLabelBestObj.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelBestObj.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelBestObj.setText("0.0");
         jPanelSBBottom.add(jLabelBestObj);
@@ -1878,6 +1888,9 @@ public class MainWindow extends javax.swing.JFrame {
     private void runWithSolver(Controller.Solvers solver){
         // Update the parameters
         updateParametersBean();
+        
+        // Display the currently selected solver in the GUI
+        jLabelSelectedSolver.setText(solver.toString());
 
         // Retrieve all instances to run
         List<String> modelPaths = new ArrayList<>();
@@ -2344,7 +2357,10 @@ public class MainWindow extends javax.swing.JFrame {
             
             switch(osm.getStatus()){
                 case STARTING:
-                    this.updateSolverStatusTemporary("Starting. Please wait...");
+                    this.updateSolverStatusTemporary("Starting to solve instance '"+osm.getInstancePath()
+                            +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()
+                            +" completed."
+                            +" Please wait...");
                     break;
                     
                 case RUNNING:
@@ -2352,8 +2368,20 @@ public class MainWindow extends javax.swing.JFrame {
                     this.jLabelStatus.setText("Working. Solving instance '"+osm.getInstancePath()
                             +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+" completed.");
                     this.jProgressBar1.setValue(osm.getProgress());
-                    this.jProgressBar1.setString(osm.getProgress()+"%, "
-                            +minutesLeft+" minutes left");
+                    
+                    
+                    // Set the progress bar text according to the selected solver
+                    if(this.controllerTask.getSolver() == Controller.Solvers.SOLVE_RELAXED){
+                        this.jProgressBar1.setString("Instance "
+                                + (osm.getInstanceNumber()+1)
+                                + "/"
+                                + osm.getBatchSize()
+                        );
+                    }
+                    else {
+                        this.jProgressBar1.setString(osm.getProgress()+"%, "
+                                +minutesLeft+" minutes left");
+                    }
                     break;
                     
                 case STOPPING:
@@ -2371,16 +2399,31 @@ public class MainWindow extends javax.swing.JFrame {
                     break;
                     
                 case DONE:
-                    this.jProgressBar1.setIndeterminate(false);
-                    // Update the status label
-                    updateStatusLabel("Done! Ready.");
-                    
-                    // Update the progress bar
-                    this.jProgressBar1.setString(null);
-                    this.jProgressBar1.setValue(100);
+                    if(osm.getInstanceNumber()<osm.getBatchSize()) {
+                        // We are not done with the whole batch yet
 
-                    // Re-enable the control panel
-                    this.enableControlPanel(true);
+                        // Update the temporary status label
+                        updateSolverStatusTemporary(
+                                "Instance '"+osm.getInstancePath()+"' ("
+                                +osm.getInstanceNumber()+"/"+osm.getBatchSize()
+                                +") done! Loading the next instance..."
+                        );
+                    }
+                    else {
+                        // The batch has ended
+                        
+                        this.jProgressBar1.setIndeterminate(false);
+                        // Update the status label
+                        updateStatusLabel("Done! Ready.");
+
+                        // Update the progress bar
+                        this.jProgressBar1.setString(null);
+                        this.jProgressBar1.setValue(100);
+
+                        // Re-enable the control panel
+                        this.enableControlPanel(true);
+                    }
+                    
                     break;
             }
         }
@@ -2623,6 +2666,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -2635,6 +2679,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelOutputFolderPath;
     private javax.swing.JLabel jLabelOutputFolderPath1;
     private javax.swing.JLabel jLabelOutputFolderPath2;
+    private javax.swing.JLabel jLabelSelectedSolver;
     private javax.swing.JLabel jLabelStatus;
     private javax.swing.JList<String> jListInstances;
     private javax.swing.JPanel jPanel1;

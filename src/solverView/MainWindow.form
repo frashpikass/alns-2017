@@ -1041,6 +1041,9 @@
           <Dimension value="[400, 125]"/>
         </Property>
         <Property name="modal" type="boolean" value="true"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[400, 125]"/>
+        </Property>
         <Property name="resizable" type="boolean" value="false"/>
       </Properties>
 
@@ -1124,6 +1127,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="No"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonNoStopActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -6372,7 +6378,7 @@
                         <Component class="javax.swing.JLabel" name="jLabelSelectedSolver">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Dialog" size="12" style="0"/>
+                              <Font name="Dialog" size="12" style="2"/>
                             </Property>
                             <Property name="text" type="java.lang.String" value="No solver selected"/>
                           </Properties>
@@ -6386,7 +6392,7 @@
                         <Component class="javax.swing.JLabel" name="jLabelBestObj">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Dialog" size="12" style="0"/>
+                              <Font name="Dialog" size="12" style="2"/>
                             </Property>
                             <Property name="horizontalAlignment" type="int" value="2"/>
                             <Property name="text" type="java.lang.String" value="0.0"/>

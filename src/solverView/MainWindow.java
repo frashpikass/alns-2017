@@ -420,6 +420,7 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogConfirmStop.setTitle("Warning");
         jDialogConfirmStop.setMinimumSize(new java.awt.Dimension(400, 125));
         jDialogConfirmStop.setModal(true);
+        jDialogConfirmStop.setPreferredSize(new java.awt.Dimension(400, 125));
         jDialogConfirmStop.setResizable(false);
 
         jPanel6.setLayout(new java.awt.BorderLayout());
@@ -445,6 +446,11 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel7.add(jButtonYesStop);
 
         jButtonNoStop.setText("No");
+        jButtonNoStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNoStopActionPerformed(evt);
+            }
+        });
         jPanel7.add(jButtonNoStop);
 
         jDialogConfirmStop.getContentPane().add(jPanel7, java.awt.BorderLayout.SOUTH);
@@ -1799,7 +1805,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel30.setText("Solver:  ");
         jPanelSBBottom.add(jLabel30);
 
-        jLabelSelectedSolver.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabelSelectedSolver.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         jLabelSelectedSolver.setText("No solver selected");
         jPanelSBBottom.add(jLabelSelectedSolver);
 
@@ -1807,7 +1813,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel25.setText("Best objective:  ");
         jPanelSBBottom.add(jLabel25);
 
-        jLabelBestObj.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabelBestObj.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         jLabelBestObj.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelBestObj.setText("0.0");
         jPanelSBBottom.add(jLabelBestObj);
@@ -1839,6 +1845,7 @@ public class MainWindow extends javax.swing.JFrame {
         
     private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
         // TODO add your handling code here:
+        jDialogConfirmStop.setLocationRelativeTo(jPanelOutput);
         jDialogConfirmStop.setVisible(true);
     }//GEN-LAST:event_jButtonStopActionPerformed
 
@@ -2276,6 +2283,11 @@ public class MainWindow extends javax.swing.JFrame {
         // Close the modal dialog
         jDialogConfirmStop.setVisible(false);
     }//GEN-LAST:event_jButtonYesStopActionPerformed
+
+    private void jButtonNoStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNoStopActionPerformed
+        // TODO add your handling code here:
+        jDialogConfirmStop.setVisible(false);
+    }//GEN-LAST:event_jButtonNoStopActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if

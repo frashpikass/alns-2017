@@ -7,7 +7,6 @@ package solverController;
 
 import gurobi.*;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -30,6 +29,15 @@ import solverModel.Vehicle;
  * @author Frash
  */
 public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage> {
+        /**
+     * The controller to notify of eventual changes
+     */
+    protected Controller controller = null;
+    
+    /**
+     * Time elapsed since the start of the optimization process.
+     */
+    protected long elapsedTime = (long) 0.0;
 
     /**
      * A Javabean that holds all general parameters for an Orienteering solver.
@@ -40,11 +48,6 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * Constant to define the default file extension for log files
      */
     private final static String LOG_FILE_EXTESION = ".log";
-
-    /**
-     * Constant to define the default file extension for object files
-     */
-    private final static String OBJECT_FILE_EXTESION = ".dat";
 
     /**
      * Constant value for the maximum time limit for the Gurobi solver
@@ -886,7 +889,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.env.set(GRB.IntParam.Threads, newNumThreads);
         model.update();
     }
-
+    
     /**
      * Optimize the provided model using Gurobi's MIPS solver.
      *
@@ -1848,6 +1851,40 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         // Notify of the new solution
         env.message("\nBest solution saved. \n"+bestSolution.toString());
     }
+    
+    /**
+     * Set how much time has elapsed since the beginning of the optimization
+     * process. Also sets progress.
+     * 
+     * @param elapsedTime the elapsed time to set
+     */
+    protected void setElapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
+        this.setProgress(this.progressEstimate(elapsedTime));
+    }
+    
+    /**
+     * Get how much time has elapsed since the beginning of the optimization
+     * process.
+     * 
+     * @return the elapsed time
+     */
+    public long getElapsedTime() {
+        return elapsedTime;
+    }
+    
+    /**
+     * Calculate an integer estimate of the progress of the solver run
+     *
+     * @param elapsedTime time elapsed since the start of the process
+     * @return an integer between [0,100] representing what percent of the
+     * solver run has been completed
+     */
+    protected int progressEstimate(long elapsedTime) {
+        int ret = Math.min((int) Math.round(((double) elapsedTime / (double) orienteeringProperties.getTimeLimit()) * 100.0), 100);
+        return ret;
+    }
+
 }
 
 /**
@@ -1872,9 +1909,66 @@ class MIPSCallback extends GRBCallback {
 
     @Override
     protected void callback() {
-        // double runtime = getDoubleInfo(GRB.CB_RUNTIME);
-        if (thread.isCancelled()) {
-            abort();
+        // Initialize message to null
+        OptimizationStatusMessage osm = null;
+        
+        try {
+            // double runtime = getDoubleInfo(GRB.CB_RUNTIME);
+            if (thread.isCancelled()) {
+                // Prepare a message for the controller
+                osm = new OptimizationStatusMessage(
+                        thread.instance.getName(), 
+                        thread.getProgress(), 
+                        thread.getElapsedTime(),
+                        OptimizationStatusMessage.Status.STOPPED, 
+                        thread.bestGlobalObjectiveValue, 
+                        thread.orienteeringProperties.getTimeLimit()
+                );
+
+                // Send the message to the controller (if possible)
+                if (thread.controller != null && osm != null){
+                    thread.controller.setMessageFromALNS(osm);
+                }
+
+                abort();
+            }
+            // if thread is not cancelled
+            else {
+                if (where == GRB.CB_MIP) {
+                    // Set the elapsed time and progress
+                    thread.setElapsedTime((long) getDoubleInfo(GRB.CB_RUNTIME));
+                }
+                
+                // Check if we have a solution and eventually log it
+                if (where == GRB.CB_MIPSOL) {
+                    // Set the elapsed time and progress
+                    thread.setElapsedTime((long) getDoubleInfo(GRB.CB_RUNTIME));
+                    
+                    // Update the best solution
+                    if(getDoubleInfo(GRB.CB_MIPSOL_OBJBST)>thread.bestGlobalObjectiveValue){
+                        thread.bestGlobalObjectiveValue = getDoubleInfo(GRB.CB_MIPSOL_OBJBST);
+                    }
+                }
+                
+                // Prepare a message for the controller
+                osm = new OptimizationStatusMessage(
+                        thread.instance.getName(), 
+                        thread.getProgress(), 
+                        thread.getElapsedTime(),
+                        OptimizationStatusMessage.Status.RUNNING, 
+                        thread.bestGlobalObjectiveValue, 
+                        thread.orienteeringProperties.getTimeLimit()
+                );
+
+                // Send the message to the controller (if possible)
+                if (thread.controller != null && osm != null){
+                    thread.controller.setMessageFromALNS(osm);
+                }
+                
+            }
+        }
+        catch (Exception ex) {
+            Logger.getLogger(MIPSCallback.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

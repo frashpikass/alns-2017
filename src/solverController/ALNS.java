@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import solverModel.Cluster;
 import solverModel.Node;
-import solverModel.Streak;
 import solverModel.Vehicle;
 
 /**
@@ -72,21 +70,10 @@ public class ALNS extends Orienteering {
     private ClusterRoulette clusterRoulette;
 
     /**
-     * The controller to notfy of eventual changes
-     */
-    private Controller controller;
-
-    /**
      * Starting time of the algorithm.
      * Reset it with method stopwatchStart()
      */
     private long startTimeInNanos = 0;
-    
-    /**
-     * Time elapsed since the beginning of the optimization process.
-     * Update it with method stopwatchUpdate()
-     */
-    private long elapsedTime = 0;
 
     public ALNS(Orienteering o, ALNSPropertiesBean ALNSParams, Controller c) throws Exception {
         // Setting up all parameters
@@ -1024,7 +1011,8 @@ public class ALNS extends Orienteering {
      * @return an integer between [0,100] representing what percent of the
      * solver run has been completed
      */
-    private int progressEstimate(long elapsedTime) {
+    @Override
+    protected int progressEstimate(long elapsedTime) {
         int ret = Math.min((int) Math.round(((double) elapsedTime / (double) alnsProperties.getTimeLimitALNS()) * 100.0), 100);
         return ret;
     }

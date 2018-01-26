@@ -223,9 +223,12 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldOutputFolderPath = new javax.swing.JTextField();
         jLabelOutputFolderPath = new javax.swing.JLabel();
         jPanelOutput = new javax.swing.JPanel();
-        jButtonStop = new javax.swing.JButton();
+        jTabbedPaneOutputs = new javax.swing.JTabbedPane();
+        jPanelConsoleOutput = new javax.swing.JPanel();
         jScrollPaneTextAreaOutput = new javax.swing.JScrollPane();
         jTextAreaOutput = new javax.swing.JTextArea();
+        jPanelStopClear = new javax.swing.JPanel();
+        jButtonStop = new javax.swing.JButton();
         jButtonReset = new javax.swing.JButton();
         jPanelStatusBar = new javax.swing.JPanel();
         jPanelSBTop = new javax.swing.JPanel();
@@ -1727,24 +1730,14 @@ public class MainWindow extends javax.swing.JFrame {
         jSplitPane2.setLeftComponent(jPanelControls);
 
         jPanelOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
-        java.awt.GridBagLayout jPanelOutputLayout = new java.awt.GridBagLayout();
-        jPanelOutputLayout.columnWidths = new int[] {0, 10, 0, 10, 0, 10, 0};
-        jPanelOutputLayout.rowHeights = new int[] {0, 10, 0};
-        jPanelOutput.setLayout(jPanelOutputLayout);
+        jPanelOutput.setPreferredSize(new java.awt.Dimension(750, 280));
+        jPanelOutput.setLayout(new java.awt.BorderLayout());
 
-        jButtonStop.setText("Stop");
-        jButtonStop.setEnabled(false);
-        jButtonStop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStopActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
-        jPanelOutput.add(jButtonStop, gridBagConstraints);
+        jTabbedPaneOutputs.setMinimumSize(new java.awt.Dimension(122, 200));
+        jTabbedPaneOutputs.setPreferredSize(new java.awt.Dimension(128, 200));
+
+        jPanelConsoleOutput.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanelConsoleOutput.setLayout(new javax.swing.BoxLayout(jPanelConsoleOutput, javax.swing.BoxLayout.PAGE_AXIS));
 
         jScrollPaneTextAreaOutput.setBackground(new java.awt.Color(0, 51, 102));
         jScrollPaneTextAreaOutput.setAutoscrolls(true);
@@ -1763,18 +1756,18 @@ public class MainWindow extends javax.swing.JFrame {
         jTextAreaOutput.setSelectionColor(new java.awt.Color(102, 0, 102));
         jScrollPaneTextAreaOutput.setViewportView(jTextAreaOutput);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 1157;
-        gridBagConstraints.ipady = 30;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
-        jPanelOutput.add(jScrollPaneTextAreaOutput, gridBagConstraints);
+        jPanelConsoleOutput.add(jScrollPaneTextAreaOutput);
+
+        jPanelStopClear.setLayout(new javax.swing.BoxLayout(jPanelStopClear, javax.swing.BoxLayout.LINE_AXIS));
+
+        jButtonStop.setText("Stop");
+        jButtonStop.setEnabled(false);
+        jButtonStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStopActionPerformed(evt);
+            }
+        });
+        jPanelStopClear.add(jButtonStop);
 
         jButtonReset.setText("Clear");
         jButtonReset.setToolTipText("Clear console ouput, reset status");
@@ -1783,14 +1776,17 @@ public class MainWindow extends javax.swing.JFrame {
                 jButtonResetActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelOutput.add(jButtonReset, gridBagConstraints);
+        jPanelStopClear.add(jButtonReset);
+
+        jPanelConsoleOutput.add(jPanelStopClear);
+
+        jTabbedPaneOutputs.addTab("Current job monitor", jPanelConsoleOutput);
+
+        jPanelOutput.add(jTabbedPaneOutputs, java.awt.BorderLayout.CENTER);
 
         jPanelStatusBar.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
         jPanelStatusBar.setForeground(java.awt.SystemColor.windowText);
+        jPanelStatusBar.setMinimumSize(new java.awt.Dimension(515, 60));
         jPanelStatusBar.setLayout(new java.awt.BorderLayout());
 
         jPanelSBTop.setLayout(new javax.swing.BoxLayout(jPanelSBTop, javax.swing.BoxLayout.LINE_AXIS));
@@ -1828,13 +1824,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelStatusBar.add(jPanelSBBottom, java.awt.BorderLayout.PAGE_END);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        jPanelOutput.add(jPanelStatusBar, gridBagConstraints);
+        jPanelOutput.add(jPanelStatusBar, java.awt.BorderLayout.PAGE_END);
 
         jSplitPane2.setRightComponent(jPanelOutput);
 
@@ -2698,6 +2688,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelALNSGeneralParams;
     private javax.swing.JPanel jPanelALNSParameters;
     private javax.swing.JPanel jPanelActions;
+    private javax.swing.JPanel jPanelConsoleOutput;
     private javax.swing.JPanel jPanelControls;
     private javax.swing.JPanel jPanelDestroyHeuristics;
     private javax.swing.JPanel jPanelInstancesButtons;
@@ -2716,6 +2707,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelSolver;
     private javax.swing.JPanel jPanelSolversEnvelope;
     private javax.swing.JPanel jPanelStatusBar;
+    private javax.swing.JPanel jPanelStopClear;
     private javax.swing.JPanel jPanelnstances;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JRadioButton jRadioButtonALNS;
@@ -2727,6 +2719,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPaneTextAreaOutput;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JTabbedPane jTabbedPaneOutputs;
     private javax.swing.JTabbedPane jTabbedPaneSolvers;
     private javax.swing.JTextArea jTextAreaOutput;
     private javax.swing.JTextField jTextField19;

@@ -29,7 +29,7 @@ import solverModel.Vehicle;
  * @author Frash
  */
 public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage> {
-        /**
+    /**
      * The controller to notify of eventual changes
      */
     protected Controller controller = null;
@@ -91,10 +91,11 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * Path to the log file (where it will be written)
      */
     private String logFilePath;
+    
     /**
      * Path to the model file to read
      */
-    private String modelPath;
+    protected String modelPath;
     
     /**
      * Best solution to the current instance.
@@ -251,7 +252,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.constraint8Variables = new ArrayList<>();
         
         // Setup best solution cache
-        this.bestSolution = new Solution();
+        this.bestSolution = new Solution(Controller.Solvers.SOLVE_MIPS.toString(), modelPath);
 
         // Go for preprocessing
         instancePreprocessing();
@@ -1883,6 +1884,14 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
     protected int progressEstimate(long elapsedTime) {
         int ret = Math.min((int) Math.round(((double) elapsedTime / (double) orienteeringProperties.getTimeLimit()) * 100.0), 100);
         return ret;
+    }
+
+    /**
+     * Best solution to the current instance.
+     * @return the bestSolution
+     */
+    public Solution getBestSolution() {
+        return bestSolution;
     }
 
 }

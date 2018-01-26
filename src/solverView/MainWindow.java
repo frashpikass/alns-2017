@@ -22,6 +22,7 @@ import javax.swing.ToolTipManager;
 import solverController.ALNSPropertiesBean;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
+import solverController.Solution;
 
 /**
  *
@@ -33,12 +34,20 @@ public class MainWindow extends javax.swing.JFrame {
      * Pointer to the controller task at hand
      */
     private Controller controllerTask = null;
+    
+    /**
+     * A list of available report panels
+     */
+    private List<SolutionReportPane> solutionReportPanes;
 
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
+        
+        // Initialize the solution report panels
+        solutionReportPanes = new ArrayList<>();
         
         // Redirecting all System Streams to jTextAreaOutput (virtual console)
         redirectSystemStreams();
@@ -462,7 +471,7 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogConfirmStop.getContentPane().add(jPanel7, java.awt.BorderLayout.SOUTH);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1230, 650));
+        setPreferredSize(new java.awt.Dimension(1230, 800));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
         jLabel1.setText("CTOWSS ALNS GUI v 1.5");
@@ -2332,6 +2341,22 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     /**
+     * Adds a solution report tab to the output pane.
+     * @param solution the new solution to represent.
+     */
+    public void addSolutionReport(Solution solution){
+        if(solution != null){
+            SolutionReportPane newPane = new SolutionReportPane(solution);
+            solutionReportPanes.add(newPane);
+            jTabbedPaneOutputs.add(newPane);
+            jTabbedPaneOutputs.setTitleAt(
+                    (solutionReportPanes.size()),
+                    "Report "+(solutionReportPanes.size())
+            );
+        }
+    }
+    
+    /**
      * Updates the status bar (label+progress bar).
      * @param osm the optimization status message to display.
      */
@@ -2384,6 +2409,10 @@ public class MainWindow extends javax.swing.JFrame {
                             +"', batch status: "+osm.getInstanceNumber()+"/"+osm.getBatchSize()+" completed. Ready.");
                     this.jProgressBar1.setValue(osm.getProgress());
                     this.jProgressBar1.setString(osm.getProgress()+"%, "+"stopped");
+                    
+                    // Eventually add the solution report
+                    this.addSolutionReport(controllerTask.getLatestBestSolution());
+                    
                     // Re-enable the control panel
                     this.enableControlPanel(true);
                     break;
@@ -2413,6 +2442,9 @@ public class MainWindow extends javax.swing.JFrame {
                         // Re-enable the control panel
                         this.enableControlPanel(true);
                     }
+                    
+                    // In any case, add the solution report
+                    this.addSolutionReport(controllerTask.getLatestBestSolution());
                     
                     break;
             }

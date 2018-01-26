@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import solverController.ALNSPropertiesBean;
@@ -39,6 +40,11 @@ public class MainWindow extends javax.swing.JFrame {
      * Incremental index representing the last solution report number
      */
     private int lastSolutionReportNumber;
+    
+    /**
+     * Remembers all the open solutionReports
+     */
+    private ArrayList<SolutionReportPane> solutionReports;
     
     /**
      * Creates new form MainWindow
@@ -67,6 +73,9 @@ public class MainWindow extends javax.swing.JFrame {
         
         // Initialize report numbers
         this.lastSolutionReportNumber = 0;
+        
+        // Initialize solution reports
+        solutionReports = new ArrayList<>();
     }
     
     /**
@@ -238,6 +247,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelStopClear = new javax.swing.JPanel();
         jButtonStop = new javax.swing.JButton();
         jButtonReset = new javax.swing.JButton();
+        jButtonCloseAllReports = new javax.swing.JButton();
         jPanelStatusBar = new javax.swing.JPanel();
         jPanelSBTop = new javax.swing.JPanel();
         jLabelStatus = new javax.swing.JLabel();
@@ -1766,6 +1776,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelStopClear.setLayout(new javax.swing.BoxLayout(jPanelStopClear, javax.swing.BoxLayout.LINE_AXIS));
 
+        jButtonStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/stop.png"))); // NOI18N
         jButtonStop.setText("Stop");
         jButtonStop.setEnabled(false);
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
@@ -1775,7 +1786,8 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPanelStopClear.add(jButtonStop);
 
-        jButtonReset.setText("Clear");
+        jButtonReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/eraser.png"))); // NOI18N
+        jButtonReset.setText("Clear console");
         jButtonReset.setToolTipText("Clear console ouput, reset status");
         jButtonReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1783,6 +1795,15 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         jPanelStopClear.add(jButtonReset);
+
+        jButtonCloseAllReports.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/notification-clear-all.png"))); // NOI18N
+        jButtonCloseAllReports.setText("Close all solution reports");
+        jButtonCloseAllReports.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCloseAllReportsActionPerformed(evt);
+            }
+        });
+        jPanelStopClear.add(jButtonCloseAllReports);
 
         jPanelConsoleOutput.add(jPanelStopClear);
 
@@ -2288,6 +2309,23 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         jDialogConfirmStop.setVisible(false);
     }//GEN-LAST:event_jButtonNoStopActionPerformed
+
+    private void jButtonCloseAllReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseAllReportsActionPerformed
+        // TODO add your handling code here:
+        
+        // Ask for confirmation
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure? All open report tabs will be closed!",
+                "Warning",
+                dialogButton
+        );
+        
+        if(dialogResult == JOptionPane.YES_OPTION){
+            this.removeAllSolutionReports();
+        }
+    }//GEN-LAST:event_jButtonCloseAllReportsActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -2358,6 +2396,9 @@ public class MainWindow extends javax.swing.JFrame {
                     this
             );
             
+            // Remember the reference to this pane
+            solutionReports.add(newPane);
+            
             // Add the solution pane to the report panes
             jTabbedPaneOutputs.addTab(
                     "Report "+lastSolutionReportNumber,
@@ -2372,7 +2413,20 @@ public class MainWindow extends javax.swing.JFrame {
      * @param solutionReport the solution report to remove
      */
     public void removeSolutionReport(SolutionReportPane solutionReport){
-        jTabbedPaneOutputs.remove(solutionReport);
+        if(solutionReport != null){
+            jTabbedPaneOutputs.remove(solutionReport);
+            solutionReports.remove(solutionReport);
+        }
+    }
+    
+    /**
+     * Remove all the open solution report tabs
+     */
+    public void removeAllSolutionReports(){
+        for(SolutionReportPane s:this.solutionReports){
+            jTabbedPaneOutputs.remove(s);
+        }
+        solutionReports.clear();
     }
     
     /**
@@ -2644,6 +2698,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonCloseAllReports;
     private javax.swing.JButton jButtonErrorOk;
     private javax.swing.JButton jButtonLoadParameters;
     private javax.swing.JButton jButtonLoadParametersALNS;

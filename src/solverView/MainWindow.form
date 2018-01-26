@@ -6343,6 +6343,9 @@
                           <SubComponents>
                             <Component class="javax.swing.JButton" name="jButtonStop">
                               <Properties>
+                                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                  <Image iconType="3" name="/images/stop.png"/>
+                                </Property>
                                 <Property name="text" type="java.lang.String" value="Stop"/>
                                 <Property name="enabled" type="boolean" value="false"/>
                               </Properties>
@@ -6352,11 +6355,25 @@
                             </Component>
                             <Component class="javax.swing.JButton" name="jButtonReset">
                               <Properties>
-                                <Property name="text" type="java.lang.String" value="Clear"/>
+                                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                  <Image iconType="3" name="/images/eraser.png"/>
+                                </Property>
+                                <Property name="text" type="java.lang.String" value="Clear console"/>
                                 <Property name="toolTipText" type="java.lang.String" value="Clear console ouput, reset status"/>
                               </Properties>
                               <Events>
                                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonResetActionPerformed"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JButton" name="jButtonCloseAllReports">
+                              <Properties>
+                                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                  <Image iconType="3" name="/images/notification-clear-all.png"/>
+                                </Property>
+                                <Property name="text" type="java.lang.String" value="Close all solution reports"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCloseAllReportsActionPerformed"/>
                               </Events>
                             </Component>
                           </SubComponents>

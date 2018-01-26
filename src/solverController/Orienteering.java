@@ -858,6 +858,9 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
 
             // Save the relaxed solution to file
             relaxedModel.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_relaxed.sol");
+            
+            // Save the relaxed solution to bestSolution too
+            bestSolution.update(bestGlobalObjectiveValue);
 
             // Dispose of the relaxed model
             relaxedModel.dispose();
@@ -922,6 +925,11 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         catch (InterruptedException e){
             // Handle a cancellation
             this.cancel(true);
+            
+            // Save and log solution
+            this.saveAndLogSolution(model);
+            
+            // Bubble up the exception
             throw new InterruptedException(e.getMessage());
         }
     }

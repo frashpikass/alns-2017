@@ -793,7 +793,8 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/images/folder-open.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Open output folder"/>
+                <Property name="text" type="java.lang.String" value="Output folder"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open the output folder for this solution report"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOpenSolutionPathActionPerformed"/>
@@ -810,6 +811,7 @@
                   <Image iconType="3" name="/images/close.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Close report"/>
+                <Property name="toolTipText" type="java.lang.String" value="Close this report tab"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCloseReportActionPerformed"/>

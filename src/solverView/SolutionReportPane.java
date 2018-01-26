@@ -26,7 +26,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
     private Solution solution = null;
     
     /**
-     * Path to the output folder
+     * Path to the output folder for this solution report
      */
     private String outputFolderPath;
     
@@ -204,7 +204,8 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jPanelButtons.setLayout(jPanelButtonsLayout);
 
         jButtonOpenSolutionPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
-        jButtonOpenSolutionPath.setText("Open output folder");
+        jButtonOpenSolutionPath.setText("Output folder");
+        jButtonOpenSolutionPath.setToolTipText("Open the output folder for this solution report");
         jButtonOpenSolutionPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOpenSolutionPathActionPerformed(evt);
@@ -218,6 +219,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
 
         jButtonCloseReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/close.png"))); // NOI18N
         jButtonCloseReport.setText("Close report");
+        jButtonCloseReport.setToolTipText("Close this report tab");
         jButtonCloseReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseReportActionPerformed(evt);

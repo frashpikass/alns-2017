@@ -6347,6 +6347,7 @@
                                   <Image iconType="3" name="/images/stop.png"/>
                                 </Property>
                                 <Property name="text" type="java.lang.String" value="Stop"/>
+                                <Property name="toolTipText" type="java.lang.String" value="Stop the batch execution"/>
                                 <Property name="enabled" type="boolean" value="false"/>
                               </Properties>
                               <Events>
@@ -6359,7 +6360,7 @@
                                   <Image iconType="3" name="/images/eraser.png"/>
                                 </Property>
                                 <Property name="text" type="java.lang.String" value="Clear console"/>
-                                <Property name="toolTipText" type="java.lang.String" value="Clear console ouput, reset status"/>
+                                <Property name="toolTipText" type="java.lang.String" value="Clear console ouput and reset status"/>
                               </Properties>
                               <Events>
                                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonResetActionPerformed"/>
@@ -6370,10 +6371,24 @@
                                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                                   <Image iconType="3" name="/images/notification-clear-all.png"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Close all solution reports"/>
+                                <Property name="text" type="java.lang.String" value="Close all reports"/>
+                                <Property name="toolTipText" type="java.lang.String" value="Close all solution reports"/>
+                                <Property name="enabled" type="boolean" value="false"/>
                               </Properties>
                               <Events>
                                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCloseAllReportsActionPerformed"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JButton" name="jButtonOpenOutputFolder">
+                              <Properties>
+                                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                  <Image iconType="3" name="/images/folder-open.png"/>
+                                </Property>
+                                <Property name="text" type="java.lang.String" value="Output folder"/>
+                                <Property name="toolTipText" type="java.lang.String" value="Open the current output folder in the File Manager"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOpenOutputFolderActionPerformed"/>
                               </Events>
                             </Component>
                           </SubComponents>

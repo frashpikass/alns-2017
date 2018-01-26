@@ -7,6 +7,7 @@ package solverView;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -248,6 +251,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonStop = new javax.swing.JButton();
         jButtonReset = new javax.swing.JButton();
         jButtonCloseAllReports = new javax.swing.JButton();
+        jButtonOpenOutputFolder = new javax.swing.JButton();
         jPanelStatusBar = new javax.swing.JPanel();
         jPanelSBTop = new javax.swing.JPanel();
         jLabelStatus = new javax.swing.JLabel();
@@ -1778,6 +1782,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/stop.png"))); // NOI18N
         jButtonStop.setText("Stop");
+        jButtonStop.setToolTipText("Stop the batch execution");
         jButtonStop.setEnabled(false);
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1788,7 +1793,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/eraser.png"))); // NOI18N
         jButtonReset.setText("Clear console");
-        jButtonReset.setToolTipText("Clear console ouput, reset status");
+        jButtonReset.setToolTipText("Clear console ouput and reset status");
         jButtonReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetActionPerformed(evt);
@@ -1797,13 +1802,25 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelStopClear.add(jButtonReset);
 
         jButtonCloseAllReports.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/notification-clear-all.png"))); // NOI18N
-        jButtonCloseAllReports.setText("Close all solution reports");
+        jButtonCloseAllReports.setText("Close all reports");
+        jButtonCloseAllReports.setToolTipText("Close all solution reports");
+        jButtonCloseAllReports.setEnabled(false);
         jButtonCloseAllReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseAllReportsActionPerformed(evt);
             }
         });
         jPanelStopClear.add(jButtonCloseAllReports);
+
+        jButtonOpenOutputFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
+        jButtonOpenOutputFolder.setText("Output folder");
+        jButtonOpenOutputFolder.setToolTipText("Open the current output folder in the File Manager");
+        jButtonOpenOutputFolder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOpenOutputFolderActionPerformed(evt);
+            }
+        });
+        jPanelStopClear.add(jButtonOpenOutputFolder);
 
         jPanelConsoleOutput.add(jPanelStopClear);
 
@@ -1871,19 +1888,32 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonStopActionPerformed
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
-        // TODO add your handling code here:
-        // Cleanup the output area
-        jTextAreaOutput.setText("");
+        // Ask for confirmation
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(
+                null,
+                "<html>Are you sure?"
+                        + "<br>The console will be cleared!"
+                        + "<br>Execution logs will still be available in the output folder.",
+                "Warning",
+                dialogButton
+        );
         
-        // Reset the progress bar
-        jProgressBar1.setIndeterminate(false);
-        jProgressBar1.setString(null);
-        jProgressBar1.setValue(0);
-        
-        jLabelBestObj.setText("0.0");
+        if(dialogResult == JOptionPane.YES_OPTION){
+            // Cleanup the output area
+            jTextAreaOutput.setText("");
 
-        // Update the status text
-        updateStatusLabel("Ready.");
+            // Reset the progress bar
+            jProgressBar1.setIndeterminate(false);
+            jProgressBar1.setString(null);
+            jProgressBar1.setValue(0);
+
+            jLabelBestObj.setText("0.0");
+
+            // Update the status text
+            updateStatusLabel("Ready.");
+        }
+        
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -2326,6 +2356,17 @@ public class MainWindow extends javax.swing.JFrame {
             this.removeAllSolutionReports();
         }
     }//GEN-LAST:event_jButtonCloseAllReportsActionPerformed
+
+    private void jButtonOpenOutputFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenOutputFolderActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            Desktop d = Desktop.getDesktop();
+            d.open(new File(this.parametersBean.getOrienteeringProperties().getOutputFolderPath()));
+        } catch (IOException ex) {
+            Logger.getLogger(SolutionReportPane.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonOpenOutputFolderActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -2405,6 +2446,9 @@ public class MainWindow extends javax.swing.JFrame {
                     new javax.swing.ImageIcon(getClass().getResource("/images/clipboard-text.png")),
                     newPane
             ); // NOI18N
+            
+            // Enable the button to close all solution reports
+            jButtonCloseAllReports.setEnabled(true);
         }
     }
     
@@ -2417,6 +2461,12 @@ public class MainWindow extends javax.swing.JFrame {
             jTabbedPaneOutputs.remove(solutionReport);
             solutionReports.remove(solutionReport);
         }
+        
+        // Disable the button to close all solution reports if there are no more
+        // reports
+        if(solutionReports.isEmpty()){
+            jButtonCloseAllReports.setEnabled(false);
+        }
     }
     
     /**
@@ -2427,6 +2477,9 @@ public class MainWindow extends javax.swing.JFrame {
             jTabbedPaneOutputs.remove(s);
         }
         solutionReports.clear();
+        
+        // Disable the button to close all solution reports
+        jButtonCloseAllReports.setEnabled(false);
     }
     
     /**
@@ -2704,6 +2757,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonLoadParametersALNS;
     private javax.swing.JButton jButtonLoadParametersMIPS;
     private javax.swing.JButton jButtonNoStop;
+    private javax.swing.JButton jButtonOpenOutputFolder;
     private javax.swing.JButton jButtonOutputFolderPath;
     private javax.swing.JButton jButtonOutputFolderPath1;
     private javax.swing.JButton jButtonOutputFolderPath2;

@@ -1209,7 +1209,7 @@
               <SubComponents>
                 <Container class="javax.swing.JSplitPane" name="jSplitPane1">
                   <Properties>
-                    <Property name="dividerLocation" type="int" value="550"/>
+                    <Property name="dividerLocation" type="int" value="450"/>
                   </Properties>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -6253,6 +6253,7 @@
               <SubComponents>
                 <Container class="javax.swing.JTabbedPane" name="jTabbedPaneOutputs">
                   <Properties>
+                    <Property name="tabLayoutPolicy" type="int" value="1"/>
                     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[122, 200]"/>
                     </Property>
@@ -6278,8 +6279,11 @@
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                          <JTabbedPaneConstraints tabName="Current job monitor">
-                            <Property name="tabTitle" type="java.lang.String" value="Current job monitor"/>
+                          <JTabbedPaneConstraints tabName="Console">
+                            <Property name="tabTitle" type="java.lang.String" value="Console"/>
+                            <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                              <Image iconType="3" name="/images/console.png"/>
+                            </Property>
                           </JTabbedPaneConstraints>
                         </Constraint>
                       </Constraints>

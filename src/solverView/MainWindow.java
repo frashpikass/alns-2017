@@ -36,18 +36,15 @@ public class MainWindow extends javax.swing.JFrame {
     private Controller controllerTask = null;
     
     /**
-     * A list of available report panels
+     * Incremental index representing the last solution report number
      */
-    private List<SolutionReportPane> solutionReportPanes;
-
+    private int lastSolutionReportNumber;
+    
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
-        
-        // Initialize the solution report panels
-        solutionReportPanes = new ArrayList<>();
         
         // Redirecting all System Streams to jTextAreaOutput (virtual console)
         redirectSystemStreams();
@@ -67,6 +64,9 @@ public class MainWindow extends javax.swing.JFrame {
         
         // Set the position of the error dialog
         jDialogError.setLocationRelativeTo(jPanelControls);
+        
+        // Initialize report numbers
+        this.lastSolutionReportNumber = 0;
     }
     
     /**
@@ -487,7 +487,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelControls.setToolTipText(null);
         jPanelControls.setLayout(new javax.swing.BoxLayout(jPanelControls, javax.swing.BoxLayout.PAGE_AXIS));
 
-        jSplitPane1.setDividerLocation(550);
+        jSplitPane1.setDividerLocation(450);
 
         jPanelnstances.setBorder(javax.swing.BorderFactory.createTitledBorder("1. Add instances to batch"));
         jPanelnstances.setMinimumSize(new java.awt.Dimension(94, 180));
@@ -1738,6 +1738,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelOutput.setPreferredSize(new java.awt.Dimension(750, 280));
         jPanelOutput.setLayout(new java.awt.BorderLayout());
 
+        jTabbedPaneOutputs.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jTabbedPaneOutputs.setMinimumSize(new java.awt.Dimension(122, 200));
         jTabbedPaneOutputs.setPreferredSize(new java.awt.Dimension(128, 200));
 
@@ -1785,7 +1786,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelConsoleOutput.add(jPanelStopClear);
 
-        jTabbedPaneOutputs.addTab("Current job monitor", jPanelConsoleOutput);
+        jTabbedPaneOutputs.addTab("Console", new javax.swing.ImageIcon(getClass().getResource("/images/console.png")), jPanelConsoleOutput); // NOI18N
 
         jPanelOutput.add(jTabbedPaneOutputs, java.awt.BorderLayout.CENTER);
 
@@ -2346,14 +2347,32 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public void addSolutionReport(Solution solution){
         if(solution != null){
-            SolutionReportPane newPane = new SolutionReportPane(solution);
-            solutionReportPanes.add(newPane);
-            jTabbedPaneOutputs.add(newPane);
-            jTabbedPaneOutputs.setTitleAt(
-                    (solutionReportPanes.size()),
-                    "Report "+(solutionReportPanes.size())
+            // Increment the reportNumber
+            this.lastSolutionReportNumber++;
+            
+            // Create a new solution pane
+            SolutionReportPane newPane = new SolutionReportPane(
+                    solution,
+                    parametersBean.getOrienteeringProperties().getOutputFolderPath(),
+                    lastSolutionReportNumber,
+                    this
             );
+            
+            // Add the solution pane to the report panes
+            jTabbedPaneOutputs.addTab(
+                    "Report "+lastSolutionReportNumber,
+                    new javax.swing.ImageIcon(getClass().getResource("/images/clipboard-text.png")),
+                    newPane
+            ); // NOI18N
         }
+    }
+    
+    /**
+     * Remove the solution report specified
+     * @param solutionReport the solution report to remove
+     */
+    public void removeSolutionReport(SolutionReportPane solutionReport){
+        jTabbedPaneOutputs.remove(solutionReport);
     }
     
     /**

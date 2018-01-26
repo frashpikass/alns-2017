@@ -5,9 +5,9 @@
  */
 package solverController;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,9 +35,29 @@ public class Solution {
     private double objectiveValue;
     
     /**
-     * Constructor for the class Solution.
+     * Path to the instance this solution refers to
      */
-    public Solution(){
+    private String instancePath;
+    
+    /**
+     * Name of the solver used for this solution
+     */
+    private String solverName;
+    
+    /**
+     * Timestamp of when this solution was last updated
+     */
+    private Timestamp timestamp;
+    
+    /**
+     * Constructor for the class Solution.
+     * @param solverName Name of the solver used to generate this solution
+     * @param instancePath Path to the instance this solution refers to
+     */
+    public Solution(String solverName, String instancePath){
+        this.solverName = solverName;
+        this.instancePath = instancePath;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
         this.vehiclePaths = new ArrayList<>();
         this.visitedClusters = new ArrayList<>();
     }
@@ -56,13 +76,17 @@ public class Solution {
         this.vehiclePaths = vehiclePaths;
         this.visitedClusters = visitedClusters;
         this.objectiveValue = objectiveValue;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
     
     @Override
     public String toString(){
         StringBuffer output = new StringBuffer();
         
-        output.append("Solution report.\n");
+        output.append("Solution report.\n\n");
+        output.append("Instance: "+instancePath+"\n");
+        output.append("Solver: "+solverName+"\n");
+        output.append("Timestamp: "+timestamp.toString()+"\n");
         output.append("Objective function value: "+objectiveValue+"\n");
         
         output.append("\nList of visited clusters (a * indicates that the node has been visited):");
@@ -101,6 +125,30 @@ public class Solution {
      */
     public double getObjectiveValue() {
         return objectiveValue;
+    }
+    
+    /**
+     * Path to the instance this solution refers to
+     * @return the instancePath
+     */
+    public String getInstancePath() {
+        return instancePath;
+    }
+
+    /**
+     * Name of the solver used for this solution
+     * @return the solverName
+     */
+    public String getSolverName() {
+        return solverName;
+    }
+
+    /**
+     * Timestamp of when this solution was last updated
+     * @return the timestamp
+     */
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
     
     /**

@@ -860,6 +860,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
             relaxedModel.write(orienteeringProperties.getOutputFolderPath() + File.separator + instance.getName() + "_relaxed.sol");
             
             // Save the relaxed solution to bestSolution too
+            this.bestGlobalObjectiveValue = relaxedModel.get(GRB.DoubleAttr.ObjVal);
             bestSolution.update(bestGlobalObjectiveValue);
 
             // Dispose of the relaxed model

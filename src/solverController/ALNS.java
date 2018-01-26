@@ -80,6 +80,7 @@ public class ALNS extends Orienteering {
         super(o);
         this.alnsProperties = ALNSParams;
         this.controller = c;
+        this.bestSolution = new Solution(c.getSolver().toString(), modelPath);
 
         // Setting up the Cluster Roulette
         clusterRoulette = new ClusterRoulette(instance.cloneClusters());
@@ -986,7 +987,7 @@ public class ALNS extends Orienteering {
             throw new InterruptedException(e.getMessage());
         }
         finally{
-            env.message("\nThis is the best solution found:\n"+bestSolution.toString());
+            env.message("\nThis is the best solution found:\n"+getBestSolution().toString());
         }
     }
     

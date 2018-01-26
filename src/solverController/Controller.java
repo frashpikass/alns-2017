@@ -38,9 +38,52 @@ public class Controller
     private List<String> modelPaths;
     
     /**
+     * A list of best solutions for the solved instances.
+     */
+    private List<Solution> bestSolutions;
+    
+    /**
      * Reference to the current ALNS task being solved
      */
     private ALNS currentALNS;
+    
+    
+    /**
+     * List of possible choices for solvers.
+     * Values are SOLVE_RELAXED, SOLVE_MIPS, SOLVE_ALNS
+     */
+    public enum Solvers {SOLVE_RELAXED, SOLVE_MIPS, SOLVE_ALNS};
+    
+    /**
+     * The solver chosen for the next batch of instances to solve.
+     */
+    private Solvers solver = Solvers.SOLVE_ALNS;
+    
+    /**
+     * Path to the last model set to be solved in the batch.
+     */
+    private String lastModelPath = "";
+    
+    /**
+     * Index of the current model being solved in the batch
+     */
+    private int lastInstanceNumber = 0;
+    
+    /**
+     * Reference to the last orienteering object created. It must be cleaned when the ALNS
+     * solver has finished processing the last model path.
+     */
+    private Orienteering lastOrienteering = null;
+    
+    /**
+     * The MainWindow which hosts the gui. This object must be used to update GUI features.
+     */
+    private MainWindow mainWindow;
+    
+    /**
+     * A message from an ALNS thread
+     */
+    private OptimizationStatusMessage messageFromALNS;
     
     /**
      * The outputstream where we want to print all the result.
@@ -107,6 +150,10 @@ public class Controller
                 
                 // Wait for job completion (the Controller will wait)
                 currentALNS.get();
+                
+                // Save the latest best solution
+                this.bestSolutions.add(currentALNS.getBestSolution());
+                
                 // Update the batch number
                 this.lastInstanceNumber++;
             }
@@ -114,6 +161,9 @@ public class Controller
         }
         catch(InterruptedException e){
             System.out.println("Controller was interrupted: "+e.getMessage());
+            
+            // Save the latest best solution
+            this.bestSolutions.add(currentALNS.getBestSolution());
             
             // Update the window
             messageReceived();
@@ -148,43 +198,6 @@ public class Controller
                     c.messageReceived();
         }
     }
-  
-    /**
-     * List of possible choices for solvers.
-     * Values are SOLVE_RELAXED, SOLVE_MIPS, SOLVE_ALNS
-     */
-    public enum Solvers {SOLVE_RELAXED, SOLVE_MIPS, SOLVE_ALNS};
-    
-    /**
-     * The solver chosen for the next batch of instances to solve.
-     */
-    private Solvers solver = Solvers.SOLVE_ALNS;
-    
-    /**
-     * Path to the last model set to be solved in the batch.
-     */
-    private String lastModelPath = "";
-    
-    /**
-     * Index of the current model being solved in the batch
-     */
-    private int lastInstanceNumber = 0;
-    
-    /**
-     * Reference to the last orienteering object created. It must be cleaned when the ALNS
-     * solver has finished processing the last model path.
-     */
-    private Orienteering lastOrienteering = null;
-    
-    /**
-     * The MainWindow which hosts the gui. This object must be used to update GUI features.
-     */
-    private MainWindow mainWindow;
-    
-    /**
-     * A message from an ALNS thread
-     */
-    private OptimizationStatusMessage messageFromALNS;
     
     /**
      * Retrieve the last message set by the ALNS thread
@@ -231,6 +244,8 @@ public class Controller
             System.setErr(new PrintStream(stdoutStream));
         }
         this.mainWindow = mainWindow;
+        
+        this.bestSolutions = new ArrayList<>();
     }
     
     /**
@@ -267,6 +282,8 @@ public class Controller
             System.setErr(new PrintStream(stdoutStream));
         }
         this.mainWindow = mainWindow;
+        
+        this.bestSolutions = new ArrayList<>();
     }
 
     public static void main(String[] args) throws Exception {
@@ -424,5 +441,16 @@ public class Controller
                     )
             );
         }
+    }
+    
+    /**
+     * Retrieves the latest recorded solution
+     * @return the latest recorded solution or null if not present
+     */
+    public Solution getLatestBestSolution(){
+        if(!bestSolutions.isEmpty()){
+            return bestSolutions.get(bestSolutions.size()-1);
+        }
+        else return null;
     }
 }

@@ -1588,6 +1588,9 @@
                                   <SubComponents>
                                     <Component class="javax.swing.JButton" name="jButtonRunMIPS">
                                       <Properties>
+                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                          <Image iconType="3" name="/images/play.png"/>
+                                        </Property>
                                         <Property name="text" type="java.lang.String" value="Solve with MIPS (exact)"/>
                                         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                                           <ComponentRef name="buttonGroupActions"/>
@@ -1599,6 +1602,9 @@
                                     </Component>
                                     <Component class="javax.swing.JButton" name="jButtonLoadParametersMIPS">
                                       <Properties>
+                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                          <Image iconType="3" name="/images/open-in-app.png"/>
+                                        </Property>
                                         <Property name="text" type="java.lang.String" value="Load parameters"/>
                                       </Properties>
                                       <Events>
@@ -1607,6 +1613,9 @@
                                     </Component>
                                     <Component class="javax.swing.JButton" name="jButtonSaveParametersMIPS">
                                       <Properties>
+                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                          <Image iconType="3" name="/images/content-save.png"/>
+                                        </Property>
                                         <Property name="text" type="java.lang.String" value="Save parameters"/>
                                       </Properties>
                                       <Events>
@@ -6085,6 +6094,9 @@
                                   <SubComponents>
                                     <Component class="javax.swing.JButton" name="jButtonRunALNS">
                                       <Properties>
+                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                          <Image iconType="3" name="/images/play.png"/>
+                                        </Property>
                                         <Property name="text" type="java.lang.String" value="Solve with ALNS (heuristic)"/>
                                         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                                           <ComponentRef name="buttonGroupActions"/>
@@ -6096,6 +6108,9 @@
                                     </Component>
                                     <Component class="javax.swing.JButton" name="jButtonLoadParametersALNS">
                                       <Properties>
+                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                          <Image iconType="3" name="/images/open-in-app.png"/>
+                                        </Property>
                                         <Property name="text" type="java.lang.String" value="Load parameters"/>
                                       </Properties>
                                       <Events>
@@ -6104,6 +6119,9 @@
                                     </Component>
                                     <Component class="javax.swing.JButton" name="jButtonSaveParametersALNS">
                                       <Properties>
+                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                          <Image iconType="3" name="/images/content-save.png"/>
+                                        </Property>
                                         <Property name="text" type="java.lang.String" value="Save parameters"/>
                                       </Properties>
                                       <Events>
@@ -6141,6 +6159,9 @@
                                   <SubComponents>
                                     <Component class="javax.swing.JButton" name="jButtonRunRelaxed">
                                       <Properties>
+                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                          <Image iconType="3" name="/images/play.png"/>
+                                        </Property>
                                         <Property name="text" type="java.lang.String" value="Solve relaxed model"/>
                                         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                                           <ComponentRef name="buttonGroupActions"/>

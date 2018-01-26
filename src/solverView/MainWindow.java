@@ -725,6 +725,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelMIPSActions.setMinimumSize(new java.awt.Dimension(300, 80));
 
+        jButtonRunMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunMIPS.setText("Solve with MIPS (exact)");
         buttonGroupActions.add(jButtonRunMIPS);
         jButtonRunMIPS.addActionListener(new java.awt.event.ActionListener() {
@@ -734,6 +735,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPanelMIPSActions.add(jButtonRunMIPS);
 
+        jButtonLoadParametersMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open-in-app.png"))); // NOI18N
         jButtonLoadParametersMIPS.setText("Load parameters");
         jButtonLoadParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -742,6 +744,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPanelMIPSActions.add(jButtonLoadParametersMIPS);
 
+        jButtonSaveParametersMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/content-save.png"))); // NOI18N
         jButtonSaveParametersMIPS.setText("Save parameters");
         jButtonSaveParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1639,6 +1642,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelALNSActions.setMinimumSize(new java.awt.Dimension(600, 80));
 
+        jButtonRunALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunALNS.setText("Solve with ALNS (heuristic)");
         buttonGroupActions.add(jButtonRunALNS);
         jButtonRunALNS.addActionListener(new java.awt.event.ActionListener() {
@@ -1648,6 +1652,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPanelALNSActions.add(jButtonRunALNS);
 
+        jButtonLoadParametersALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open-in-app.png"))); // NOI18N
         jButtonLoadParametersALNS.setText("Load parameters");
         jButtonLoadParametersALNS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1656,6 +1661,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPanelALNSActions.add(jButtonLoadParametersALNS);
 
+        jButtonSaveParametersALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/content-save.png"))); // NOI18N
         jButtonSaveParametersALNS.setText("Save parameters");
         jButtonSaveParametersALNS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1672,6 +1678,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelRelaxedActions.setMinimumSize(new java.awt.Dimension(600, 80));
 
+        jButtonRunRelaxed.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunRelaxed.setText("Solve relaxed model");
         buttonGroupActions.add(jButtonRunRelaxed);
         jButtonRunRelaxed.addActionListener(new java.awt.event.ActionListener() {

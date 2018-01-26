@@ -127,11 +127,6 @@ public class MainWindow extends javax.swing.JFrame {
         jTabbedPaneSolvers = new javax.swing.JTabbedPane();
         jPanelMIPS = new javax.swing.JPanel();
         jScrollPaneIMIPS = new javax.swing.JScrollPane();
-        jPanel5 = new javax.swing.JPanel();
-        jPanelMIPSActions = new javax.swing.JPanel();
-        jButtonRunMIPS = new javax.swing.JButton();
-        jButtonLoadParametersMIPS = new javax.swing.JButton();
-        jButtonSaveParametersMIPS = new javax.swing.JButton();
         jPanelMIPSParameters = new javax.swing.JPanel();
         jLabelOutputFolderPath1 = new javax.swing.JLabel();
         jTextFieldOutputFolderPath1 = new javax.swing.JTextField();
@@ -142,14 +137,13 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldNumThreads1 = new javax.swing.JTextField();
         jCheckBoxForceHeuristicConstraints1 = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
+        jPanelMIPSActions = new javax.swing.JPanel();
+        jButtonRunMIPS = new javax.swing.JButton();
+        jButtonLoadParametersMIPS = new javax.swing.JButton();
+        jButtonSaveParametersMIPS = new javax.swing.JButton();
         jPanelALNS = new javax.swing.JPanel();
         jScrollPaneALNS = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
-        jPanelALNSActions = new javax.swing.JPanel();
-        jButtonRunALNS = new javax.swing.JButton();
-        jButtonLoadParametersALNS = new javax.swing.JButton();
-        jButtonSaveParametersALNS = new javax.swing.JButton();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5));
         jPanelALNSGeneralParams = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabelOutputFolderPath2 = new javax.swing.JLabel();
@@ -215,9 +209,14 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         jTextFieldNerfBarrier = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
+        jPanelALNSActions = new javax.swing.JPanel();
+        jButtonRunALNS = new javax.swing.JButton();
+        jButtonLoadParametersALNS = new javax.swing.JButton();
+        jButtonSaveParametersALNS = new javax.swing.JButton();
         jPanelRelaxed = new javax.swing.JPanel();
         jPanelRelaxedActions = new javax.swing.JPanel();
         jButtonRunRelaxed = new javax.swing.JButton();
+        jScrollPaneRelaxParam = new javax.swing.JScrollPane();
         jPanelRelaxedParameters = new javax.swing.JPanel();
         jButtonOutputFolderPath = new javax.swing.JButton();
         jTextFieldOutputFolderPath = new javax.swing.JTextField();
@@ -472,14 +471,14 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMain.setPreferredSize(new java.awt.Dimension(1230, 600));
         jPanelMain.setLayout(new javax.swing.BoxLayout(jPanelMain, javax.swing.BoxLayout.LINE_AXIS));
 
-        jSplitPane2.setDividerLocation(320);
+        jSplitPane2.setDividerLocation(300);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jPanelControls.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
         jPanelControls.setToolTipText(null);
         jPanelControls.setLayout(new javax.swing.BoxLayout(jPanelControls, javax.swing.BoxLayout.PAGE_AXIS));
 
-        jSplitPane1.setDividerLocation(400);
+        jSplitPane1.setDividerLocation(550);
 
         jPanelnstances.setBorder(javax.swing.BorderFactory.createTitledBorder("1. Add instances to batch"));
         jPanelnstances.setMinimumSize(new java.awt.Dimension(94, 180));
@@ -551,42 +550,9 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMIPS.setPreferredSize(new java.awt.Dimension(300, 240));
         jPanelMIPS.setLayout(new java.awt.BorderLayout());
 
-        jScrollPaneIMIPS.setBorder(null);
+        jScrollPaneIMIPS.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         jScrollPaneIMIPS.setMinimumSize(new java.awt.Dimension(300, 18));
 
-        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.PAGE_AXIS));
-
-        jPanelMIPSActions.setMinimumSize(new java.awt.Dimension(300, 80));
-        jPanelMIPSActions.setPreferredSize(new java.awt.Dimension(300, 80));
-
-        jButtonRunMIPS.setText("Solve with MIPS (exact)");
-        buttonGroupActions.add(jButtonRunMIPS);
-        jButtonRunMIPS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRunMIPSActionPerformed(evt);
-            }
-        });
-        jPanelMIPSActions.add(jButtonRunMIPS);
-
-        jButtonLoadParametersMIPS.setText("Load parameters");
-        jButtonLoadParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLoadParametersMIPSActionPerformed(evt);
-            }
-        });
-        jPanelMIPSActions.add(jButtonLoadParametersMIPS);
-
-        jButtonSaveParametersMIPS.setText("Save parameters");
-        jButtonSaveParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveParametersMIPSActionPerformed(evt);
-            }
-        });
-        jPanelMIPSActions.add(jButtonSaveParametersMIPS);
-
-        jPanel5.add(jPanelMIPSActions);
-
-        jPanelMIPSParameters.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Parameters"));
         jPanelMIPSParameters.setMinimumSize(new java.awt.Dimension(300, 180));
         jPanelMIPSParameters.setPreferredSize(new java.awt.Dimension(300, 180));
         jPanelMIPSParameters.setLayout(new java.awt.GridBagLayout());
@@ -730,17 +696,44 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(11, 0, 0, 0);
         jPanelMIPSParameters.add(jLabel3, gridBagConstraints);
 
-        jPanel5.add(jPanelMIPSParameters);
-
-        jScrollPaneIMIPS.setViewportView(jPanel5);
+        jScrollPaneIMIPS.setViewportView(jPanelMIPSParameters);
 
         jPanelMIPS.add(jScrollPaneIMIPS, java.awt.BorderLayout.CENTER);
+
+        jPanelMIPSActions.setMinimumSize(new java.awt.Dimension(300, 80));
+
+        jButtonRunMIPS.setText("Solve with MIPS (exact)");
+        buttonGroupActions.add(jButtonRunMIPS);
+        jButtonRunMIPS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRunMIPSActionPerformed(evt);
+            }
+        });
+        jPanelMIPSActions.add(jButtonRunMIPS);
+
+        jButtonLoadParametersMIPS.setText("Load parameters");
+        jButtonLoadParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoadParametersMIPSActionPerformed(evt);
+            }
+        });
+        jPanelMIPSActions.add(jButtonLoadParametersMIPS);
+
+        jButtonSaveParametersMIPS.setText("Save parameters");
+        jButtonSaveParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveParametersMIPSActionPerformed(evt);
+            }
+        });
+        jPanelMIPSActions.add(jButtonSaveParametersMIPS);
+
+        jPanelMIPS.add(jPanelMIPSActions, java.awt.BorderLayout.PAGE_START);
 
         jTabbedPaneSolvers.addTab("MIPS", jPanelMIPS);
 
         jPanelALNS.setLayout(new java.awt.BorderLayout());
 
-        jScrollPaneALNS.setBorder(null);
+        jScrollPaneALNS.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
         jScrollPaneALNS.setMinimumSize(new java.awt.Dimension(200, 300));
         jScrollPaneALNS.setPreferredSize(new java.awt.Dimension(700, 300));
 
@@ -748,37 +741,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel2.setName(""); // NOI18N
         jPanel2.setPreferredSize(new java.awt.Dimension(610, 1200));
         jPanel2.setRequestFocusEnabled(false);
-
-        jPanelALNSActions.setMinimumSize(new java.awt.Dimension(600, 80));
-        jPanelALNSActions.setPreferredSize(new java.awt.Dimension(600, 80));
-
-        jButtonRunALNS.setText("Solve with ALNS (heuristic)");
-        buttonGroupActions.add(jButtonRunALNS);
-        jButtonRunALNS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRunALNSActionPerformed(evt);
-            }
-        });
-        jPanelALNSActions.add(jButtonRunALNS);
-
-        jButtonLoadParametersALNS.setText("Load parameters");
-        jButtonLoadParametersALNS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonLoadParametersALNSActionPerformed(evt);
-            }
-        });
-        jPanelALNSActions.add(jButtonLoadParametersALNS);
-
-        jButtonSaveParametersALNS.setText("Save parameters");
-        jButtonSaveParametersALNS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveParametersALNSActionPerformed(evt);
-            }
-        });
-        jPanelALNSActions.add(jButtonSaveParametersALNS);
-
-        jPanel2.add(jPanelALNSActions);
-        jPanel2.add(filler1);
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
         jPanelALNSGeneralParams.setBorder(javax.swing.BorderFactory.createTitledBorder("General Parameters"));
         jPanelALNSGeneralParams.setMinimumSize(new java.awt.Dimension(600, 150));
@@ -867,7 +830,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelALNSGeneralParams.add(jPanel3);
 
-        jPanel2.add(jPanelALNSGeneralParams);
+        jPanel2.add(jPanelALNSGeneralParams, java.awt.BorderLayout.PAGE_START);
 
         jPanelALNSParameters.setBorder(javax.swing.BorderFactory.createTitledBorder("ALNS parameters"));
         jPanelALNSParameters.setMinimumSize(new java.awt.Dimension(600, 1100));
@@ -1645,13 +1608,44 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanelALNSParameters.add(jPanel4);
 
-        jPanel2.add(jPanelALNSParameters);
+        jPanel2.add(jPanelALNSParameters, java.awt.BorderLayout.CENTER);
 
         jScrollPaneALNS.setViewportView(jPanel2);
 
         jPanelALNS.add(jScrollPaneALNS, java.awt.BorderLayout.CENTER);
 
+        jPanelALNSActions.setMinimumSize(new java.awt.Dimension(600, 80));
+
+        jButtonRunALNS.setText("Solve with ALNS (heuristic)");
+        buttonGroupActions.add(jButtonRunALNS);
+        jButtonRunALNS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRunALNSActionPerformed(evt);
+            }
+        });
+        jPanelALNSActions.add(jButtonRunALNS);
+
+        jButtonLoadParametersALNS.setText("Load parameters");
+        jButtonLoadParametersALNS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoadParametersALNSActionPerformed(evt);
+            }
+        });
+        jPanelALNSActions.add(jButtonLoadParametersALNS);
+
+        jButtonSaveParametersALNS.setText("Save parameters");
+        jButtonSaveParametersALNS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveParametersALNSActionPerformed(evt);
+            }
+        });
+        jPanelALNSActions.add(jButtonSaveParametersALNS);
+
+        jPanelALNS.add(jPanelALNSActions, java.awt.BorderLayout.PAGE_START);
+
         jTabbedPaneSolvers.addTab("ALNS", jPanelALNS);
+
+        jPanelRelaxed.setLayout(new java.awt.BorderLayout());
 
         jPanelRelaxedActions.setMinimumSize(new java.awt.Dimension(600, 80));
 
@@ -1664,7 +1658,9 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPanelRelaxedActions.add(jButtonRunRelaxed);
 
-        jPanelRelaxed.add(jPanelRelaxedActions);
+        jPanelRelaxed.add(jPanelRelaxedActions, java.awt.BorderLayout.PAGE_START);
+
+        jScrollPaneRelaxParam.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
 
         jPanelRelaxedParameters.setLayout(new java.awt.GridBagLayout());
 
@@ -1677,8 +1673,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(30, 12, 30, 0);
         jPanelRelaxedParameters.add(jButtonOutputFolderPath, gridBagConstraints);
 
@@ -1700,9 +1695,8 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.ipadx = 84;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(38, 14, 0, 0);
         jPanelRelaxedParameters.add(jTextFieldOutputFolderPath, gridBagConstraints);
 
@@ -1711,11 +1705,13 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(42, 0, 0, 0);
         jPanelRelaxedParameters.add(jLabelOutputFolderPath, gridBagConstraints);
 
-        jPanelRelaxed.add(jPanelRelaxedParameters);
+        jScrollPaneRelaxParam.setViewportView(jPanelRelaxedParameters);
+
+        jPanelRelaxed.add(jScrollPaneRelaxParam, java.awt.BorderLayout.CENTER);
 
         jTabbedPaneSolvers.addTab("Relaxed", jPanelRelaxed);
 
@@ -2594,7 +2590,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupInstance;
     private javax.swing.ButtonGroup buttonGroupSolver;
     private solverView.DoubleConverter doubleConverter1;
-    private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.JButton jButton1;
@@ -2680,7 +2675,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanelALNS;
@@ -2716,6 +2710,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneALNS;
     private javax.swing.JScrollPane jScrollPaneIMIPS;
+    private javax.swing.JScrollPane jScrollPaneRelaxParam;
     private javax.swing.JScrollPane jScrollPaneTextAreaOutput;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;

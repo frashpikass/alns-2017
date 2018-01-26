@@ -1180,7 +1180,7 @@
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="jSplitPane2">
           <Properties>
-            <Property name="dividerLocation" type="int" value="320"/>
+            <Property name="dividerLocation" type="int" value="300"/>
             <Property name="orientation" type="int" value="0"/>
           </Properties>
 
@@ -1209,7 +1209,7 @@
               <SubComponents>
                 <Container class="javax.swing.JSplitPane" name="jSplitPane1">
                   <Properties>
-                    <Property name="dividerLocation" type="int" value="400"/>
+                    <Property name="dividerLocation" type="int" value="550"/>
                   </Properties>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -1401,7 +1401,9 @@
                                 <Container class="javax.swing.JScrollPane" name="jScrollPaneIMIPS">
                                   <Properties>
                                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                      <Border info="null"/>
+                                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                        <TitledBorder title="Parameters"/>
+                                      </Border>
                                     </Property>
                                     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                       <Dimension value="[300, 18]"/>
@@ -1415,217 +1417,202 @@
 
                                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                                   <SubComponents>
-                                    <Container class="javax.swing.JPanel" name="jPanel5">
+                                    <Container class="javax.swing.JPanel" name="jPanelMIPSParameters">
+                                      <Properties>
+                                        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                          <Dimension value="[300, 180]"/>
+                                        </Property>
+                                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                          <Dimension value="[300, 180]"/>
+                                        </Property>
+                                      </Properties>
 
-                                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
-                                        <Property name="axis" type="int" value="3"/>
-                                      </Layout>
+                                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
                                       <SubComponents>
-                                        <Container class="javax.swing.JPanel" name="jPanelMIPSActions">
+                                        <Component class="javax.swing.JLabel" name="jLabelOutputFolderPath1">
                                           <Properties>
-                                            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[300, 80]"/>
-                                            </Property>
-                                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[300, 80]"/>
+                                            <Property name="horizontalAlignment" type="int" value="4"/>
+                                            <Property name="text" type="java.lang.String" value="Output folder"/>
+                                          </Properties>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="0" gridY="2" gridWidth="2" gridHeight="1" fill="0" ipadX="67" ipadY="0" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JTextField" name="jTextFieldOutputFolderPath1">
+                                          <Properties>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
+                                          </Properties>
+                                          <BindingProperties>
+                                            <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath1" targetPath="text" updateStrategy="0" immediately="false">
+                                              <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                              <Property name="name" type="java.lang.String" value="MIPS: output folder"/>
+                                            </BindingProperty>
+                                          </BindingProperties>
+                                          <Events>
+                                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldOutputFolderPath1updatePsiBean"/>
+                                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldOutputFolderPath1ActionPerformed"/>
+                                          </Events>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="2" gridY="2" gridWidth="1" gridHeight="1" fill="2" ipadX="212" ipadY="0" insetsTop="6" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JButton" name="jButtonOutputFolderPath1">
+                                          <Properties>
+                                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                              <Image iconType="3" name="/images/folder-open.png"/>
                                             </Property>
                                           </Properties>
-
-                                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
-                                          <SubComponents>
-                                            <Component class="javax.swing.JButton" name="jButtonRunMIPS">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="Solve with MIPS (exact)"/>
-                                                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                                                  <ComponentRef name="buttonGroupActions"/>
-                                                </Property>
-                                              </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRunMIPSActionPerformed"/>
-                                              </Events>
-                                            </Component>
-                                            <Component class="javax.swing.JButton" name="jButtonLoadParametersMIPS">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="Load parameters"/>
-                                              </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLoadParametersMIPSActionPerformed"/>
-                                              </Events>
-                                            </Component>
-                                            <Component class="javax.swing.JButton" name="jButtonSaveParametersMIPS">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="Save parameters"/>
-                                              </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSaveParametersMIPSActionPerformed"/>
-                                              </Events>
-                                            </Component>
-                                          </SubComponents>
-                                        </Container>
-                                        <Container class="javax.swing.JPanel" name="jPanelMIPSParameters">
+                                          <Events>
+                                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPath1ActionPerformed"/>
+                                          </Events>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="3" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JLabel" name="jLabel26">
                                           <Properties>
-                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                                                <TitledBorder title="Parameters">
-                                                  <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                                                    <TitledBorder/>
-                                                  </Border>
-                                                </TitledBorder>
-                                              </Border>
-                                            </Property>
-                                            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[300, 180]"/>
-                                            </Property>
-                                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[300, 180]"/>
-                                            </Property>
+                                            <Property name="horizontalAlignment" type="int" value="4"/>
+                                            <Property name="text" type="java.lang.String" value="Global time limit for MIPS"/>
                                           </Properties>
-
-                                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
-                                          <SubComponents>
-                                            <Component class="javax.swing.JLabel" name="jLabelOutputFolderPath1">
-                                              <Properties>
-                                                <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="text" type="java.lang.String" value="Output folder"/>
-                                              </Properties>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="0" gridY="2" gridWidth="2" gridHeight="1" fill="0" ipadX="67" ipadY="0" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JTextField" name="jTextFieldOutputFolderPath1">
-                                              <Properties>
-                                                <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
-                                              </Properties>
-                                              <BindingProperties>
-                                                <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath1" targetPath="text" updateStrategy="0" immediately="false">
-                                                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                  <Property name="name" type="java.lang.String" value="MIPS: output folder"/>
-                                                </BindingProperty>
-                                              </BindingProperties>
-                                              <Events>
-                                                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldOutputFolderPath1updatePsiBean"/>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldOutputFolderPath1ActionPerformed"/>
-                                              </Events>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="2" gridY="2" gridWidth="1" gridHeight="1" fill="2" ipadX="212" ipadY="0" insetsTop="6" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JButton" name="jButtonOutputFolderPath1">
-                                              <Properties>
-                                                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                                                  <Image iconType="3" name="/images/folder-open.png"/>
-                                                </Property>
-                                              </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPath1ActionPerformed"/>
-                                              </Events>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="3" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JLabel" name="jLabel26">
-                                              <Properties>
-                                                <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="text" type="java.lang.String" value="Global time limit for MIPS"/>
-                                              </Properties>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="0" gridY="3" gridWidth="2" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JTextField" name="jTextFieldTimeLimit1">
-                                              <Properties>
-                                                <Property name="toolTipText" type="java.lang.String" value="Sets how long (in seconds) should the MIPS solver run for"/>
-                                              </Properties>
-                                              <BindingProperties>
-                                                <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.timeLimit}" target="jTextFieldTimeLimit1" targetPath="text" updateStrategy="0" immediately="false">
-                                                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                  <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                                                    <ComponentRef name="doubleConverter1"/>
-                                                  </Property>
-                                                  <Property name="name" type="java.lang.String" value="MIPS: solver time limit"/>
-                                                </BindingProperty>
-                                              </BindingProperties>
-                                              <Events>
-                                                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldTimeLimit1updatePsiBean"/>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldTimeLimit1ActionPerformed"/>
-                                              </Events>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="2" gridY="3" gridWidth="1" gridHeight="1" fill="2" ipadX="212" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JLabel" name="jLabel27">
-                                              <Properties>
-                                                <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="text" type="java.lang.String" value="Number of threads"/>
-                                              </Properties>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="0" gridY="4" gridWidth="2" gridHeight="1" fill="0" ipadX="35" ipadY="0" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JTextField" name="jTextFieldNumThreads1">
-                                              <Properties>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Select how many threads should be used by the MIPS solver (also affects ALNS).&#xa;&lt;br/&gt;Set it to 0 to use all the available CPU cores.&#xa;&lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; if your CPU has hyperthreading, we suggest you to use only half of the available cores."/>
-                                              </Properties>
-                                              <BindingProperties>
-                                                <BindingProperty name="text" source="orienteeringPropertiesBean" sourcePath="${numThreads}" target="jTextFieldNumThreads1" targetPath="text" updateStrategy="0" immediately="false">
-                                                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                  <Property name="name" type="java.lang.String" value="MIPS: number of threads"/>
-                                                </BindingProperty>
-                                              </BindingProperties>
-                                              <Events>
-                                                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldNumThreads1updatePsiBean"/>
-                                              </Events>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="2" gridY="4" gridWidth="1" gridHeight="1" fill="2" ipadX="212" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JCheckBox" name="jCheckBoxForceHeuristicConstraints1">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="Force heuristic constraints in MIPS"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="If checked, heuristic constraints will always be used every time the MIPS solver is run (also affects ALNS)"/>
-                                              </Properties>
-                                              <BindingProperties>
-                                                <BindingProperty name="selected" source="orienteeringPropertiesBean" sourcePath="${forceHeuristicConstraints}" target="jCheckBoxForceHeuristicConstraints1" targetPath="selected" updateStrategy="0" immediately="false">
-                                                  <Property name="name" type="java.lang.String" value="MIPS: force heuristic constraints"/>
-                                                </BindingProperty>
-                                              </BindingProperties>
-                                              <Events>
-                                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxForceHeuristicConstraints1updatePsiBeanC"/>
-                                              </Events>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="2" gridY="5" gridWidth="2" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                            <Component class="javax.swing.JLabel" name="jLabel3">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="seconds"/>
-                                              </Properties>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                                  <GridBagConstraints gridX="3" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="11" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
-                                                </Constraint>
-                                              </Constraints>
-                                            </Component>
-                                          </SubComponents>
-                                        </Container>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="0" gridY="3" gridWidth="2" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JTextField" name="jTextFieldTimeLimit1">
+                                          <Properties>
+                                            <Property name="toolTipText" type="java.lang.String" value="Sets how long (in seconds) should the MIPS solver run for"/>
+                                          </Properties>
+                                          <BindingProperties>
+                                            <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.timeLimit}" target="jTextFieldTimeLimit1" targetPath="text" updateStrategy="0" immediately="false">
+                                              <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                              <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                <ComponentRef name="doubleConverter1"/>
+                                              </Property>
+                                              <Property name="name" type="java.lang.String" value="MIPS: solver time limit"/>
+                                            </BindingProperty>
+                                          </BindingProperties>
+                                          <Events>
+                                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldTimeLimit1updatePsiBean"/>
+                                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldTimeLimit1ActionPerformed"/>
+                                          </Events>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="2" gridY="3" gridWidth="1" gridHeight="1" fill="2" ipadX="212" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JLabel" name="jLabel27">
+                                          <Properties>
+                                            <Property name="horizontalAlignment" type="int" value="4"/>
+                                            <Property name="text" type="java.lang.String" value="Number of threads"/>
+                                          </Properties>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="0" gridY="4" gridWidth="2" gridHeight="1" fill="0" ipadX="35" ipadY="0" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JTextField" name="jTextFieldNumThreads1">
+                                          <Properties>
+                                            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Select how many threads should be used by the MIPS solver (also affects ALNS).&#xa;&lt;br/&gt;Set it to 0 to use all the available CPU cores.&#xa;&lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; if your CPU has hyperthreading, we suggest you to use only half of the available cores."/>
+                                          </Properties>
+                                          <BindingProperties>
+                                            <BindingProperty name="text" source="orienteeringPropertiesBean" sourcePath="${numThreads}" target="jTextFieldNumThreads1" targetPath="text" updateStrategy="0" immediately="false">
+                                              <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                              <Property name="name" type="java.lang.String" value="MIPS: number of threads"/>
+                                            </BindingProperty>
+                                          </BindingProperties>
+                                          <Events>
+                                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldNumThreads1updatePsiBean"/>
+                                          </Events>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="2" gridY="4" gridWidth="1" gridHeight="1" fill="2" ipadX="212" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JCheckBox" name="jCheckBoxForceHeuristicConstraints1">
+                                          <Properties>
+                                            <Property name="text" type="java.lang.String" value="Force heuristic constraints in MIPS"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="If checked, heuristic constraints will always be used every time the MIPS solver is run (also affects ALNS)"/>
+                                          </Properties>
+                                          <BindingProperties>
+                                            <BindingProperty name="selected" source="orienteeringPropertiesBean" sourcePath="${forceHeuristicConstraints}" target="jCheckBoxForceHeuristicConstraints1" targetPath="selected" updateStrategy="0" immediately="false">
+                                              <Property name="name" type="java.lang.String" value="MIPS: force heuristic constraints"/>
+                                            </BindingProperty>
+                                          </BindingProperties>
+                                          <Events>
+                                            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxForceHeuristicConstraints1updatePsiBeanC"/>
+                                          </Events>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="2" gridY="5" gridWidth="2" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JLabel" name="jLabel3">
+                                          <Properties>
+                                            <Property name="text" type="java.lang.String" value="seconds"/>
+                                          </Properties>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="3" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="11" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
                                       </SubComponents>
                                     </Container>
+                                  </SubComponents>
+                                </Container>
+                                <Container class="javax.swing.JPanel" name="jPanelMIPSActions">
+                                  <Properties>
+                                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                      <Dimension value="[300, 80]"/>
+                                    </Property>
+                                  </Properties>
+                                  <Constraints>
+                                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                                      <BorderConstraints direction="First"/>
+                                    </Constraint>
+                                  </Constraints>
+
+                                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+                                  <SubComponents>
+                                    <Component class="javax.swing.JButton" name="jButtonRunMIPS">
+                                      <Properties>
+                                        <Property name="text" type="java.lang.String" value="Solve with MIPS (exact)"/>
+                                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                                          <ComponentRef name="buttonGroupActions"/>
+                                        </Property>
+                                      </Properties>
+                                      <Events>
+                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRunMIPSActionPerformed"/>
+                                      </Events>
+                                    </Component>
+                                    <Component class="javax.swing.JButton" name="jButtonLoadParametersMIPS">
+                                      <Properties>
+                                        <Property name="text" type="java.lang.String" value="Load parameters"/>
+                                      </Properties>
+                                      <Events>
+                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLoadParametersMIPSActionPerformed"/>
+                                      </Events>
+                                    </Component>
+                                    <Component class="javax.swing.JButton" name="jButtonSaveParametersMIPS">
+                                      <Properties>
+                                        <Property name="text" type="java.lang.String" value="Save parameters"/>
+                                      </Properties>
+                                      <Events>
+                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSaveParametersMIPSActionPerformed"/>
+                                      </Events>
+                                    </Component>
                                   </SubComponents>
                                 </Container>
                               </SubComponents>
@@ -1644,7 +1631,9 @@
                                 <Container class="javax.swing.JScrollPane" name="jScrollPaneALNS">
                                   <Properties>
                                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                      <Border info="null"/>
+                                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                        <TitledBorder title="Parameters"/>
+                                      </Border>
                                     </Property>
                                     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                       <Dimension value="[200, 300]"/>
@@ -1673,65 +1662,8 @@
                                         <Property name="requestFocusEnabled" type="boolean" value="false"/>
                                       </Properties>
 
-                                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+                                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
                                       <SubComponents>
-                                        <Container class="javax.swing.JPanel" name="jPanelALNSActions">
-                                          <Properties>
-                                            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[600, 80]"/>
-                                            </Property>
-                                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[600, 80]"/>
-                                            </Property>
-                                          </Properties>
-
-                                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
-                                          <SubComponents>
-                                            <Component class="javax.swing.JButton" name="jButtonRunALNS">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="Solve with ALNS (heuristic)"/>
-                                                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-                                                  <ComponentRef name="buttonGroupActions"/>
-                                                </Property>
-                                              </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRunALNSActionPerformed"/>
-                                              </Events>
-                                            </Component>
-                                            <Component class="javax.swing.JButton" name="jButtonLoadParametersALNS">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="Load parameters"/>
-                                              </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLoadParametersALNSActionPerformed"/>
-                                              </Events>
-                                            </Component>
-                                            <Component class="javax.swing.JButton" name="jButtonSaveParametersALNS">
-                                              <Properties>
-                                                <Property name="text" type="java.lang.String" value="Save parameters"/>
-                                              </Properties>
-                                              <Events>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSaveParametersALNSActionPerformed"/>
-                                              </Events>
-                                            </Component>
-                                          </SubComponents>
-                                        </Container>
-                                        <Component class="javax.swing.Box$Filler" name="filler1">
-                                          <Properties>
-                                            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[0, 5]"/>
-                                            </Property>
-                                            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[0, 5]"/>
-                                            </Property>
-                                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                              <Dimension value="[0, 5]"/>
-                                            </Property>
-                                          </Properties>
-                                          <AuxValues>
-                                            <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.RigidArea"/>
-                                          </AuxValues>
-                                        </Component>
                                         <Container class="javax.swing.JPanel" name="jPanelALNSGeneralParams">
                                           <Properties>
                                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -1746,6 +1678,11 @@
                                               <Dimension value="[600, 150]"/>
                                             </Property>
                                           </Properties>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                                              <BorderConstraints direction="First"/>
+                                            </Constraint>
+                                          </Constraints>
 
                                           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
                                           <SubComponents>
@@ -1861,6 +1798,11 @@
                                               <Dimension value="[600, 950]"/>
                                             </Property>
                                           </Properties>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                                              <BorderConstraints direction="Center"/>
+                                            </Constraint>
+                                          </Constraints>
 
                                           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
                                           <SubComponents>
@@ -6127,6 +6069,49 @@
                                     </Container>
                                   </SubComponents>
                                 </Container>
+                                <Container class="javax.swing.JPanel" name="jPanelALNSActions">
+                                  <Properties>
+                                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                      <Dimension value="[600, 80]"/>
+                                    </Property>
+                                  </Properties>
+                                  <Constraints>
+                                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                                      <BorderConstraints direction="First"/>
+                                    </Constraint>
+                                  </Constraints>
+
+                                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+                                  <SubComponents>
+                                    <Component class="javax.swing.JButton" name="jButtonRunALNS">
+                                      <Properties>
+                                        <Property name="text" type="java.lang.String" value="Solve with ALNS (heuristic)"/>
+                                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                                          <ComponentRef name="buttonGroupActions"/>
+                                        </Property>
+                                      </Properties>
+                                      <Events>
+                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRunALNSActionPerformed"/>
+                                      </Events>
+                                    </Component>
+                                    <Component class="javax.swing.JButton" name="jButtonLoadParametersALNS">
+                                      <Properties>
+                                        <Property name="text" type="java.lang.String" value="Load parameters"/>
+                                      </Properties>
+                                      <Events>
+                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLoadParametersALNSActionPerformed"/>
+                                      </Events>
+                                    </Component>
+                                    <Component class="javax.swing.JButton" name="jButtonSaveParametersALNS">
+                                      <Properties>
+                                        <Property name="text" type="java.lang.String" value="Save parameters"/>
+                                      </Properties>
+                                      <Events>
+                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSaveParametersALNSActionPerformed"/>
+                                      </Events>
+                                    </Component>
+                                  </SubComponents>
+                                </Container>
                               </SubComponents>
                             </Container>
                             <Container class="javax.swing.JPanel" name="jPanelRelaxed">
@@ -6138,7 +6123,7 @@
                                 </Constraint>
                               </Constraints>
 
-                              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+                              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
                               <SubComponents>
                                 <Container class="javax.swing.JPanel" name="jPanelRelaxedActions">
                                   <Properties>
@@ -6146,6 +6131,11 @@
                                       <Dimension value="[600, 80]"/>
                                     </Property>
                                   </Properties>
+                                  <Constraints>
+                                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                                      <BorderConstraints direction="First"/>
+                                    </Constraint>
+                                  </Constraints>
 
                                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
                                   <SubComponents>
@@ -6162,56 +6152,74 @@
                                     </Component>
                                   </SubComponents>
                                 </Container>
-                                <Container class="javax.swing.JPanel" name="jPanelRelaxedParameters">
+                                <Container class="javax.swing.JScrollPane" name="jScrollPaneRelaxParam">
+                                  <Properties>
+                                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                        <TitledBorder title="Parameters"/>
+                                      </Border>
+                                    </Property>
+                                  </Properties>
+                                  <Constraints>
+                                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                                      <BorderConstraints direction="Center"/>
+                                    </Constraint>
+                                  </Constraints>
 
-                                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
+                                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                                   <SubComponents>
-                                    <Component class="javax.swing.JButton" name="jButtonOutputFolderPath">
-                                      <Properties>
-                                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                                          <Image iconType="3" name="/images/folder-open.png"/>
-                                        </Property>
-                                      </Properties>
-                                      <Events>
-                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPathActionPerformed"/>
-                                      </Events>
-                                      <Constraints>
-                                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                          <GridBagConstraints gridX="2" gridY="0" gridWidth="1" gridHeight="3" fill="0" ipadX="0" ipadY="0" insetsTop="30" insetsLeft="12" insetsBottom="30" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                        </Constraint>
-                                      </Constraints>
-                                    </Component>
-                                    <Component class="javax.swing.JTextField" name="jTextFieldOutputFolderPath">
-                                      <Properties>
-                                        <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
-                                      </Properties>
-                                      <BindingProperties>
-                                        <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath" targetPath="text" updateStrategy="0" immediately="false">
-                                          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                          <Property name="name" type="java.lang.String" value="outputFolderPath"/>
-                                        </BindingProperty>
-                                      </BindingProperties>
-                                      <Events>
-                                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="updatePsiBean"/>
-                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldOutputFolderPathActionPerformed"/>
-                                      </Events>
-                                      <Constraints>
-                                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                          <GridBagConstraints gridX="1" gridY="0" gridWidth="1" gridHeight="2" fill="0" ipadX="84" ipadY="0" insetsTop="38" insetsLeft="14" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                        </Constraint>
-                                      </Constraints>
-                                    </Component>
-                                    <Component class="javax.swing.JLabel" name="jLabelOutputFolderPath">
-                                      <Properties>
-                                        <Property name="horizontalAlignment" type="int" value="4"/>
-                                        <Property name="text" type="java.lang.String" value="Output folder"/>
-                                      </Properties>
-                                      <Constraints>
-                                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                                          <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="42" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                                        </Constraint>
-                                      </Constraints>
-                                    </Component>
+                                    <Container class="javax.swing.JPanel" name="jPanelRelaxedParameters">
+
+                                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
+                                      <SubComponents>
+                                        <Component class="javax.swing.JButton" name="jButtonOutputFolderPath">
+                                          <Properties>
+                                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                              <Image iconType="3" name="/images/folder-open.png"/>
+                                            </Property>
+                                          </Properties>
+                                          <Events>
+                                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPathActionPerformed"/>
+                                          </Events>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="2" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="30" insetsLeft="12" insetsBottom="30" insetsRight="0" anchor="11" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JTextField" name="jTextFieldOutputFolderPath">
+                                          <Properties>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
+                                          </Properties>
+                                          <BindingProperties>
+                                            <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath" targetPath="text" updateStrategy="0" immediately="false">
+                                              <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                              <Property name="name" type="java.lang.String" value="outputFolderPath"/>
+                                            </BindingProperty>
+                                          </BindingProperties>
+                                          <Events>
+                                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="updatePsiBean"/>
+                                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldOutputFolderPathActionPerformed"/>
+                                          </Events>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="1" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="84" ipadY="0" insetsTop="38" insetsLeft="14" insetsBottom="0" insetsRight="0" anchor="11" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                        <Component class="javax.swing.JLabel" name="jLabelOutputFolderPath">
+                                          <Properties>
+                                            <Property name="horizontalAlignment" type="int" value="4"/>
+                                            <Property name="text" type="java.lang.String" value="Output folder"/>
+                                          </Properties>
+                                          <Constraints>
+                                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                                              <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="42" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="11" weightX="0.0" weightY="0.0"/>
+                                            </Constraint>
+                                          </Constraints>
+                                        </Component>
+                                      </SubComponents>
+                                    </Container>
                                   </SubComponents>
                                 </Container>
                               </SubComponents>

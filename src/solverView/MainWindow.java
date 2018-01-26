@@ -54,7 +54,10 @@ public class MainWindow extends javax.swing.JFrame {
         jScrollPaneIMIPS.getVerticalScrollBar().setUnitIncrement(16);
         
         // Show Deprecated tools window
-        jDialogDeprecatedOptions.setVisible(true);
+        jDialogDeprecatedOptions.setVisible(false);
+        
+        // Set the position of the error dialog
+        jDialogError.setLocationRelativeTo(jPanelControls);
     }
     
     /**
@@ -265,7 +268,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         jDialogError.setTitle("Error");
         jDialogError.setIconImage(null);
+        jDialogError.setMinimumSize(new java.awt.Dimension(400, 200));
         jDialogError.setModal(true);
+        jDialogError.setResizable(false);
         jDialogError.setType(java.awt.Window.Type.POPUP);
         jDialogError.getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -420,7 +425,6 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogConfirmStop.setTitle("Warning");
         jDialogConfirmStop.setMinimumSize(new java.awt.Dimension(400, 125));
         jDialogConfirmStop.setModal(true);
-        jDialogConfirmStop.setPreferredSize(new java.awt.Dimension(400, 125));
         jDialogConfirmStop.setResizable(false);
 
         jPanel6.setLayout(new java.awt.BorderLayout());

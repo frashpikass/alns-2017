@@ -79,6 +79,18 @@ public class Solution {
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
     
+    /**
+     * Update the solution with the new results. Use this method to store the
+     * solution of a relaxed model.
+     * @param objectiveValue new objective function value of this solution
+     */
+    public void update(
+            double objectiveValue
+    ){
+        this.objectiveValue = objectiveValue;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+    }
+    
     @Override
     public String toString(){
         StringBuffer output = new StringBuffer();

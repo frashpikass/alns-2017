@@ -34,6 +34,8 @@ public class Main {
      * interface.
      *
      * @param args input arguments from the command line
+     * @throws org.apache.commons.cli.ParseException if there are problems while
+     * parsing the arguments
      */
     public static void main(String[] args) throws ParseException, Exception {
         try {

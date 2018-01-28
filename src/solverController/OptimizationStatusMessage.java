@@ -62,6 +62,7 @@ public class OptimizationStatusMessage {
      * @param elapsedTime Currently elapsed time
      * @param status solver status
      * @param bestObj current value of the best objective
+     * @param timelimit maximum time limit for the current solver job
      */
     public OptimizationStatusMessage(
             String instancePath,
@@ -89,6 +90,7 @@ public class OptimizationStatusMessage {
      * @param batchSize size of the batch
      * @param status solver status
      * @param bestObj current value of the best objective
+     * @param timelimit maximum time limit for the current solver job
      */
     public OptimizationStatusMessage(
             String instancePath,

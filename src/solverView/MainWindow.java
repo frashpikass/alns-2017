@@ -2632,7 +2632,8 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * Sets the progress bar in an indeterminate state and publishes a message
      * in the status bar.
-     * @param message 
+     * @param message message to display in the status bar while the progress
+     * bar is indeterminate
      */
     public void updateSolverStatusTemporary(String message){
         this.jLabelStatus.setText(message);

@@ -1666,7 +1666,8 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
      * Remove the selected cluster from the solution.
      *
      * @param c the cluster to remove from solution.
-     * @throws GRBException
+     * @throws GRBException if there are problems while trying to remove the
+     * cluster from the solution
      */
     protected void removeFromSolution(Cluster c) throws GRBException {
         y[c.getId()].set(GRB.DoubleAttr.LB, 0.0);

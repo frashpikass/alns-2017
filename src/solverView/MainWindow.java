@@ -1964,6 +1964,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void runWithSolver(Controller.Solvers solver){
         // Update the parameters
         updateParametersBean();
+        updatePsiBean();
         
         // Display the currently selected solver in the GUI
         jLabelSelectedSolver.setText(solver.toString());
@@ -2054,6 +2055,7 @@ public class MainWindow extends javax.swing.JFrame {
                 this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
                 this.alnsPropertiesBean = parametersBean.getALNSproperties();
                 this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
+                this.updatePsiGui();
                 this.updateParametersGUI();
             } catch (IOException ex) {
                 System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
@@ -2070,6 +2072,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void saveParameters(){
         jFileChooserSaveParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         updateParametersBean();
+        updatePsiBean();
         int result = jFileChooserSaveParameters.showOpenDialog(jPanelSolversEnvelope);
         File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
         if (outputFilePath != null && result == JFileChooser.APPROVE_OPTION) {

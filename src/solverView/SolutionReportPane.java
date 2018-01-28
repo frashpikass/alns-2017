@@ -85,7 +85,10 @@ public class SolutionReportPane extends javax.swing.JPanel {
             if(solution.getSolverName().equals(Controller.Solvers.SOLVE_RELAXED.toString())){
                 this.jScrollPaneReport.setVisible(false);
             }
-            else this.jTextAreaReport.setText(solution.toString());
+            else{
+                this.jTextAreaReport.setText(solution.toString());
+                this.jTextAreaReport.setCaretPosition(0);
+            }
         }
         else{
             this.jLabelBestObjective.setText(NO_SOL);

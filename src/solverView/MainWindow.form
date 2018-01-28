@@ -12,6 +12,9 @@
           <ComponentRef name="btnAddInstance"/>
         </Property>
         <Property name="dialogTitle" type="java.lang.String" value="Select instance file(s) to add"/>
+        <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new FileNameExtensionFilter(&quot;TXT File&quot;,&quot;txt&quot;)" type="code"/>
+        </Property>
         <Property name="multiSelectionEnabled" type="boolean" value="true"/>
         <Property name="selectedFiles" type="[Ljava.io.File;" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="null"/>
@@ -48,6 +51,9 @@
     <Component class="javax.swing.JFileChooser" name="jFileChooserLoadParameters">
       <Properties>
         <Property name="dialogTitle" type="java.lang.String" value="Load parameters from JSON"/>
+        <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new FileNameExtensionFilter(&quot;JSON File&quot;,&quot;json&quot;)" type="code"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JFileChooser" name="jFileChooserSaveParameters">

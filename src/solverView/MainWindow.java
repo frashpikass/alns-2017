@@ -23,6 +23,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import solverController.ALNSPropertiesBean;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
@@ -265,6 +266,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jFileChooserInstances.setAccessory(btnAddInstance);
         jFileChooserInstances.setDialogTitle("Select instance file(s) to add");
+        jFileChooserInstances.setFileFilter(new FileNameExtensionFilter("TXT File","txt"));
         jFileChooserInstances.setMultiSelectionEnabled(true);
         jFileChooserInstances.setSelectedFiles(null);
 
@@ -280,6 +282,7 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooserOutputFolderPath.setToolTipText("Choose the output directory");
 
         jFileChooserLoadParameters.setDialogTitle("Load parameters from JSON");
+        jFileChooserLoadParameters.setFileFilter(new FileNameExtensionFilter("JSON File","json"));
 
         jFileChooserSaveParameters.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
         jFileChooserSaveParameters.setDialogTitle("Save parameters to JSON");
@@ -2057,10 +2060,17 @@ public class MainWindow extends javax.swing.JFrame {
                 this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
                 this.updatePsiGui();
                 this.updateParametersGUI();
-            } catch (IOException ex) {
-                System.out.println("Can't load parameters from '"+inputFile.getAbsolutePath()+"': "+ex.getMessage());
+                System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(
+                        jPanelMain,
+                        "<html>The provided parameters file isn't valid.<br>"
+                                + "Reason: <br>"
+                                + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );                
             }
-            System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
             updateWorkingDirectory(inputFile.toPath().getParent().toFile());
         }
     }

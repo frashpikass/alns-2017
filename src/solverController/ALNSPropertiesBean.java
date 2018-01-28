@@ -7,6 +7,7 @@ package solverController;
 
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 
 /**
  * Java Bean to hold all the properties and parameters for the ALNS optimizer.
@@ -15,7 +16,7 @@ import java.beans.PropertyChangeListener;
  */
 public class ALNSPropertiesBean {
     static final long serialVersionUID = 0;
-
+    
     /**
      * Empty constructor.
      */
@@ -29,35 +30,35 @@ public class ALNSPropertiesBean {
      * @param apb the ALNSPropertiesBean to clone from
      */
     public void cloneFrom(ALNSPropertiesBean apb){
-        this.maxHistorySize = apb.getMaxHistorySize();
-        this.qStart = apb.getqStart();
-        this.qDelta = apb.getqDelta();
-        this.segmentSize = apb.getSegmentSize();
-        this.maxSegments = apb.getMaxSegments();
-        this.maxSegmentsWithoutImprovement = apb.getMaxSegmentsWithoutImprovement();
-        this.useDestroyCloseToBarycenter = apb.isUseDestroyCloseToBarycenter();
-        this.useDestroyGreedyCostInsertion = apb.isUseDestroyGreedyCostInsertion();
-        this.useDestroyGreedyBestInsertion = apb.isUseDestroyGreedyBestInsertion();
-        this.useDestroyGreedyProfitInsertion = apb.isUseDestroyGreedyProfitInsertion();
-        this.useDestroyRandomInsertion = apb.isUseDestroyRandomInsertion();
-        this.useRepairHighCostRemoval = apb.isUseRepairHighCostRemoval();
-        this.useRepairRandomRemoval = apb.isUseRepairRandomRemoval();
-        this.useRepairTravelTime = apb.isUseRepairTravelTime();
-        this.useRepairVehicleTime = apb.isUseRepairVehicleTime();
-        this.useRepairWorstRemoval = apb.isUseRepairWorstRemoval();
-        this.lambda = apb.getLambda();
-        this.alpha = apb.getAlpha();
-        this.punishmentGamma = apb.getPunishmentGamma();
-        this.cooldownGamma = apb.getCooldownGamma();
-        this.warmupGamma = apb.getWarmupGamma();
-        this.nerfBarrier = apb.getNerfBarrier();
-        this.timeLimitALNS = apb.getTimeLimitALNS();
-        this.timeLimitLocalSearch = apb.getTimeLimitLocalSearch();
-        this.heuristicScores = apb.getHeuristicScores();
-        this.rewardForBestSegmentHeuristics = apb.getRewardForBestSegmentHeuristics();
-        this.punishmentForWorstSegmentHeuristics = apb.getPunishmentForWorstSegmentHeuristics();
-        this.maxMIPSNodesForFeasibilityCheck = apb.getMaxMIPSNodesForFeasibilityCheck();
-        this.maxIterationsWithoutImprovement = apb.getMaxIterationsWithoutImprovement();
+        this.setMaxHistorySize(apb.getMaxHistorySize());
+        this.setqStart(apb.getqStart());
+        this.setqDelta(apb.getqDelta());
+        this.setSegmentSize(apb.getSegmentSize());
+        this.setMaxSegments(apb.getMaxSegments());
+        this.setMaxSegmentsWithoutImprovement(apb.getMaxSegmentsWithoutImprovement());
+        this.setUseDestroyCloseToBarycenter(apb.isUseDestroyCloseToBarycenter());
+        this.setUseDestroyGreedyCostInsertion(apb.isUseDestroyGreedyCostInsertion());
+        this.setUseDestroyGreedyBestInsertion(apb.isUseDestroyGreedyBestInsertion());
+        this.setUseDestroyGreedyProfitInsertion(apb.isUseDestroyGreedyProfitInsertion());
+        this.setUseDestroyRandomInsertion(apb.isUseDestroyRandomInsertion());
+        this.setUseRepairHighCostRemoval(apb.isUseRepairHighCostRemoval());
+        this.setUseRepairRandomRemoval(apb.isUseRepairRandomRemoval());
+        this.setUseRepairTravelTime(apb.isUseRepairTravelTime());
+        this.setUseRepairVehicleTime(apb.isUseRepairVehicleTime());
+        this.setUseRepairWorstRemoval(apb.isUseRepairWorstRemoval());
+        this.setLambda(apb.getLambda());
+        this.setAlpha(apb.getAlpha());
+        this.setPunishmentGamma(apb.getPunishmentGamma());
+        this.setCooldownGamma(apb.getCooldownGamma());
+        this.setWarmupGamma(apb.getWarmupGamma());
+        this.setNerfBarrier(apb.getNerfBarrier());
+        this.setTimeLimitALNS(apb.getTimeLimitALNS());
+        this.setTimeLimitLocalSearch(apb.getTimeLimitLocalSearch());
+        this.setHeuristicScores(apb.getHeuristicScores());
+        this.setRewardForBestSegmentHeuristics(apb.getRewardForBestSegmentHeuristics());
+        this.setPunishmentForWorstSegmentHeuristics(apb.getPunishmentForWorstSegmentHeuristics());
+        this.setMaxMIPSNodesForFeasibilityCheck(apb.getMaxMIPSNodesForFeasibilityCheck());
+        this.setMaxIterationsWithoutImprovement(apb.getMaxIterationsWithoutImprovement());
     }
 
     /**
@@ -906,6 +907,37 @@ public class ALNSPropertiesBean {
     public double[] getHeuristicScores() {
         return heuristicScores;
     }
+    
+    /**
+     * This parameters holds the values of psi, the function that prizes good
+     * heuristics and penalizes the bad ones.
+     *
+     * @param index the index of psi to get
+     * @return the heuristicScores
+     */
+    public double getHeuristicScores(int index) {
+        return heuristicScores[index];
+    }
+    
+    /**
+     * This parameters holds the values of psi, the function that prizes good
+     * heuristics and penalizes the bad ones.
+     *
+     * @param index the index of psi to set
+     * @param value the value to set at the specified index
+     */
+    public void setHeuristicScores(int index, double value) {
+        // Cloning the original array
+        double[] newHeuristicScores = Arrays.copyOf(
+                this.heuristicScores,
+                NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES
+        );
+        // Modifying the array
+        newHeuristicScores[index] = value;
+        
+        // Setting the new array (with property change support)
+        setHeuristicScores(newHeuristicScores);
+    }
 
     /**
      * This parameters holds the values of psi, the function that prizes good
@@ -914,7 +946,7 @@ public class ALNSPropertiesBean {
      * @param heuristicScores the heuristicScores to set
      */
     public void setHeuristicScores(double[] heuristicScores) {
-        double[] oldHeuristicScores = this.heuristicScores;
+        double[] oldHeuristicScores = Arrays.copyOf(heuristicScores, NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES);
         this.heuristicScores = heuristicScores;
         propertyChangeSupport.firePropertyChange(PROP_HEURISTICSCORES, oldHeuristicScores, heuristicScores);
     }
@@ -1037,5 +1069,4 @@ public class ALNSPropertiesBean {
         this.useDestroyCloseToBarycenter = useDestroyCloseToBarycenter;
         propertyChangeSupport.firePropertyChange(PROP_USEDESTROYCLOSETOBARYCENTER, oldUseDestroyCloseToBarycenter, useDestroyCloseToBarycenter);
     }
-    
 }

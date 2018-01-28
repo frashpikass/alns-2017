@@ -2319,18 +2319,39 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRemoveInstanceActionPerformed
 
     private void btnAddInstanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInstanceActionPerformed
+        // Update working directory
         jFileChooserInstances.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
+        
+        // Ask the user to choose a file
         int result = jFileChooserInstances.showOpenDialog(jPanelMain);
         if(JFileChooser.APPROVE_OPTION == result){
-            File[] selected = jFileChooserInstances.getSelectedFiles();
+            // Copy the old instances list
             DefaultListModel dlm = new DefaultListModel();
             for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
                 dlm.addElement(jListInstances.getModel().getElementAt(i));
             }
+            
+            // Gather all the selected instance files, test them against the
+            // model, if they're correct add them to the batch,
+            // otherwise show an error dialog
+            File[] selected = jFileChooserInstances.getSelectedFiles();
             for (File f : selected) {
                 String path = f.getAbsolutePath();
-                dlm.addElement(path);
-            }
+                try {
+                    solverModel.InstanceCTOPWSSReader.read(path);
+                    dlm.addElement(path);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(
+                        jPanelMain,
+                        "<html>The provided instance file isn't valid."
+                                + "<br>Path: "+path
+                                + "<br>Reason: <i><br>"
+                                + ex.getMessage() + "</i>",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            } // for-each
 
             jListInstances.setModel(dlm);
         }

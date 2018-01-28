@@ -2315,6 +2315,7 @@ public class MainWindow extends javax.swing.JFrame {
                 }
             }
             jListInstances.setModel(dlm);
+            jListInstances.setSelectedIndex(toRemove);
         }
     }//GEN-LAST:event_btnRemoveInstanceActionPerformed
 

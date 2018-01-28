@@ -38,6 +38,7 @@ public class InstanceCTOPWSSReader
 		} catch (IOException e) 
 		{
 			e.printStackTrace();
+                        throw e;
 		}
 		// The first 5 lines in the file define general parameters
                 
@@ -170,6 +171,7 @@ public class InstanceCTOPWSSReader
 			} catch (Exception e)
 			{
 				e.printStackTrace();
+                                throw e;
 			}
 			
 		}

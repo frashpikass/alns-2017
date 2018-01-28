@@ -695,7 +695,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMIPSParameters.add(jTextFieldNumThreads1, gridBagConstraints);
 
         jCheckBoxForceHeuristicConstraints1.setText("Force heuristic constraints in MIPS");
-        jCheckBoxForceHeuristicConstraints1.setToolTipText("If checked, heuristic constraints will always be used every time the MIPS solver is run (also affects ALNS)");
+        jCheckBoxForceHeuristicConstraints1.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br>These constraints clean up the model to speed up the search.\n<br><b>Warning:</b> forcing these constraints on might turn a feasible model into an infeasible one.\n<br>Turn this option off if the log says the model is infeasible!");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints1, org.jdesktop.beansbinding.BeanProperty.create("selected"), "MIPS: force heuristic constraints");
         bindingGroup.addBinding(binding);
@@ -853,7 +853,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSGeneralParams.add(jButtonOutputFolderPath2, gridBagConstraints);
 
         jCheckBoxForceHeuristicConstraints2.setText("Force heuristic constraints in MIPS");
-        jCheckBoxForceHeuristicConstraints2.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br><b>Recommended OFF in ALNS</b>");
+        jCheckBoxForceHeuristicConstraints2.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br>These constraints clean up the model to speed up the search.\n<br><b>Warning:</b> forcing these constraints on might turn a feasible model into an infeasible one.\n<br>In ALNS they are dynamically turned on by default  according to their effect on feasibility\n<br>for the selected model.\n<br><b>Recommended OFF in ALNS</b>");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints2, org.jdesktop.beansbinding.BeanProperty.create("selected"), "ALNS: force heuristic constraints in MIPS");
         bindingGroup.addBinding(binding);
@@ -2355,7 +2355,6 @@ public class MainWindow extends javax.swing.JFrame {
         // Kill the controller thread and triggers the garbage collector
         if (controllerTask != null) {
             controllerTask.cancel(true);
-            controllerTask = null;
             System.gc();
         }
         
@@ -2574,7 +2573,10 @@ public class MainWindow extends javax.swing.JFrame {
                     this.jProgressBar1.setString(osm.getProgress()+"%, "+"stopped");
                     
                     // Eventually add the solution report
-                    this.addSolutionReport(controllerTask.getLatestBestSolution());
+                    if(controllerTask != null){
+                        this.addSolutionReport(controllerTask.getLatestBestSolution());
+                        controllerTask = null;
+                    }
                     
                     // Re-enable the control panel
                     this.enableControlPanel(true);

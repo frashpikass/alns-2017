@@ -1542,7 +1542,7 @@
                                         <Component class="javax.swing.JCheckBox" name="jCheckBoxForceHeuristicConstraints1">
                                           <Properties>
                                             <Property name="text" type="java.lang.String" value="Force heuristic constraints in MIPS"/>
-                                            <Property name="toolTipText" type="java.lang.String" value="If checked, heuristic constraints will always be used every time the MIPS solver is run (also affects ALNS)"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;If checked, heuristic constraints will always be used every time the MIPS solver is run.&#xa;&lt;br&gt;These constraints clean up the model to speed up the search.&#xa;&lt;br&gt;&lt;b&gt;Warning:&lt;/b&gt; forcing these constraints on might turn a feasible model into an infeasible one.&#xa;&lt;br&gt;Turn this option off if the log says the model is infeasible!"/>
                                           </Properties>
                                           <BindingProperties>
                                             <BindingProperty name="selected" source="parametersBean" sourcePath="${orienteeringProperties.forceHeuristicConstraints}" target="jCheckBoxForceHeuristicConstraints1" targetPath="selected" updateStrategy="0" immediately="false">
@@ -1775,7 +1775,7 @@
                                             <Component class="javax.swing.JCheckBox" name="jCheckBoxForceHeuristicConstraints2">
                                               <Properties>
                                                 <Property name="text" type="java.lang.String" value="Force heuristic constraints in MIPS"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;If checked, heuristic constraints will always be used every time the MIPS solver is run.&#xa;&lt;br&gt;&lt;b&gt;Recommended OFF in ALNS&lt;/b&gt;"/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;If checked, heuristic constraints will always be used every time the MIPS solver is run.&#xa;&lt;br&gt;These constraints clean up the model to speed up the search.&#xa;&lt;br&gt;&lt;b&gt;Warning:&lt;/b&gt; forcing these constraints on might turn a feasible model into an infeasible one.&#xa;&lt;br&gt;In ALNS they are dynamically turned on by default  according to their effect on feasibility&#xa;&lt;br&gt;for the selected model.&#xa;&lt;br&gt;&lt;b&gt;Recommended OFF in ALNS&lt;/b&gt;"/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="selected" source="parametersBean" sourcePath="${orienteeringProperties.forceHeuristicConstraints}" target="jCheckBoxForceHeuristicConstraints2" targetPath="selected" updateStrategy="0" immediately="false">

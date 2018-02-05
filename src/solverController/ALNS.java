@@ -9,7 +9,6 @@ import gurobi.GRB;
 import gurobi.GRBCallback;
 import gurobi.GRBConstr;
 import gurobi.GRBException;
-import gurobi.GRBLinExpr;
 import gurobi.GRBModel;
 import gurobi.GRBVar;
 import java.io.File;
@@ -420,7 +419,6 @@ public class ALNS extends Orienteering {
 
             // Keeping track of how many segments without improvement have been seen
             long segmentsWithoutImprovement = 0;
-            //long maxSegmentsWithoutImprovement = 20; // to parametrize / REMOVE
 
             // A string to log why the segment ended.
             StringBuffer segmentEndCause = new StringBuffer();
@@ -511,7 +509,7 @@ public class ALNS extends Orienteering {
                         removedClusters.removeAll(xNew);
                         env.message("\nALNSLOG, "+"xNewR="+String.valueOf(xNew)+", q="+q+"\n");
                         repairMethodWasUsed = true;
-                        // TODO: If a repair method was used, we could punish clusters which brought the solution into infeasibility
+                        // If a repair method was used, we punish clusters which brought the solution into infeasibility
                         // CLUSTER COOLDOWN: Cool down freshly removed clusters since they brought the solution into infeasibility
                         clusterRoulette.cooldown(alnsProperties.getCooldownGamma(), removedClusters);
                     } else {
@@ -538,9 +536,7 @@ public class ALNS extends Orienteering {
                         
                         // 1 - CLUSTER COOLDOWN PUNISHMENT: heavily penalize the infeasible cluster, update nerf list
                         env.message("\nALNSLOG, punishing clusters " + String.valueOf(xNew)+"\n");
-                        //DEBUG: downscaling the infeas. cluster is useless since we will kill it
-                        //clusterRoulette.downscale(alnsProperties.getPunishmentGamma(), xNew);
-                        //clusterRoulette.updateNerfOccurrences();
+                        
                         // Make sure the clusters are physically unwired from the model
                         // and removed from the cluster roulette
                         for(Cluster c : xNew){
@@ -724,20 +720,9 @@ public class ALNS extends Orienteering {
                 
                 /* -------------------------------------- CLOSING THE SEGMENT */
 
-                //            // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
-                //            // This would be a nice spot to use some local search algorithm:
-                //            // repairBackToFeasibility will check whether the solution found in
-                //            // this segment is infeasible or not; if it is infeasible it will bring
-                //            // it back to feasibility through a special repair heuristic
-                //            List<Cluster> xBestRepaired = repairBackToFeasibility(xBest);
-                //            
-                //            // If xBest and xBestRepaired are not the same solution, make sure the feasible one is the best
-                //            if(!(xBest.containsAll(xBestRepaired) && xBestRepaired.containsAll(xBest))){
-                //                // TODO: I'm not sure about this, I need to check again tomorrow; update bestObjectiveValue accordingly
-                //                xBest = xBestRepaired;
-                //                bestObjectiveValue = model.get(GRB.DoubleAttr.ObjVal);
-                //            }
-                //            
+                // At the end of the segment, the best solution is in xBest, with a value in bestObjectiveValue
+                // This would be a nice spot to use some local search algorithm.
+                
                 // We check whether there was an improvement from last segment to this one
                 if (bestObjectiveValueInSegment > bestGlobalObjectiveValue) {
                     env.message("\nALNSLOG, " + elapsedTime + ": segment " + segments + " ended with an improvement!\n");
@@ -893,13 +878,6 @@ public class ALNS extends Orienteering {
                     
                     env.message("ALNSLOG: Local search aborted. Reson:"+localSearchComment.toString()+"\n Keeping the previous best solution...");
                     
-                    /* THIS TEST MUST BE MOVED AS SOON AS A GLOBAL BEST IS FOUND AND DONE ONLY ONCE
-                    // Test to set variables in the model and log vehicle paths
-                    testSolution(this.model, xGlobalBest, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
-
-                    // Save the local search solution to file
-                    super.writeSolution(this.model);
-                    */
                 } else {
                     localSearchComment.append("OK. New solution = "
                             + String.valueOf(xLocalSearch)
@@ -1499,7 +1477,6 @@ public class ALNS extends Orienteering {
             if (q > 1) {
                 Vehicle firstVehicle = null;
                 double firstClusterCost = firstClusterRemoved.getTotalCost();
-//                int biggestStreakSize = 0;
 
                 // Stores clusters and their ratios
                 LinkedHashMap<Cluster, Double> clustersRatios = new LinkedHashMap<>();
@@ -1516,27 +1493,6 @@ public class ALNS extends Orienteering {
                         }
                     }
                 }
-                
-//                // Find v as the vehicle with the longest streak in the first cluster
-//                for (Vehicle v : instance.getVehicles()) {
-//                    if (v.canServe(firstClusterRemoved)) {
-//                        // Get the biggest streak of v in first
-//                        List<Streak> streaks = firstClusterRemoved.getStreaks(v);
-//                        // If there are streaks for vehicle v in the first cluster removed
-//                        if (!streaks.isEmpty()) {
-//                            streaks.sort(Streak.SIZE_COMPARATOR.reversed());
-//                            int streakSize = streaks.get(0).size();
-//
-//                            // PROBLEMA: sto prendendo la lunghezza dello streak invece della sua durata!
-//                            // If the streak we've found is bigger than the previous one
-//                            // update biggestStreakSize and firstVehicle
-//                            if (streakSize > biggestStreakSize) {
-//                                biggestStreakSize = streakSize;
-//                                firstVehicle = v;
-//                            }
-//                        }
-//                    }
-//                }
 
                 if (firstVehicle != null) {
                     // Calculate the ratio for the first cluster
@@ -1686,206 +1642,7 @@ public class ALNS extends Orienteering {
         // Return the repaired input
         return output;
     }
-
-    /**
-     * This is a special repair heuristic to bring back an eventual infeasible
-     * solution into feasibility. It operates by removing the minimum number of
-     * low gain clusters when their total cost is more than or equal the
-     * difference between the maximum cost for the solution (Tmax) and the
-     * actual cost of the solution.
-     * <br>Fesibility is tested at the end of the method, so you can expect to
-     * find interesting information about this solution in the current model.
-     *
-     * @param inputSolution an infeasible solution
-     * @return a feasible solution
-     */
-    private List<Cluster> repairBackToFeasibility(List<Cluster> inputSolution) throws Exception {
-        // 0. Check feasibility. If infeasible goto 1, else goto 9
-        // 1. Compute the feasibility relaxation model so that we can retrieve some information on z and Tmax
-        // 2. Look at how much into infeasibility we are, so get the maxZ
-        // 3. Compute costDifference = maxZ-Tmax
-        // 4. Sort inputSolution clusters by increasing profit
-        // 5. Sort inputSolution clusters by increasing service time (cost)
-        // 6. Get the first cluster from sorted inputSolution with cost >= costDifference
-        // 7. Remove the cluster found in 6.
-        // 8. Goto 0
-        // 9. Return the new feasible solution
-
-        int firstNodeID = 0;
-
-        // Create a new objective function for the feasibility relaxation model
-        // The objective function is setup to "minimize the value of sum(z[*][lastNodeID])"
-        // (we want to minimize the time of arrival into the last node)
-        int lastNodeID = instance.getNum_nodes() - 1;
-        GRBLinExpr newObj = new GRBLinExpr();
-        for (int s = 0; s < instance.getNum_nodes(); s++) {
-            newObj.addTerm(1.0, this.z[s][lastNodeID]);
-        }
-
-        // Setup the output
-        List<Cluster> output = new ArrayList<>(inputSolution);
-
-        // 0. Check feasibility and start cycling until we have a feasible solution
-        boolean isFeasible = testSolutionForFeasibility(output, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
-        while (!isFeasible && output.size() > 1) {
-            // 1. Compute the feasibilityRelaxation so that we can retrieve some information on z and Tmax
-            GRBModel clone = new GRBModel(model);
-
-            // Setup the new value of Tmax as the maximum value for a double
-            double safeTMax = instance.getTmax() * instance.getNum_vehicles() * instance.getNum_nodes();
-            double[] newTMax = new double[this.constraint8.size()];
-            for (int t = 0; t < this.constraint8.size(); t++) {
-                newTMax[t] = safeTMax;
-            }
-
-            // Set the new value of Tmax as the new upper bound for each z
-            for (int i = 0; i < instance.getNum_nodes(); i++) {
-                for (int j = 0; j < instance.getNum_nodes(); j++) {
-                    GRBVar toFix = clone.getVarByName("z_(" + i + "," + j + ")");
-                    toFix.set(GRB.DoubleAttr.UB, safeTMax);
-                }
-            }
-
-            // try removing all constraints8 from the cloned model, then
-            // rebuild them with the new tmax instead
-            // Remove all old constraints
-            for (GRBConstr grbc : this.constraint8) {
-                GRBConstr toRemove = clone.getConstrByName(grbc.get(GRB.StringAttr.ConstrName));
-                clone.remove(toRemove);
-            }
-            // Add new constraints
-            for (int i = firstNodeID; i < instance.getNum_nodes(); i++) {
-                for (int j = firstNodeID; j < instance.getNum_nodes(); j++) {
-                    GRBLinExpr expr8 = new GRBLinExpr();
-                    for (int v = 0; v < instance.getNum_vehicles(); v++) {
-                        expr8.addTerm(safeTMax, x[v][i][j]);
-                    }
-
-                    // Add the constraint to the cloned model
-                    // This is one constraint for every z[i][j]
-                    clone.addConstr(z[i][j], GRB.LESS_EQUAL, expr8, "c8_arc(" + i + "," + j + ")");
-                }
-            }
-
-            /*
-            // For each constraint in the list of constraints, change Tmax to
-            // the maximum possible value
-            for(int i = 0; i < this.constraint8.size(); i++){
-                List<GRBVar> vars = this.constraint8Variables.get(i);
-                //DEBUG: check if sizes of all arguments are the same!
-                GRBConstr [] constraints = constraint8.toArray(new GRBConstr[constraint8.size()]);
-                GRBVar [] variables = vars.toArray(new GRBVar[vars.size()]);
-                
-                clone.chgCoeffs(constraints, variables, newTMax);
-            }
-             */
-            // Now we set the objective function to "minimize the time of arrival into the last node"
-            clone.setObjective(newObj, GRB.MINIMIZE);
-
-            // Update the cloned model
-            clone.update();
-
-            //clone.write("feasibilitySubmodel.lp");
-            // Let's test the solution on the feasibility relaxation model (clone)
-            //if(true){
-            if (this.testSolution(clone, output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
-                // If it worked, we're very happy because we can start looking for the maximum value of Z
-                double maxZ = -1;
-                double tempZ;
-                for (int i = 0; i < instance.getNum_nodes(); i++) {
-                    GRBVar zCurrent = clone.getVarByName(z[i][lastNodeID].get(GRB.StringAttr.VarName));
-                    tempZ = zCurrent.get(GRB.DoubleAttr.X);
-                    if (tempZ >= maxZ) {
-                        maxZ = tempZ;
-                    }
-                }
-
-                // 3. Compute costDifference = maxZ-Tmax
-                double costDifference = maxZ - instance.getTmax();
-
-                // 4. Sort inputSolution clusters by increasing profit/cost ratio
-                output.sort(Cluster.PROFIT_COST_RATIO_COMPARATOR);
-
-                // 5. Get the first cluster from sorted inputSolution with cost >= costDifference
-                Cluster toRemove = null;
-                for (Cluster c : output) {
-                    if (c.getTotalCost() >= costDifference) {
-                        toRemove = c;
-                        break;
-                    }
-                }
-                // if there isn't a cluster that satisfies our criteria, choose
-                // the one with the least profit/cost ratio
-                if (toRemove == null) {
-                    toRemove = output.get(0);
-                }
-
-                // 6. Remove the cluster found in 5.
-                output.remove(toRemove);
-
-                // 7. Goto 0 (test feasibility)
-                isFeasible = testSolutionForFeasibility(output, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck());
-            } // In case the feasibility relaxation did not work, something went VERY wrong
-            else {
-                throw new Exception("PROBLEM: the feasibility relaxation was infeasible!");
-            }
-
-            // Memory cleanup
-            clone.dispose();
-        }
-
-        return output;
-    }
-
-    /**
-     * This is a special repair heuristic to bring back an eventual infeasible
-     * solution into feasibility. It operates by removing the minimum number of
-     * low gain-high cost clusters.
-     * <br>Fesibility is tested at the end of the method, so you can expect to
-     * find interesting information about this solution in the current model.
-     *
-     * @param inputSolution an infeasible solution
-     * @return a feasible solution
-     * @throws Exception if testing the solution breaks somewhere
-     */
-    private List<Cluster> repairBackToFeasibility2(List<Cluster> inputSolution) throws Exception {
-        // Setup the output
-        List<Cluster> output = new ArrayList<>(inputSolution);
-
-        while (!testSolutionForFeasibility(output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
-            output = this.repairWorstRemoval(output, 1);
-        }
-
-        return output;
-    }
-
-    /**
-     * This is a special repair heuristic to bring back an eventual infeasible
-     * solution into feasibility. It operates by removing the minimum number of
-     * clusters through the repeated application of the specified repair method
-     * with q=1.
-     * <br>Fesibility is tested at the end of the method, so you can expect to
-     * find interesting information about this solution in the current model.
-     *
-     * @param inputSolution an infeasible solution
-     * @param repairMethod the repair heuristic to use
-     * @return a feasible solution
-     * @throws Exception if testing the solution breaks somewhere
-     */
-    private List<Cluster> repairBackToFeasibility3(
-            List<Cluster> inputSolution,
-            BiFunction<List<Cluster>, Integer, List<Cluster>> repairMethod
-    ) throws Exception {
-        // Setup the output
-        List<Cluster> output = new ArrayList<>(inputSolution);
-
-        while (output.size() > 1 && !testSolutionForFeasibility(output, false, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
-            output = repairMethod.apply(output, 1);
-        }
-
-        return output;
-    }
-
+    
     /**
      * This is a special repair heuristic to bring back an eventual infeasible
      * solution into feasibility. It operates by removing the minimum number of
@@ -2138,12 +1895,6 @@ public class ALNS extends Orienteering {
         env.message("\nALNSLOG, "+elapsedTime+": trying to get a feasible set of h. constraints for the local search...\n");
         
         // Setup feasible heuristics
-//        List<Integer> heuristicIDs =
-//                super.getLargestFeasibleCombinationOfHeuristicConstraints(
-//                allHeuristicConstraints,
-//                inputSolution,
-//                alnsProperties.getMaxMIPSNodesForFeasibilityCheck()
-//        );
         List<Integer> heuristicIDs = this.feasibleHeuristicIDs;
         
         // Logging constraints used
@@ -2157,8 +1908,8 @@ public class ALNS extends Orienteering {
         // as a starting point
         // Setup a feasible solution in case there was no improvement
         if(segmentsWithoutImprovement > 0){
-            // select a value of q which is the floor of solutionSize/2, so to keep at least
-            // half of the old solution
+            // select a value of q which is the floor of solutionSize/3, so to keep at least
+            // one third of the old solution
             
             int q = Math.floorDiv(inputSolution.size(), 3);
             
@@ -2225,7 +1976,7 @@ public class ALNS extends Orienteering {
             env.message("\nALNSLOG: local search, testing the input solution on the cloned model...\n");
             
             // Test the solution on the clone model so that we can gather informations on the warm solution
-            if (this.testSolution(clone, partialInputSolution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) { // DEBUG: LOCAL SEARCH CRASHES BECAUSE IT DOESN'T ENTER HERE?
+            if (this.testSolution(clone, partialInputSolution, true, alnsProperties.getMaxMIPSNodesForFeasibilityCheck())) {
                 env.message("\nALNSLOG: local search, the input solution "
                         +String.valueOf(partialInputSolution)
                         +" appeared to be feasible\n");
@@ -2312,7 +2063,6 @@ public class ALNS extends Orienteering {
             env.message("ALNSLOG: Optimization interrupted by user.\n");
             env.message(e.getMessage());
             this.cleanup();
-            //DEBUG: uncomment later
             logRedirector.cancel(true);
             return false;
         } finally {

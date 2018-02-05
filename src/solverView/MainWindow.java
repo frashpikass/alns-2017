@@ -172,7 +172,6 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         jTextFieldNumThreads2 = new javax.swing.JTextField();
         jButtonOutputFolderPath2 = new javax.swing.JButton();
-        jCheckBoxForceHeuristicConstraints2 = new javax.swing.JCheckBox();
         jTextFieldTimeLimitALNS = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
@@ -244,6 +243,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonOutputFolderPath = new javax.swing.JButton();
         jTextFieldOutputFolderPath = new javax.swing.JTextField();
         jLabelOutputFolderPath = new javax.swing.JLabel();
+        jCheckBoxForceHeuristicConstraints2 = new javax.swing.JCheckBox();
         jPanelOutput = new javax.swing.JPanel();
         jTabbedPaneOutputs = new javax.swing.JTabbedPane();
         jPanelConsoleOutput = new javax.swing.JPanel();
@@ -697,7 +697,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         jPanelMIPSParameters.add(jTextFieldNumThreads1, gridBagConstraints);
 
-        jCheckBoxForceHeuristicConstraints1.setText("Force heuristic constraints in MIPS");
+        jCheckBoxForceHeuristicConstraints1.setText("Use heuristic constraints in MIPS");
         jCheckBoxForceHeuristicConstraints1.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br>These constraints clean up the model to speed up the search.\n<br><b>Warning:</b> forcing these constraints on might turn a feasible model into an infeasible one.\n<br>Turn this option off if the log says the model is infeasible!");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints1, org.jdesktop.beansbinding.BeanProperty.create("selected"), "MIPS: force heuristic constraints");
@@ -776,7 +776,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSGeneralParams.setBorder(javax.swing.BorderFactory.createTitledBorder("General Parameters"));
         java.awt.GridBagLayout jPanelALNSGeneralParamsLayout = new java.awt.GridBagLayout();
         jPanelALNSGeneralParamsLayout.columnWidths = new int[] {0, 10, 0, 10, 0};
-        jPanelALNSGeneralParamsLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0};
+        jPanelALNSGeneralParamsLayout.rowHeights = new int[] {0, 10, 0, 10, 0};
         jPanelALNSGeneralParams.setLayout(jPanelALNSGeneralParamsLayout);
 
         jLabelOutputFolderPath2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -854,23 +854,6 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         jPanelALNSGeneralParams.add(jButtonOutputFolderPath2, gridBagConstraints);
-
-        jCheckBoxForceHeuristicConstraints2.setText("Force heuristic constraints in MIPS");
-        jCheckBoxForceHeuristicConstraints2.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br>These constraints clean up the model to speed up the search.\n<br><b>Warning:</b> forcing these constraints on might turn a feasible model into an infeasible one.\n<br>In ALNS they are dynamically turned on by default  according to their effect on feasibility\n<br>for the selected model.\n<br><b>Recommended OFF in ALNS</b>");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints2, org.jdesktop.beansbinding.BeanProperty.create("selected"), "ALNS: force heuristic constraints in MIPS");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxForceHeuristicConstraints2.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxForceHeuristicConstraints2updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        jPanelALNSGeneralParams.add(jCheckBoxForceHeuristicConstraints2, gridBagConstraints);
 
         jTextFieldTimeLimitALNS.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jTextFieldTimeLimitALNS.setToolTipText("<html>\n<b>ALNS time limit</b>\n<br>Maximum runtime for the ALNS heuristic algorithm (in seconds).\n<br>When this time is reached, the ALNS solver execution terminates.");
@@ -1764,6 +1747,24 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(42, 0, 0, 0);
         jPanelRelaxedParameters.add(jLabelOutputFolderPath, gridBagConstraints);
+
+        jCheckBoxForceHeuristicConstraints2.setText("Use heuristic constraints");
+        jCheckBoxForceHeuristicConstraints2.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br>These constraints clean up the model to speed up the search and to tighten the relaxed solution.\n<br><b>Warning:</b> forcing these constraints on might turn a feasible model into an infeasible one.\n<br>Turn this option off if the log says the model is infeasible!");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints2, org.jdesktop.beansbinding.BeanProperty.create("selected"));
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxForceHeuristicConstraints2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxForceHeuristicConstraints2updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelRelaxedParameters.add(jCheckBoxForceHeuristicConstraints2, gridBagConstraints);
 
         jScrollPaneRelaxParam.setViewportView(jPanelRelaxedParameters);
 

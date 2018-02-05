@@ -1713,7 +1713,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.insets = new java.awt.Insets(30, 12, 30, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
         jPanelRelaxedParameters.add(jButtonOutputFolderPath, gridBagConstraints);
 
         jTextFieldOutputFolderPath.setToolTipText("Choose the output directory");
@@ -1735,8 +1735,6 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.ipadx = 84;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.insets = new java.awt.Insets(38, 14, 0, 0);
         jPanelRelaxedParameters.add(jTextFieldOutputFolderPath, gridBagConstraints);
 
         jLabelOutputFolderPath.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1744,8 +1742,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.insets = new java.awt.Insets(42, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         jPanelRelaxedParameters.add(jLabelOutputFolderPath, gridBagConstraints);
 
         jCheckBoxForceHeuristicConstraints2.setText("Use heuristic constraints");

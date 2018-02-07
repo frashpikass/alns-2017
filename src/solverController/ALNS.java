@@ -2147,17 +2147,6 @@ public class ALNS extends Orienteering {
                 notifyController(elapsedTime, OptimizationStatusMessage.Status.STOPPED, bestGlobalObjectiveValue);
             }
         }
-        /*
-        try {
-            boolean cancelLogRedir = this.logRedirector.cancel(true);
-            env.message("Did you close the logger door? "+cancelLogRedir+"\n");
-        } catch (GRBException ex) {
-            Logger.getLogger(ALNS.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch(Exception e){
-            System.out.println("Strange error happened: "+e.getMessage());
-        }
-         */
     }
     
     /**

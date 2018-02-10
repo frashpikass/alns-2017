@@ -18,12 +18,7 @@ public class DoubleConverter extends Converter<Double, String> {
     @Override
     public Double convertReverse(String value) {
         double output;
-        try{
-            output = Double.parseDouble(value);
-        }
-        catch(Exception e){
-            output = 0.0;
-        }
+        output = Double.parseDouble(value);
         //System.out.println("Converting Reverse"+value+"->"+output);
         return output;
     }

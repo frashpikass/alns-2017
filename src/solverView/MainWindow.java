@@ -136,6 +136,8 @@ public class MainWindow extends javax.swing.JFrame {
         integerConverter1 = new solverView.bindingInterfaces.IntegerConverter();
         probabilityValueValidator1 = new solverView.bindingInterfaces.ProbabilityValueValidator();
         positiveDoubleValidator1 = new solverView.bindingInterfaces.PositiveDoubleValidator();
+        positiveLongValidator1 = new solverView.bindingInterfaces.PositiveLongValidator();
+        longConverter1 = new solverView.bindingInterfaces.LongConverter();
         jLabel1 = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -1115,8 +1117,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldTimeLimitLocalSearch.setToolTipText("<html>\n<b>ALNS local search time limit</b>\n<br>Maximum runtime (in seconds) for the local search process.\n<br>A MIPS local search is run at the end of every segment, when possible.\n<br>The local search process takes advantage of all the heuristic constraints\n<br>defined by our Optimization Algorithms team.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.timeLimitLocalSearch}"), jTextFieldTimeLimitLocalSearch, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitLocalSearch");
-        binding.setConverter(integerConverter1);
-        binding.setValidator(positiveIntegerValidator1);
+        binding.setConverter(longConverter1);
+        binding.setValidator(positiveLongValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldTimeLimitLocalSearch.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1315,8 +1317,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxSegments.setToolTipText("<html>\nMaximum number of segments for an ALNS run.\n<br>When this number of segments is reached, the ALNS solver\n<br>terminates its execution.\n<br>This value is throttled by the \"Max segments without improvement\"\n<br>parameter.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegments}"), jTextFieldMaxSegments, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max segments for an ALNS run");
-        binding.setConverter(integerConverter1);
-        binding.setValidator(positiveIntegerValidator1);
+        binding.setConverter(longConverter1);
+        binding.setValidator(positiveLongValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldMaxSegments.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1354,13 +1356,18 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxSegmentsWithoutImprovement.setToolTipText("<html>\nMaximum number of segments without improvement for an ALNS run.\n<br>When this number of segments without improvement is reached,\n<br>the ALNS solver terminates its execution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegmentsWithoutImprovement}"), jTextFieldMaxSegmentsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max segments without improvement");
-        binding.setConverter(integerConverter1);
-        binding.setValidator(positiveIntegerValidator1);
+        binding.setConverter(longConverter1);
+        binding.setValidator(positiveLongValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldMaxSegmentsWithoutImprovement.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 updatePsiBean(evt);
+            }
+        });
+        jTextFieldMaxSegmentsWithoutImprovement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldMaxSegmentsWithoutImprovementActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2479,6 +2486,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void jTextFieldMaxIterationsWithoutImprovementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMaxIterationsWithoutImprovementActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldMaxIterationsWithoutImprovementActionPerformed
+
+    private void jTextFieldMaxSegmentsWithoutImprovementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMaxSegmentsWithoutImprovementActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldMaxSegmentsWithoutImprovementActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -3023,11 +3034,13 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldTimeLimitALNS;
     private javax.swing.JTextField jTextFieldTimeLimitLocalSearch;
     private javax.swing.JTextField jTextFieldWarmupGamma;
+    private solverView.bindingInterfaces.LongConverter longConverter1;
     private solverController.OrienteeringPropertiesBean orienteeringPropertiesBean;
     private solverController.ParametersBean parametersBean;
     private solverView.PathCacheBean pathCacheBean;
     private solverView.bindingInterfaces.PositiveDoubleValidator positiveDoubleValidator1;
     private solverView.bindingInterfaces.PositiveIntegerValidator positiveIntegerValidator1;
+    private solverView.bindingInterfaces.PositiveLongValidator positiveLongValidator1;
     private solverView.bindingInterfaces.ProbabilityValueValidator probabilityValueValidator1;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

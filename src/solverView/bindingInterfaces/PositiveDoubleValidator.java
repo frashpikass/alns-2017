@@ -8,7 +8,7 @@ package solverView.bindingInterfaces;
 import org.jdesktop.beansbinding.Validator;
 
 /**
- * Class which validates positive doubles and ensures they are greater or equal
+ * Class which validates positive doubles and ensures they are greater
  * than 0.
  * @author Frash
  */

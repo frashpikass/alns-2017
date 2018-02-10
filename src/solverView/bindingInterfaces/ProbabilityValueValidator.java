@@ -8,8 +8,8 @@ package solverView.bindingInterfaces;
 import org.jdesktop.beansbinding.Validator;
 
 /**
- * Class which validates positive doubles and ensures they are greater or equal
- * than 0.
+ * Class which validates probability values (double) and ensures they are
+ * in range [0, 1]
  * @author Frash
  */
 public class ProbabilityValueValidator extends Validator<Double>{

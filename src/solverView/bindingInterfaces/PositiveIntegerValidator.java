@@ -16,7 +16,7 @@ public class PositiveIntegerValidator extends Validator<Integer>{
 
     @Override
     public Validator.Result validate(Integer value) {
-        if (!(value >= 0 )) {
+        if (!(value > 0 )) {
             return new Validator.Result(value, "This value must be a positive integer or zero!");
         }
         

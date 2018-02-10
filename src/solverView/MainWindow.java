@@ -5,6 +5,7 @@
  */
 package solverView;
 
+import solverView.bindingInterfaces.ErrorBindingListener;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
@@ -107,7 +108,7 @@ public class MainWindow extends javax.swing.JFrame {
         parametersBean = new solverController.ParametersBean();
         pathCacheBean = new solverView.PathCacheBean();
         jFileChooserWorkingDirectory = new javax.swing.JFileChooser();
-        doubleConverter1 = new solverView.DoubleConverter();
+        doubleConverter1 = new solverView.bindingInterfaces.DoubleConverter();
         jDialogError = new javax.swing.JDialog();
         jLabelErrorMessage = new javax.swing.JLabel();
         jButtonErrorOk = new javax.swing.JButton();
@@ -131,6 +132,10 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jButtonYesStop = new javax.swing.JButton();
         jButtonNoStop = new javax.swing.JButton();
+        positiveIntegerValidator1 = new solverView.bindingInterfaces.PositiveIntegerValidator();
+        integerConverter1 = new solverView.bindingInterfaces.IntegerConverter();
+        probabilityValueValidator1 = new solverView.bindingInterfaces.ProbabilityValueValidator();
+        positiveDoubleValidator1 = new solverView.bindingInterfaces.PositiveDoubleValidator();
         jLabel1 = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -917,7 +922,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldSegmentSize.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldSegmentSize.setToolTipText("<html> \n<b>ALNS segment size</b>\n<br>Maximum number of iterations in an ALNS optimization segment.\n<br>Every iteration includes the application of a destroy heuristic over\n<br>the previous feasible solution, followed by the application of a\n<br>repair heuristic to bring the destroyed solution back to feasibility.\n<br>This parameter can be throttled by the \"Maximum iterations without\n<br>improvement in a segment\" parameter.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.segmentSize}"), jTextFieldSegmentSize, org.jdesktop.beansbinding.BeanProperty.create("text"), "segmentSize");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.segmentSize}"), jTextFieldSegmentSize, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max iterations per segment");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldSegmentSize.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1026,7 +1033,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldQDelta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldQDelta.setToolTipText("<html>\n<b>Degree of Destruction increment</b>\n<br>Constant increment of q at the end of every segment.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.qDelta}"), jTextFieldQDelta, org.jdesktop.beansbinding.BeanProperty.create("text"), "qDelta");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.qDelta}"), jTextFieldQDelta, org.jdesktop.beansbinding.BeanProperty.create("text"), "Delta q");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldQDelta.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1044,7 +1053,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldQStart.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldQStart.setToolTipText("<html>\n<b>Initial Degree of Destruction</b>\n<br>Initial value of q (degree of destruction) at the beginning of the first ALNS segment.\n<br>q determines how many clusters are to be inserted by the destruction heuristics.\n<br>The value of q increases at the end of each segment by <tt>qDelta</tt>.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.qStart}"), jTextFieldQStart, org.jdesktop.beansbinding.BeanProperty.create("text"), "qStart");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.qStart}"), jTextFieldQStart, org.jdesktop.beansbinding.BeanProperty.create("text"), "Initial q");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldQStart.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1062,7 +1073,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldLambda.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldLambda.setToolTipText("<html>\n<b>ALNS heuristic decay</b>\n<br>This is the decay parameter of the update process for heuristic method weights.\n<br>This value should be a double in the interval [0,1].\n<br>Heuristic method weights are updated at the end of every iteration\n<br>following the convex combination:\n<br> <tt>newWeight</tt> = <tt>lambda</tt>*<tt>oldWeight</tt> + (1-<tt>lambda</tt>)*<tt>psi</tt>\n<br>where <tt>psi</tt> is a value that indicates the relative score to give to an heuristic.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.lambda}"), jTextFieldLambda, org.jdesktop.beansbinding.BeanProperty.create("text"), "lambda");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.lambda}"), jTextFieldLambda, org.jdesktop.beansbinding.BeanProperty.create("text"), "Lambda");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(probabilityValueValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldLambda.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1080,7 +1093,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldAlpha.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldAlpha.setToolTipText("<html>\n<b>Simulated annealing decay</b>\n<br>This is the decay parameter of the update process for <tt>Temperature.</tt>\n<br>This value should be a real number in the interval [0,1].\n<br>The temperature is updated at the end of every segment like\n<br><tt>newTemperature</tt> = <tt>alpha</tt>*<tt>oldTemperature</tt>\n<br>A slowly decreasing temperature (<tt>alpha</tt>-&gt;1)\n<br>will make it more likely to accept worse solutions at the\n<br>beginning of a segment, but it might find a better solution.\n<br>However a slowly decreasing temperature will take longer to converge\n<br>to a better solution.\n<br>\n<br><b>NOTE:</b> to be changed in accordance with <tt>Segment Size</tt>");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.alpha}"), jTextFieldAlpha, org.jdesktop.beansbinding.BeanProperty.create("text"), "alpha");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.alpha}"), jTextFieldAlpha, org.jdesktop.beansbinding.BeanProperty.create("text"), "Alpha");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(probabilityValueValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldAlpha.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1100,6 +1115,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldTimeLimitLocalSearch.setToolTipText("<html>\n<b>ALNS local search time limit</b>\n<br>Maximum runtime (in seconds) for the local search process.\n<br>A MIPS local search is run at the end of every segment, when possible.\n<br>The local search process takes advantage of all the heuristic constraints\n<br>defined by our Optimization Algorithms team.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.timeLimitLocalSearch}"), jTextFieldTimeLimitLocalSearch, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitLocalSearch");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldTimeLimitLocalSearch.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1118,6 +1135,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldRewardForBestSegmentHeuristics.setToolTipText("<html>\n<b>ALNS reward for best h. in segment</b>\n<br>A scaling factor which is applied to the weight of the best heuristics of the previous segment,\n<br>at the beginning of the next segment.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.rewardForBestSegmentHeuristics}"), jTextFieldRewardForBestSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "rewardForBestSegmentHeuristics");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldRewardForBestSegmentHeuristics.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1135,7 +1154,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldPunishmentForWorstSegmentHeuristics.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldPunishmentForWorstSegmentHeuristics.setToolTipText("<html>\n<b>ALNS punishment for h. in segment</b>\n<br>A scaling factor which is applied to the weight of the worst heuristics of the previous segment,\n<br>at the beginning of the next segment.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.punishmentForWorstSegmentHeuristics}"), jTextFieldPunishmentForWorstSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "punishmentForWorstSegmentHeuristics");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.punishmentForWorstSegmentHeuristics}"), jTextFieldPunishmentForWorstSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "Punishment for worst segment heuristics");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldPunishmentForWorstSegmentHeuristics.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1155,6 +1176,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxMIPSNodesForFeasibilityCheck.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxMIPSNodesForFeasibilityCheck}"), jTextFieldMaxMIPSNodesForFeasibilityCheck, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxMIPSNodesForFeasibilityCheck");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldMaxMIPSNodesForFeasibilityCheck.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1172,12 +1195,19 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxIterationsWithoutImprovement.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldMaxIterationsWithoutImprovement.setToolTipText("<html>\n<b>ALNS no-improvement throttle</b>\n<br>Maximum number of iterations without improvement in an ALNS optimization segment.\n<br>If this number of iterations without improvement is reached,\n<br>the ALNS solver will move on with the next segment (evenutally doing a little\n<br>local search in between the two segments).");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxIterationsWithoutImprovement}"), jTextFieldMaxIterationsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxIterationsWithoutImprovement");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxIterationsWithoutImprovement}"), jTextFieldMaxIterationsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max iterations w/o improvement in a segment");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldMaxIterationsWithoutImprovement.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 updatePsiBean(evt);
+            }
+        });
+        jTextFieldMaxIterationsWithoutImprovement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldMaxIterationsWithoutImprovementActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1284,7 +1314,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxSegments.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldMaxSegments.setToolTipText("<html>\nMaximum number of segments for an ALNS run.\n<br>When this number of segments is reached, the ALNS solver\n<br>terminates its execution.\n<br>This value is throttled by the \"Max segments without improvement\"\n<br>parameter.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegments}"), jTextFieldMaxSegments, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxSegments");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegments}"), jTextFieldMaxSegments, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max segments for an ALNS run");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldMaxSegments.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1321,7 +1353,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxSegmentsWithoutImprovement.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldMaxSegmentsWithoutImprovement.setToolTipText("<html>\nMaximum number of segments without improvement for an ALNS run.\n<br>When this number of segments without improvement is reached,\n<br>the ALNS solver terminates its execution.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegmentsWithoutImprovement}"), jTextFieldMaxSegmentsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "maxSegmentsWithoutImprovement");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegmentsWithoutImprovement}"), jTextFieldMaxSegmentsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max segments without improvement");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldMaxSegmentsWithoutImprovement.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1539,7 +1573,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldPunishmentGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldPunishmentGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the new probability of being chosen for nerfed\n<br>clusters (clusters which haven't behaved well in the segment).\n<br>Must be a double in range [0,1].");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.punishmentGamma}"), jTextFieldPunishmentGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "punishmentGamma");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.punishmentGamma}"), jTextFieldPunishmentGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "Punshment Gamma");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(probabilityValueValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldPunishmentGamma.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1557,7 +1593,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldCooldownGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldCooldownGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the scaling factor used in the cooldown process.\n<br>Must be a small double in range [0,1].\n<br><li>A hot (freshly selected) cluster will have a new probability of\nbeing chosen which is <i>cooldownGamma</i> times smaller</li>\n<br>Probability for hot clusters is downscaled like\n<br><li><i>newProbability</i> = (1 -\n<i>cooldownGamma</i>)*<i>oldProbability</i></li>");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.cooldownGamma}"), jTextFieldCooldownGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "cooldownGamma");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.cooldownGamma}"), jTextFieldCooldownGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "Cooldown Gamma");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(probabilityValueValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldCooldownGamma.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1591,7 +1629,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldWarmupGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldWarmupGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the scaling factor used in the warmup process.\n<br>Must be a small double in range [0,1].\n<br><li>A cold (not freshly selected) cluster will have a new probability\nof being chosen which is <i>warmupGamma</i> times bigger</li>\n\n<br>Probability for cold clusters is upscaled like\n<br><li><i>newProbability</i> = (1 -\n<i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.warmupGamma}"), jTextFieldWarmupGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "warmupGamma");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.warmupGamma}"), jTextFieldWarmupGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "Warmup Gamma");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(probabilityValueValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldWarmupGamma.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1617,7 +1657,9 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldNerfBarrier.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldNerfBarrier.setToolTipText("<html>\n<b>Cooldown - Bad Cluster Nerfing at segment end</b>\n<br>Clusters that have had a \"chance of being chosen\" less than the average\nfor more than nerfBarrier% of the time in a segment will be surely\npunished to make them less available in the following segment.\n\n<br>This will also impact on the local search: clusters that have a\nprobability of selection below the average won't be included in those\navailable for the local search.\n\n<br>Must be a double in range [0,1].");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.nerfBarrier}"), jTextFieldNerfBarrier, org.jdesktop.beansbinding.BeanProperty.create("text"), "nerfBarrier");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.nerfBarrier}"), jTextFieldNerfBarrier, org.jdesktop.beansbinding.BeanProperty.create("text"), "Nerf Barrier");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(probabilityValueValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldNerfBarrier.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2433,6 +2475,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void jCheckBoxForceHeuristicConstraints2updatePsiBeanC(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxForceHeuristicConstraints2updatePsiBeanC
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBoxForceHeuristicConstraints2updatePsiBeanC
+
+    private void jTextFieldMaxIterationsWithoutImprovementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMaxIterationsWithoutImprovementActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldMaxIterationsWithoutImprovementActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -2817,9 +2863,10 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupActions;
     private javax.swing.ButtonGroup buttonGroupInstance;
     private javax.swing.ButtonGroup buttonGroupSolver;
-    private solverView.DoubleConverter doubleConverter1;
+    private solverView.bindingInterfaces.DoubleConverter doubleConverter1;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
+    private solverView.bindingInterfaces.IntegerConverter integerConverter1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCloseAllReports;
     private javax.swing.JButton jButtonErrorOk;
@@ -2979,6 +3026,9 @@ public class MainWindow extends javax.swing.JFrame {
     private solverController.OrienteeringPropertiesBean orienteeringPropertiesBean;
     private solverController.ParametersBean parametersBean;
     private solverView.PathCacheBean pathCacheBean;
+    private solverView.bindingInterfaces.PositiveDoubleValidator positiveDoubleValidator1;
+    private solverView.bindingInterfaces.PositiveIntegerValidator positiveIntegerValidator1;
+    private solverView.bindingInterfaces.ProbabilityValueValidator probabilityValueValidator1;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

@@ -84,7 +84,7 @@
         <Property name="fileSelectionMode" type="int" value="1"/>
       </Properties>
     </Component>
-    <Component class="solverView.DoubleConverter" name="doubleConverter1">
+    <Component class="solverView.bindingInterfaces.DoubleConverter" name="doubleConverter1">
     </Component>
     <Container class="javax.swing.JDialog" name="jDialogError">
       <Properties>
@@ -1142,6 +1142,14 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="solverView.bindingInterfaces.PositiveIntegerValidator" name="positiveIntegerValidator1">
+    </Component>
+    <Component class="solverView.bindingInterfaces.IntegerConverter" name="integerConverter1">
+    </Component>
+    <Component class="solverView.bindingInterfaces.ProbabilityValueValidator" name="probabilityValueValidator1">
+    </Component>
+    <Component class="solverView.bindingInterfaces.PositiveDoubleValidator" name="positiveDoubleValidator1">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -2643,7 +2651,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.segmentSize}" target="jTextFieldSegmentSize" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="segmentSize"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="integerConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveIntegerValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Max iterations per segment"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -2773,7 +2787,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.qDelta}" target="jTextFieldQDelta" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="qDelta"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="integerConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveIntegerValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Delta q"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -2793,7 +2813,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.qStart}" target="jTextFieldQStart" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="qStart"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="integerConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveIntegerValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Initial q"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -2813,7 +2839,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.lambda}" target="jTextFieldLambda" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="lambda"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="probabilityValueValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Lambda"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -2836,7 +2868,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.alpha}" target="jTextFieldAlpha" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="alpha"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="probabilityValueValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Alpha"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -2856,6 +2894,12 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.timeLimitLocalSearch}" target="jTextFieldTimeLimitLocalSearch" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="integerConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveIntegerValidator1"/>
+                                                      </Property>
                                                       <Property name="name" type="java.lang.String" value="timeLimitLocalSearch"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
@@ -2876,6 +2920,12 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.rewardForBestSegmentHeuristics}" target="jTextFieldRewardForBestSegmentHeuristics" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveDoubleValidator1"/>
+                                                      </Property>
                                                       <Property name="name" type="java.lang.String" value="rewardForBestSegmentHeuristics"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
@@ -2896,7 +2946,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.punishmentForWorstSegmentHeuristics}" target="jTextFieldPunishmentForWorstSegmentHeuristics" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="punishmentForWorstSegmentHeuristics"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveDoubleValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Punishment for worst segment heuristics"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -2919,6 +2975,12 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.maxMIPSNodesForFeasibilityCheck}" target="jTextFieldMaxMIPSNodesForFeasibilityCheck" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveDoubleValidator1"/>
+                                                      </Property>
                                                       <Property name="name" type="java.lang.String" value="maxMIPSNodesForFeasibilityCheck"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
@@ -2939,11 +3001,18 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.maxIterationsWithoutImprovement}" target="jTextFieldMaxIterationsWithoutImprovement" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="maxIterationsWithoutImprovement"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="integerConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveIntegerValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Max iterations w/o improvement in a segment"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
                                                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="updatePsiBean"/>
+                                                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldMaxIterationsWithoutImprovementActionPerformed"/>
                                                   </Events>
                                                   <Constraints>
                                                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -3044,7 +3113,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.maxSegments}" target="jTextFieldMaxSegments" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="maxSegments"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="integerConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveIntegerValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Max segments for an ALNS run"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -3085,7 +3160,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.maxSegmentsWithoutImprovement}" target="jTextFieldMaxSegmentsWithoutImprovement" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="maxSegmentsWithoutImprovement"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="integerConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="positiveIntegerValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Max segments without improvement"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -3336,7 +3417,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.punishmentGamma}" target="jTextFieldPunishmentGamma" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="punishmentGamma"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="probabilityValueValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Punshment Gamma"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -3356,7 +3443,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.cooldownGamma}" target="jTextFieldCooldownGamma" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="cooldownGamma"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="probabilityValueValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Cooldown Gamma"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -3396,7 +3489,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.warmupGamma}" target="jTextFieldWarmupGamma" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="warmupGamma"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="probabilityValueValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Warmup Gamma"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -3426,7 +3525,13 @@
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.nerfBarrier}" target="jTextFieldNerfBarrier" targetPath="text" updateStrategy="0" immediately="false">
                                                       <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                      <Property name="name" type="java.lang.String" value="nerfBarrier"/>
+                                                      <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="doubleConverter1"/>
+                                                      </Property>
+                                                      <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                        <ComponentRef name="probabilityValueValidator1"/>
+                                                      </Property>
+                                                      <Property name="name" type="java.lang.String" value="Nerf Barrier"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>

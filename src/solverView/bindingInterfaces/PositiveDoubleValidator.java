@@ -16,7 +16,7 @@ public class PositiveDoubleValidator extends Validator<Double>{
 
     @Override
     public Result validate(Double value) {
-        if ((value < 0)) {
+        if ((value <= 0)) {
             return new Result(null, "This value must be a positive number!");
         }
         

@@ -1154,6 +1154,8 @@
     </Component>
     <Component class="solverView.bindingInterfaces.LongConverter" name="longConverter1">
     </Component>
+    <Component class="solverView.bindingInterfaces.PsibeanAdapter" name="psibeanAdapter1">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -2930,7 +2932,7 @@
                                                       <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
                                                         <ComponentRef name="positiveDoubleValidator1"/>
                                                       </Property>
-                                                      <Property name="name" type="java.lang.String" value="rewardForBestSegmentHeuristics"/>
+                                                      <Property name="name" type="java.lang.String" value="Reward for best segment heuristics"/>
                                                     </BindingProperty>
                                                   </BindingProperties>
                                                   <Events>
@@ -3055,9 +3057,20 @@
                                                     <Component class="javax.swing.JTextField" name="jTextFieldPsi0">
                                                       <Properties>
                                                         <Property name="horizontalAlignment" type="int" value="0"/>
-                                                        <Property name="text" type="java.lang.String" value="0.0"/>
                                                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for new global optimum&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w1&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be a new global optimum."/>
                                                       </Properties>
+                                                      <BindingProperties>
+                                                        <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi1}" target="jTextFieldPsi0" targetPath="text" updateStrategy="0" immediately="false">
+                                                          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="doubleConverter1"/>
+                                                          </Property>
+                                                          <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="positiveDoubleValidator1"/>
+                                                          </Property>
+                                                          <Property name="name" type="java.lang.String" value="Psi - omega 1"/>
+                                                        </BindingProperty>
+                                                      </BindingProperties>
                                                       <Events>
                                                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldPsi0FocusLost"/>
                                                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldPsi0ActionPerformed"/>
@@ -3066,9 +3079,20 @@
                                                     <Component class="javax.swing.JTextField" name="jTextFieldPsi1">
                                                       <Properties>
                                                         <Property name="horizontalAlignment" type="int" value="0"/>
-                                                        <Property name="text" type="java.lang.String" value="0.0"/>
                                                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for better solution&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w2&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be better than the previous one."/>
                                                       </Properties>
+                                                      <BindingProperties>
+                                                        <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi2}" target="jTextFieldPsi1" targetPath="text" updateStrategy="0" immediately="false">
+                                                          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="doubleConverter1"/>
+                                                          </Property>
+                                                          <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="positiveDoubleValidator1"/>
+                                                          </Property>
+                                                          <Property name="name" type="java.lang.String" value="Psi - omega 2"/>
+                                                        </BindingProperty>
+                                                      </BindingProperties>
                                                       <Events>
                                                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldPsi1FocusLost"/>
                                                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldPsi1ActionPerformed"/>
@@ -3077,9 +3101,20 @@
                                                     <Component class="javax.swing.JTextField" name="jTextFieldPsi2">
                                                       <Properties>
                                                         <Property name="horizontalAlignment" type="int" value="0"/>
-                                                        <Property name="text" type="java.lang.String" value="0.0"/>
                                                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for worse solution, but accepted&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w3&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is worse than the previous one but is accepted anyway."/>
                                                       </Properties>
+                                                      <BindingProperties>
+                                                        <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi3}" target="jTextFieldPsi2" targetPath="text" updateStrategy="0" immediately="false">
+                                                          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="doubleConverter1"/>
+                                                          </Property>
+                                                          <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="positiveDoubleValidator1"/>
+                                                          </Property>
+                                                          <Property name="name" type="java.lang.String" value="Psi - omega 3"/>
+                                                        </BindingProperty>
+                                                      </BindingProperties>
                                                       <Events>
                                                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldPsi2FocusLost"/>
                                                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldPsi2ActionPerformed"/>
@@ -3088,9 +3123,20 @@
                                                     <Component class="javax.swing.JTextField" name="jTextFieldPsi3">
                                                       <Properties>
                                                         <Property name="horizontalAlignment" type="int" value="0"/>
-                                                        <Property name="text" type="java.lang.String" value="0.0"/>
                                                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for solution rejected&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w4&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be worse than the previous one and is rejected."/>
                                                       </Properties>
+                                                      <BindingProperties>
+                                                        <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi4}" target="jTextFieldPsi3" targetPath="text" updateStrategy="0" immediately="false">
+                                                          <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="doubleConverter1"/>
+                                                          </Property>
+                                                          <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                            <ComponentRef name="positiveDoubleValidator1"/>
+                                                          </Property>
+                                                          <Property name="name" type="java.lang.String" value="Psi - omega 4"/>
+                                                        </BindingProperty>
+                                                      </BindingProperties>
                                                       <Events>
                                                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldPsi3FocusLost"/>
                                                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldPsi3ActionPerformed"/>

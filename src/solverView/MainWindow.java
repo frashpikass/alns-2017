@@ -81,6 +81,8 @@ public class MainWindow extends javax.swing.JFrame {
         
         // Initialize solution reports
         solutionReports = new ArrayList<>();
+        
+        psibeanAdapter1.setAlnsPropertiesBean(this.alnsPropertiesBean);
     }
     
     /**
@@ -138,6 +140,7 @@ public class MainWindow extends javax.swing.JFrame {
         positiveDoubleValidator1 = new solverView.bindingInterfaces.PositiveDoubleValidator();
         positiveLongValidator1 = new solverView.bindingInterfaces.PositiveLongValidator();
         longConverter1 = new solverView.bindingInterfaces.LongConverter();
+        psibeanAdapter1 = new solverView.bindingInterfaces.PsibeanAdapter();
         jLabel1 = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -1136,7 +1139,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldRewardForBestSegmentHeuristics.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldRewardForBestSegmentHeuristics.setToolTipText("<html>\n<b>ALNS reward for best h. in segment</b>\n<br>A scaling factor which is applied to the weight of the best heuristics of the previous segment,\n<br>at the beginning of the next segment.");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.rewardForBestSegmentHeuristics}"), jTextFieldRewardForBestSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "rewardForBestSegmentHeuristics");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.rewardForBestSegmentHeuristics}"), jTextFieldRewardForBestSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "Reward for best segment heuristics");
         binding.setConverter(doubleConverter1);
         binding.setValidator(positiveDoubleValidator1);
         bindingGroup.addBinding(binding);
@@ -1239,8 +1242,13 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.setLayout(new javax.swing.BoxLayout(jPanelPsi, javax.swing.BoxLayout.LINE_AXIS));
 
         jTextFieldPsi0.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi0.setText("0.0");
         jTextFieldPsi0.setToolTipText("<html>\n<b>ALNS h. score for new global optimum</b>\n<br><tt>w1</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be a new global optimum.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi1}"), jTextFieldPsi0, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 1");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
         jTextFieldPsi0.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldPsi0FocusLost(evt);
@@ -1254,8 +1262,13 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.add(jTextFieldPsi0);
 
         jTextFieldPsi1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi1.setText("0.0");
         jTextFieldPsi1.setToolTipText("<html>\n<b>ALNS h. score for better solution</b>\n<br><tt>w2</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be better than the previous one.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi2}"), jTextFieldPsi1, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 2");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
         jTextFieldPsi1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldPsi1FocusLost(evt);
@@ -1269,8 +1282,13 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.add(jTextFieldPsi1);
 
         jTextFieldPsi2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi2.setText("0.0");
         jTextFieldPsi2.setToolTipText("<html>\n<b>ALNS h. score for worse solution, but accepted</b>\n<br><tt>w3</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is worse than the previous one but is accepted anyway.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi3}"), jTextFieldPsi2, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 3");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
         jTextFieldPsi2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldPsi2FocusLost(evt);
@@ -1284,8 +1302,13 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.add(jTextFieldPsi2);
 
         jTextFieldPsi3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi3.setText("0.0");
         jTextFieldPsi3.setToolTipText("<html>\n<b>ALNS h. score for solution rejected</b>\n<br><tt>w4</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be worse than the previous one and is rejected.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi4}"), jTextFieldPsi3, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 4");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
         jTextFieldPsi3.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldPsi3FocusLost(evt);
@@ -2014,7 +2037,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void runWithSolver(Controller.Solvers solver){
         // Update the parameters
         updateParametersBean();
-        updatePsiBean();
+//        updatePsiBean();
         
         // Display the currently selected solver in the GUI
         jLabelSelectedSolver.setText(solver.toString());
@@ -2129,7 +2152,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void saveParameters(){
         jFileChooserSaveParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         updateParametersBean();
-        updatePsiBean();
+//        updatePsiBean();
         int result = jFileChooserSaveParameters.showOpenDialog(jPanelSolversEnvelope);
         File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
         if (outputFilePath != null && result == JFileChooser.APPROVE_OPTION) {
@@ -2172,42 +2195,42 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jTextFieldPsi3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi3ActionPerformed
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi3ActionPerformed
 
     private void jTextFieldPsi3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi3FocusLost
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi3FocusLost
 
     private void jTextFieldPsi2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi2ActionPerformed
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi2ActionPerformed
 
     private void jTextFieldPsi2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi2FocusLost
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi2FocusLost
 
     private void jTextFieldPsi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi1ActionPerformed
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi1ActionPerformed
 
     private void jTextFieldPsi1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi1FocusLost
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi1FocusLost
 
     private void jTextFieldPsi0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPsi0ActionPerformed
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi0ActionPerformed
 
     private void jTextFieldPsi0FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldPsi0FocusLost
         // TODO add your handling code here:
-        updatePsiBean();
+//        updatePsiBean();
     }//GEN-LAST:event_jTextFieldPsi0FocusLost
 
     private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
@@ -2806,18 +2829,18 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldPsi3.updateUI();
     }
 
-    /**
-     * This method updates the values of psi in the ALNS properties bean, using
-     * the values written in the psi text fields.
-     */
-    private void updatePsiBean() {
-        double[] toSet = new double[ALNSPropertiesBean.NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES];
-        toSet[0] = Double.parseDouble(jTextFieldPsi0.getText());
-        toSet[1] = Double.parseDouble(jTextFieldPsi1.getText());
-        toSet[2] = Double.parseDouble(jTextFieldPsi2.getText());
-        toSet[3] = Double.parseDouble(jTextFieldPsi3.getText());
-        parametersBean.getALNSproperties().setHeuristicScores(toSet);
-    }
+//    /**
+//     * This method updates the values of psi in the ALNS properties bean, using
+//     * the values written in the psi text fields.
+//     */
+//    private void updatePsiBean() {
+//        double[] toSet = new double[ALNSPropertiesBean.NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES];
+//        toSet[0] = Double.parseDouble(jTextFieldPsi0.getText());
+//        toSet[1] = Double.parseDouble(jTextFieldPsi1.getText());
+//        toSet[2] = Double.parseDouble(jTextFieldPsi2.getText());
+//        toSet[3] = Double.parseDouble(jTextFieldPsi3.getText());
+//        parametersBean.getALNSproperties().setHeuristicScores(toSet);
+//    }
 
     /**
      * This method updates jTextAreaOutput with the output from the optimization
@@ -3042,6 +3065,7 @@ public class MainWindow extends javax.swing.JFrame {
     private solverView.bindingInterfaces.PositiveIntegerValidator positiveIntegerValidator1;
     private solverView.bindingInterfaces.PositiveLongValidator positiveLongValidator1;
     private solverView.bindingInterfaces.ProbabilityValueValidator probabilityValueValidator1;
+    private solverView.bindingInterfaces.PsibeanAdapter psibeanAdapter1;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

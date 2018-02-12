@@ -946,7 +946,7 @@ public class ALNSPropertiesBean {
      * @param heuristicScores the heuristicScores to set
      */
     public void setHeuristicScores(double[] heuristicScores) {
-        double[] oldHeuristicScores = Arrays.copyOf(heuristicScores, NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES);
+        double[] oldHeuristicScores = Arrays.copyOf(this.heuristicScores, NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES);
         this.heuristicScores = heuristicScores;
         propertyChangeSupport.firePropertyChange(PROP_HEURISTICSCORES, oldHeuristicScores, heuristicScores);
     }

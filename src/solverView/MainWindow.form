@@ -3289,6 +3289,9 @@
                                                       <SubComponents>
                                                         <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairHighCostRemoval">
                                                           <Properties>
+                                                            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                                                              <ComponentRef name="default"/>
+                                                            </Property>
                                                             <Property name="text" type="java.lang.String" value="RepairHighCostRemoval"/>
                                                           </Properties>
                                                           <BindingProperties>

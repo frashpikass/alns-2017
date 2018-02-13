@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -28,11 +29,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdesktop.beansbinding.Binding;
-import org.jdesktop.beansbinding.Binding.SyncFailure;
 import org.jdesktop.beansbinding.Converter;
 import org.jdesktop.beansbinding.Validator;
 import org.jdesktop.beansbinding.Validator.Result;
-import solverController.ALNSPropertiesBean;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
 import solverController.Solution;
@@ -2334,6 +2333,7 @@ public class MainWindow extends javax.swing.JFrame {
             Validator validator = b.getValidator();
             Converter converter = b.getConverter();
             
+            // Validate all JTextField bindings
             if(source != null && validator != null && converter != null){
                 if(source instanceof JTextField){
                     JTextField jtf = (JTextField) source;
@@ -2347,9 +2347,10 @@ public class MainWindow extends javax.swing.JFrame {
                             jtf.setBackground(Color.PINK);
                             JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
                             System.out.println(msg);
+                            ret = false;
                             break;
                         }
-                        else ret &= true;
+                        else ret = true;
                     }
                     catch(Exception e){ //Conversion error
                         String msg = "[" + b.getName() + "] " + "The inserted string is not a number. "+e.getMessage();
@@ -2357,14 +2358,45 @@ public class MainWindow extends javax.swing.JFrame {
                         jtf.setBackground(Color.PINK);
                         JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
                         System.out.println(msg);
-                        ret &= false;
+                        ret = false;
                         break;
                     }
                     
                 }
-            }
-                
+            }       
         }
+        
+        boolean jcbValidRepair = false;
+        boolean jcbValidDestroy = false;
+        
+        // Validate all Repair Heuristics (at least one of them must be selected)
+        if(ret){
+            for(Component c : jPanelRepairHeuristics.getComponents()){
+                if(c instanceof JCheckBox){
+                    jcbValidRepair |= ((JCheckBox) c).isSelected();
+                }
+            }
+            if(!jcbValidRepair){
+                String msgR = "You must select at least an ALNS repair heuristic!";
+                JOptionPane.showMessageDialog(null, msgR, "Input error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        ret &= jcbValidRepair;
+        
+        
+        // Validate all Destroy Heuristics (at least one of them must be selected)
+        if(ret){
+            for(Component c : jPanelDestroyHeuristics.getComponents()){
+                if(c instanceof JCheckBox){
+                    jcbValidDestroy |= ((JCheckBox) c).isSelected();
+                }
+            }
+            if(!jcbValidDestroy){
+                String msg = "You must select at least an ALNS destroy heuristic!";
+                JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        ret &= jcbValidDestroy;
         
         return ret;
     }

@@ -22,9 +22,15 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.jdesktop.beansbinding.Binding;
+import org.jdesktop.beansbinding.Binding.SyncFailure;
+import org.jdesktop.beansbinding.Converter;
+import org.jdesktop.beansbinding.Validator;
+import org.jdesktop.beansbinding.Validator.Result;
 import solverController.ALNSPropertiesBean;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
@@ -52,6 +58,11 @@ public class MainWindow extends javax.swing.JFrame {
     private ArrayList<SolutionReportPane> solutionReports;
     
     /**
+     * Listens to binding errors
+     */
+    private ErrorBindingListener errorBindingListener;
+    
+    /**
      * Creates new form MainWindow
      */
     public MainWindow() {
@@ -61,7 +72,8 @@ public class MainWindow extends javax.swing.JFrame {
         redirectSystemStreams();
         
         // Adding a binding listener to keep track of binding or validation errors
-        bindingGroup.addBindingListener(new ErrorBindingListener(jDialogError, jLabelErrorMessage));
+        errorBindingListener = new ErrorBindingListener(jDialogError, jLabelErrorMessage);
+        bindingGroup.addBindingListener(errorBindingListener);
         
         // Setup a smart scroller on the output text area
         new SmartScroller(jScrollPaneTextAreaOutput);
@@ -2295,9 +2307,55 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonRunALNSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunALNSActionPerformed
         // TODO add your handling code here:
-        runWithSolver(Controller.Solvers.SOLVE_ALNS);
+        if(validateFields()){
+            runWithSolver(Controller.Solvers.SOLVE_ALNS);
+        }
     }//GEN-LAST:event_jButtonRunALNSActionPerformed
 
+    /**
+     * Validate all the text fields involved in the binding group of this
+     * window.
+     * @return <code>true</code> if all fields are valid, <code>false</code> otherwise
+     */
+    public boolean validateFields(){
+        boolean ret = false;
+        
+        for(Binding b: bindingGroup.getBindings()){
+            Object source = b.getTargetObject();
+            Validator validator = b.getValidator();
+            Converter converter = b.getConverter();
+            
+            if(source != null && validator != null && converter != null){
+                if(source instanceof JTextField){
+                    JTextField jtf = (JTextField) source;
+                    try{
+                        Result r = validator.validate(
+                                converter.convertReverse((jtf.getText()))
+                        );
+                        if(r != null){ //Validation error
+                            String msg = "[" + b.getName() + "] " + r.getDescription();
+                            JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
+                            System.out.println(msg);
+                            break;
+                        }
+                        else ret &= true;
+                    }
+                    catch(Exception e){ //Conversion error
+                        String msg = "[" + b.getName() + "] " + "The inserted string is not a number. "+e.getMessage();
+                        JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
+                        System.out.println(msg);
+                        ret &= false;
+                        break;
+                    }
+                    
+                }
+            }
+                
+        }
+        
+        return ret;
+    }
+    
     private void jTextFieldOutputFolderPath2updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPath2updatePsiBean
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldOutputFolderPath2updatePsiBean
@@ -2324,12 +2382,16 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonRunMIPSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunMIPSActionPerformed
         // TODO add your handling code here:
-        runWithSolver(Controller.Solvers.SOLVE_MIPS);
+        if(validateFields()){
+            runWithSolver(Controller.Solvers.SOLVE_MIPS);
+        }
     }//GEN-LAST:event_jButtonRunMIPSActionPerformed
 
     private void jButtonRunRelaxedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunRelaxedActionPerformed
         // TODO add your handling code here:
-        runWithSolver(Controller.Solvers.SOLVE_RELAXED);
+        if(validateFields()){
+            runWithSolver(Controller.Solvers.SOLVE_RELAXED);
+        }
     }//GEN-LAST:event_jButtonRunRelaxedActionPerformed
 
     private void btnMoveInstanceDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveInstanceDownActionPerformed
@@ -2434,12 +2496,16 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButtonSaveParametersMIPSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersMIPSActionPerformed
         // TODO add your handling code here:
-        saveParameters();
+        if(validateFields()){
+            saveParameters();
+        }
     }//GEN-LAST:event_jButtonSaveParametersMIPSActionPerformed
 
     private void jButtonSaveParametersALNSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveParametersALNSActionPerformed
         // TODO add your handling code here:
-        saveParameters();
+        if(validateFields()){
+            saveParameters();
+        }
     }//GEN-LAST:event_jButtonSaveParametersALNSActionPerformed
 
     private void jButtonLoadParametersALNSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadParametersALNSActionPerformed

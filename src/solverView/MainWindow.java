@@ -5,6 +5,7 @@
  */
 package solverView;
 
+import java.awt.Color;
 import solverView.bindingInterfaces.ErrorBindingListener;
 import java.awt.Component;
 import java.awt.Container;
@@ -2334,6 +2335,8 @@ public class MainWindow extends javax.swing.JFrame {
                         );
                         if(r != null){ //Validation error
                             String msg = "[" + b.getName() + "] " + r.getDescription();
+                            jtf.requestFocusInWindow();
+                            jtf.setBackground(Color.PINK);
                             JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
                             System.out.println(msg);
                             break;
@@ -2342,6 +2345,8 @@ public class MainWindow extends javax.swing.JFrame {
                     }
                     catch(Exception e){ //Conversion error
                         String msg = "[" + b.getName() + "] " + "The inserted string is not a number. "+e.getMessage();
+                        jtf.requestFocusInWindow();
+                        jtf.setBackground(Color.PINK);
                         JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
                         System.out.println(msg);
                         ret &= false;

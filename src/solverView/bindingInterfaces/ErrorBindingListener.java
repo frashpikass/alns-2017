@@ -5,9 +5,11 @@
  */
 package solverView.bindingInterfaces;
 
+import java.awt.Color;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import org.jdesktop.beansbinding.AbstractBindingListener;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.beansbinding.Binding.SyncFailure;
@@ -30,8 +32,12 @@ public class ErrorBindingListener extends AbstractBindingListener{
 
     @Override
     public void syncFailed(Binding binding, SyncFailure fail) {
+        Object source = binding.getTargetObject();
+        
         String description = "";
         if ((fail != null)) {
+            // error messages
+            
             if((fail.getType() == Binding.SyncFailureType.VALIDATION_FAILED)){
                 description = fail.getValidationResult().getDescription();
             }
@@ -50,6 +56,13 @@ public class ErrorBindingListener extends AbstractBindingListener{
             if((fail.getType() == Binding.SyncFailureType.TARGET_UNWRITEABLE)){
                 description = "Target unwriteable";
             }
+            
+            // background colour change to display error
+            if(source instanceof JTextField){
+                JTextField jtf = (JTextField) source;
+                jtf.setBackground(Color.PINK);
+            }
+            
         }
         
         String msg = "[" + binding.getName() + "] " + description;
@@ -61,6 +74,13 @@ public class ErrorBindingListener extends AbstractBindingListener{
 
     @Override
     public void synced(Binding binding) {
+        Object source = binding.getTargetObject();
+        // background colour change to show validation
+        if(source instanceof JTextField){
+            JTextField jtf = (JTextField) source;
+            jtf.setBackground(null);
+        }
+        
         String bindName = binding.getName();
         String msg = "[" + bindName + "] Synced";
         System.out.println(msg);        

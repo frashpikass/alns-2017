@@ -6,9 +6,8 @@
 package solverView.bindingInterfaces;
 
 import java.awt.Color;
-import javax.swing.JDialog;
+import java.util.HashMap;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.jdesktop.beansbinding.AbstractBindingListener;
 import org.jdesktop.beansbinding.Binding;
@@ -20,14 +19,24 @@ import org.jdesktop.beansbinding.Binding.SyncFailure;
  * @author Frash
  */
 public class ErrorBindingListener extends AbstractBindingListener{
+    /**
+     * Format for error messages
+     */
+    private final static String ERROR_MSG_FORMAT = "<html><b><font size=\"5\" color=\"red\">%s</font></b></html>";
+    
     /** Label used to display warnings. */
-    private JDialog errorDialog;
     private JLabel outputLabel;
+    
+    /**
+     * Map to store previous binding errors
+     */
+    private HashMap<Binding, String> errorMap;
+    
 
-    public ErrorBindingListener(JDialog errorDialog, JLabel outputLabel) {
-        if (outputLabel == null || errorDialog == null) throw new IllegalArgumentException();
-        this.errorDialog = errorDialog;
+    public ErrorBindingListener(JLabel outputLabel) {
+        if (outputLabel == null) throw new IllegalArgumentException();
         this.outputLabel = outputLabel;
+        errorMap = new HashMap<>();
     }
 
     @Override
@@ -66,10 +75,13 @@ public class ErrorBindingListener extends AbstractBindingListener{
         }
         
         String msg = "[" + binding.getName() + "] " + description;
-        JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
+        //JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
+        
+        // Show error message and save it to the error list
+        outputLabel.setText(String.format(ERROR_MSG_FORMAT, msg));
+        errorMap.put(binding, msg);
+        
         System.out.println(msg);
-//        outputLabel.setText(msg);
-//        errorDialog.setVisible(true);
     }
 
     @Override
@@ -83,7 +95,25 @@ public class ErrorBindingListener extends AbstractBindingListener{
         
         String bindName = binding.getName();
         String msg = "[" + bindName + "] Synced";
-        System.out.println(msg);        
-        outputLabel.setText("");
+        System.out.println(msg);
+        
+        
+        // If the binding is in the error map, remove it and show the last
+        // error available or a "Ready." message
+        if(errorMap.containsKey(binding)){
+            errorMap.remove(binding);
+            if(errorMap.isEmpty()){
+                outputLabel.setText("Ready.");
+            }
+            else{
+                // Get the first next error to fix and show it
+                for(Binding b : errorMap.keySet()){
+                    outputLabel.setText(String.format(ERROR_MSG_FORMAT, errorMap.get(b)));
+                    break;
+                }
+            }
+        }
+        
+        
     }
 }

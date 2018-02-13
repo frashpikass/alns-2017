@@ -73,7 +73,7 @@ public class MainWindow extends javax.swing.JFrame {
         redirectSystemStreams();
         
         // Adding a binding listener to keep track of binding or validation errors
-        errorBindingListener = new ErrorBindingListener(jDialogError, jLabelErrorMessage);
+        errorBindingListener = new ErrorBindingListener(jLabelStatus);
         bindingGroup.addBindingListener(errorBindingListener);
         
         // Setup a smart scroller on the output text area
@@ -154,6 +154,7 @@ public class MainWindow extends javax.swing.JFrame {
         positiveLongValidator1 = new solverView.bindingInterfaces.PositiveLongValidator();
         longConverter1 = new solverView.bindingInterfaces.LongConverter();
         psibeanAdapter1 = new solverView.bindingInterfaces.PsibeanAdapter();
+        positiveOrZeroIntegerValidator1 = new solverView.bindingInterfaces.PositiveOrZeroIntegerValidator();
         jLabel1 = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -669,6 +670,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.timeLimit}"), jTextFieldTimeLimit1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: solver time limit");
         binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldTimeLimit1.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -704,6 +706,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldNumThreads1.setToolTipText("<html>\nSelect how many threads should be used by the MIPS solver (also affects ALNS).\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.numThreads}"), jTextFieldNumThreads1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: number of threads");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveOrZeroIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldNumThreads1.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -852,6 +856,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldNumThreads2.setPreferredSize(new java.awt.Dimension(30, 24));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.numThreads}"), jTextFieldNumThreads2, org.jdesktop.beansbinding.BeanProperty.create("text"), "ALNS number of threads");
+        binding.setConverter(integerConverter1);
+        binding.setValidator(positiveOrZeroIntegerValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldNumThreads2.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -883,6 +889,8 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldTimeLimitALNS.setPreferredSize(new java.awt.Dimension(30, 24));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.timeLimitALNS}"), jTextFieldTimeLimitALNS, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitALNS");
+        binding.setConverter(longConverter1);
+        binding.setValidator(positiveLongValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldTimeLimitALNS.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -3135,6 +3143,7 @@ public class MainWindow extends javax.swing.JFrame {
     private solverView.bindingInterfaces.PositiveDoubleValidator positiveDoubleValidator1;
     private solverView.bindingInterfaces.PositiveIntegerValidator positiveIntegerValidator1;
     private solverView.bindingInterfaces.PositiveLongValidator positiveLongValidator1;
+    private solverView.bindingInterfaces.PositiveOrZeroIntegerValidator positiveOrZeroIntegerValidator1;
     private solverView.bindingInterfaces.ProbabilityValueValidator probabilityValueValidator1;
     private solverView.bindingInterfaces.PsibeanAdapter psibeanAdapter1;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;

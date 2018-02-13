@@ -1156,6 +1156,8 @@
     </Component>
     <Component class="solverView.bindingInterfaces.PsibeanAdapter" name="psibeanAdapter1">
     </Component>
+    <Component class="solverView.bindingInterfaces.PositiveOrZeroIntegerValidator" name="positiveOrZeroIntegerValidator1">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -1516,6 +1518,9 @@
                                               <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
                                                 <ComponentRef name="doubleConverter1"/>
                                               </Property>
+                                              <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                <ComponentRef name="positiveDoubleValidator1"/>
+                                              </Property>
                                               <Property name="name" type="java.lang.String" value="MIPS: solver time limit"/>
                                             </BindingProperty>
                                           </BindingProperties>
@@ -1547,6 +1552,12 @@
                                           <BindingProperties>
                                             <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.numThreads}" target="jTextFieldNumThreads1" targetPath="text" updateStrategy="0" immediately="false">
                                               <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                              <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                <ComponentRef name="integerConverter1"/>
+                                              </Property>
+                                              <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                <ComponentRef name="positiveOrZeroIntegerValidator1"/>
+                                              </Property>
                                               <Property name="name" type="java.lang.String" value="MIPS: number of threads"/>
                                             </BindingProperty>
                                           </BindingProperties>
@@ -1765,6 +1776,12 @@
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.numThreads}" target="jTextFieldNumThreads2" targetPath="text" updateStrategy="0" immediately="false">
                                                   <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                  <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                    <ComponentRef name="integerConverter1"/>
+                                                  </Property>
+                                                  <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                    <ComponentRef name="positiveOrZeroIntegerValidator1"/>
+                                                  </Property>
                                                   <Property name="name" type="java.lang.String" value="ALNS number of threads"/>
                                                 </BindingProperty>
                                               </BindingProperties>
@@ -1803,6 +1820,12 @@
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.timeLimitALNS}" target="jTextFieldTimeLimitALNS" targetPath="text" updateStrategy="0" immediately="false">
                                                   <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                                                  <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                    <ComponentRef name="longConverter1"/>
+                                                  </Property>
+                                                  <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                    <ComponentRef name="positiveLongValidator1"/>
+                                                  </Property>
                                                   <Property name="name" type="java.lang.String" value="timeLimitALNS"/>
                                                 </BindingProperty>
                                               </BindingProperties>

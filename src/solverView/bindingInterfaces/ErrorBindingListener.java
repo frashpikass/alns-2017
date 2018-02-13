@@ -113,7 +113,15 @@ public class ErrorBindingListener extends AbstractBindingListener{
                 }
             }
         }
-        
-        
+    }
+    
+    /**
+     * Displays an error message in a way that is coherent with other errors.
+     * The message is correctly formatted but it's not saved in the stack.
+     * @param msg the error message to to display
+     */
+    public void displayErrorMessage(String msg) {        
+        outputLabel.setText(String.format(ERROR_MSG_FORMAT, msg));
+    
     }
 }

@@ -154,6 +154,14 @@ public class ParametersBean implements Serializable {
         this.ALNSproperties.cloneFrom(out.getALNSproperties());
     }
     
+    /**
+     * Restores default values for every property
+     */
+    public void restoreDefaults(){
+        ALNSproperties.cloneFrom(new ALNSPropertiesBean());
+        OrienteeringProperties.cloneFrom(new OrienteeringPropertiesBean());
+    }
+    
     public static final String PROP_ALNSPROPERTIES = "ALNSProperties";
     public static final String PROP_ORIENTEERINGPROPERTIES = "OrienteeringProperties";
     

@@ -143,8 +143,7 @@ public class ErrorBindingListener extends AbstractBindingListener{
             }
         }
         
-        // Clear the error stack
-        errorMap.clear();
+        // The error stack is automatically cleared as the values are reset
         
         // Reset the status bar to "Ready."
         if(errorMap.isEmpty()){

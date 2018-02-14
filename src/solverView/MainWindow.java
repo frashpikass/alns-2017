@@ -282,6 +282,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonRunALNS = new javax.swing.JButton();
         jButtonLoadParametersALNS = new javax.swing.JButton();
         jButtonSaveParametersALNS = new javax.swing.JButton();
+        jButtonResetParametersALNS = new javax.swing.JButton();
         jPanelRelaxed = new javax.swing.JPanel();
         jPanelRelaxedActions = new javax.swing.JPanel();
         jButtonRunRelaxed = new javax.swing.JButton();
@@ -1828,6 +1829,15 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPanelALNSActions.add(jButtonSaveParametersALNS);
 
+        jButtonResetParametersALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/replay.png"))); // NOI18N
+        jButtonResetParametersALNS.setText("Reset parameters");
+        jButtonResetParametersALNS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonResetParametersALNSActionPerformed(evt);
+            }
+        });
+        jPanelALNSActions.add(jButtonResetParametersALNS);
+
         jPanelALNS.add(jPanelALNSActions, java.awt.BorderLayout.PAGE_START);
 
         jTabbedPaneSolvers.addTab("ALNS", jPanelALNS);
@@ -2697,6 +2707,12 @@ public class MainWindow extends javax.swing.JFrame {
         }
         else jLabelThreadsMIPS.setText(""+jSliderThreadsALNS.getValue());
     }//GEN-LAST:event_jSliderThreadsMIPSStateChanged
+
+    private void jButtonResetParametersALNSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetParametersALNSActionPerformed
+        // TODO add your handling code here:
+        this.parametersBean.restoreDefaults();
+        this.errorBindingListener.resetAllErrors();
+    }//GEN-LAST:event_jButtonResetParametersALNSActionPerformed
     
     /**
      * Update the cached path to the working directory to the specified one, if
@@ -3097,6 +3113,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonOutputFolderPath1;
     private javax.swing.JButton jButtonOutputFolderPath2;
     private javax.swing.JButton jButtonReset;
+    private javax.swing.JButton jButtonResetParametersALNS;
     private javax.swing.JButton jButtonRun;
     private javax.swing.JButton jButtonRunALNS;
     private javax.swing.JButton jButtonRunMIPS;

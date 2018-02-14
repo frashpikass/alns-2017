@@ -1384,8 +1384,8 @@ public class ALNS extends Orienteering {
     }
 
     /**
-     * Removal heuristic. It removes from the solution the q clusters with the
-     * highest cost.
+     * Removal heuristic. Removes at most q clusters with the highest cost
+     * from the current solution.
      *
      * @param inputSolution the solution to repair
      * @param q number of clusters to remove
@@ -1617,7 +1617,7 @@ public class ALNS extends Orienteering {
     }
 
     /**
-     * Removal heuristic. Removes at most q randomly picked clusters from the
+     * Removal heuristic. Removes q randomly picked clusters from the
      * current solution.
      *
      * @param inputSolution the solution to repair

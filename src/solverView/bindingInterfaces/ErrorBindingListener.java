@@ -93,9 +93,9 @@ public class ErrorBindingListener extends AbstractBindingListener{
             jtf.setBackground(null);
         }
         
-//        String bindName = binding.getName();
-//        String msg = "[" + bindName + "] Synced";
-//        System.out.println(msg);
+        String bindName = binding.getName();
+        String msg = "[" + bindName + "] Synced";
+        System.out.println(msg);
         
         
         // If the binding is in the error map, remove it and show the last
@@ -123,5 +123,32 @@ public class ErrorBindingListener extends AbstractBindingListener{
     public void displayErrorMessage(String msg) {        
         outputLabel.setText(String.format(ERROR_MSG_FORMAT, msg));
     
+    }
+    
+    /**
+     * Removes all errors from the stack
+     */
+    public void resetAllErrors(){
+        for(Binding b : errorMap.keySet()){
+            // For each binding, if it's represented as a textfield
+            if(b.getTargetObject() instanceof JTextField){
+                // get the textfield
+                JTextField jtf = (JTextField) b.getTargetObject();
+                
+                // reset the text to the safe stored value
+                jtf.setText(b.getSourceValueForTarget().getValue().toString());
+                
+                // reset the background
+                jtf.setBackground(null);
+            }
+        }
+        
+        // Clear the error stack
+        errorMap.clear();
+        
+        // Reset the status bar to "Ready."
+        if(errorMap.isEmpty()){
+            outputLabel.setText("Ready.");
+        }
     }
 }

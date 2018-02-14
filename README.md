@@ -1,5 +1,5 @@
 # alns-2017
-## Version 1.0, December 22nd 2017
+## Version 1.7, February 14th 2018
 Solve the given instances for a Clustered Team Orienteering problem With Services Sequence (CTOWSS) using either an ALNS (Adaptive Large Neighborhood Search) algorithm, a regular MIPS solver or the MIPS solver on the model's relaxation.
 
 (C) 2017 Francesco Piazza
@@ -106,6 +106,5 @@ Parameters are self explanatory if you know the theory behind the algorithm, but
 You may find some specific documentation in the docs folder. Some of it is in Italian, but the flow chart shows where parameters will be used.
 
 ## Known issues
-- ALNS performance might be a little lackluster if you don't tune the parameters according to the selected instance.
+- ALNS performance might be a little lackluster if you don't tune the parameters according to the selected instance
 - More heuristics could be added
-- None so far :)

@@ -20,6 +20,11 @@ import java.util.logging.Logger;
  */
 public class Solution {
     /**
+     * Parameters used to compute this current solution
+     */
+    private ParametersBean parameters;
+    
+    /**
      * List of vehicle paths in a ordered, human-readable form.
      */
     private List<List<Integer>> vehiclePaths;
@@ -49,17 +54,70 @@ public class Solution {
      */
     private Timestamp timestamp;
     
+//    /**
+//     * Constructor for the class Solution.
+//     * @param solverName Name of the solver used to generate this solution
+//     * @param instancePath Path to the instance this solution refers to
+//     */
+//    public Solution(String solverName, String instancePath){
+//        this.solverName = solverName;
+//        this.instancePath = instancePath;
+//        this.timestamp = new Timestamp(System.currentTimeMillis());
+//        this.vehiclePaths = new ArrayList<>();
+//        this.visitedClusters = new ArrayList<>();
+//    }
+    
     /**
      * Constructor for the class Solution.
      * @param solverName Name of the solver used to generate this solution
      * @param instancePath Path to the instance this solution refers to
+     * @param apb an ALNS properties bean to clone
+     * @param opb an Orienteering properties bean to clone
      */
-    public Solution(String solverName, String instancePath){
+    public Solution(
+            String solverName,
+            String instancePath,
+            ALNSPropertiesBean apb,
+            OrienteeringPropertiesBean opb
+    ){
         this.solverName = solverName;
         this.instancePath = instancePath;
         this.timestamp = new Timestamp(System.currentTimeMillis());
         this.vehiclePaths = new ArrayList<>();
         this.visitedClusters = new ArrayList<>();
+        
+        // Clone parameters from given property beans
+        this.parameters = new ParametersBean();
+        ALNSPropertiesBean tempALNS = new ALNSPropertiesBean();
+        tempALNS.cloneFrom(apb);
+        this.parameters.setALNSproperties(tempALNS);
+        OrienteeringPropertiesBean tempOrienteering = new OrienteeringPropertiesBean();
+        tempOrienteering.cloneFrom(opb);
+        this.parameters.setOrienteeringProperties(tempOrienteering);
+    }
+    
+        /**
+     * Constructor for the class Solution.
+     * @param solverName Name of the solver used to generate this solution
+     * @param instancePath Path to the instance this solution refers to
+     * @param opb an Orienteering properties bean to clone
+     */
+    public Solution(
+            String solverName,
+            String instancePath,
+            OrienteeringPropertiesBean opb
+    ){
+        this.solverName = solverName;
+        this.instancePath = instancePath;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+        this.vehiclePaths = new ArrayList<>();
+        this.visitedClusters = new ArrayList<>();
+        
+        // Clone parameters from given property beans
+        this.parameters = new ParametersBean();
+        OrienteeringPropertiesBean tempOrienteering = new OrienteeringPropertiesBean();
+        tempOrienteering.cloneFrom(opb);
+        this.parameters.setOrienteeringProperties(tempOrienteering);
     }
     
     /**
@@ -177,5 +235,21 @@ public class Solution {
             Logger.getLogger(Solution.class.getName()).log(Level.SEVERE, "Problem while trying to write solution output to "+path, ex);
             throw ex;
         }
+    }
+
+    /**
+     * Parameters used to compute this current solution
+     * @return the parameters
+     */
+    public ParametersBean getParameters() {
+        return parameters;
+    }
+
+    /**
+     * Parameters used to compute this current solution
+     * @param parameters the parameters to set
+     */
+    public void setParameters(ParametersBean parameters) {
+        this.parameters = parameters;
     }
 }

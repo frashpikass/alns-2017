@@ -252,7 +252,7 @@ public class Orienteering extends SwingWorker<Boolean, OptimizationStatusMessage
         this.constraint8Variables = new ArrayList<>();
         
         // Setup best solution cache
-        this.bestSolution = new Solution(Controller.Solvers.SOLVE_MIPS.toString(), modelPath);
+        this.bestSolution = new Solution(Controller.Solvers.SOLVE_MIPS.toString(), modelPath, orienteeringProperties);
 
         // Go for preprocessing
         instancePreprocessing();

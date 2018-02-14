@@ -79,7 +79,7 @@ public class ALNS extends Orienteering {
         super(o);
         this.alnsProperties = ALNSParams;
         this.controller = c;
-        this.bestSolution = new Solution(c.getSolver().toString(), modelPath);
+        this.bestSolution = new Solution(c.getSolver().toString(), modelPath, alnsProperties, orienteeringProperties);
 
         // Setting up the Cluster Roulette
         clusterRoulette = new ClusterRoulette(instance.cloneClusters());

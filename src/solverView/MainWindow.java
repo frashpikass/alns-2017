@@ -10,6 +10,7 @@ import solverView.bindingInterfaces.ErrorBindingListener;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
+import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -82,9 +83,23 @@ public class MainWindow extends javax.swing.JFrame {
         // Setup a smart scroller on the output text area
         new SmartScroller(jScrollPaneTextAreaOutput);
         
+        // Setup a form scroller to support viewport scrolling when tabbing
+        // through fields
+        FormScroller scrollerALNS = new FormScroller( jScrollPaneALNS );
+        scrollerALNS.setScrollInsets( new Insets(5, 0, 5, 0) );
+        
+        FormScroller scrollerMIPS = new FormScroller( jScrollPaneMIPS );
+        scrollerMIPS.setScrollInsets( new Insets(5, 0, 5, 0) );
+        
+        FormScroller scrollerRelax = new FormScroller( jScrollPaneRelaxParam );
+        scrollerRelax.setScrollInsets( new Insets(5, 0, 5, 0) );
+        
+        FormScroller scrollerInstances = new FormScroller( jScrollPaneInstances );
+        scrollerInstances.setScrollInsets( new Insets(5, 0, 5, 0) );
+        
         // Speeding up scrollers
         jScrollPaneALNS.getVerticalScrollBar().setUnitIncrement(16);
-        jScrollPaneIMIPS.getVerticalScrollBar().setUnitIncrement(16);
+        jScrollPaneMIPS.getVerticalScrollBar().setUnitIncrement(16);
         
         // Show Deprecated tools window
         jDialogDeprecatedOptions.setVisible(false);
@@ -164,7 +179,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelControls = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanelnstances = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPaneInstances = new javax.swing.JScrollPane();
         jListInstances = new javax.swing.JList<>();
         jPanelInstancesButtons = new javax.swing.JPanel();
         btnAddInstance = new javax.swing.JButton();
@@ -174,8 +189,8 @@ public class MainWindow extends javax.swing.JFrame {
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
         jPanelSolversEnvelope = new javax.swing.JPanel();
         jTabbedPaneSolvers = new javax.swing.JTabbedPane();
-        jPanelMIPS = new javax.swing.JPanel();
-        jScrollPaneIMIPS = new javax.swing.JScrollPane();
+        jPaneMIPS = new javax.swing.JPanel();
+        jScrollPaneMIPS = new javax.swing.JScrollPane();
         jPanelMIPSParameters = new javax.swing.JPanel();
         jLabelOutputFolderPath1 = new javax.swing.JLabel();
         jTextFieldOutputFolderPath1 = new javax.swing.JTextField();
@@ -187,7 +202,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel32 = new javax.swing.JLabel();
         jSliderThreadsMIPS = new javax.swing.JSlider();
         jLabelThreadsMIPS = new javax.swing.JLabel();
-        jPanelMIPSActions = new javax.swing.JPanel();
+        jPaneMIPSActions = new javax.swing.JPanel();
         jButtonRunMIPS = new javax.swing.JButton();
         jButtonLoadParametersMIPS = new javax.swing.JButton();
         jButtonSaveParametersMIPS = new javax.swing.JButton();
@@ -544,9 +559,9 @@ public class MainWindow extends javax.swing.JFrame {
         jListInstances.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jListInstances.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jListInstances.setToolTipText(null);
-        jScrollPane2.setViewportView(jListInstances);
+        jScrollPaneInstances.setViewportView(jListInstances);
 
-        jPanelnstances.add(jScrollPane2);
+        jPanelnstances.add(jScrollPaneInstances);
 
         jPanelInstancesButtons.setLayout(new javax.swing.BoxLayout(jPanelInstancesButtons, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -603,12 +618,12 @@ public class MainWindow extends javax.swing.JFrame {
         jTabbedPaneSolvers.setMinimumSize(new java.awt.Dimension(350, 320));
         jTabbedPaneSolvers.setPreferredSize(new java.awt.Dimension(650, 326));
 
-        jPanelMIPS.setMinimumSize(new java.awt.Dimension(300, 18));
-        jPanelMIPS.setPreferredSize(new java.awt.Dimension(300, 240));
-        jPanelMIPS.setLayout(new java.awt.BorderLayout());
+        jPaneMIPS.setMinimumSize(new java.awt.Dimension(300, 18));
+        jPaneMIPS.setPreferredSize(new java.awt.Dimension(300, 240));
+        jPaneMIPS.setLayout(new java.awt.BorderLayout());
 
-        jScrollPaneIMIPS.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
-        jScrollPaneIMIPS.setMinimumSize(new java.awt.Dimension(300, 18));
+        jScrollPaneMIPS.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
+        jScrollPaneMIPS.setMinimumSize(new java.awt.Dimension(300, 18));
 
         jPanelMIPSParameters.setMinimumSize(new java.awt.Dimension(300, 180));
         jPanelMIPSParameters.setPreferredSize(new java.awt.Dimension(300, 180));
@@ -756,11 +771,11 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         jPanelMIPSParameters.add(jLabelThreadsMIPS, gridBagConstraints);
 
-        jScrollPaneIMIPS.setViewportView(jPanelMIPSParameters);
+        jScrollPaneMIPS.setViewportView(jPanelMIPSParameters);
 
-        jPanelMIPS.add(jScrollPaneIMIPS, java.awt.BorderLayout.CENTER);
+        jPaneMIPS.add(jScrollPaneMIPS, java.awt.BorderLayout.CENTER);
 
-        jPanelMIPSActions.setMinimumSize(new java.awt.Dimension(300, 80));
+        jPaneMIPSActions.setMinimumSize(new java.awt.Dimension(300, 80));
 
         jButtonRunMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunMIPS.setText("Solve with MIPS (exact)");
@@ -770,7 +785,7 @@ public class MainWindow extends javax.swing.JFrame {
                 jButtonRunMIPSActionPerformed(evt);
             }
         });
-        jPanelMIPSActions.add(jButtonRunMIPS);
+        jPaneMIPSActions.add(jButtonRunMIPS);
 
         jButtonLoadParametersMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open-in-app.png"))); // NOI18N
         jButtonLoadParametersMIPS.setText("Load parameters");
@@ -779,7 +794,7 @@ public class MainWindow extends javax.swing.JFrame {
                 jButtonLoadParametersMIPSActionPerformed(evt);
             }
         });
-        jPanelMIPSActions.add(jButtonLoadParametersMIPS);
+        jPaneMIPSActions.add(jButtonLoadParametersMIPS);
 
         jButtonSaveParametersMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/content-save.png"))); // NOI18N
         jButtonSaveParametersMIPS.setText("Save parameters");
@@ -788,11 +803,11 @@ public class MainWindow extends javax.swing.JFrame {
                 jButtonSaveParametersMIPSActionPerformed(evt);
             }
         });
-        jPanelMIPSActions.add(jButtonSaveParametersMIPS);
+        jPaneMIPSActions.add(jButtonSaveParametersMIPS);
 
-        jPanelMIPS.add(jPanelMIPSActions, java.awt.BorderLayout.PAGE_START);
+        jPaneMIPS.add(jPaneMIPSActions, java.awt.BorderLayout.PAGE_START);
 
-        jTabbedPaneSolvers.addTab("MIPS", jPanelMIPS);
+        jTabbedPaneSolvers.addTab("MIPS", jPaneMIPS);
 
         jPanelALNS.setLayout(new java.awt.BorderLayout());
 
@@ -1538,6 +1553,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelHeuristics.add(jLabel33, gridBagConstraints);
 
+        jLabel34.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel34.setText("<html><i>Active heuristics:</i>");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -1574,7 +1590,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelClusterRoulette.add(jTextFieldPunishmentGamma, gridBagConstraints);
 
-        jLabel21.setText("Punishment Gamma (for nerfed clusters)");
+        jLabel21.setText("<html>Punishment Gamma <br>( nerfed clusters probability in next segment)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 8;
@@ -2415,6 +2431,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
             if(!jcbValidRepair){
                 String msgR = "You must select at least an ALNS repair heuristic!";
+                jPanelHeuristics.requestFocusInWindow();
                 JOptionPane.showMessageDialog(null, msgR, "Input error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -2430,6 +2447,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
             if(!jcbValidDestroy){
                 String msg = "You must select at least an ALNS destroy heuristic!";
+                jPanelHeuristics.requestFocusInWindow();
                 JOptionPane.showMessageDialog(null, msg, "Input error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -3153,6 +3171,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelThreadsALNS;
     private javax.swing.JLabel jLabelThreadsMIPS;
     private javax.swing.JList<String> jListInstances;
+    private javax.swing.JPanel jPaneMIPS;
+    private javax.swing.JPanel jPaneMIPSActions;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanelALNS;
@@ -3167,8 +3187,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelFineTunings;
     private javax.swing.JPanel jPanelHeuristics;
     private javax.swing.JPanel jPanelInstancesButtons;
-    private javax.swing.JPanel jPanelMIPS;
-    private javax.swing.JPanel jPanelMIPSActions;
     private javax.swing.JPanel jPanelMIPSParameters;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JPanel jPanelOutput;
@@ -3189,9 +3207,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButtonALNS;
     private javax.swing.JRadioButton jRadioButtonMIPS;
     private javax.swing.JRadioButton jRadioButtonRelaxed;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneALNS;
-    private javax.swing.JScrollPane jScrollPaneIMIPS;
+    private javax.swing.JScrollPane jScrollPaneInstances;
+    private javax.swing.JScrollPane jScrollPaneMIPS;
     private javax.swing.JScrollPane jScrollPaneRelaxParam;
     private javax.swing.JScrollPane jScrollPaneTextAreaOutput;
     private javax.swing.JSlider jSliderThreadsALNS;

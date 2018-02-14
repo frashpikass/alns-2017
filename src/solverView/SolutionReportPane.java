@@ -237,6 +237,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
 
         jButtonReloadParameters.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open-in-app.png"))); // NOI18N
         jButtonReloadParameters.setText("Reload used parameters");
+        jButtonReloadParameters.setToolTipText("Reload all parameters used to produce this solution");
         jButtonReloadParameters.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonReloadParametersActionPerformed(evt);

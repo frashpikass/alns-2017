@@ -828,6 +828,7 @@
                   <Image iconType="3" name="/images/open-in-app.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Reload used parameters"/>
+                <Property name="toolTipText" type="java.lang.String" value="Reload all parameters used to produce this solution"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonReloadParametersActionPerformed"/>

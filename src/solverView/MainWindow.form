@@ -8054,6 +8054,7 @@
                                           <Image iconType="3" name="/images/replay.png"/>
                                         </Property>
                                         <Property name="text" type="java.lang.String" value="Reset parameters"/>
+                                        <Property name="toolTipText" type="java.lang.String" value="Resets all parameters to safe defaults"/>
                                       </Properties>
                                       <Events>
                                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonResetParametersALNSActionPerformed"/>

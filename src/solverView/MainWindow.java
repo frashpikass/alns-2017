@@ -1832,6 +1832,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonResetParametersALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/replay.png"))); // NOI18N
         jButtonResetParametersALNS.setText("Reset parameters");
+        jButtonResetParametersALNS.setToolTipText("Resets all parameters to safe defaults");
         jButtonResetParametersALNS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetParametersALNSActionPerformed(evt);

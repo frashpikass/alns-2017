@@ -202,6 +202,24 @@ public class MainWindow extends javax.swing.JFrame {
         jLabelThreadsALNS = new javax.swing.JLabel();
         jPanelALNSParameters = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
+        jPanelHeuristics = new javax.swing.JPanel();
+        jPanelRepairHeuristics = new javax.swing.JPanel();
+        jCheckBoxRepairHighCostRemoval = new javax.swing.JCheckBox();
+        jCheckBoxRepairRandomRemoval = new javax.swing.JCheckBox();
+        jCheckBoxRepairTravelTime = new javax.swing.JCheckBox();
+        jCheckBoxRepairVehicleTime = new javax.swing.JCheckBox();
+        jCheckBoxRepairWorstRemoval = new javax.swing.JCheckBox();
+        jPanelDestroyHeuristics = new javax.swing.JPanel();
+        jCheckBoxDestroyGreedyCostInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyGreedyBestInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyGreedyProfitInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyRandomInsertion = new javax.swing.JCheckBox();
+        jCheckBoxDestroyCloseToBarycenter = new javax.swing.JCheckBox();
+        jPanelPsi = new javax.swing.JPanel();
+        jTextFieldPsi0 = new javax.swing.JTextField();
+        jTextFieldPsi1 = new javax.swing.JTextField();
+        jTextFieldPsi2 = new javax.swing.JTextField();
+        jTextFieldPsi3 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jTextFieldSegmentSize = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -224,30 +242,12 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldMaxMIPSNodesForFeasibilityCheck = new javax.swing.JTextField();
         jTextFieldMaxIterationsWithoutImprovement = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
-        jPanelPsi = new javax.swing.JPanel();
-        jTextFieldPsi0 = new javax.swing.JTextField();
-        jTextFieldPsi1 = new javax.swing.JTextField();
-        jTextFieldPsi2 = new javax.swing.JTextField();
-        jTextFieldPsi3 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextFieldMaxSegments = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jTextFieldMaxSegmentsWithoutImprovement = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jPanelRepairHeuristics = new javax.swing.JPanel();
-        jCheckBoxRepairHighCostRemoval = new javax.swing.JCheckBox();
-        jCheckBoxRepairRandomRemoval = new javax.swing.JCheckBox();
-        jCheckBoxRepairTravelTime = new javax.swing.JCheckBox();
-        jCheckBoxRepairVehicleTime = new javax.swing.JCheckBox();
-        jCheckBoxRepairWorstRemoval = new javax.swing.JCheckBox();
-        jPanelDestroyHeuristics = new javax.swing.JPanel();
-        jCheckBoxDestroyGreedyCostInsertion = new javax.swing.JCheckBox();
-        jCheckBoxDestroyGreedyBestInsertion = new javax.swing.JCheckBox();
-        jCheckBoxDestroyGreedyProfitInsertion = new javax.swing.JCheckBox();
-        jCheckBoxDestroyRandomInsertion = new javax.swing.JCheckBox();
-        jCheckBoxDestroyCloseToBarycenter = new javax.swing.JCheckBox();
         jTextFieldPunishmentGamma = new javax.swing.JTextField();
         jTextFieldCooldownGamma = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
@@ -947,6 +947,302 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel4Layout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0};
         jPanel4.setLayout(jPanel4Layout);
 
+        jPanelHeuristics.setLayout(new java.awt.GridLayout(1, 2));
+
+        jPanelRepairHeuristics.setBorder(javax.swing.BorderFactory.createTitledBorder("Repair Heuristics"));
+        jPanelRepairHeuristics.setToolTipText("");
+        jPanelRepairHeuristics.setName(""); // NOI18N
+        jPanelRepairHeuristics.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBoxRepairHighCostRemoval.setText("RepairHighCostRemoval");
+        jCheckBoxRepairHighCostRemoval.setToolTipText("Removes the first q clusters with the highest cost from the current solution.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairHighCostRemoval}"), jCheckBoxRepairHighCostRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairHighCostRemoval");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxRepairHighCostRemoval.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairHighCostRemoval, gridBagConstraints);
+
+        jCheckBoxRepairRandomRemoval.setText("RepairRandomRemoval");
+        jCheckBoxRepairRandomRemoval.setToolTipText("Removes at most q randomly picked clusters from the current solution.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairRandomRemoval}"), jCheckBoxRepairRandomRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairRandomRemoval");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxRepairRandomRemoval.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairRandomRemoval, gridBagConstraints);
+
+        jCheckBoxRepairTravelTime.setText("RepairTravelTime");
+        jCheckBoxRepairTravelTime.setToolTipText("<html>\nRemoves the first cluster with the least profit/cost\n<br>ratio, then removes the other q-1 clusters which are the most similar to\n<br>the first one. The similarity criterion is computed as follows:\n<ul>\n<li> 1/3 * (distanceBetween(i,j) + distanceBetween(firstNode,j) + distanceBetween(j,lastNode))\n<li> i = first cluster removed from solution\n<li> j = cluster to evaluate for removal\n</ul>");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairTravelTime}"), jCheckBoxRepairTravelTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairTravelTime");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxRepairTravelTime.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairTravelTime, gridBagConstraints);
+
+        jCheckBoxRepairVehicleTime.setText("RepairVehicleTime");
+        jCheckBoxRepairVehicleTime.setToolTipText("<html>\nRemoves the first cluster with the least profit/cost\n<br>ratio, then removes the other q-1 clusters which are the most similar to\n<br>the first one.\n<br>The similarity criterion is computed as follows:\n<br><ul>\n<li>Find v as the vehicle with the longest service time in the first cluster</li>\n<li>For every node n in the first cluster get the duration of services servable by v.\n<br>Sum all the values to get the total service time.</li>\n<li>Divide the previous value by the total duration of services in the clusters</li>\n<li>Take the absolute value of the difference between the ratio for the\n<br>first cluster removed and the ratio for every other cluster as the similarity criterion.</li>\n</ul>");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairVehicleTime}"), jCheckBoxRepairVehicleTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairVehicleTime");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxRepairVehicleTime.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairVehicleTime, gridBagConstraints);
+
+        jCheckBoxRepairWorstRemoval.setText("RepairWorstRemoval");
+        jCheckBoxRepairWorstRemoval.setToolTipText("Removes the first q clusters with the least profit/cost ratio.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairWorstRemoval}"), jCheckBoxRepairWorstRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairWorstRemoval");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxRepairWorstRemoval.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelRepairHeuristics.add(jCheckBoxRepairWorstRemoval, gridBagConstraints);
+
+        jPanelHeuristics.add(jPanelRepairHeuristics);
+
+        jPanelDestroyHeuristics.setBorder(javax.swing.BorderFactory.createTitledBorder("Destroy Heuristics"));
+        jPanelDestroyHeuristics.setToolTipText("");
+        jPanelDestroyHeuristics.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBoxDestroyGreedyCostInsertion.setText("DestroyGreedyCostInsertion");
+        jCheckBoxDestroyGreedyCostInsertion.setToolTipText("Inserts the q clusters with the least cost  into the current solution in a greedy way.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyCostInsertion}"), jCheckBoxDestroyGreedyCostInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyCostInsertion");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxDestroyGreedyCostInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyCostInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyGreedyBestInsertion.setText("DestroyGreedyBestInsertion");
+        jCheckBoxDestroyGreedyBestInsertion.setToolTipText("Inserts the q clusters with the highest profit to cost ratio into the current solution in a greedy way.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyBestInsertion}"), jCheckBoxDestroyGreedyBestInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyBestInsertion");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxDestroyGreedyBestInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyBestInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyGreedyProfitInsertion.setText("DestroyGreedyProfitInsertion");
+        jCheckBoxDestroyGreedyProfitInsertion.setToolTipText("Inserts the q clusters with the highest profit into the current solution in a greedy way.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyProfitInsertion}"), jCheckBoxDestroyGreedyProfitInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyProfitInsertion");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxDestroyGreedyProfitInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyProfitInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyRandomInsertion.setText("DestroyRandomInsertion");
+        jCheckBoxDestroyRandomInsertion.setToolTipText("Inserts q randomly picked clusters into the current solution.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyRandomInsertion}"), jCheckBoxDestroyRandomInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyRandomInsertion");
+        bindingGroup.addBinding(binding);
+
+        jCheckBoxDestroyRandomInsertion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                updatePsiBeanC(evt);
+            }
+        });
+        jCheckBoxDestroyRandomInsertion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxDestroyRandomInsertionActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyRandomInsertion, gridBagConstraints);
+
+        jCheckBoxDestroyCloseToBarycenter.setText("DestroyCloseToBarycenter");
+        jCheckBoxDestroyCloseToBarycenter.setToolTipText("Inserts the first q available clusters which are the closest\n<br>to the barycenter of the current solution.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyCloseToBarycenter}"), jCheckBoxDestroyCloseToBarycenter, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyCloseToBarycenter");
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        jPanelDestroyHeuristics.add(jCheckBoxDestroyCloseToBarycenter, gridBagConstraints);
+
+        jPanelHeuristics.add(jPanelDestroyHeuristics);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 42;
+        gridBagConstraints.gridwidth = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanel4.add(jPanelHeuristics, gridBagConstraints);
+
+        jPanelPsi.setMinimumSize(new java.awt.Dimension(200, 24));
+        jPanelPsi.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                updatePsiGui(evt);
+            }
+        });
+        jPanelPsi.setLayout(new javax.swing.BoxLayout(jPanelPsi, javax.swing.BoxLayout.LINE_AXIS));
+
+        jTextFieldPsi0.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi0.setToolTipText("<html>\n<b>ALNS h. score for new global optimum</b>\n<br><tt>w1</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be a new global optimum.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi1}"), jTextFieldPsi0, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 1");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
+        jTextFieldPsi0.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi0FocusLost(evt);
+            }
+        });
+        jTextFieldPsi0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPsi0ActionPerformed(evt);
+            }
+        });
+        jPanelPsi.add(jTextFieldPsi0);
+
+        jTextFieldPsi1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi1.setToolTipText("<html>\n<b>ALNS h. score for better solution</b>\n<br><tt>w2</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be better than the previous one.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi2}"), jTextFieldPsi1, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 2");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
+        jTextFieldPsi1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi1FocusLost(evt);
+            }
+        });
+        jTextFieldPsi1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPsi1ActionPerformed(evt);
+            }
+        });
+        jPanelPsi.add(jTextFieldPsi1);
+
+        jTextFieldPsi2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi2.setToolTipText("<html>\n<b>ALNS h. score for worse solution, but accepted</b>\n<br><tt>w3</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is worse than the previous one but is accepted anyway.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi3}"), jTextFieldPsi2, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 3");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
+        jTextFieldPsi2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi2FocusLost(evt);
+            }
+        });
+        jTextFieldPsi2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPsi2ActionPerformed(evt);
+            }
+        });
+        jPanelPsi.add(jTextFieldPsi2);
+
+        jTextFieldPsi3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldPsi3.setToolTipText("<html>\n<b>ALNS h. score for solution rejected</b>\n<br><tt>w4</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be worse than the previous one and is rejected.");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi4}"), jTextFieldPsi3, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 4");
+        binding.setConverter(doubleConverter1);
+        binding.setValidator(positiveDoubleValidator1);
+        bindingGroup.addBinding(binding);
+
+        jTextFieldPsi3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldPsi3FocusLost(evt);
+            }
+        });
+        jTextFieldPsi3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPsi3ActionPerformed(evt);
+            }
+        });
+        jPanelPsi.add(jTextFieldPsi3);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 26;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        jPanel4.add(jPanelPsi, gridBagConstraints);
+
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel5.setText("Max iterations per segment");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1265,100 +1561,6 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
         jPanel4.add(jLabel20, gridBagConstraints);
 
-        jPanelPsi.setMinimumSize(new java.awt.Dimension(200, 24));
-        jPanelPsi.addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentAdded(java.awt.event.ContainerEvent evt) {
-                updatePsiGui(evt);
-            }
-        });
-        jPanelPsi.setLayout(new javax.swing.BoxLayout(jPanelPsi, javax.swing.BoxLayout.LINE_AXIS));
-
-        jTextFieldPsi0.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi0.setToolTipText("<html>\n<b>ALNS h. score for new global optimum</b>\n<br><tt>w1</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be a new global optimum.");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi1}"), jTextFieldPsi0, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 1");
-        binding.setConverter(doubleConverter1);
-        binding.setValidator(positiveDoubleValidator1);
-        bindingGroup.addBinding(binding);
-
-        jTextFieldPsi0.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldPsi0FocusLost(evt);
-            }
-        });
-        jTextFieldPsi0.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldPsi0ActionPerformed(evt);
-            }
-        });
-        jPanelPsi.add(jTextFieldPsi0);
-
-        jTextFieldPsi1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi1.setToolTipText("<html>\n<b>ALNS h. score for better solution</b>\n<br><tt>w2</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be better than the previous one.");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi2}"), jTextFieldPsi1, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 2");
-        binding.setConverter(doubleConverter1);
-        binding.setValidator(positiveDoubleValidator1);
-        bindingGroup.addBinding(binding);
-
-        jTextFieldPsi1.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldPsi1FocusLost(evt);
-            }
-        });
-        jTextFieldPsi1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldPsi1ActionPerformed(evt);
-            }
-        });
-        jPanelPsi.add(jTextFieldPsi1);
-
-        jTextFieldPsi2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi2.setToolTipText("<html>\n<b>ALNS h. score for worse solution, but accepted</b>\n<br><tt>w3</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is worse than the previous one but is accepted anyway.");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi3}"), jTextFieldPsi2, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 3");
-        binding.setConverter(doubleConverter1);
-        binding.setValidator(positiveDoubleValidator1);
-        bindingGroup.addBinding(binding);
-
-        jTextFieldPsi2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldPsi2FocusLost(evt);
-            }
-        });
-        jTextFieldPsi2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldPsi2ActionPerformed(evt);
-            }
-        });
-        jPanelPsi.add(jTextFieldPsi2);
-
-        jTextFieldPsi3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi3.setToolTipText("<html>\n<b>ALNS h. score for solution rejected</b>\n<br><tt>w4</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be worse than the previous one and is rejected.");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi4}"), jTextFieldPsi3, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 4");
-        binding.setConverter(doubleConverter1);
-        binding.setValidator(positiveDoubleValidator1);
-        bindingGroup.addBinding(binding);
-
-        jTextFieldPsi3.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldPsi3FocusLost(evt);
-            }
-        });
-        jTextFieldPsi3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldPsi3ActionPerformed(evt);
-            }
-        });
-        jPanelPsi.add(jTextFieldPsi3);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 26;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel4.add(jPanelPsi, gridBagConstraints);
-
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("Max segments for an ALNS run");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1439,198 +1641,6 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel4.add(jLabel19, gridBagConstraints);
-
-        jPanel1.setLayout(new java.awt.GridLayout(1, 2));
-
-        jPanelRepairHeuristics.setBorder(javax.swing.BorderFactory.createTitledBorder("Repair Heuristics"));
-        jPanelRepairHeuristics.setToolTipText("");
-        jPanelRepairHeuristics.setName(""); // NOI18N
-        jPanelRepairHeuristics.setLayout(new java.awt.GridBagLayout());
-
-        jCheckBoxRepairHighCostRemoval.setText("RepairHighCostRemoval");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairHighCostRemoval}"), jCheckBoxRepairHighCostRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairHighCostRemoval");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxRepairHighCostRemoval.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelRepairHeuristics.add(jCheckBoxRepairHighCostRemoval, gridBagConstraints);
-
-        jCheckBoxRepairRandomRemoval.setText("RepairRandomRemoval");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairRandomRemoval}"), jCheckBoxRepairRandomRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairRandomRemoval");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxRepairRandomRemoval.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelRepairHeuristics.add(jCheckBoxRepairRandomRemoval, gridBagConstraints);
-
-        jCheckBoxRepairTravelTime.setText("RepairTravelTime");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairTravelTime}"), jCheckBoxRepairTravelTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairTravelTime");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxRepairTravelTime.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelRepairHeuristics.add(jCheckBoxRepairTravelTime, gridBagConstraints);
-
-        jCheckBoxRepairVehicleTime.setText("RepairVehicleTime");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairVehicleTime}"), jCheckBoxRepairVehicleTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairVehicleTime");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxRepairVehicleTime.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelRepairHeuristics.add(jCheckBoxRepairVehicleTime, gridBagConstraints);
-
-        jCheckBoxRepairWorstRemoval.setText("RepairWorstRemoval");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairWorstRemoval}"), jCheckBoxRepairWorstRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairWorstRemoval");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxRepairWorstRemoval.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelRepairHeuristics.add(jCheckBoxRepairWorstRemoval, gridBagConstraints);
-
-        jPanel1.add(jPanelRepairHeuristics);
-
-        jPanelDestroyHeuristics.setBorder(javax.swing.BorderFactory.createTitledBorder("Destroy Heuristics"));
-        jPanelDestroyHeuristics.setToolTipText("");
-        jPanelDestroyHeuristics.setLayout(new java.awt.GridBagLayout());
-
-        jCheckBoxDestroyGreedyCostInsertion.setText("DestroyGreedyCostInsertion");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyCostInsertion}"), jCheckBoxDestroyGreedyCostInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyCostInsertion");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxDestroyGreedyCostInsertion.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyCostInsertion, gridBagConstraints);
-
-        jCheckBoxDestroyGreedyBestInsertion.setText("DestroyGreedyBestInsertion");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyBestInsertion}"), jCheckBoxDestroyGreedyBestInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyBestInsertion");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxDestroyGreedyBestInsertion.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyBestInsertion, gridBagConstraints);
-
-        jCheckBoxDestroyGreedyProfitInsertion.setText("DestroyGreedyProfitInsertion");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyProfitInsertion}"), jCheckBoxDestroyGreedyProfitInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyProfitInsertion");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxDestroyGreedyProfitInsertion.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyProfitInsertion, gridBagConstraints);
-
-        jCheckBoxDestroyRandomInsertion.setText("DestroyRandomInsertion");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyRandomInsertion}"), jCheckBoxDestroyRandomInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyRandomInsertion");
-        bindingGroup.addBinding(binding);
-
-        jCheckBoxDestroyRandomInsertion.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updatePsiBeanC(evt);
-            }
-        });
-        jCheckBoxDestroyRandomInsertion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxDestroyRandomInsertionActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanelDestroyHeuristics.add(jCheckBoxDestroyRandomInsertion, gridBagConstraints);
-
-        jCheckBoxDestroyCloseToBarycenter.setText("DestroyCloseToBarycenter");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyCloseToBarycenter}"), jCheckBoxDestroyCloseToBarycenter, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyCloseToBarycenter");
-        bindingGroup.addBinding(binding);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        jPanelDestroyHeuristics.add(jCheckBoxDestroyCloseToBarycenter, gridBagConstraints);
-
-        jPanel1.add(jPanelDestroyHeuristics);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 42;
-        gridBagConstraints.gridwidth = 9;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        jPanel4.add(jPanel1, gridBagConstraints);
 
         jTextFieldPunishmentGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldPunishmentGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the new probability of being chosen for nerfed\n<br>clusters (clusters which haven't behaved well in the segment).\n<br>Must be a double in range [0,1].");
@@ -3123,7 +3133,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelThreadsALNS;
     private javax.swing.JLabel jLabelThreadsMIPS;
     private javax.swing.JList<String> jListInstances;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
@@ -3136,6 +3145,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelConsoleOutput;
     private javax.swing.JPanel jPanelControls;
     private javax.swing.JPanel jPanelDestroyHeuristics;
+    private javax.swing.JPanel jPanelHeuristics;
     private javax.swing.JPanel jPanelInstancesButtons;
     private javax.swing.JPanel jPanelMIPS;
     private javax.swing.JPanel jPanelMIPSActions;

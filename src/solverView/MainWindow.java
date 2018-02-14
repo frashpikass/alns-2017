@@ -41,6 +41,10 @@ import solverController.Solution;
  * @author Frash
  */
 public class MainWindow extends javax.swing.JFrame {
+    /**
+     * Current version of CTOWSS ALNS GUI
+     */
+    public final static String SOFTWARE_VERSION = "1.7";
 
     /**
      * Pointer to the controller task at hand
@@ -95,6 +99,7 @@ public class MainWindow extends javax.swing.JFrame {
         solutionReports = new ArrayList<>();
         
         psibeanAdapter1.setAlnsPropertiesBean(this.alnsPropertiesBean);
+        
     }
     
     /**
@@ -154,7 +159,6 @@ public class MainWindow extends javax.swing.JFrame {
         longConverter1 = new solverView.bindingInterfaces.LongConverter();
         psibeanAdapter1 = new solverView.bindingInterfaces.PsibeanAdapter();
         positiveOrZeroIntegerValidator1 = new solverView.bindingInterfaces.PositiveOrZeroIntegerValidator();
-        jLabel1 = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanelControls = new javax.swing.JPanel();
@@ -517,11 +521,9 @@ public class MainWindow extends javax.swing.JFrame {
         jDialogConfirmStop.getContentPane().add(jPanel7, java.awt.BorderLayout.SOUTH);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CTOWSS ALNS v"+SOFTWARE_VERSION+" (GUI mode)");
         setPreferredSize(new java.awt.Dimension(1230, 800));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
-
-        jLabel1.setText("CTOWSS ALNS GUI v 1.5");
-        getContentPane().add(jLabel1);
 
         jPanelMain.setPreferredSize(new java.awt.Dimension(1230, 600));
         jPanelMain.setLayout(new javax.swing.BoxLayout(jPanelMain, javax.swing.BoxLayout.LINE_AXIS));
@@ -2718,7 +2720,7 @@ public class MainWindow extends javax.swing.JFrame {
             public void run() {
                 MainWindow mw = new MainWindow();
                 // Set the title
-                mw.setTitle("CTOWSS Solver v1.5 (GUI mode)");
+                mw.setTitle("CTOWSS ALNS v"+SOFTWARE_VERSION+" (GUI mode)");
 
                 // Make the window appear
                 mw.setVisible(true);
@@ -2956,7 +2958,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        this.setTitle("ALNS Solver v1.0 (GUI mode)");
+        this.setTitle("CTOWSS ALNS v"+SOFTWARE_VERSION+" (GUI mode)");
         this.setVisible(true);
         ToolTipManager.sharedInstance().setInitialDelay(250);
         ToolTipManager.sharedInstance().setDismissDelay(15000);
@@ -3108,7 +3110,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JFileChooser jFileChooserSaveOutput;
     private javax.swing.JFileChooser jFileChooserSaveParameters;
     private javax.swing.JFileChooser jFileChooserWorkingDirectory;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;

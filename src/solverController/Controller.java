@@ -287,30 +287,6 @@ public class Controller
     }
 
     public static void main(String[] args) throws Exception {
-        
-        /*
-        MainWindow mw = new MainWindow();
-        System.setOut(new PrintStream(mw.getTextAreaOutputStream()));
-        System.setErr(new PrintStream(mw.getTextAreaOutputStream()));
-        
-        mw.openWindow(args);
-        /*
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MainWindow mw = new MainWindow();
-                // Set the title
-                mw.setTitle("ALNS Solver v1.0 (GUI mode)");
-                
-                // Make the window appear
-                mw.setVisible(true);
-                
-                // Make tooltips appear faster and last longer
-                ToolTipManager.sharedInstance().setInitialDelay(250);
-                ToolTipManager.sharedInstance().setDismissDelay(15000);
-            }
-        });
-        */
-        // TEST
         List<String> modelPaths = new ArrayList<>();
         modelPaths.add("Instance0.txt");
         

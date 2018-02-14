@@ -98,8 +98,6 @@ public class Main {
             @Override
             public void run() {
                 MainWindow mw = new MainWindow();
-                // Set the title
-                mw.setTitle("ALNS Solver v1.0 (GUI mode)");
 
                 // Make the window appear
                 mw.setVisible(true);

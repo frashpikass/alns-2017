@@ -6,7 +6,9 @@
 package solverView.bindingInterfaces;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.jdesktop.beansbinding.AbstractBindingListener;
@@ -129,7 +131,8 @@ public class ErrorBindingListener extends AbstractBindingListener{
      * Removes all errors from the stack
      */
     public void resetAllErrors(){
-        for(Binding b : errorMap.keySet()){
+        List<Binding> l = new ArrayList<>(errorMap.keySet());
+        for(Binding b : l){
             // For each binding, if it's represented as a textfield
             if(b.getTargetObject() instanceof JTextField){
                 // get the textfield
@@ -137,9 +140,6 @@ public class ErrorBindingListener extends AbstractBindingListener{
                 
                 // reset the text to the safe stored value
                 jtf.setText(b.getSourceValueForTarget().getValue().toString());
-                
-                // reset the background
-                jtf.setBackground(null);
             }
         }
         

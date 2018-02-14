@@ -11,10 +11,9 @@ The current stable version is 1.0, built on December 22nd 2017.
 
 ## Minimum system requirements
 ### Software
-This project has been coded for
-- JDJ 1.8
-- Gurobi 7.5.1
-So you will need to provide those in order to run.
+This project has been coded with
+- JDK 1.8
+- Gurobi 7.5.2
 
 ### Hardware
 A multicore processor is highly advised in order to solve orienteering problems faster.
@@ -104,7 +103,9 @@ A few notes on this:
 The default parameters have been tested on about 20 instances found in literature and are thought to work fine on these.
 Parameters are self explanatory if you know the theory behind the algorithm, but will be more thoroughly explained in the future.
 
+You may find some specific documentation in the docs folder. Some of it is in Italian, but the flow chart shows where parameters will be used.
+
 ## Known issues
-- Unfortunately batch processing doesn't work as of December 2017.
-- The GUI interface is ugly, however everything should work.
-If you find any unreported issues, feel free to report them.
+- ALNS performance might be a little lackluster if you don't tune the parameters according to the selected instance.
+- More heuristics could be added
+- None so far :)

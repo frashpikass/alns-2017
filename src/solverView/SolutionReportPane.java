@@ -123,6 +123,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jPanelButtons = new javax.swing.JPanel();
         jButtonOpenSolutionPath = new javax.swing.JButton();
         jButtonCloseReport = new javax.swing.JButton();
+        jButtonReloadParameters = new javax.swing.JButton();
         jScrollPaneReport = new javax.swing.JScrollPane();
         jTextAreaReport = new javax.swing.JTextArea();
 
@@ -132,27 +133,27 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jPanelHeader.setLayout(new java.awt.BorderLayout());
 
         java.awt.GridBagLayout jPanelHeaderLayout = new java.awt.GridBagLayout();
-        jPanelHeaderLayout.columnWidths = new int[] {0, 10, 0, 10, 0};
+        jPanelHeaderLayout.columnWidths = new int[] {0, 10, 0};
         jPanelHeaderLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0};
         jPanelLabels.setLayout(jPanelHeaderLayout);
 
         jLabel1.setText("Instance:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabel1, gridBagConstraints);
 
         jLabel2.setText("Solver:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabel2, gridBagConstraints);
 
         jLabel3.setText("Timestamp:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabel3, gridBagConstraints);
@@ -160,7 +161,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jLabelInstancePath.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelInstancePath.setText("jLabel4");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -169,7 +170,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jLabelSolver.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelSolver.setText("jLabel5");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -178,7 +179,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jLabelTimestamp.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelTimestamp.setText("jLabel6");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -186,7 +187,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
 
         jLabel4.setText("Best obj:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabel4, gridBagConstraints);
@@ -194,20 +195,20 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jLabelBestObjective.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelBestObjective.setText("jLabel5");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabelBestObjective, gridBagConstraints);
 
-        jPanelHeader.add(jPanelLabels, java.awt.BorderLayout.WEST);
+        jPanelHeader.add(jPanelLabels, java.awt.BorderLayout.CENTER);
 
         java.awt.GridBagLayout jPanelButtonsLayout = new java.awt.GridBagLayout();
-        jPanelButtonsLayout.columnWidths = new int[] {0};
-        jPanelButtonsLayout.rowHeights = new int[] {0, 10, 0};
+        jPanelButtonsLayout.columnWidths = new int[] {0, 10, 0, 10, 0};
+        jPanelButtonsLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0};
         jPanelButtons.setLayout(jPanelButtonsLayout);
 
         jButtonOpenSolutionPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
-        jButtonOpenSolutionPath.setText("Output folder");
+        jButtonOpenSolutionPath.setText("Open output folder");
         jButtonOpenSolutionPath.setToolTipText("Open the output folder for this solution report");
         jButtonOpenSolutionPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,13 +216,13 @@ public class SolutionReportPane extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelButtons.add(jButtonOpenSolutionPath, gridBagConstraints);
 
         jButtonCloseReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/close.png"))); // NOI18N
-        jButtonCloseReport.setText("Close report");
+        jButtonCloseReport.setText("Close this report");
         jButtonCloseReport.setToolTipText("Close this report tab");
         jButtonCloseReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -229,12 +230,25 @@ public class SolutionReportPane extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelButtons.add(jButtonCloseReport, gridBagConstraints);
 
-        jPanelHeader.add(jPanelButtons, java.awt.BorderLayout.EAST);
+        jButtonReloadParameters.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open-in-app.png"))); // NOI18N
+        jButtonReloadParameters.setText("Reload used parameters");
+        jButtonReloadParameters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReloadParametersActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanelButtons.add(jButtonReloadParameters, gridBagConstraints);
+
+        jPanelHeader.add(jPanelButtons, java.awt.BorderLayout.WEST);
 
         add(jPanelHeader, java.awt.BorderLayout.PAGE_START);
 
@@ -264,10 +278,16 @@ public class SolutionReportPane extends javax.swing.JPanel {
         parentWindow.removeSolutionReport(this);
     }//GEN-LAST:event_jButtonCloseReportActionPerformed
 
+    private void jButtonReloadParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReloadParametersActionPerformed
+        // TODO add your handling code here:
+        parentWindow.loadParametersBean(this.solution.getParameters());
+    }//GEN-LAST:event_jButtonReloadParametersActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCloseReport;
     private javax.swing.JButton jButtonOpenSolutionPath;
+    private javax.swing.JButton jButtonReloadParameters;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -35,6 +35,7 @@ import org.jdesktop.beansbinding.Validator;
 import org.jdesktop.beansbinding.Validator.Result;
 import solverController.Controller;
 import solverController.OptimizationStatusMessage;
+import solverController.ParametersBean;
 import solverController.Solution;
 
 /**
@@ -2713,6 +2714,16 @@ public class MainWindow extends javax.swing.JFrame {
         this.parametersBean.restoreDefaults();
         this.errorBindingListener.resetAllErrors();
     }//GEN-LAST:event_jButtonResetParametersALNSActionPerformed
+    
+    /**
+     * Load parameters from a given PropertiesBean
+     * @param pb the PropertiesBean to load parameters from
+     */
+    public void loadParametersBean(ParametersBean pb){
+        this.parametersBean.getALNSproperties().cloneFrom(pb.getALNSproperties());
+        this.parametersBean.getOrienteeringProperties().cloneFrom(pb.getOrienteeringProperties());
+        this.errorBindingListener.resetAllErrors();
+    }
     
     /**
      * Update the cached path to the working directory to the specified one, if

@@ -2262,7 +2262,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void updatePsiBeanC(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_updatePsiBeanC
         // TODO add your handling code here:
-        //updateParametersBean();
     }//GEN-LAST:event_updatePsiBeanC
 
     private void updatePsiGui(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_updatePsiGui
@@ -2702,7 +2701,7 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.parametersBean.restoreDefaults();
         this.errorBindingListener.resetAllErrors();
-        updateAllJTextFieldsFromBindings();
+        //updateAllJTextFieldsFromBindings();
     }//GEN-LAST:event_jButtonResetParametersALNSActionPerformed
     
     /**

@@ -156,15 +156,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonLoadParameters = new javax.swing.JButton();
         jButtonRun = new javax.swing.JButton();
         jButtonTestBean = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jDialogConfirmStop = new javax.swing.JDialog();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel29 = new javax.swing.JLabel();
-        filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 15), new java.awt.Dimension(0, 15), new java.awt.Dimension(32767, 15));
-        jPanel7 = new javax.swing.JPanel();
-        jButtonYesStop = new javax.swing.JButton();
-        jButtonNoStop = new javax.swing.JButton();
+        jButtonStopDebugger = new javax.swing.JButton();
         positiveIntegerValidator1 = new solverView.bindingInterfaces.PositiveIntegerValidator();
         integerConverter1 = new solverView.bindingInterfaces.IntegerConverter();
         probabilityValueValidator1 = new solverView.bindingInterfaces.ProbabilityValueValidator();
@@ -485,55 +477,18 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanelActions.add(jButtonTestBean, gridBagConstraints);
 
-        jButton1.setText("Stop debugger");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonStopDebugger.setText("Stop debugger");
+        jButtonStopDebugger.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonStopDebuggerActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
-        jPanelActions.add(jButton1, gridBagConstraints);
+        jPanelActions.add(jButtonStopDebugger, gridBagConstraints);
 
         jDialogDeprecatedOptions.getContentPane().add(jPanelActions);
-
-        jDialogConfirmStop.setTitle("Warning");
-        jDialogConfirmStop.setMinimumSize(new java.awt.Dimension(400, 125));
-        jDialogConfirmStop.setModal(true);
-        jDialogConfirmStop.setResizable(false);
-
-        jPanel6.setLayout(new java.awt.BorderLayout());
-
-        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/alert.png"))); // NOI18N
-        jPanel6.add(jLabel17, java.awt.BorderLayout.CENTER);
-
-        jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel29.setText("<html>Are you sure you want to stop the solver?\n<br />The batch process will also stop.\n</html>");
-        jLabel29.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        jPanel6.add(jLabel29, java.awt.BorderLayout.LINE_END);
-        jPanel6.add(filler4, java.awt.BorderLayout.EAST);
-
-        jDialogConfirmStop.getContentPane().add(jPanel6, java.awt.BorderLayout.CENTER);
-
-        jButtonYesStop.setText("Yes");
-        jButtonYesStop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonYesStopActionPerformed(evt);
-            }
-        });
-        jPanel7.add(jButtonYesStop);
-
-        jButtonNoStop.setText("No");
-        jButtonNoStop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNoStopActionPerformed(evt);
-            }
-        });
-        jPanel7.add(jButtonNoStop);
-
-        jDialogConfirmStop.getContentPane().add(jPanel7, java.awt.BorderLayout.SOUTH);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CTOWSS ALNS v"+SOFTWARE_VERSION+" (GUI mode)");
@@ -2077,8 +2032,28 @@ public class MainWindow extends javax.swing.JFrame {
         
     private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
         // TODO add your handling code here:
-        jDialogConfirmStop.setLocationRelativeTo(jPanelOutput);
-        jDialogConfirmStop.setVisible(true);
+        // Ask for confirmation
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(
+                null,
+                "<html>Are you sure you want to stop the solver?" +
+                "<br>The batch process will also stop.",
+                "Warning",
+                dialogButton
+        );
+        
+        if(dialogResult == JOptionPane.YES_OPTION){
+            // Kill the controller thread and triggers the garbage collector
+            if (controllerTask != null) {
+                controllerTask.cancel(true);
+                System.gc();
+            }
+
+            enableControlPanel(true);
+
+            // Update the status text
+            updateStatusLabel("Stopped.");
+        }
     }//GEN-LAST:event_jButtonStopActionPerformed
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
@@ -2110,10 +2085,10 @@ public class MainWindow extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButtonResetActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonStopDebuggerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopDebuggerActionPerformed
         // TODO add your handling code here:
         System.out.println("Execution paused");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonStopDebuggerActionPerformed
 
     private void jButtonTestBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestBeanActionPerformed
         jTextAreaOutput.append("Current properties bean:\n");
@@ -2615,28 +2590,6 @@ public class MainWindow extends javax.swing.JFrame {
         loadParameters();
     }//GEN-LAST:event_jButtonLoadParametersMIPSActionPerformed
 
-    private void jButtonYesStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonYesStopActionPerformed
-        // TODO add your handling code here:
-        // Kill the controller thread and triggers the garbage collector
-        if (controllerTask != null) {
-            controllerTask.cancel(true);
-            System.gc();
-        }
-        
-        enableControlPanel(true);
-
-        // Update the status text
-        updateStatusLabel("Stopped.");
-        
-        // Close the modal dialog
-        jDialogConfirmStop.setVisible(false);
-    }//GEN-LAST:event_jButtonYesStopActionPerformed
-
-    private void jButtonNoStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNoStopActionPerformed
-        // TODO add your handling code here:
-        jDialogConfirmStop.setVisible(false);
-    }//GEN-LAST:event_jButtonNoStopActionPerformed
-
     private void jButtonCloseAllReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseAllReportsActionPerformed
         // TODO add your handling code here:
         
@@ -3102,15 +3055,12 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupSolver;
     private solverView.bindingInterfaces.DoubleConverter doubleConverter1;
     private javax.swing.Box.Filler filler3;
-    private javax.swing.Box.Filler filler4;
     private solverView.bindingInterfaces.IntegerConverter integerConverter1;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCloseAllReports;
     private javax.swing.JButton jButtonErrorOk;
     private javax.swing.JButton jButtonLoadParameters;
     private javax.swing.JButton jButtonLoadParametersALNS;
     private javax.swing.JButton jButtonLoadParametersMIPS;
-    private javax.swing.JButton jButtonNoStop;
     private javax.swing.JButton jButtonOpenOutputFolder;
     private javax.swing.JButton jButtonOutputFolderPath;
     private javax.swing.JButton jButtonOutputFolderPath1;
@@ -3125,8 +3075,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSaveParametersALNS;
     private javax.swing.JButton jButtonSaveParametersMIPS;
     private javax.swing.JButton jButtonStop;
+    private javax.swing.JButton jButtonStopDebugger;
     private javax.swing.JButton jButtonTestBean;
-    private javax.swing.JButton jButtonYesStop;
     private javax.swing.JCheckBox jCheckBoxDestroyCloseToBarycenter;
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyBestInsertion;
     private javax.swing.JCheckBox jCheckBoxDestroyGreedyCostInsertion;
@@ -3139,7 +3089,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBoxRepairTravelTime;
     private javax.swing.JCheckBox jCheckBoxRepairVehicleTime;
     private javax.swing.JCheckBox jCheckBoxRepairWorstRemoval;
-    private javax.swing.JDialog jDialogConfirmStop;
     private javax.swing.JDialog jDialogDeprecatedOptions;
     private javax.swing.JDialog jDialogError;
     private javax.swing.JFileChooser jFileChooserInstances;
@@ -3155,7 +3104,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
@@ -3167,7 +3115,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
@@ -3193,8 +3140,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JList<String> jListInstances;
     private javax.swing.JPanel jPaneMIPS;
     private javax.swing.JPanel jPaneMIPSActions;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanelALNS;
     private javax.swing.JPanel jPanelALNSActions;
     private javax.swing.JPanel jPanelALNSGeneralParams;

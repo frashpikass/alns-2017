@@ -135,7 +135,6 @@ public class MainWindow extends javax.swing.JFrame {
         buttonGroupActions = new javax.swing.ButtonGroup();
         jTextField19 = new javax.swing.JTextField();
         jFileChooserOutputFolderPath = new javax.swing.JFileChooser();
-        orienteeringPropertiesBean = new solverController.OrienteeringPropertiesBean();
         jFileChooserLoadParameters = new javax.swing.JFileChooser();
         jFileChooserSaveParameters = new javax.swing.JFileChooser();
         jFileChooserSaveOutput = new javax.swing.JFileChooser();
@@ -2186,7 +2185,7 @@ public class MainWindow extends javax.swing.JFrame {
 
             // Setup a new instance of controller
             controllerTask = new Controller(modelPaths,
-                orienteeringPropertiesBean,
+                parametersBean.getOrienteeringProperties(),
                 parametersBean.getALNSproperties(),
                 solver,
                 textAreaOutputStream,
@@ -2207,7 +2206,6 @@ public class MainWindow extends javax.swing.JFrame {
             try {
                 this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
                 this.errorBindingListener.resetAllErrors();
-                this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
                 System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
@@ -2315,7 +2313,7 @@ public class MainWindow extends javax.swing.JFrame {
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
         if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
-            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
+            this.parametersBean.getOrienteeringProperties().setOutputFolderPath(outputFolderPath.getAbsolutePath());
             updateWorkingDirectory(outputFolderPath);
         }
     }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
@@ -2355,7 +2353,7 @@ public class MainWindow extends javax.swing.JFrame {
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
         if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
-            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
+            this.parametersBean.getOrienteeringProperties().setOutputFolderPath(outputFolderPath.getAbsolutePath());
             updateWorkingDirectory(outputFolderPath);
         }
     }//GEN-LAST:event_jButtonOutputFolderPath1ActionPerformed
@@ -2470,7 +2468,7 @@ public class MainWindow extends javax.swing.JFrame {
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
         if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
             jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
-            orienteeringPropertiesBean.setOutputFolderPath(outputFolderPath.getAbsolutePath());
+            this.parametersBean.getOrienteeringProperties().setOutputFolderPath(outputFolderPath.getAbsolutePath());
             updateWorkingDirectory(outputFolderPath);
         }
     }//GEN-LAST:event_jButtonOutputFolderPath2ActionPerformed
@@ -3264,7 +3262,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldTimeLimitLocalSearch;
     private javax.swing.JTextField jTextFieldWarmupGamma;
     private solverView.bindingInterfaces.LongConverter longConverter1;
-    private solverController.OrienteeringPropertiesBean orienteeringPropertiesBean;
     private solverController.ParametersBean parametersBean;
     private solverView.PathCacheBean pathCacheBean;
     private solverView.bindingInterfaces.PositiveDoubleValidator positiveDoubleValidator1;

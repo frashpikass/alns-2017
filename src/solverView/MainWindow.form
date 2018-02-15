@@ -44,8 +44,6 @@
         <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
       </Properties>
     </Component>
-    <Component class="solverController.OrienteeringPropertiesBean" name="orienteeringPropertiesBean">
-    </Component>
     <Component class="javax.swing.JFileChooser" name="jFileChooserLoadParameters">
       <Properties>
         <Property name="dialogTitle" type="java.lang.String" value="Load parameters from JSON"/>

@@ -558,7 +558,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         jListInstances.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jListInstances.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jListInstances.setToolTipText(null);
         jScrollPaneInstances.setViewportView(jListInstances);
 
         jPanelnstances.add(jScrollPaneInstances);
@@ -614,7 +613,6 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelSolversEnvelope.setMinimumSize(new java.awt.Dimension(362, 180));
         jPanelSolversEnvelope.setLayout(new javax.swing.BoxLayout(jPanelSolversEnvelope, javax.swing.BoxLayout.LINE_AXIS));
 
-        jTabbedPaneSolvers.setToolTipText("Use a MIPS solver");
         jTabbedPaneSolvers.setMinimumSize(new java.awt.Dimension(350, 320));
         jTabbedPaneSolvers.setPreferredSize(new java.awt.Dimension(650, 326));
 
@@ -779,6 +777,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonRunMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunMIPS.setText("Solve with MIPS (exact)");
+        jButtonRunMIPS.setToolTipText("Run the MIPS solver on all instances with the specified parameters.");
         buttonGroupActions.add(jButtonRunMIPS);
         jButtonRunMIPS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -789,6 +788,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonLoadParametersMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open-in-app.png"))); // NOI18N
         jButtonLoadParametersMIPS.setText("Load parameters");
+        jButtonLoadParametersMIPS.setToolTipText("Load parameters from a JSON file.");
         jButtonLoadParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLoadParametersMIPSActionPerformed(evt);
@@ -798,6 +798,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonSaveParametersMIPS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/content-save.png"))); // NOI18N
         jButtonSaveParametersMIPS.setText("Save parameters");
+        jButtonSaveParametersMIPS.setToolTipText("Save parameters to a JSON file.");
         jButtonSaveParametersMIPS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveParametersMIPSActionPerformed(evt);
@@ -1802,6 +1803,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonRunALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunALNS.setText("Solve with ALNS (heuristic)");
+        jButtonRunALNS.setToolTipText("Run the ALNS solver on all instances with the specified parameters.");
         buttonGroupActions.add(jButtonRunALNS);
         jButtonRunALNS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1812,6 +1814,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonLoadParametersALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/open-in-app.png"))); // NOI18N
         jButtonLoadParametersALNS.setText("Load parameters");
+        jButtonLoadParametersALNS.setToolTipText("Load parameters from JSON file.");
         jButtonLoadParametersALNS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLoadParametersALNSActionPerformed(evt);
@@ -1821,6 +1824,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonSaveParametersALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/content-save.png"))); // NOI18N
         jButtonSaveParametersALNS.setText("Save parameters");
+        jButtonSaveParametersALNS.setToolTipText("Save parameters to a JSON file.");
         jButtonSaveParametersALNS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveParametersALNSActionPerformed(evt);
@@ -1829,7 +1833,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSActions.add(jButtonSaveParametersALNS);
 
         jButtonResetParametersALNS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/replay.png"))); // NOI18N
-        jButtonResetParametersALNS.setText("Reset parameters");
+        jButtonResetParametersALNS.setText("Default parameters");
         jButtonResetParametersALNS.setToolTipText("Resets all parameters to safe defaults");
         jButtonResetParametersALNS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1848,6 +1852,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonRunRelaxed.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunRelaxed.setText("Solve relaxed model");
+        jButtonRunRelaxed.setToolTipText("Solve the relaxation of all models with the specified options.");
         buttonGroupActions.add(jButtonRunRelaxed);
         jButtonRunRelaxed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

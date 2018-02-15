@@ -105,9 +105,6 @@ public class MainWindow extends javax.swing.JFrame {
         // Show Deprecated tools window
         jDialogDeprecatedOptions.setVisible(false);
         
-        // Set the position of the error dialog
-        jDialogError.setLocationRelativeTo(jPanelControls);
-        
         // Initialize report numbers
         this.lastSolutionReportNumber = 0;
         
@@ -142,10 +139,6 @@ public class MainWindow extends javax.swing.JFrame {
         pathCacheBean = new solverView.PathCacheBean();
         jFileChooserWorkingDirectory = new javax.swing.JFileChooser();
         doubleConverter1 = new solverView.bindingInterfaces.DoubleConverter();
-        jDialogError = new javax.swing.JDialog();
-        jLabelErrorMessage = new javax.swing.JLabel();
-        jButtonErrorOk = new javax.swing.JButton();
-        jLabelErrorIcon = new javax.swing.JLabel();
         jDialogDeprecatedOptions = new javax.swing.JDialog();
         jPanelSolver = new javax.swing.JPanel();
         jRadioButtonMIPS = new javax.swing.JRadioButton();
@@ -333,41 +326,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         jFileChooserWorkingDirectory.setDialogTitle("Choose the working directory");
         jFileChooserWorkingDirectory.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-
-        jDialogError.setTitle("Error");
-        jDialogError.setIconImage(null);
-        jDialogError.setMinimumSize(new java.awt.Dimension(400, 200));
-        jDialogError.setModal(true);
-        jDialogError.setResizable(false);
-        jDialogError.setType(java.awt.Window.Type.POPUP);
-        jDialogError.getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        jLabelErrorMessage.setText("Error message!");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.ipady = 30;
-        jDialogError.getContentPane().add(jLabelErrorMessage, gridBagConstraints);
-
-        jButtonErrorOk.setText("OK");
-        jButtonErrorOk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonErrorOkActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        jDialogError.getContentPane().add(jButtonErrorOk, gridBagConstraints);
-
-        jLabelErrorIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/alert.png"))); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        jDialogError.getContentPane().add(jLabelErrorIcon, gridBagConstraints);
 
         jDialogDeprecatedOptions.setBounds(new java.awt.Rectangle(50, 50, 100, 200));
         jDialogDeprecatedOptions.setLocation(new java.awt.Point(50, 50));
@@ -2340,11 +2298,6 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonOutputFolderPath1ActionPerformed
 
-    private void jButtonErrorOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonErrorOkActionPerformed
-        // TODO add your handling code here:
-        jDialogError.setVisible(false);
-    }//GEN-LAST:event_jButtonErrorOkActionPerformed
-
     private void jButtonRunALNSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunALNSActionPerformed
         // TODO add your handling code here:
         if(validateFields()){
@@ -3060,7 +3013,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler3;
     private solverView.bindingInterfaces.IntegerConverter integerConverter1;
     private javax.swing.JButton jButtonCloseAllReports;
-    private javax.swing.JButton jButtonErrorOk;
     private javax.swing.JButton jButtonLoadParameters;
     private javax.swing.JButton jButtonLoadParametersALNS;
     private javax.swing.JButton jButtonLoadParametersMIPS;
@@ -3093,7 +3045,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBoxRepairVehicleTime;
     private javax.swing.JCheckBox jCheckBoxRepairWorstRemoval;
     private javax.swing.JDialog jDialogDeprecatedOptions;
-    private javax.swing.JDialog jDialogError;
     private javax.swing.JFileChooser jFileChooserInstances;
     private javax.swing.JFileChooser jFileChooserLoadParameters;
     private javax.swing.JFileChooser jFileChooserOutputFolderPath;
@@ -3131,8 +3082,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelBestObj;
-    private javax.swing.JLabel jLabelErrorIcon;
-    private javax.swing.JLabel jLabelErrorMessage;
     private javax.swing.JLabel jLabelOutputFolderPath;
     private javax.swing.JLabel jLabelOutputFolderPath1;
     private javax.swing.JLabel jLabelOutputFolderPath2;

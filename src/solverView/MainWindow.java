@@ -114,7 +114,7 @@ public class MainWindow extends javax.swing.JFrame {
         // Initialize solution reports
         solutionReports = new ArrayList<>();
         
-        psibeanAdapter1.setAlnsPropertiesBean(this.alnsPropertiesBean);
+        psibeanAdapter1.setAlnsPropertiesBean(this.parametersBean.getALNSproperties());
         
     }
     
@@ -136,7 +136,6 @@ public class MainWindow extends javax.swing.JFrame {
         jTextField19 = new javax.swing.JTextField();
         jFileChooserOutputFolderPath = new javax.swing.JFileChooser();
         orienteeringPropertiesBean = new solverController.OrienteeringPropertiesBean();
-        alnsPropertiesBean = new solverController.ALNSPropertiesBean();
         jFileChooserLoadParameters = new javax.swing.JFileChooser();
         jFileChooserSaveParameters = new javax.swing.JFileChooser();
         jFileChooserSaveOutput = new javax.swing.JFileChooser();
@@ -2114,7 +2113,6 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButtonTestBeanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestBeanActionPerformed
-        updateParametersBean();
         jTextAreaOutput.append("Current properties bean:\n");
         jTextAreaOutput.append(parametersBean.toJSON());
     }//GEN-LAST:event_jButtonTestBeanActionPerformed
@@ -2124,10 +2122,6 @@ public class MainWindow extends javax.swing.JFrame {
      * @param solver 
      */
     private void runWithSolver(Controller.Solvers solver){
-        // Update the parameters
-        updateParametersBean();
-//        updatePsiBean();
-        
         // Display the currently selected solver in the GUI
         jLabelSelectedSolver.setText(solver.toString());
 
@@ -2165,9 +2159,6 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.out.println("Who are you running from? Don't be silly!\n");
 
-        // Update the parameters
-        updateParametersBean();
-
         // Retrieve all instances to run
         List<String> modelPaths = new ArrayList<>();
         for (int i = 0; i < jListInstances.getModel().getSize(); i++) {
@@ -2196,7 +2187,7 @@ public class MainWindow extends javax.swing.JFrame {
             // Setup a new instance of controller
             controllerTask = new Controller(modelPaths,
                 orienteeringPropertiesBean,
-                alnsPropertiesBean,
+                parametersBean.getALNSproperties(),
                 solver,
                 textAreaOutputStream,
                 this
@@ -2215,10 +2206,8 @@ public class MainWindow extends javax.swing.JFrame {
         if (inputFile != null && result == JFileChooser.APPROVE_OPTION) {
             try {
                 this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
-                this.alnsPropertiesBean = parametersBean.getALNSproperties();
+                this.errorBindingListener.resetAllErrors();
                 this.orienteeringPropertiesBean = parametersBean.getOrienteeringProperties();
-                this.updatePsiGui();
-                this.updateParametersGUI();
                 System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
@@ -2240,8 +2229,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void saveParameters(){
         jFileChooserSaveParameters.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
-        updateParametersBean();
-//        updatePsiBean();
+        
         int result = jFileChooserSaveParameters.showOpenDialog(jPanelSolversEnvelope);
         File outputFilePath = jFileChooserSaveParameters.getSelectedFile();
         if (outputFilePath != null && result == JFileChooser.APPROVE_OPTION) {
@@ -2261,11 +2249,11 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jTextFieldNerfBarrierFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNerfBarrierFocusLost
         // TODO add your handling code here:
-        updateParametersBean();
+
     }//GEN-LAST:event_jTextFieldNerfBarrierFocusLost
 
     private void updatePsiBean(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_updatePsiBean
-        updateParametersBean();
+
     }//GEN-LAST:event_updatePsiBean
 
     private void jCheckBoxDestroyRandomInsertionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDestroyRandomInsertionActionPerformed
@@ -2714,7 +2702,23 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.parametersBean.restoreDefaults();
         this.errorBindingListener.resetAllErrors();
+        updateAllJTextFieldsFromBindings();
     }//GEN-LAST:event_jButtonResetParametersALNSActionPerformed
+    
+    /**
+     * Restore the value of all JTextFields from their bound object
+     */
+    public void updateAllJTextFieldsFromBindings(){
+        for(Binding b : this.bindingGroup.getBindings()){
+            if(b.getTargetObject() instanceof JTextField){
+                // get the textfield
+                JTextField jtf = (JTextField) b.getTargetObject();
+                
+                // reset the text to the safe stored value
+                jtf.setText(b.getSourceValueForTarget().getValue().toString());
+            }
+        }
+    }
     
     /**
      * Load parameters from a given PropertiesBean
@@ -3041,19 +3045,6 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldPsi3.updateUI();
     }
 
-//    /**
-//     * This method updates the values of psi in the ALNS properties bean, using
-//     * the values written in the psi text fields.
-//     */
-//    private void updatePsiBean() {
-//        double[] toSet = new double[ALNSPropertiesBean.NUMBER_OF_VALUES_FOR_HEURISTIC_SCORES];
-//        toSet[0] = Double.parseDouble(jTextFieldPsi0.getText());
-//        toSet[1] = Double.parseDouble(jTextFieldPsi1.getText());
-//        toSet[2] = Double.parseDouble(jTextFieldPsi2.getText());
-//        toSet[3] = Double.parseDouble(jTextFieldPsi3.getText());
-//        parametersBean.getALNSproperties().setHeuristicScores(toSet);
-//    }
-
     /**
      * This method updates jTextAreaOutput with the output from the optimization
      * algorithms
@@ -3101,7 +3092,6 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private solverController.ALNSPropertiesBean alnsPropertiesBean;
     private javax.swing.JButton btnAddInstance;
     private javax.swing.JButton btnMoveInstanceDown;
     private javax.swing.JButton btnMoveInstanceUp;
@@ -3295,107 +3285,5 @@ public class MainWindow extends javax.swing.JFrame {
     private void updateStatusLabel(String statusText) {
         jLabelStatus.setText(statusText);
         jLabelStatus.updateUI();
-    }
-
-    /**
-     * Updates the parameters bean with the latest version of the parameters in
-     * alnsPropertiesBean and orienteeringPropertiesBean (taken from the GUI). 
-     * Necessary before parameter visualization/serialization.
-     */
-    private void updateParametersBean() {
-        /* TEMP: UNCOMMENT LATER
-        orienteeringPropertiesBean.setForceHeuristicConstraints(jCheckBoxForceHeuristicConstraints.isSelected());
-        orienteeringPropertiesBean.setNumThreads(Integer.valueOf(jTextFieldNumThreads.getText()));
-        orienteeringPropertiesBean.setOutputFolderPath(jTextFieldOutputFolderPath.getText());
-        orienteeringPropertiesBean.setTimeLimit(Double.valueOf(jTextFieldTimeLimit.getText()));
-        
-        alnsPropertiesBean.setAlpha(Double.valueOf(jTextFieldAlpha.getText()));
-        alnsPropertiesBean.setCooldownGamma(Double.valueOf(jTextFieldCooldownGamma.getText()));
-        updatePsiBean();
-        alnsPropertiesBean.setLambda(Double.valueOf(jTextFieldLambda.getText()));
-        //alnsPropertiesBean.setMaxHistorySize(Double.valueOf(jTextFieldMaxHistorySize.getText()));
-        alnsPropertiesBean.setMaxIterationsWithoutImprovement(Integer.valueOf(jTextFieldMaxIterationsWithoutImprovement.getText()));
-        alnsPropertiesBean.setMaxMIPSNodesForFeasibilityCheck(Double.valueOf(jTextFieldMaxMIPSNodesForFeasibilityCheck.getText()));
-        alnsPropertiesBean.setMaxSegments(Long.valueOf(jTextFieldMaxSegments.getText()));
-        alnsPropertiesBean.setMaxSegmentsWithoutImprovement(Long.valueOf(jTextFieldMaxSegmentsWithoutImprovement.getText()));
-        alnsPropertiesBean.setPunishmentForWorstSegmentHeuristics(Double.valueOf(jTextFieldPunishmentForWorstSegmentHeuristics.getText()));
-        alnsPropertiesBean.setPunishmentGamma(Double.valueOf(jTextFieldPunishmentGamma.getText()));
-        alnsPropertiesBean.setRewardForBestSegmentHeuristics(Double.valueOf(jTextFieldRewardForBestSegmentHeuristics.getText()));
-        alnsPropertiesBean.setSegmentSize(Integer.valueOf(jTextFieldSegmentSize.getText()));
-        alnsPropertiesBean.setTimeLimitALNS(Long.valueOf(jTextFieldTimeLimitALNS.getText()));
-        alnsPropertiesBean.setTimeLimitLocalSearch(Long.valueOf(jTextFieldTimeLimitLocalSearch.getText()));
-        alnsPropertiesBean.setWarmupGamma(Double.valueOf(jTextFieldWarmupGamma.getText()));
-        alnsPropertiesBean.setqDelta(Integer.valueOf(jTextFieldQDelta.getText()));
-        alnsPropertiesBean.setqStart(Integer.valueOf(jTextFieldQStart.getText()));
-        alnsPropertiesBean.setNerfBarrier(Double.valueOf(jTextFieldNerfBarrier.getText()));
-        
-        alnsPropertiesBean.setUseDestroyCloseToBarycenter(jCheckBoxDestroyCloseToBarycenter.isSelected());
-        alnsPropertiesBean.setUseDestroyGreedyBestInsertion(jCheckBoxDestroyGreedyBestInsertion.isSelected());
-        alnsPropertiesBean.setUseDestroyGreedyCostInsertion(jCheckBoxDestroyGreedyCostInsertion.isSelected());
-        alnsPropertiesBean.setUseDestroyGreedyProfitInsertion(jCheckBoxDestroyGreedyProfitInsertion.isSelected());
-        alnsPropertiesBean.setUseDestroyRandomInsertion(jCheckBoxDestroyRandomInsertion.isSelected());
-        
-        alnsPropertiesBean.setUseRepairHighCostRemoval(jCheckBoxRepairHighCostRemoval.isSelected());
-        alnsPropertiesBean.setUseRepairRandomRemoval(jCheckBoxRepairRandomRemoval.isSelected());
-        alnsPropertiesBean.setUseRepairTravelTime(jCheckBoxRepairTravelTime.isSelected());
-        alnsPropertiesBean.setUseRepairVehicleTime(jCheckBoxRepairVehicleTime.isSelected());
-        alnsPropertiesBean.setUseRepairWorstRemoval(jCheckBoxRepairWorstRemoval.isSelected());
-        
-        parametersBean = new ParametersBean(orienteeringPropertiesBean, alnsPropertiesBean);
-        
-        TEMP */
-    }
-    
-    /**
-     * Updates every GUI field from orienteeringPropertiesBean and alnsPropertiesBean
-     */
-    private void updateParametersGUI() {
-        /*
-        // orienteering
-        jTextFieldOutputFolderPath.setText(orienteeringPropertiesBean.getOutputFolderPath());
-        jTextFieldTimeLimit.setText(String.valueOf(orienteeringPropertiesBean.getTimeLimit()));
-        jTextFieldNumThreads.setText(String.valueOf(orienteeringPropertiesBean.getNumThreads()));
-        jCheckBoxForceHeuristicConstraints.setSelected(orienteeringPropertiesBean.isForceHeuristicConstraints());
-        
-        //alns
-        //jTextFieldMaxHistorySize.setText(alnsPropertiesBean.getMaxHistorySize());
-        jTextFieldQStart.setText(String.valueOf(alnsPropertiesBean.getqStart()));
-        jTextFieldQDelta.setText(String.valueOf(alnsPropertiesBean.getqDelta()));
-        jTextFieldSegmentSize.setText(String.valueOf(alnsPropertiesBean.getSegmentSize()));
-        jTextFieldMaxSegments.setText(String.valueOf(alnsPropertiesBean.getMaxSegments()));
-        jTextFieldMaxSegmentsWithoutImprovement.setText(String.valueOf(alnsPropertiesBean.getMaxSegmentsWithoutImprovement()));
-        
-        jCheckBoxDestroyCloseToBarycenter.setSelected(alnsPropertiesBean.isUseDestroyCloseToBarycenter());
-        jCheckBoxDestroyGreedyCostInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyCostInsertion());
-        jCheckBoxDestroyGreedyBestInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyBestInsertion());
-        jCheckBoxDestroyGreedyProfitInsertion.setSelected(alnsPropertiesBean.isUseDestroyGreedyProfitInsertion());
-        jCheckBoxDestroyRandomInsertion.setSelected(alnsPropertiesBean.isUseDestroyRandomInsertion());
-        
-        jCheckBoxRepairHighCostRemoval.setSelected(alnsPropertiesBean.isUseRepairHighCostRemoval());
-        jCheckBoxRepairRandomRemoval.setSelected(alnsPropertiesBean.isUseRepairRandomRemoval());
-        jCheckBoxRepairTravelTime.setSelected(alnsPropertiesBean.isUseRepairTravelTime());
-        jCheckBoxRepairVehicleTime.setSelected(alnsPropertiesBean.isUseRepairVehicleTime());
-        jCheckBoxRepairWorstRemoval.setSelected(alnsPropertiesBean.isUseRepairWorstRemoval());
-        
-        jTextFieldLambda.setText(String.valueOf(alnsPropertiesBean.getLambda()));
-        jTextFieldAlpha.setText(String.valueOf(alnsPropertiesBean.getAlpha()));
-        jTextFieldPunishmentGamma.setText(String.valueOf(alnsPropertiesBean.getPunishmentGamma()));
-        jTextFieldCooldownGamma.setText(String.valueOf(alnsPropertiesBean.getCooldownGamma()));
-        jTextFieldWarmupGamma.setText(String.valueOf(alnsPropertiesBean.getWarmupGamma()));
-        jTextFieldNerfBarrier.setText(String.valueOf(alnsPropertiesBean.getNerfBarrier()));
-        jTextFieldTimeLimitALNS.setText(String.valueOf(alnsPropertiesBean.getTimeLimitALNS()));
-        jTextFieldTimeLimitLocalSearch.setText(String.valueOf(alnsPropertiesBean.getTimeLimitLocalSearch()));
-        jTextFieldRewardForBestSegmentHeuristics.setText(String.valueOf(alnsPropertiesBean.getRewardForBestSegmentHeuristics()));
-        jTextFieldPunishmentForWorstSegmentHeuristics.setText(String.valueOf(alnsPropertiesBean.getPunishmentForWorstSegmentHeuristics()));
-        jTextFieldMaxMIPSNodesForFeasibilityCheck.setText(String.valueOf(alnsPropertiesBean.getMaxMIPSNodesForFeasibilityCheck()));
-        
-        jTextFieldPsi0.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[0]));
-        jTextFieldPsi1.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[1]));
-        jTextFieldPsi2.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[2]));
-        jTextFieldPsi3.setText(String.valueOf(alnsPropertiesBean.getHeuristicScores()[3]));
-        
-        jTextFieldMaxIterationsWithoutImprovement.setText(String.valueOf(alnsPropertiesBean.getMaxIterationsWithoutImprovement()));
-        */
-        
     }
 }

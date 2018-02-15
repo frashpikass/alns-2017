@@ -111,6 +111,9 @@ public class SolutionReportPane extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanelHeader = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPaneReport = new javax.swing.JScrollPane();
+        jTextAreaReport = new javax.swing.JTextArea();
         jPanelLabels = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -124,17 +127,27 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jButtonOpenSolutionPath = new javax.swing.JButton();
         jButtonCloseReport = new javax.swing.JButton();
         jButtonReloadParameters = new javax.swing.JButton();
-        jScrollPaneReport = new javax.swing.JScrollPane();
-        jTextAreaReport = new javax.swing.JTextArea();
 
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setName("Report 1"); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
-        jPanelHeader.setLayout(new java.awt.BorderLayout());
+        jPanelHeader.setLayout(new javax.swing.BoxLayout(jPanelHeader, javax.swing.BoxLayout.LINE_AXIS));
+
+        jScrollPaneReport.setBorder(javax.swing.BorderFactory.createTitledBorder("Report"));
+
+        jTextAreaReport.setEditable(false);
+        jTextAreaReport.setColumns(50);
+        jTextAreaReport.setRows(11);
+        jTextAreaReport.setTabSize(4);
+        jTextAreaReport.setAutoscrolls(false);
+        jScrollPaneReport.setViewportView(jTextAreaReport);
+
+        jSplitPane1.setLeftComponent(jScrollPaneReport);
 
         java.awt.GridBagLayout jPanelHeaderLayout = new java.awt.GridBagLayout();
         jPanelHeaderLayout.columnWidths = new int[] {0, 10, 0};
-        jPanelHeaderLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0};
+        jPanelHeaderLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0};
         jPanelLabels.setLayout(jPanelHeaderLayout);
 
         jLabel1.setText("Instance:");
@@ -163,7 +176,6 @@ public class SolutionReportPane extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabelInstancePath, gridBagConstraints);
 
@@ -172,7 +184,6 @@ public class SolutionReportPane extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabelSolver, gridBagConstraints);
 
@@ -181,7 +192,6 @@ public class SolutionReportPane extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabelTimestamp, gridBagConstraints);
 
@@ -200,11 +210,15 @@ public class SolutionReportPane extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelLabels.add(jLabelBestObjective, gridBagConstraints);
 
-        jPanelHeader.add(jPanelLabels, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setRightComponent(jPanelLabels);
+
+        jPanelHeader.add(jSplitPane1);
+
+        add(jPanelHeader, java.awt.BorderLayout.CENTER);
 
         java.awt.GridBagLayout jPanelButtonsLayout = new java.awt.GridBagLayout();
         jPanelButtonsLayout.columnWidths = new int[] {0, 10, 0, 10, 0};
-        jPanelButtonsLayout.rowHeights = new int[] {0, 10, 0, 10, 0, 10, 0, 10, 0};
+        jPanelButtonsLayout.rowHeights = new int[] {0};
         jPanelButtons.setLayout(jPanelButtonsLayout);
 
         jButtonOpenSolutionPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
@@ -216,8 +230,8 @@ public class SolutionReportPane extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelButtons.add(jButtonOpenSolutionPath, gridBagConstraints);
 
@@ -230,8 +244,8 @@ public class SolutionReportPane extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelButtons.add(jButtonCloseReport, gridBagConstraints);
 
@@ -245,23 +259,11 @@ public class SolutionReportPane extends javax.swing.JPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelButtons.add(jButtonReloadParameters, gridBagConstraints);
 
-        jPanelHeader.add(jPanelButtons, java.awt.BorderLayout.WEST);
-
-        add(jPanelHeader, java.awt.BorderLayout.PAGE_START);
-
-        jScrollPaneReport.setBorder(javax.swing.BorderFactory.createTitledBorder("Report"));
-
-        jTextAreaReport.setEditable(false);
-        jTextAreaReport.setColumns(20);
-        jTextAreaReport.setRows(5);
-        jTextAreaReport.setAutoscrolls(false);
-        jScrollPaneReport.setViewportView(jTextAreaReport);
-
-        add(jScrollPaneReport, java.awt.BorderLayout.CENTER);
+        add(jPanelButtons, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOpenSolutionPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenSolutionPathActionPerformed
@@ -301,6 +303,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
     private javax.swing.JPanel jPanelHeader;
     private javax.swing.JPanel jPanelLabels;
     private javax.swing.JScrollPane jScrollPaneReport;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextArea jTextAreaReport;
     // End of variables declaration//GEN-END:variables
 

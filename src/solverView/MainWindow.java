@@ -1964,7 +1964,6 @@ public class MainWindow extends javax.swing.JFrame {
         jTextAreaOutput.setForeground(new java.awt.Color(255, 255, 0));
         jTextAreaOutput.setRows(4);
         jTextAreaOutput.setTabSize(4);
-        jTextAreaOutput.setToolTipText(null);
         jTextAreaOutput.setAutoscrolls(false);
         jTextAreaOutput.setMargin(new java.awt.Insets(5, 7, 5, 7));
         jTextAreaOutput.setSelectedTextColor(new java.awt.Color(255, 255, 153));

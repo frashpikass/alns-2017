@@ -616,6 +616,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMIPSParameters.add(jTextFieldOutputFolderPath1, gridBagConstraints);
 
         jButtonOutputFolderPath1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
+        jButtonOutputFolderPath1.setToolTipText("Choose output folder");
         jButtonOutputFolderPath1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderPath1ActionPerformed(evt);
@@ -821,6 +822,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSGeneralParams.add(jLabel28, gridBagConstraints);
 
         jButtonOutputFolderPath2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
+        jButtonOutputFolderPath2.setToolTipText("Choose output folder");
         jButtonOutputFolderPath2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderPath2ActionPerformed(evt);
@@ -1823,6 +1825,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRelaxedParameters.setLayout(new java.awt.GridBagLayout());
 
         jButtonOutputFolderPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
+        jButtonOutputFolderPath.setToolTipText("Choose output folder");
         jButtonOutputFolderPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderPathActionPerformed(evt);

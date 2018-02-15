@@ -1377,6 +1377,7 @@
                                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                                               <Image iconType="3" name="/images/folder-open.png"/>
                                             </Property>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose output folder"/>
                                           </Properties>
                                           <Events>
                                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPath1ActionPerformed"/>
@@ -2478,6 +2479,7 @@
                                                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                                                   <Image iconType="3" name="/images/folder-open.png"/>
                                                 </Property>
+                                                <Property name="toolTipText" type="java.lang.String" value="Choose output folder"/>
                                               </Properties>
                                               <Events>
                                                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPath2ActionPerformed"/>
@@ -8031,6 +8033,7 @@
                                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                                               <Image iconType="3" name="/images/folder-open.png"/>
                                             </Property>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose output folder"/>
                                           </Properties>
                                           <Events>
                                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPathActionPerformed"/>

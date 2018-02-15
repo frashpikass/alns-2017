@@ -140,7 +140,7 @@ public class PsibeanAdapter implements PropertyChangeListener{
     public void setAlnsPropertiesBean(ALNSPropertiesBean alnsPropertiesBean) {
         solverController.ALNSPropertiesBean oldAlnsPropertiesBean = this.alnsPropertiesBean;
         this.alnsPropertiesBean = alnsPropertiesBean;
-        alnsPropertiesBean.addPropertyChangeListener(this);
+        this.alnsPropertiesBean.addPropertyChangeListener(this);
         propertyChangeSupport.firePropertyChange(PROP_ALNSPROPERTIESBEAN, oldAlnsPropertiesBean, alnsPropertiesBean);
     }
     
@@ -170,6 +170,22 @@ public class PsibeanAdapter implements PropertyChangeListener{
                 propertyChangeSupport.firePropertyChange(PROP_PSI4, oldV[3], newV[3]);
             }
         }
+    }
+    
+    /**
+     * Adds a PropertyChangeListener to start listening to events
+     * @param listener the listener to add
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+    
+    /**
+     * Removes a PropertyChangeListener to stop listening to events
+     * @param listener the listener to remove
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
     
     

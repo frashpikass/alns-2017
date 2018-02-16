@@ -95,9 +95,9 @@ public class ErrorBindingListener extends AbstractBindingListener{
             jtf.setBackground(null);
         }
         
-        String bindName = binding.getName();
-        String msg = "[" + bindName + "] Synced";
-        System.out.println(msg);
+//        String bindName = binding.getName();
+//        String msg = "[" + bindName + "] Synced";
+//        System.out.println(msg);
         
         
         // If the binding is in the error map, remove it and show the last

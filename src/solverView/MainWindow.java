@@ -2814,8 +2814,9 @@ public class MainWindow extends javax.swing.JFrame {
         if(osm != null){
             this.jLabelBestObj.setText(String.valueOf(osm.getBestObj()));
             
-            // Record how much time is left for processing the current instance
-            long timeLeft = (long) osm.getTimelimit()- (long) osm.getElapsedTime();
+            // Record how much time is left for processing all the instances
+            long instancesLeft = (long) osm.getBatchSize() - osm.getInstanceNumber();
+            long timeLeft = (long) osm.getTimelimit()*instancesLeft - (long) osm.getElapsedTime();
             long minutesLeft = TimeUnit.SECONDS.toMinutes(timeLeft);
             
             switch(osm.getStatus()){
@@ -2842,7 +2843,7 @@ public class MainWindow extends javax.swing.JFrame {
                         );
                     }
                     else {
-                        this.jProgressBar1.setString(osm.getProgress()+"%, "
+                        this.jProgressBar1.setString("Instance: "+osm.getProgress()+"%, Batch: "
                                 +minutesLeft+" minutes left");
                     }
                     break;

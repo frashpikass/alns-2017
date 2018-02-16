@@ -150,4 +150,18 @@ public class ErrorBindingListener extends AbstractBindingListener{
             outputLabel.setText("Ready.");
         }
     }
+    
+    /**
+     * Resets a single error from its corresponding binding
+     * @param b the binding to reset an error for
+     */
+    public void resetError(Binding b){
+        if(b.getTargetObject() instanceof JTextField){
+            // get the textfield
+            JTextField jtf = (JTextField) b.getTargetObject();
+
+            // reset the text to the safe stored value
+            jtf.setText(b.getSourceValueForTarget().getValue().toString());
+        }
+    }
 }

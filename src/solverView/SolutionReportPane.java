@@ -171,17 +171,7 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jTextAreaReport.setRows(11);
         jTextAreaReport.setTabSize(4);
         jTextAreaReport.setAutoscrolls(false);
-        jTextAreaReport.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                openReportPopup(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                openReportPopup(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                openReportPopup(evt);
-            }
-        });
+        jTextAreaReport.setComponentPopupMenu(jPopupMenuReport);
         jScrollPaneReport.setViewportView(jTextAreaReport);
 
         jSplitPane1.setLeftComponent(jScrollPaneReport);
@@ -326,14 +316,6 @@ public class SolutionReportPane extends javax.swing.JPanel {
         // TODO add your handling code here:
         parentWindow.loadParametersBean(this.solution.getParameters());
     }//GEN-LAST:event_jButtonReloadParametersActionPerformed
-
-    private void openReportPopup(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openReportPopup
-        // TODO add your handling code here:
-        if(evt.isPopupTrigger()){
-            if(evt.getComponent() == jTextAreaReport)
-                jPopupMenuReport.show(evt.getComponent(), evt.getX(), evt.getY());
-        }
-    }//GEN-LAST:event_openReportPopup
 
     private void jMenuItemCopySelectedTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySelectedTextActionPerformed
         // TODO add your handling code here:

@@ -1003,6 +1003,30 @@
     </Component>
     <Component class="solverView.bindingInterfaces.FolderPathValidator" name="folderPathValidator1">
     </Component>
+    <Container class="javax.swing.JPopupMenu" name="jPopupMenuCopyFromConsole">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCopyFromConsole">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Copy selected text to clipboard"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCopyFromConsoleActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCopyAllFromConsole">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Copy all text in console"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCopyAllFromConsoleActionPerformed"/>
+          </Events>
+        </MenuItem>
+      </SubComponents>
+    </Container>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -8158,6 +8182,11 @@
                                   <Color blue="66" green="0" red="66" type="rgb"/>
                                 </Property>
                               </Properties>
+                              <Events>
+                                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openConsolePopup"/>
+                                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openConsolePopup"/>
+                                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openConsolePopup"/>
+                              </Events>
                             </Component>
                           </SubComponents>
                         </Container>

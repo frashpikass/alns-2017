@@ -12,6 +12,9 @@ import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -70,6 +73,11 @@ public class MainWindow extends javax.swing.JFrame {
     private ErrorBindingListener errorBindingListener;
     
     /**
+     * Clipboard for storing copied text
+     */
+    private Clipboard clipboard;
+    
+    /**
      * Creates new form MainWindow
      */
     public MainWindow() {
@@ -77,6 +85,9 @@ public class MainWindow extends javax.swing.JFrame {
         
         // Redirecting all System Streams to jTextAreaOutput (virtual console)
         redirectSystemStreams();
+        
+        // Initializing the clipboard
+        this.clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         
         // Adding a binding listener to keep track of binding or validation errors
         errorBindingListener = new ErrorBindingListener(jLabelStatus);
@@ -161,6 +172,9 @@ public class MainWindow extends javax.swing.JFrame {
         psibeanAdapter1 = new solverView.bindingInterfaces.PsibeanAdapter();
         positiveOrZeroIntegerValidator1 = new solverView.bindingInterfaces.PositiveOrZeroIntegerValidator();
         folderPathValidator1 = new solverView.bindingInterfaces.FolderPathValidator();
+        jPopupMenuCopyFromConsole = new javax.swing.JPopupMenu();
+        jMenuItemCopyFromConsole = new javax.swing.JMenuItem();
+        jMenuItemCopyAllFromConsole = new javax.swing.JMenuItem();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanelControls = new javax.swing.JPanel();
@@ -451,6 +465,22 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelActions.add(jButtonStopDebugger, gridBagConstraints);
 
         jDialogDeprecatedOptions.getContentPane().add(jPanelActions);
+
+        jMenuItemCopyFromConsole.setText("Copy selected text to clipboard");
+        jMenuItemCopyFromConsole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCopyFromConsoleActionPerformed(evt);
+            }
+        });
+        jPopupMenuCopyFromConsole.add(jMenuItemCopyFromConsole);
+
+        jMenuItemCopyAllFromConsole.setText("Copy all text in console");
+        jMenuItemCopyAllFromConsole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCopyAllFromConsoleActionPerformed(evt);
+            }
+        });
+        jPopupMenuCopyFromConsole.add(jMenuItemCopyAllFromConsole);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CTOWSS ALNS v"+SOFTWARE_VERSION+" (GUI mode)");
@@ -1876,6 +1906,17 @@ public class MainWindow extends javax.swing.JFrame {
         jTextAreaOutput.setMargin(new java.awt.Insets(5, 7, 5, 7));
         jTextAreaOutput.setSelectedTextColor(new java.awt.Color(255, 255, 153));
         jTextAreaOutput.setSelectionColor(new java.awt.Color(102, 0, 102));
+        jTextAreaOutput.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                openConsolePopup(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                openConsolePopup(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                openConsolePopup(evt);
+            }
+        });
         jScrollPaneTextAreaOutput.setViewportView(jTextAreaOutput);
 
         jPanelConsoleOutput.add(jScrollPaneTextAreaOutput);
@@ -2603,6 +2644,27 @@ public class MainWindow extends javax.swing.JFrame {
         this.errorBindingListener.resetAllErrors();
         //updateAllJTextFieldsFromBindings();
     }//GEN-LAST:event_jButtonResetParametersALNSActionPerformed
+
+    private void jMenuItemCopyFromConsoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopyFromConsoleActionPerformed
+        // TODO add your handling code here:
+        String selectedText = jTextAreaOutput.getSelectedText();
+        clipboard.setContents(new StringSelection(selectedText), null);
+        
+    }//GEN-LAST:event_jMenuItemCopyFromConsoleActionPerformed
+
+    private void openConsolePopup(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openConsolePopup
+        // TODO add your handling code here:
+        if(evt.isPopupTrigger()){
+            if(evt.getComponent() == jTextAreaOutput)
+                jPopupMenuCopyFromConsole.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_openConsolePopup
+
+    private void jMenuItemCopyAllFromConsoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopyAllFromConsoleActionPerformed
+        // TODO add your handling code here:
+        String selectedText = jTextAreaOutput.getText();
+        clipboard.setContents(new StringSelection(selectedText), null);
+    }//GEN-LAST:event_jMenuItemCopyAllFromConsoleActionPerformed
     
     /**
      * Restore the value of all JTextFields from their bound object
@@ -3081,6 +3143,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelThreadsALNS;
     private javax.swing.JLabel jLabelThreadsMIPS;
     private javax.swing.JList<String> jListInstances;
+    private javax.swing.JMenuItem jMenuItemCopyAllFromConsole;
+    private javax.swing.JMenuItem jMenuItemCopyFromConsole;
     private javax.swing.JPanel jPaneMIPS;
     private javax.swing.JPanel jPaneMIPSActions;
     private javax.swing.JPanel jPanelALNS;
@@ -3111,6 +3175,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelStatusBar;
     private javax.swing.JPanel jPanelStopClear;
     private javax.swing.JPanel jPanelnstances;
+    private javax.swing.JPopupMenu jPopupMenuCopyFromConsole;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JRadioButton jRadioButtonALNS;
     private javax.swing.JRadioButton jRadioButtonMIPS;

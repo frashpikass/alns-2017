@@ -288,6 +288,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonOpenOutputFolder = new javax.swing.JButton();
         jPanelStatusBar = new javax.swing.JPanel();
         jPanelSBTop = new javax.swing.JPanel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         jLabelStatus = new javax.swing.JLabel();
         jPanelSBBottom = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
@@ -1944,6 +1945,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelStatusBar.setLayout(new java.awt.BorderLayout());
 
         jPanelSBTop.setLayout(new javax.swing.BoxLayout(jPanelSBTop, javax.swing.BoxLayout.LINE_AXIS));
+        jPanelSBTop.add(filler1);
 
         jLabelStatus.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelStatus.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -3010,6 +3012,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupInstance;
     private javax.swing.ButtonGroup buttonGroupSolver;
     private solverView.bindingInterfaces.DoubleConverter doubleConverter1;
+    private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler3;
     private solverView.bindingInterfaces.IntegerConverter integerConverter1;
     private javax.swing.JButton jButtonCloseAllReports;

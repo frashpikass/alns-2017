@@ -553,7 +553,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelMIPSParameters.add(jLabelOutputFolderPath1, gridBagConstraints);
 
-        jTextFieldOutputFolderPath1.setToolTipText("Choose the output directory");
+        jTextFieldOutputFolderPath1.setToolTipText("Choose the output folder");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: output folder");
         bindingGroup.addBinding(binding);
@@ -576,7 +576,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMIPSParameters.add(jTextFieldOutputFolderPath1, gridBagConstraints);
 
         jButtonOutputFolderPath1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
-        jButtonOutputFolderPath1.setToolTipText("Choose output folder");
+        jButtonOutputFolderPath1.setToolTipText("Choose the output folder");
         jButtonOutputFolderPath1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderPath1ActionPerformed(evt);
@@ -597,7 +597,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelMIPSParameters.add(jLabel26, gridBagConstraints);
 
-        jTextFieldTimeLimit1.setToolTipText("Sets how long (in seconds) should the MIPS solver run for");
+        jTextFieldTimeLimit1.setToolTipText("Maximum runtime for the MIPS solver (in seconds)");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.timeLimit}"), jTextFieldTimeLimit1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: solver time limit");
         binding.setConverter(doubleConverter1);
@@ -622,7 +622,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMIPSParameters.add(jTextFieldTimeLimit1, gridBagConstraints);
 
         jCheckBoxForceHeuristicConstraints1.setText("Use heuristic constraints in MIPS");
-        jCheckBoxForceHeuristicConstraints1.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br>These constraints clean up the model to speed up the search.\n<br><b>Warning:</b> forcing these constraints on might turn a feasible model into an infeasible one.\n<br>Turn this option off if the log says the model is infeasible!");
+        jCheckBoxForceHeuristicConstraints1.setToolTipText("<html>If checked, heuristic constraints will always be used every time the MIPS solver is run.\n<br>These constraints clean up the model to speed up the search.\n<br><b>Warning:</b> forcing these constraints might turn a feasible model into an infeasible one.\n<br>Turn this option off if the log says the model is infeasible!");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.forceHeuristicConstraints}"), jCheckBoxForceHeuristicConstraints1, org.jdesktop.beansbinding.BeanProperty.create("selected"), "MIPS: force heuristic constraints");
         bindingGroup.addBinding(binding);
@@ -658,7 +658,7 @@ public class MainWindow extends javax.swing.JFrame {
         jSliderThreadsMIPS.setMinorTickSpacing(1);
         jSliderThreadsMIPS.setPaintLabels(true);
         jSliderThreadsMIPS.setPaintTicks(true);
-        jSliderThreadsMIPS.setToolTipText("<html>\nSelect how many threads should be used by the MIPS solver (also affects ALNS).\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
+        jSliderThreadsMIPS.setToolTipText("<html>\nSelect how many threads should be used by the MIPS solver.\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.numThreads}"), jSliderThreadsMIPS, org.jdesktop.beansbinding.BeanProperty.create("value"), "MIPS: Number of threads slider");
         bindingGroup.addBinding(binding);
@@ -674,7 +674,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanelMIPSParameters.add(jSliderThreadsMIPS, gridBagConstraints);
 
-        jLabelThreadsMIPS.setText("<html>default: number of cores\n<br><i>Avoid if CPU has hyperthreading</i>");
+        jLabelThreadsMIPS.setText("<html><b>default:</b> number of cores\n<br><i>Avoid if CPU has hyperthreading</i>");
         jLabelThreadsMIPS.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabelThreadsMIPS.setPreferredSize(new java.awt.Dimension(155, 35));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -749,7 +749,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelALNSGeneralParams.add(jLabelOutputFolderPath2, gridBagConstraints);
 
-        jTextFieldOutputFolderPath2.setToolTipText("Choose the output directory");
+        jTextFieldOutputFolderPath2.setToolTipText("Choose the output folder");
         jTextFieldOutputFolderPath2.setPreferredSize(new java.awt.Dimension(60, 24));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath2, org.jdesktop.beansbinding.BeanProperty.create("text"), "ALNS output folder");
@@ -782,7 +782,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelALNSGeneralParams.add(jLabel28, gridBagConstraints);
 
         jButtonOutputFolderPath2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
-        jButtonOutputFolderPath2.setToolTipText("Choose output folder");
+        jButtonOutputFolderPath2.setToolTipText("Choose the output folder");
         jButtonOutputFolderPath2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderPath2ActionPerformed(evt);
@@ -837,7 +837,7 @@ public class MainWindow extends javax.swing.JFrame {
         jSliderThreadsALNS.setMinorTickSpacing(1);
         jSliderThreadsALNS.setPaintLabels(true);
         jSliderThreadsALNS.setPaintTicks(true);
-        jSliderThreadsALNS.setToolTipText("<html>\nSelect how many threads should be used by the MIPS solver (also affects ALNS).\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
+        jSliderThreadsALNS.setToolTipText("<html>\nSelect how many threads should be used by the solver.\n<br/>Set it to 0 to use all the available CPU cores.\n<br/><b>NOTE:</b> if your CPU has hyperthreading, we suggest you to use only half of the available cores.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.numThreads}"), jSliderThreadsALNS, org.jdesktop.beansbinding.BeanProperty.create("value"), "ALNS: Number of threads slider");
         bindingGroup.addBinding(binding);
@@ -853,7 +853,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 3;
         jPanelALNSGeneralParams.add(jSliderThreadsALNS, gridBagConstraints);
 
-        jLabelThreadsALNS.setText("<html>default: number of cores\n<br><i>Avoid if CPU has hyperthreading</i>");
+        jLabelThreadsALNS.setText("<html><b>default:</b> number of cores\n<br><i>Avoid if CPU has hyperthreading</i>");
         jLabelThreadsALNS.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabelThreadsALNS.setPreferredSize(new java.awt.Dimension(155, 35));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -872,7 +872,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         jPanelALNSGeneralParams.add(jLabel11, gridBagConstraints);
 
-        jTextFieldTimeLimitLocalSearch.setToolTipText("<html>\n<b>ALNS local search time limit</b>\n<br>Maximum runtime (in seconds) for the local search process.\n<br>A MIPS local search is run at the end of every segment, when possible.\n<br>The local search process takes advantage of all the heuristic constraints\n<br>defined by our Optimization Algorithms team.");
+        jTextFieldTimeLimitLocalSearch.setToolTipText("<html>\n<b>ALNS local search time limit</b>\n<br>Maximum runtime (in seconds) for the local search process.\n<br>A MIPS local search is run at the end of every segment, when possible.\n<br>The local search process takes advantage of as many heuristic constraints\n<br>as possible to simplify the model and speed up the solver.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.timeLimitLocalSearch}"), jTextFieldTimeLimitLocalSearch, org.jdesktop.beansbinding.BeanProperty.create("text"), "timeLimitLocalSearch");
         binding.setConverter(longConverter1);
@@ -909,7 +909,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelProgression.setLayout(jPanelProgressionLayout);
 
         jTextFieldQStart.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldQStart.setToolTipText("<html>\n<b>Initial Degree of Destruction</b>\n<br>Initial value of q (degree of destruction) at the beginning of the first ALNS segment.\n<br>q determines how many clusters are to be inserted by the destruction heuristics.\n<br>The value of q increases at the end of each segment by <tt>qDelta</tt>.");
+        jTextFieldQStart.setToolTipText("<html>\n<b>Initial Degree of Destruction</b>\n<br>Initial value of <tt>q</tt> (degree of destruction) at the beginning of the first ALNS segment.\n<br><tt>q</tt> determines how many clusters are to be inserted by the destruction heuristics.\n<br>The value of <tt>q</tt> increases at the end of each segment by <tt>qDelta</tt>.");
         jTextFieldQStart.setPreferredSize(new java.awt.Dimension(45, 24));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.qStart}"), jTextFieldQStart, org.jdesktop.beansbinding.BeanProperty.create("text"), "Initial q");
@@ -939,7 +939,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelProgression.add(jLabel7, gridBagConstraints);
 
         jTextFieldQDelta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldQDelta.setToolTipText("<html>\n<b>Degree of Destruction increment</b>\n<br>Constant increment of q at the end of every segment.");
+        jTextFieldQDelta.setToolTipText("<html>\n<b>Degree of Destruction increment</b>\n<br>Constant increment of <tt>q</tt> at the end of every segment.");
         jTextFieldQDelta.setPreferredSize(new java.awt.Dimension(45, 24));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.qDelta}"), jTextFieldQDelta, org.jdesktop.beansbinding.BeanProperty.create("text"), "Delta q");
@@ -969,7 +969,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelProgression.add(jLabel6, gridBagConstraints);
 
         jTextFieldSegmentSize.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldSegmentSize.setToolTipText("<html> \n<b>ALNS segment size</b>\n<br>Maximum number of iterations in an ALNS optimization segment.\n<br>Every iteration includes the application of a destroy heuristic over\n<br>the previous feasible solution, followed by the application of a\n<br>repair heuristic to bring the destroyed solution back to feasibility.\n<br>This parameter can be throttled by the \"Maximum iterations without\n<br>improvement in a segment\" parameter.");
+        jTextFieldSegmentSize.setToolTipText("<html> \n<b>ALNS segment size</b>\n<br>Maximum number of iterations in an ALNS optimization segment.\n<br>Every iteration includes the application of a destroy heuristic over\n<br>the previous feasible solution, followed by the application of a\n<br>repair heuristic to bring the destroyed solution back to feasibility.\n<br>This parameter can be throttled by the\n<br><tt>Maximum iterations w/o improvement in a segment</b> parameter.");
         jTextFieldSegmentSize.setPreferredSize(new java.awt.Dimension(45, 24));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.segmentSize}"), jTextFieldSegmentSize, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max iterations per segment");
@@ -1035,7 +1035,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelProgression.add(jLabel15, gridBagConstraints);
 
         jTextFieldAlpha.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldAlpha.setToolTipText("<html>\n<b>Simulated annealing decay</b>\n<br>This is the decay parameter of the update process for <tt>Temperature.</tt>\n<br>This value should be a real number in the interval [0,1].\n<br>The temperature is updated at the end of every segment like\n<br><tt>newTemperature</tt> = <tt>alpha</tt>*<tt>oldTemperature</tt>\n<br>A slowly decreasing temperature (<tt>alpha</tt>-&gt;1)\n<br>will make it more likely to accept worse solutions at the\n<br>beginning of a segment, but it might find a better solution.\n<br>However a slowly decreasing temperature will take longer to converge\n<br>to a better solution.\n<br>\n<br><b>NOTE:</b> to be changed in accordance with <tt>Segment Size</tt>");
+        jTextFieldAlpha.setToolTipText("<html>\n<b>Simulated annealing decay</b>\n<br>This is the decay parameter of the update process for <tt>Temperature.</tt>\n<br>This value should be a real number in the interval [0,1].\n<br>The temperature is updated at the end of every segment like\n<br><tt>newTemperature</tt> = <tt>alpha</tt>*<tt>oldTemperature</tt>\n<br>A slowly decreasing temperature (<tt>alpha</tt>-&gt;1)\n<br>will make it more likely to accept worse solutions at the\n<br>beginning of a segment, but it might find a better solution.\n<br>However a slowly decreasing temperature will take longer to converge\n<br>to a better solution.\n<br>\n<br><b>NOTE:</b> to be changed in accordance with <tt>Max iterations per segment</tt> and\n<br><tt>Max iterations w/o improvement in a segment</tt>.");
         jTextFieldAlpha.setPreferredSize(new java.awt.Dimension(45, 24));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.alpha}"), jTextFieldAlpha, org.jdesktop.beansbinding.BeanProperty.create("text"), "Alpha");
@@ -1057,7 +1057,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldAlpha.getAccessibleContext().setAccessibleDescription("<html>\n<b>Simulated annealing</b>\n<br>This is the decay parameter of the update process for <tt>Temperature.</tt>\n<br>This value should be a double in the interval [0,1].\n<br>The temperature is updated at the end of every segment like\n<br><tt>newTemperature</tt> = <tt>alpha</tt>*<tt>oldTemperature</tt>\n<br>A slowly decreasing temperature (<tt>alpha</tt>-&gt;1)\n<br>will make it more likely to accept worse solutions at the\n<br>beginning, but it might find a better solution in a longer time.\n<br><b>NOTE:</b> to be changed in accordance with <tt>Segment Size</tt>");
 
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel9.setText("Alpha (Simulated Annealing temp. decay)");
+        jLabel9.setText("Alpha (Simulated Annealing temperature decay)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 6;
@@ -1082,7 +1082,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelHeuristics.add(jLabel8, gridBagConstraints);
 
         jTextFieldLambda.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextFieldLambda.setToolTipText("<html>\n<b>ALNS heuristic weight decay</b>\n<br>This is the decay parameter of the update process for heuristic method weights.\n<br>This value should be a floating point number (double) in the interval [0,1].\n<br>Heuristic method weights are updated at the end of every iteration\n<br>following the convex combination:\n<br> <tt>newWeight</tt> = <tt>lambda</tt>*<tt>oldWeight</tt> + (1-<tt>lambda</tt>)*<tt>psi</tt>\n<br>where <tt>psi</tt> is a value that indicates the relative score to give to an heuristic.");
+        jTextFieldLambda.setToolTipText("<html>\n<b>ALNS heuristic weight decay</b>\n<br>This is the decay parameter of the update process for heuristic method weights.\n<br>This value should be a real number in the interval [0,1].\n<br>Heuristic method weights are updated at the end of every iteration\n<br>following the convex combination:\n<br> <tt>newWeight</tt> = <tt>lambda</tt>*<tt>oldWeight</tt> + (1-<tt>lambda</tt>)*<tt>psi</tt>\n<br>where <tt>psi</tt> is a value that indicates the relative score to give to an heuristic\n<br>(defined by parameter <tt>Heuristic scores (values for psi)</tt>)");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.lambda}"), jTextFieldLambda, org.jdesktop.beansbinding.BeanProperty.create("text"), "Lambda");
         binding.setConverter(doubleConverter1);
@@ -1106,7 +1106,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxRepairHighCostRemoval.setText("RepairHighCostRemoval");
-        jCheckBoxRepairHighCostRemoval.setToolTipText("Removes the first q clusters with the highest cost from the current solution.");
+        jCheckBoxRepairHighCostRemoval.setToolTipText("Removes the first <tt>q</tt> clusters with the highest cost from the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairHighCostRemoval}"), jCheckBoxRepairHighCostRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairHighCostRemoval");
         bindingGroup.addBinding(binding);
@@ -1124,7 +1124,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.add(jCheckBoxRepairHighCostRemoval, gridBagConstraints);
 
         jCheckBoxRepairRandomRemoval.setText("RepairRandomRemoval");
-        jCheckBoxRepairRandomRemoval.setToolTipText("Removes at most q randomly picked clusters from the current solution.");
+        jCheckBoxRepairRandomRemoval.setToolTipText("Removes at most <tt>q</tt> randomly picked clusters from the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairRandomRemoval}"), jCheckBoxRepairRandomRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairRandomRemoval");
         bindingGroup.addBinding(binding);
@@ -1142,7 +1142,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.add(jCheckBoxRepairRandomRemoval, gridBagConstraints);
 
         jCheckBoxRepairTravelTime.setText("RepairTravelTime");
-        jCheckBoxRepairTravelTime.setToolTipText("<html>\nRemoves the first cluster with the least profit/cost\n<br>ratio, then removes the other q-1 clusters which are the most similar to\n<br>the first one. The similarity criterion is computed as follows:\n<ul>\n<li> 1/3 * (distanceBetween(i,j) + distanceBetween(firstNode,j) + distanceBetween(j,lastNode))\n<li> i = first cluster removed from solution\n<li> j = cluster to evaluate for removal\n</ul>");
+        jCheckBoxRepairTravelTime.setToolTipText("<html>\nRemoves the first cluster with the least profit/cost\n<br>ratio, then removes the other <tt>q-1</tt> clusters which are the most similar to\n<br>the first one. The similarity criterion is computed as follows:\n<ul>\n<li> <tt>1/3 * (distanceBetween(i,j) + distanceBetween(startingDeposit, j) + distanceBetween(j, endingDeposit))</tt>\n<li> <tt>i</tt>= first cluster removed from solution\n<li> <tt>j</tt> = cluster to evaluate for removal\n</ul>");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairTravelTime}"), jCheckBoxRepairTravelTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairTravelTime");
         bindingGroup.addBinding(binding);
@@ -1160,7 +1160,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.add(jCheckBoxRepairTravelTime, gridBagConstraints);
 
         jCheckBoxRepairVehicleTime.setText("RepairVehicleTime");
-        jCheckBoxRepairVehicleTime.setToolTipText("<html>\nRemoves the first cluster with the least profit/cost\n<br>ratio, then removes the other q-1 clusters which are the most similar to\n<br>the first one.\n<br>The similarity criterion is computed as follows:\n<br><ul>\n<li>Find v as the vehicle with the longest service time in the first cluster</li>\n<li>For every node n in the first cluster get the duration of services servable by v.\n<br>Sum all the values to get the total service time.</li>\n<li>Divide the previous value by the total duration of services in the clusters</li>\n<li>Take the absolute value of the difference between the ratio for the\n<br>first cluster removed and the ratio for every other cluster as the similarity criterion.</li>\n</ul>");
+        jCheckBoxRepairVehicleTime.setToolTipText("<html>\nRemoves the first cluster <tt>C</tt> with the least profit/cost ratio in solution,\n<br>then removes the other <tt>q-1</tt> clusters which are the most similar to\n<br>the first one.\n<br>The similarity criterion is computed as follows:\n<br><ul>\n<li>Find <tt>v</tt> as the vehicle with the longest service time in the first cluster <tt>C</tt></li>\n<li>Compute <tt>ratio(C) := maxCost(v, C) / ( 1 + totalCost(C) )</tt></li>\n<li>Compute for every other cluster <tt>c</tt> in solution\n<br><tt>ratio(c) := maxCost(v, c) / ( 1 + totalCost(c) )</tt></li>\n<li>Similarity criterion: <tt>sim(c) := |ratio(c) - ratio(C)|</tt></li>\n</ul>");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairVehicleTime}"), jCheckBoxRepairVehicleTime, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairVehicleTime");
         bindingGroup.addBinding(binding);
@@ -1178,7 +1178,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.add(jCheckBoxRepairVehicleTime, gridBagConstraints);
 
         jCheckBoxRepairWorstRemoval.setText("RepairWorstRemoval");
-        jCheckBoxRepairWorstRemoval.setToolTipText("Removes the first q clusters with the least profit/cost ratio.");
+        jCheckBoxRepairWorstRemoval.setToolTipText("Removes the first <tt>q</tt> clusters with the least profit/cost ratio.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairWorstRemoval}"), jCheckBoxRepairWorstRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairWorstRemoval");
         bindingGroup.addBinding(binding);
@@ -1205,7 +1205,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxDestroyGreedyCostInsertion.setText("DestroyGreedyCostInsertion");
-        jCheckBoxDestroyGreedyCostInsertion.setToolTipText("Inserts the q clusters with the least cost  into the current solution in a greedy way.");
+        jCheckBoxDestroyGreedyCostInsertion.setToolTipText("Inserts the <tt>q</tt> clusters with the least cost  into the current solution in a greedy way.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyCostInsertion}"), jCheckBoxDestroyGreedyCostInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyCostInsertion");
         bindingGroup.addBinding(binding);
@@ -1223,7 +1223,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyCostInsertion, gridBagConstraints);
 
         jCheckBoxDestroyGreedyBestInsertion.setText("DestroyGreedyBestInsertion");
-        jCheckBoxDestroyGreedyBestInsertion.setToolTipText("Inserts the q clusters with the highest profit to cost ratio into the current solution in a greedy way.");
+        jCheckBoxDestroyGreedyBestInsertion.setToolTipText("Inserts the <tt>q</tt> clusters with the highest profit to cost ratio into the current solution in a greedy way.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyBestInsertion}"), jCheckBoxDestroyGreedyBestInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyBestInsertion");
         bindingGroup.addBinding(binding);
@@ -1241,7 +1241,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyBestInsertion, gridBagConstraints);
 
         jCheckBoxDestroyGreedyProfitInsertion.setText("DestroyGreedyProfitInsertion");
-        jCheckBoxDestroyGreedyProfitInsertion.setToolTipText("Inserts the q clusters with the highest profit into the current solution in a greedy way.");
+        jCheckBoxDestroyGreedyProfitInsertion.setToolTipText("Inserts the <tt>q</tt> clusters with the highest profit into the current solution in a greedy way.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyProfitInsertion}"), jCheckBoxDestroyGreedyProfitInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyProfitInsertion");
         bindingGroup.addBinding(binding);
@@ -1259,7 +1259,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyProfitInsertion, gridBagConstraints);
 
         jCheckBoxDestroyRandomInsertion.setText("DestroyRandomInsertion");
-        jCheckBoxDestroyRandomInsertion.setToolTipText("Inserts q randomly picked clusters into the current solution.");
+        jCheckBoxDestroyRandomInsertion.setToolTipText("Inserts <tt>q</tt> randomly picked clusters into the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyRandomInsertion}"), jCheckBoxDestroyRandomInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyRandomInsertion");
         bindingGroup.addBinding(binding);
@@ -1282,7 +1282,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyRandomInsertion, gridBagConstraints);
 
         jCheckBoxDestroyCloseToBarycenter.setText("DestroyCloseToBarycenter");
-        jCheckBoxDestroyCloseToBarycenter.setToolTipText("Inserts the first q available clusters which are the closest\n<br>to the barycenter of the current solution.");
+        jCheckBoxDestroyCloseToBarycenter.setToolTipText("Inserts the first <tt>q</tt> available clusters which are the closest\n<br>to the barycenter of the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyCloseToBarycenter}"), jCheckBoxDestroyCloseToBarycenter, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyCloseToBarycenter");
         bindingGroup.addBinding(binding);
@@ -1316,7 +1316,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.setLayout(new javax.swing.BoxLayout(jPanelPsi, javax.swing.BoxLayout.LINE_AXIS));
 
         jTextFieldPsi0.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi0.setToolTipText("<html>\n<b>ALNS h. score for new global optimum</b>\n<br><tt>w1</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be a new global optimum.");
+        jTextFieldPsi0.setToolTipText("<html>\n<b>ALNS heuristic score for new global optimum</b>\n<br><tt>omega1</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be a new global optimum.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi1}"), jTextFieldPsi0, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 1");
         binding.setConverter(doubleConverter1);
@@ -1336,7 +1336,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.add(jTextFieldPsi0);
 
         jTextFieldPsi1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi1.setToolTipText("<html>\n<b>ALNS h. score for better solution</b>\n<br><tt>w2</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be better than the previous one.");
+        jTextFieldPsi1.setToolTipText("<html>\n<b>ALNS heuristic score for a better solution</b>\n<br><tt>omega2</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be better than the previous one.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi2}"), jTextFieldPsi1, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 2");
         binding.setConverter(doubleConverter1);
@@ -1356,7 +1356,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.add(jTextFieldPsi1);
 
         jTextFieldPsi2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi2.setToolTipText("<html>\n<b>ALNS h. score for worse solution, but accepted</b>\n<br><tt>w3</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is worse than the previous one but is accepted anyway.");
+        jTextFieldPsi2.setToolTipText("<html>\n<b>ALNS heuristic score for worse solution, but accepted</b>\n<br><tt>omega3</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is worse than the previous one but is accepted anyway by simulated annealing.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi3}"), jTextFieldPsi2, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 3");
         binding.setConverter(doubleConverter1);
@@ -1376,7 +1376,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelPsi.add(jTextFieldPsi2);
 
         jTextFieldPsi3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldPsi3.setToolTipText("<html>\n<b>ALNS h. score for solution rejected</b>\n<br><tt>w4</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be worse than the previous one and is rejected.");
+        jTextFieldPsi3.setToolTipText("<html>\n<b>ALNS heuristic score for rejected solution</b>\n<br><tt>omega4</tt> is the new suggested score for the selected heuristics\n<br>if the new solution is found to be worse than the previous one and is rejected by simulated annealing.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, psibeanAdapter1, org.jdesktop.beansbinding.ELProperty.create("${psi4}"), jTextFieldPsi3, org.jdesktop.beansbinding.BeanProperty.create("text"), "Psi - omega 4");
         binding.setConverter(doubleConverter1);
@@ -1402,7 +1402,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelHeuristics.add(jPanelPsi, gridBagConstraints);
 
         jTextFieldRewardForBestSegmentHeuristics.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextFieldRewardForBestSegmentHeuristics.setToolTipText("<html>\n<b>ALNS reward for best h. in segment</b>\n<br>A scaling factor which is applied to the weight of the best heuristics of the previous segment,\n<br>at the beginning of the next segment.");
+        jTextFieldRewardForBestSegmentHeuristics.setToolTipText("<html>\n<b>ALNS reward for best heuristics in segment</b>\n<br>A scaling factor which is applied to the weight of the best heuristics of the previous segment,\n<br>at the beginning of the next segment.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.rewardForBestSegmentHeuristics}"), jTextFieldRewardForBestSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "Reward for best segment heuristics");
         binding.setConverter(doubleConverter1);
@@ -1435,7 +1435,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelHeuristics.add(jLabel13, gridBagConstraints);
 
         jTextFieldPunishmentForWorstSegmentHeuristics.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextFieldPunishmentForWorstSegmentHeuristics.setToolTipText("<html>\n<b>ALNS punishment for h. in segment</b>\n<br>A scaling factor which is applied to the weight of the worst heuristics of the previous segment,\n<br>at the beginning of the next segment.");
+        jTextFieldPunishmentForWorstSegmentHeuristics.setToolTipText("<html>\n<b>ALNS punishment for worst heuristics in segment</b>\n<br>A scaling factor which is applied to the weight of the worst heuristics of the previous segment,\n<br>at the beginning of the next segment.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.punishmentForWorstSegmentHeuristics}"), jTextFieldPunishmentForWorstSegmentHeuristics, org.jdesktop.beansbinding.BeanProperty.create("text"), "Punishment for worst segment heuristics");
         binding.setConverter(doubleConverter1);
@@ -1489,7 +1489,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelClusterRoulette.setLayout(jPanelClusterRouletteLayout);
 
         jTextFieldPunishmentGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldPunishmentGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the new probability of being chosen for nerfed\n<br>clusters (clusters which haven't behaved well in the segment).\n<br>Must be a double in range [0,1].");
+        jTextFieldPunishmentGamma.setToolTipText("<html>\n<b>Cluster roulette punishment gamma</b>\n<br>This parameter is the new probability of being chosen for nerfed\n<br>clusters (clusters which haven't behaved well in the segment).\n<br>Must be a real number in range [0,1].");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.punishmentGamma}"), jTextFieldPunishmentGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "Punshment Gamma");
         binding.setConverter(doubleConverter1);
@@ -1517,7 +1517,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelClusterRoulette.add(jLabel21, gridBagConstraints);
 
         jTextFieldCooldownGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldCooldownGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the scaling factor used in the cooldown process.\n<br>Must be a small double in range [0,1].\n<br><li>A hot (freshly selected) cluster will have a new probability of\nbeing chosen which is <i>cooldownGamma</i> times smaller</li>\n<br>Probability for hot clusters is downscaled like\n<br><li><i>newProbability</i> = (1 -\n<i>cooldownGamma</i>)*<i>oldProbability</i></li>");
+        jTextFieldCooldownGamma.setToolTipText("<html>\n<b>Cluster roulette cooldown gamma</b>\n<br>This parameter is the scaling factor used in the cooldown process.\n<br>Must be a small real number in range [0,1].\n<br><li>A hot (freshly selected) cluster will have a new probability of\nbeing chosen which is <tt>cooldownGamma</tt> times smaller</li>\n<br>Probability for hot clusters is downscaled like\n<br><li><tt><i>newProbability</i> = (1 -\n<i>cooldownGamma</i>) * <i>oldProbability</i></tt></li>");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.cooldownGamma}"), jTextFieldCooldownGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "Cooldown Gamma");
         binding.setConverter(doubleConverter1);
@@ -1545,7 +1545,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelClusterRoulette.add(jLabel22, gridBagConstraints);
 
         jTextFieldWarmupGamma.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldWarmupGamma.setToolTipText("<html>\n<b>Cluster roulette</b>\n<br>This parameter is the scaling factor used in the warmup process.\n<br>Must be a small double in range [0,1].\n<br><li>A cold (not freshly selected) cluster will have a new probability\nof being chosen which is <i>warmupGamma</i> times bigger</li>\n\n<br>Probability for cold clusters is upscaled like\n<br><li><i>newProbability</i> = (1 -\n<i>warmupGamma</i>)*<i>oldProbability</i>+<i>warmupGamma</i></li>");
+        jTextFieldWarmupGamma.setToolTipText("<html>\n<b>Cluster roulette warmup gamma</b>\n<br>This parameter is the scaling factor used in the warmup process.\n<br>Must be a small real number in range [0,1].\n<br><li>A cold (not freshly selected) cluster will have a new probability\nof being chosen which is <tt>warmupGamma</tt> times bigger</li>\n\n<br>Probability for cold clusters is upscaled like\n<br><li><tt><i>newProbability</i> = (1 -\n<i>warmupGamma</i>) * <i>oldProbability</i> + <i>warmupGamma</i></tt></li>");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.warmupGamma}"), jTextFieldWarmupGamma, org.jdesktop.beansbinding.BeanProperty.create("text"), "Warmup Gamma");
         binding.setConverter(doubleConverter1);
@@ -1573,7 +1573,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelClusterRoulette.add(jLabel23, gridBagConstraints);
 
         jTextFieldNerfBarrier.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldNerfBarrier.setToolTipText("<html>\n<b>Cooldown - Bad Cluster Nerfing at segment end</b>\n<br>Clusters that have had a \"chance of being chosen\" less than the average\nfor more than nerfBarrier% of the time in a segment will be surely\npunished to make them less available in the following segment.\n\n<br>This will also impact on the local search: clusters that have a\nprobability of selection below the average won't be included in those\navailable for the local search.\n\n<br>Must be a double in range [0,1].");
+        jTextFieldNerfBarrier.setToolTipText("<html>\n<b>Cluster roulette nerf barrier</b>\n<br>Clusters that have had a \"cluster roulette chance of being chosen\" less than the average\n<br>for more than <tt>nerfBarrier%</tt> of the time in a segment will be\n<br>punished to make them less available for the following segment.\n\n<br><br>This will also impact the local search: clusters that have a\n<br>probability of selection below the average won't be included in those\n<br>available for the local search.\n\n<br><br>Must be a real number in range [0,1].");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.nerfBarrier}"), jTextFieldNerfBarrier, org.jdesktop.beansbinding.BeanProperty.create("text"), "Nerf Barrier");
         binding.setConverter(doubleConverter1);
@@ -1649,7 +1649,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelFineTunings.add(jLabel18, gridBagConstraints);
 
         jTextFieldMaxSegments.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldMaxSegments.setToolTipText("<html>\nMaximum number of segments for an ALNS run.\n<br>When this number of segments is reached, the ALNS solver\n<br>terminates its execution.\n<br>This value is throttled by the \"Max segments without improvement\"\n<br>parameter.");
+        jTextFieldMaxSegments.setToolTipText("<html>\n<b>Maximum number of segments for an ALNS run.</b>\n<br>When this number of segments is reached, the ALNS solver\n<br>terminates its execution.\n<br>This value is throttled by the <tt>Max segments w/o improvement</tt>\n<br>parameter.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegments}"), jTextFieldMaxSegments, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max segments for an ALNS run");
         binding.setConverter(longConverter1);
@@ -1678,7 +1678,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelFineTunings.add(jLabel2, gridBagConstraints);
 
         jTextFieldMaxSegmentsWithoutImprovement.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldMaxSegmentsWithoutImprovement.setToolTipText("<html>\nMaximum number of segments without improvement for an ALNS run.\n<br>When this number of segments without improvement is reached,\n<br>the ALNS solver terminates its execution.");
+        jTextFieldMaxSegmentsWithoutImprovement.setToolTipText("<html>\n<b>Maximum number of segments without improvement for an ALNS run.</b>\n<br>When this number of segments without improvement is reached,\n<br>the ALNS solver terminates its execution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.maxSegmentsWithoutImprovement}"), jTextFieldMaxSegmentsWithoutImprovement, org.jdesktop.beansbinding.BeanProperty.create("text"), "Max segments without improvement");
         binding.setConverter(longConverter1);
@@ -1769,7 +1769,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonRunRelaxed.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/play.png"))); // NOI18N
         jButtonRunRelaxed.setText("Solve relaxed model");
-        jButtonRunRelaxed.setToolTipText("Solve the relaxation of all models with the specified options.");
+        jButtonRunRelaxed.setToolTipText("Solve the relaxation of all models with the specified parameters.");
         buttonGroupActions.add(jButtonRunRelaxed);
         jButtonRunRelaxed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1785,7 +1785,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRelaxedParameters.setLayout(new java.awt.GridBagLayout());
 
         jButtonOutputFolderPath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder-open.png"))); // NOI18N
-        jButtonOutputFolderPath.setToolTipText("Choose output folder");
+        jButtonOutputFolderPath.setToolTipText("Choose the output folder");
         jButtonOutputFolderPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderPathActionPerformed(evt);
@@ -1798,7 +1798,7 @@ public class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
         jPanelRelaxedParameters.add(jButtonOutputFolderPath, gridBagConstraints);
 
-        jTextFieldOutputFolderPath.setToolTipText("Choose the output directory");
+        jTextFieldOutputFolderPath.setToolTipText("Choose the output folder");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "outputFolderPath");
         bindingGroup.addBinding(binding);

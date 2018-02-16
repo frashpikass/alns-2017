@@ -1299,7 +1299,7 @@
                                         </Component>
                                         <Component class="javax.swing.JTextField" name="jTextFieldOutputFolderPath1">
                                           <Properties>
-                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output folder"/>
                                           </Properties>
                                           <BindingProperties>
                                             <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath1" targetPath="text" updateStrategy="0" immediately="false">
@@ -1322,7 +1322,7 @@
                                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                                               <Image iconType="3" name="/images/folder-open.png"/>
                                             </Property>
-                                            <Property name="toolTipText" type="java.lang.String" value="Choose output folder"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output folder"/>
                                           </Properties>
                                           <Events>
                                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPath1ActionPerformed"/>
@@ -1346,7 +1346,7 @@
                                         </Component>
                                         <Component class="javax.swing.JTextField" name="jTextFieldTimeLimit1">
                                           <Properties>
-                                            <Property name="toolTipText" type="java.lang.String" value="Sets how long (in seconds) should the MIPS solver run for"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="Maximum runtime for the MIPS solver (in seconds)"/>
                                           </Properties>
                                           <BindingProperties>
                                             <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.timeLimit}" target="jTextFieldTimeLimit1" targetPath="text" updateStrategy="0" immediately="false">
@@ -1373,7 +1373,7 @@
                                         <Component class="javax.swing.JCheckBox" name="jCheckBoxForceHeuristicConstraints1">
                                           <Properties>
                                             <Property name="text" type="java.lang.String" value="Use heuristic constraints in MIPS"/>
-                                            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;If checked, heuristic constraints will always be used every time the MIPS solver is run.&#xa;&lt;br&gt;These constraints clean up the model to speed up the search.&#xa;&lt;br&gt;&lt;b&gt;Warning:&lt;/b&gt; forcing these constraints on might turn a feasible model into an infeasible one.&#xa;&lt;br&gt;Turn this option off if the log says the model is infeasible!"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;If checked, heuristic constraints will always be used every time the MIPS solver is run.&#xa;&lt;br&gt;These constraints clean up the model to speed up the search.&#xa;&lt;br&gt;&lt;b&gt;Warning:&lt;/b&gt; forcing these constraints might turn a feasible model into an infeasible one.&#xa;&lt;br&gt;Turn this option off if the log says the model is infeasible!"/>
                                           </Properties>
                                           <BindingProperties>
                                             <BindingProperty name="selected" source="parametersBean" sourcePath="${orienteeringProperties.forceHeuristicConstraints}" target="jCheckBoxForceHeuristicConstraints1" targetPath="selected" updateStrategy="0" immediately="false">
@@ -1417,7 +1417,7 @@
                                             <Property name="minorTickSpacing" type="int" value="1"/>
                                             <Property name="paintLabels" type="boolean" value="true"/>
                                             <Property name="paintTicks" type="boolean" value="true"/>
-                                            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Select how many threads should be used by the MIPS solver (also affects ALNS).&#xa;&lt;br/&gt;Set it to 0 to use all the available CPU cores.&#xa;&lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; if your CPU has hyperthreading, we suggest you to use only half of the available cores."/>
+                                            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Select how many threads should be used by the MIPS solver.&#xa;&lt;br/&gt;Set it to 0 to use all the available CPU cores.&#xa;&lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; if your CPU has hyperthreading, we suggest you to use only half of the available cores."/>
                                           </Properties>
                                           <BindingProperties>
                                             <BindingProperty name="value" source="parametersBean" sourcePath="${orienteeringProperties.numThreads}" target="jSliderThreadsMIPS" targetPath="value" updateStrategy="0" immediately="false">
@@ -1436,7 +1436,7 @@
                                         </Component>
                                         <Component class="javax.swing.JLabel" name="jLabelThreadsMIPS">
                                           <Properties>
-                                            <Property name="text" type="java.lang.String" value="&lt;html&gt;default: number of cores&#xa;&lt;br&gt;&lt;i&gt;Avoid if CPU has hyperthreading&lt;/i&gt;"/>
+                                            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;b&gt;default:&lt;/b&gt; number of cores&#xa;&lt;br&gt;&lt;i&gt;Avoid if CPU has hyperthreading&lt;/i&gt;"/>
                                             <Property name="verticalAlignment" type="int" value="1"/>
                                             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                               <Dimension value="[155, 35]"/>
@@ -2387,7 +2387,7 @@
                                             </Component>
                                             <Component class="javax.swing.JTextField" name="jTextFieldOutputFolderPath2">
                                               <Properties>
-                                                <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
+                                                <Property name="toolTipText" type="java.lang.String" value="Choose the output folder"/>
                                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                                   <Dimension value="[60, 24]"/>
                                                 </Property>
@@ -2424,7 +2424,7 @@
                                                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                                                   <Image iconType="3" name="/images/folder-open.png"/>
                                                 </Property>
-                                                <Property name="toolTipText" type="java.lang.String" value="Choose output folder"/>
+                                                <Property name="toolTipText" type="java.lang.String" value="Choose the output folder"/>
                                               </Properties>
                                               <Events>
                                                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPath2ActionPerformed"/>
@@ -2493,7 +2493,7 @@
                                                 <Property name="minorTickSpacing" type="int" value="1"/>
                                                 <Property name="paintLabels" type="boolean" value="true"/>
                                                 <Property name="paintTicks" type="boolean" value="true"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Select how many threads should be used by the MIPS solver (also affects ALNS).&#xa;&lt;br/&gt;Set it to 0 to use all the available CPU cores.&#xa;&lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; if your CPU has hyperthreading, we suggest you to use only half of the available cores."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Select how many threads should be used by the solver.&#xa;&lt;br/&gt;Set it to 0 to use all the available CPU cores.&#xa;&lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; if your CPU has hyperthreading, we suggest you to use only half of the available cores."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="value" source="parametersBean" sourcePath="${orienteeringProperties.numThreads}" target="jSliderThreadsALNS" targetPath="value" updateStrategy="0" immediately="false">
@@ -2512,7 +2512,7 @@
                                             </Component>
                                             <Component class="javax.swing.JLabel" name="jLabelThreadsALNS">
                                               <Properties>
-                                                <Property name="text" type="java.lang.String" value="&lt;html&gt;default: number of cores&#xa;&lt;br&gt;&lt;i&gt;Avoid if CPU has hyperthreading&lt;/i&gt;"/>
+                                                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;b&gt;default:&lt;/b&gt; number of cores&#xa;&lt;br&gt;&lt;i&gt;Avoid if CPU has hyperthreading&lt;/i&gt;"/>
                                                 <Property name="verticalAlignment" type="int" value="1"/>
                                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                                   <Dimension value="[155, 35]"/>
@@ -2537,7 +2537,7 @@
                                             </Component>
                                             <Component class="javax.swing.JTextField" name="jTextFieldTimeLimitLocalSearch">
                                               <Properties>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS local search time limit&lt;/b&gt;&#xa;&lt;br&gt;Maximum runtime (in seconds) for the local search process.&#xa;&lt;br&gt;A MIPS local search is run at the end of every segment, when possible.&#xa;&lt;br&gt;The local search process takes advantage of all the heuristic constraints&#xa;&lt;br&gt;defined by our Optimization Algorithms team."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS local search time limit&lt;/b&gt;&#xa;&lt;br&gt;Maximum runtime (in seconds) for the local search process.&#xa;&lt;br&gt;A MIPS local search is run at the end of every segment, when possible.&#xa;&lt;br&gt;The local search process takes advantage of as many heuristic constraints&#xa;&lt;br&gt;as possible to simplify the model and speed up the solver."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.timeLimitLocalSearch}" target="jTextFieldTimeLimitLocalSearch" targetPath="text" updateStrategy="0" immediately="false">
@@ -3578,7 +3578,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldQStart">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Initial Degree of Destruction&lt;/b&gt;&#xa;&lt;br&gt;Initial value of q (degree of destruction) at the beginning of the first ALNS segment.&#xa;&lt;br&gt;q determines how many clusters are to be inserted by the destruction heuristics.&#xa;&lt;br&gt;The value of q increases at the end of each segment by &lt;tt&gt;qDelta&lt;/tt&gt;."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Initial Degree of Destruction&lt;/b&gt;&#xa;&lt;br&gt;Initial value of &lt;tt&gt;q&lt;/tt&gt; (degree of destruction) at the beginning of the first ALNS segment.&#xa;&lt;br&gt;&lt;tt&gt;q&lt;/tt&gt; determines how many clusters are to be inserted by the destruction heuristics.&#xa;&lt;br&gt;The value of &lt;tt&gt;q&lt;/tt&gt; increases at the end of each segment by &lt;tt&gt;qDelta&lt;/tt&gt;."/>
                                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                                   <Dimension value="[45, 24]"/>
                                                 </Property>
@@ -3618,7 +3618,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldQDelta">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Degree of Destruction increment&lt;/b&gt;&#xa;&lt;br&gt;Constant increment of q at the end of every segment."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Degree of Destruction increment&lt;/b&gt;&#xa;&lt;br&gt;Constant increment of &lt;tt&gt;q&lt;/tt&gt; at the end of every segment."/>
                                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                                   <Dimension value="[45, 24]"/>
                                                 </Property>
@@ -3658,7 +3658,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldSegmentSize">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt; &#xa;&lt;b&gt;ALNS segment size&lt;/b&gt;&#xa;&lt;br&gt;Maximum number of iterations in an ALNS optimization segment.&#xa;&lt;br&gt;Every iteration includes the application of a destroy heuristic over&#xa;&lt;br&gt;the previous feasible solution, followed by the application of a&#xa;&lt;br&gt;repair heuristic to bring the destroyed solution back to feasibility.&#xa;&lt;br&gt;This parameter can be throttled by the &quot;Maximum iterations without&#xa;&lt;br&gt;improvement in a segment&quot; parameter."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt; &#xa;&lt;b&gt;ALNS segment size&lt;/b&gt;&#xa;&lt;br&gt;Maximum number of iterations in an ALNS optimization segment.&#xa;&lt;br&gt;Every iteration includes the application of a destroy heuristic over&#xa;&lt;br&gt;the previous feasible solution, followed by the application of a&#xa;&lt;br&gt;repair heuristic to bring the destroyed solution back to feasibility.&#xa;&lt;br&gt;This parameter can be throttled by the&#xa;&lt;br&gt;&lt;tt&gt;Maximum iterations w/o improvement in a segment&lt;/b&gt; parameter."/>
                                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                                   <Dimension value="[45, 24]"/>
                                                 </Property>
@@ -3742,7 +3742,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldAlpha">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Simulated annealing decay&lt;/b&gt;&#xa;&lt;br&gt;This is the decay parameter of the update process for &lt;tt&gt;Temperature.&lt;/tt&gt;&#xa;&lt;br&gt;This value should be a real number in the interval [0,1].&#xa;&lt;br&gt;The temperature is updated at the end of every segment like&#xa;&lt;br&gt;&lt;tt&gt;newTemperature&lt;/tt&gt; = &lt;tt&gt;alpha&lt;/tt&gt;*&lt;tt&gt;oldTemperature&lt;/tt&gt;&#xa;&lt;br&gt;A slowly decreasing temperature (&lt;tt&gt;alpha&lt;/tt&gt;-&amp;gt;1)&#xa;&lt;br&gt;will make it more likely to accept worse solutions at the&#xa;&lt;br&gt;beginning of a segment, but it might find a better solution.&#xa;&lt;br&gt;However a slowly decreasing temperature will take longer to converge&#xa;&lt;br&gt;to a better solution.&#xa;&lt;br&gt;&#xa;&lt;br&gt;&lt;b&gt;NOTE:&lt;/b&gt; to be changed in accordance with &lt;tt&gt;Segment Size&lt;/tt&gt;"/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Simulated annealing decay&lt;/b&gt;&#xa;&lt;br&gt;This is the decay parameter of the update process for &lt;tt&gt;Temperature.&lt;/tt&gt;&#xa;&lt;br&gt;This value should be a real number in the interval [0,1].&#xa;&lt;br&gt;The temperature is updated at the end of every segment like&#xa;&lt;br&gt;&lt;tt&gt;newTemperature&lt;/tt&gt; = &lt;tt&gt;alpha&lt;/tt&gt;*&lt;tt&gt;oldTemperature&lt;/tt&gt;&#xa;&lt;br&gt;A slowly decreasing temperature (&lt;tt&gt;alpha&lt;/tt&gt;-&amp;gt;1)&#xa;&lt;br&gt;will make it more likely to accept worse solutions at the&#xa;&lt;br&gt;beginning of a segment, but it might find a better solution.&#xa;&lt;br&gt;However a slowly decreasing temperature will take longer to converge&#xa;&lt;br&gt;to a better solution.&#xa;&lt;br&gt;&#xa;&lt;br&gt;&lt;b&gt;NOTE:&lt;/b&gt; to be changed in accordance with &lt;tt&gt;Max iterations per segment&lt;/tt&gt; and&#xa;&lt;br&gt;&lt;tt&gt;Max iterations w/o improvement in a segment&lt;/tt&gt;."/>
                                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                                   <Dimension value="[45, 24]"/>
                                                 </Property>
@@ -3774,7 +3774,7 @@
                                             <Component class="javax.swing.JLabel" name="jLabel9">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="2"/>
-                                                <Property name="text" type="java.lang.String" value="Alpha (Simulated Annealing temp. decay)"/>
+                                                <Property name="text" type="java.lang.String" value="Alpha (Simulated Annealing temperature decay)"/>
                                               </Properties>
                                               <Constraints>
                                                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -4687,7 +4687,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldLambda">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="2"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS heuristic weight decay&lt;/b&gt;&#xa;&lt;br&gt;This is the decay parameter of the update process for heuristic method weights.&#xa;&lt;br&gt;This value should be a floating point number (double) in the interval [0,1].&#xa;&lt;br&gt;Heuristic method weights are updated at the end of every iteration&#xa;&lt;br&gt;following the convex combination:&#xa;&lt;br&gt; &lt;tt&gt;newWeight&lt;/tt&gt; = &lt;tt&gt;lambda&lt;/tt&gt;*&lt;tt&gt;oldWeight&lt;/tt&gt; + (1-&lt;tt&gt;lambda&lt;/tt&gt;)*&lt;tt&gt;psi&lt;/tt&gt;&#xa;&lt;br&gt;where &lt;tt&gt;psi&lt;/tt&gt; is a value that indicates the relative score to give to an heuristic."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS heuristic weight decay&lt;/b&gt;&#xa;&lt;br&gt;This is the decay parameter of the update process for heuristic method weights.&#xa;&lt;br&gt;This value should be a real number in the interval [0,1].&#xa;&lt;br&gt;Heuristic method weights are updated at the end of every iteration&#xa;&lt;br&gt;following the convex combination:&#xa;&lt;br&gt; &lt;tt&gt;newWeight&lt;/tt&gt; = &lt;tt&gt;lambda&lt;/tt&gt;*&lt;tt&gt;oldWeight&lt;/tt&gt; + (1-&lt;tt&gt;lambda&lt;/tt&gt;)*&lt;tt&gt;psi&lt;/tt&gt;&#xa;&lt;br&gt;where &lt;tt&gt;psi&lt;/tt&gt; is a value that indicates the relative score to give to an heuristic&#xa;&lt;br&gt;(defined by parameter &lt;tt&gt;Heuristic scores (values for psi)&lt;/tt&gt;)"/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.lambda}" target="jTextFieldLambda" targetPath="text" updateStrategy="0" immediately="false">
@@ -4730,7 +4730,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairHighCostRemoval">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairHighCostRemoval"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Removes the first q clusters with the highest cost from the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Removes the first &lt;tt&gt;q&lt;/tt&gt; clusters with the highest cost from the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairHighCostRemoval}" target="jCheckBoxRepairHighCostRemoval" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4749,7 +4749,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairRandomRemoval">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairRandomRemoval"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Removes at most q randomly picked clusters from the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Removes at most &lt;tt&gt;q&lt;/tt&gt; randomly picked clusters from the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairRandomRemoval}" target="jCheckBoxRepairRandomRemoval" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4768,7 +4768,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairTravelTime">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairTravelTime"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Removes the first cluster with the least profit/cost&#xa;&lt;br&gt;ratio, then removes the other q-1 clusters which are the most similar to&#xa;&lt;br&gt;the first one. The similarity criterion is computed as follows:&#xa;&lt;ul&gt;&#xa;&lt;li&gt; 1/3 * (distanceBetween(i,j) + distanceBetween(firstNode,j) + distanceBetween(j,lastNode))&#xa;&lt;li&gt; i = first cluster removed from solution&#xa;&lt;li&gt; j = cluster to evaluate for removal&#xa;&lt;/ul&gt;"/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Removes the first cluster with the least profit/cost&#xa;&lt;br&gt;ratio, then removes the other &lt;tt&gt;q-1&lt;/tt&gt; clusters which are the most similar to&#xa;&lt;br&gt;the first one. The similarity criterion is computed as follows:&#xa;&lt;ul&gt;&#xa;&lt;li&gt; &lt;tt&gt;1/3 * (distanceBetween(i,j) + distanceBetween(startingDeposit, j) + distanceBetween(j, endingDeposit))&lt;/tt&gt;&#xa;&lt;li&gt; &lt;tt&gt;i&lt;/tt&gt;= first cluster removed from solution&#xa;&lt;li&gt; &lt;tt&gt;j&lt;/tt&gt; = cluster to evaluate for removal&#xa;&lt;/ul&gt;"/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairTravelTime}" target="jCheckBoxRepairTravelTime" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4787,7 +4787,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairVehicleTime">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairVehicleTime"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Removes the first cluster with the least profit/cost&#xa;&lt;br&gt;ratio, then removes the other q-1 clusters which are the most similar to&#xa;&lt;br&gt;the first one.&#xa;&lt;br&gt;The similarity criterion is computed as follows:&#xa;&lt;br&gt;&lt;ul&gt;&#xa;&lt;li&gt;Find v as the vehicle with the longest service time in the first cluster&lt;/li&gt;&#xa;&lt;li&gt;For every node n in the first cluster get the duration of services servable by v.&#xa;&lt;br&gt;Sum all the values to get the total service time.&lt;/li&gt;&#xa;&lt;li&gt;Divide the previous value by the total duration of services in the clusters&lt;/li&gt;&#xa;&lt;li&gt;Take the absolute value of the difference between the ratio for the&#xa;&lt;br&gt;first cluster removed and the ratio for every other cluster as the similarity criterion.&lt;/li&gt;&#xa;&lt;/ul&gt;"/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Removes the first cluster &lt;tt&gt;C&lt;/tt&gt; with the least profit/cost ratio in solution,&#xa;&lt;br&gt;then removes the other &lt;tt&gt;q-1&lt;/tt&gt; clusters which are the most similar to&#xa;&lt;br&gt;the first one.&#xa;&lt;br&gt;The similarity criterion is computed as follows:&#xa;&lt;br&gt;&lt;ul&gt;&#xa;&lt;li&gt;Find &lt;tt&gt;v&lt;/tt&gt; as the vehicle with the longest service time in the first cluster &lt;tt&gt;C&lt;/tt&gt;&lt;/li&gt;&#xa;&lt;li&gt;Compute &lt;tt&gt;ratio(C) := maxCost(v, C) / ( 1 + totalCost(C) )&lt;/tt&gt;&lt;/li&gt;&#xa;&lt;li&gt;Compute for every other cluster &lt;tt&gt;c&lt;/tt&gt; in solution&#xa;&lt;br&gt;&lt;tt&gt;ratio(c) := maxCost(v, c) / ( 1 + totalCost(c) )&lt;/tt&gt;&lt;/li&gt;&#xa;&lt;li&gt;Similarity criterion: &lt;tt&gt;sim(c) := |ratio(c) - ratio(C)|&lt;/tt&gt;&lt;/li&gt;&#xa;&lt;/ul&gt;"/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairVehicleTime}" target="jCheckBoxRepairVehicleTime" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4806,7 +4806,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairWorstRemoval">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairWorstRemoval"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Removes the first q clusters with the least profit/cost ratio."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Removes the first &lt;tt&gt;q&lt;/tt&gt; clusters with the least profit/cost ratio."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairWorstRemoval}" target="jCheckBoxRepairWorstRemoval" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4843,7 +4843,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyGreedyCostInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyGreedyCostInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the q clusters with the least cost  into the current solution in a greedy way."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the least cost  into the current solution in a greedy way."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyGreedyCostInsertion}" target="jCheckBoxDestroyGreedyCostInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4862,7 +4862,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyGreedyBestInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyGreedyBestInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the q clusters with the highest profit to cost ratio into the current solution in a greedy way."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the highest profit to cost ratio into the current solution in a greedy way."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyGreedyBestInsertion}" target="jCheckBoxDestroyGreedyBestInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4881,7 +4881,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyGreedyProfitInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyGreedyProfitInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the q clusters with the highest profit into the current solution in a greedy way."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the highest profit into the current solution in a greedy way."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyGreedyProfitInsertion}" target="jCheckBoxDestroyGreedyProfitInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4900,7 +4900,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyRandomInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyRandomInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts q randomly picked clusters into the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts &lt;tt&gt;q&lt;/tt&gt; randomly picked clusters into the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyRandomInsertion}" target="jCheckBoxDestroyRandomInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4920,7 +4920,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyCloseToBarycenter">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyCloseToBarycenter"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the first q available clusters which are the closest&#xa;&lt;br&gt;to the barycenter of the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the first &lt;tt&gt;q&lt;/tt&gt; available clusters which are the closest&#xa;&lt;br&gt;to the barycenter of the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyCloseToBarycenter}" target="jCheckBoxDestroyCloseToBarycenter" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4965,7 +4965,7 @@
                                                 <Component class="javax.swing.JTextField" name="jTextFieldPsi0">
                                                   <Properties>
                                                     <Property name="horizontalAlignment" type="int" value="0"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for new global optimum&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w1&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be a new global optimum."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS heuristic score for new global optimum&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;omega1&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be a new global optimum."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi1}" target="jTextFieldPsi0" targetPath="text" updateStrategy="0" immediately="false">
@@ -4987,7 +4987,7 @@
                                                 <Component class="javax.swing.JTextField" name="jTextFieldPsi1">
                                                   <Properties>
                                                     <Property name="horizontalAlignment" type="int" value="0"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for better solution&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w2&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be better than the previous one."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS heuristic score for a better solution&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;omega2&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be better than the previous one."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi2}" target="jTextFieldPsi1" targetPath="text" updateStrategy="0" immediately="false">
@@ -5009,7 +5009,7 @@
                                                 <Component class="javax.swing.JTextField" name="jTextFieldPsi2">
                                                   <Properties>
                                                     <Property name="horizontalAlignment" type="int" value="0"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for worse solution, but accepted&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w3&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is worse than the previous one but is accepted anyway."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS heuristic score for worse solution, but accepted&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;omega3&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is worse than the previous one but is accepted anyway by simulated annealing."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi3}" target="jTextFieldPsi2" targetPath="text" updateStrategy="0" immediately="false">
@@ -5031,7 +5031,7 @@
                                                 <Component class="javax.swing.JTextField" name="jTextFieldPsi3">
                                                   <Properties>
                                                     <Property name="horizontalAlignment" type="int" value="0"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS h. score for solution rejected&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;w4&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be worse than the previous one and is rejected."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS heuristic score for rejected solution&lt;/b&gt;&#xa;&lt;br&gt;&lt;tt&gt;omega4&lt;/tt&gt; is the new suggested score for the selected heuristics&#xa;&lt;br&gt;if the new solution is found to be worse than the previous one and is rejected by simulated annealing."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="text" source="psibeanAdapter1" sourcePath="${psi4}" target="jTextFieldPsi3" targetPath="text" updateStrategy="0" immediately="false">
@@ -5055,7 +5055,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldRewardForBestSegmentHeuristics">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="2"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS reward for best h. in segment&lt;/b&gt;&#xa;&lt;br&gt;A scaling factor which is applied to the weight of the best heuristics of the previous segment,&#xa;&lt;br&gt;at the beginning of the next segment."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS reward for best heuristics in segment&lt;/b&gt;&#xa;&lt;br&gt;A scaling factor which is applied to the weight of the best heuristics of the previous segment,&#xa;&lt;br&gt;at the beginning of the next segment."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.rewardForBestSegmentHeuristics}" target="jTextFieldRewardForBestSegmentHeuristics" targetPath="text" updateStrategy="0" immediately="false">
@@ -5101,7 +5101,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldPunishmentForWorstSegmentHeuristics">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="2"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS punishment for h. in segment&lt;/b&gt;&#xa;&lt;br&gt;A scaling factor which is applied to the weight of the worst heuristics of the previous segment,&#xa;&lt;br&gt;at the beginning of the next segment."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;ALNS punishment for worst heuristics in segment&lt;/b&gt;&#xa;&lt;br&gt;A scaling factor which is applied to the weight of the worst heuristics of the previous segment,&#xa;&lt;br&gt;at the beginning of the next segment."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.punishmentForWorstSegmentHeuristics}" target="jTextFieldPunishmentForWorstSegmentHeuristics" targetPath="text" updateStrategy="0" immediately="false">
@@ -6194,7 +6194,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldPunishmentGamma">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the new probability of being chosen for nerfed&#xa;&lt;br&gt;clusters (clusters which haven&apos;t behaved well in the segment).&#xa;&lt;br&gt;Must be a double in range [0,1]."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette punishment gamma&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the new probability of being chosen for nerfed&#xa;&lt;br&gt;clusters (clusters which haven&apos;t behaved well in the segment).&#xa;&lt;br&gt;Must be a real number in range [0,1]."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.punishmentGamma}" target="jTextFieldPunishmentGamma" targetPath="text" updateStrategy="0" immediately="false">
@@ -6230,7 +6230,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldCooldownGamma">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the scaling factor used in the cooldown process.&#xa;&lt;br&gt;Must be a small double in range [0,1].&#xa;&lt;br&gt;&lt;li&gt;A hot (freshly selected) cluster will have a new probability of&#xa;being chosen which is &lt;i&gt;cooldownGamma&lt;/i&gt; times smaller&lt;/li&gt;&#xa;&lt;br&gt;Probability for hot clusters is downscaled like&#xa;&lt;br&gt;&lt;li&gt;&lt;i&gt;newProbability&lt;/i&gt; = (1 -&#xa;&lt;i&gt;cooldownGamma&lt;/i&gt;)*&lt;i&gt;oldProbability&lt;/i&gt;&lt;/li&gt;"/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette cooldown gamma&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the scaling factor used in the cooldown process.&#xa;&lt;br&gt;Must be a small real number in range [0,1].&#xa;&lt;br&gt;&lt;li&gt;A hot (freshly selected) cluster will have a new probability of&#xa;being chosen which is &lt;tt&gt;cooldownGamma&lt;/tt&gt; times smaller&lt;/li&gt;&#xa;&lt;br&gt;Probability for hot clusters is downscaled like&#xa;&lt;br&gt;&lt;li&gt;&lt;tt&gt;&lt;i&gt;newProbability&lt;/i&gt; = (1 -&#xa;&lt;i&gt;cooldownGamma&lt;/i&gt;) * &lt;i&gt;oldProbability&lt;/i&gt;&lt;/tt&gt;&lt;/li&gt;"/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.cooldownGamma}" target="jTextFieldCooldownGamma" targetPath="text" updateStrategy="0" immediately="false">
@@ -6266,7 +6266,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldWarmupGamma">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the scaling factor used in the warmup process.&#xa;&lt;br&gt;Must be a small double in range [0,1].&#xa;&lt;br&gt;&lt;li&gt;A cold (not freshly selected) cluster will have a new probability&#xa;of being chosen which is &lt;i&gt;warmupGamma&lt;/i&gt; times bigger&lt;/li&gt;&#xa;&#xa;&lt;br&gt;Probability for cold clusters is upscaled like&#xa;&lt;br&gt;&lt;li&gt;&lt;i&gt;newProbability&lt;/i&gt; = (1 -&#xa;&lt;i&gt;warmupGamma&lt;/i&gt;)*&lt;i&gt;oldProbability&lt;/i&gt;+&lt;i&gt;warmupGamma&lt;/i&gt;&lt;/li&gt;"/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette warmup gamma&lt;/b&gt;&#xa;&lt;br&gt;This parameter is the scaling factor used in the warmup process.&#xa;&lt;br&gt;Must be a small real number in range [0,1].&#xa;&lt;br&gt;&lt;li&gt;A cold (not freshly selected) cluster will have a new probability&#xa;of being chosen which is &lt;tt&gt;warmupGamma&lt;/tt&gt; times bigger&lt;/li&gt;&#xa;&#xa;&lt;br&gt;Probability for cold clusters is upscaled like&#xa;&lt;br&gt;&lt;li&gt;&lt;tt&gt;&lt;i&gt;newProbability&lt;/i&gt; = (1 -&#xa;&lt;i&gt;warmupGamma&lt;/i&gt;) * &lt;i&gt;oldProbability&lt;/i&gt; + &lt;i&gt;warmupGamma&lt;/i&gt;&lt;/tt&gt;&lt;/li&gt;"/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.warmupGamma}" target="jTextFieldWarmupGamma" targetPath="text" updateStrategy="0" immediately="false">
@@ -6302,7 +6302,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldNerfBarrier">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cooldown - Bad Cluster Nerfing at segment end&lt;/b&gt;&#xa;&lt;br&gt;Clusters that have had a &quot;chance of being chosen&quot; less than the average&#xa;for more than nerfBarrier% of the time in a segment will be surely&#xa;punished to make them less available in the following segment.&#xa;&#xa;&lt;br&gt;This will also impact on the local search: clusters that have a&#xa;probability of selection below the average won&apos;t be included in those&#xa;available for the local search.&#xa;&#xa;&lt;br&gt;Must be a double in range [0,1]."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Cluster roulette nerf barrier&lt;/b&gt;&#xa;&lt;br&gt;Clusters that have had a &quot;cluster roulette chance of being chosen&quot; less than the average&#xa;&lt;br&gt;for more than &lt;tt&gt;nerfBarrier%&lt;/tt&gt; of the time in a segment will be&#xa;&lt;br&gt;punished to make them less available for the following segment.&#xa;&#xa;&lt;br&gt;&lt;br&gt;This will also impact the local search: clusters that have a&#xa;&lt;br&gt;probability of selection below the average won&apos;t be included in those&#xa;&lt;br&gt;available for the local search.&#xa;&#xa;&lt;br&gt;&lt;br&gt;Must be a real number in range [0,1]."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.nerfBarrier}" target="jTextFieldNerfBarrier" targetPath="text" updateStrategy="0" immediately="false">
@@ -7117,7 +7117,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldMaxSegments">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Maximum number of segments for an ALNS run.&#xa;&lt;br&gt;When this number of segments is reached, the ALNS solver&#xa;&lt;br&gt;terminates its execution.&#xa;&lt;br&gt;This value is throttled by the &quot;Max segments without improvement&quot;&#xa;&lt;br&gt;parameter."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Maximum number of segments for an ALNS run.&lt;/b&gt;&#xa;&lt;br&gt;When this number of segments is reached, the ALNS solver&#xa;&lt;br&gt;terminates its execution.&#xa;&lt;br&gt;This value is throttled by the &lt;tt&gt;Max segments w/o improvement&lt;/tt&gt;&#xa;&lt;br&gt;parameter."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.maxSegments}" target="jTextFieldMaxSegments" targetPath="text" updateStrategy="0" immediately="false">
@@ -7154,7 +7154,7 @@
                                             <Component class="javax.swing.JTextField" name="jTextFieldMaxSegmentsWithoutImprovement">
                                               <Properties>
                                                 <Property name="horizontalAlignment" type="int" value="4"/>
-                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Maximum number of segments without improvement for an ALNS run.&#xa;&lt;br&gt;When this number of segments without improvement is reached,&#xa;&lt;br&gt;the ALNS solver terminates its execution."/>
+                                                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;b&gt;Maximum number of segments without improvement for an ALNS run.&lt;/b&gt;&#xa;&lt;br&gt;When this number of segments without improvement is reached,&#xa;&lt;br&gt;the ALNS solver terminates its execution."/>
                                               </Properties>
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${ALNSproperties.maxSegmentsWithoutImprovement}" target="jTextFieldMaxSegmentsWithoutImprovement" targetPath="text" updateStrategy="0" immediately="false">
@@ -7942,7 +7942,7 @@
                                           <Image iconType="3" name="/images/play.png"/>
                                         </Property>
                                         <Property name="text" type="java.lang.String" value="Solve relaxed model"/>
-                                        <Property name="toolTipText" type="java.lang.String" value="Solve the relaxation of all models with the specified options."/>
+                                        <Property name="toolTipText" type="java.lang.String" value="Solve the relaxation of all models with the specified parameters."/>
                                         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                                           <ComponentRef name="buttonGroupActions"/>
                                         </Property>
@@ -7978,7 +7978,7 @@
                                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                                               <Image iconType="3" name="/images/folder-open.png"/>
                                             </Property>
-                                            <Property name="toolTipText" type="java.lang.String" value="Choose output folder"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output folder"/>
                                           </Properties>
                                           <Events>
                                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOutputFolderPathActionPerformed"/>
@@ -7991,7 +7991,7 @@
                                         </Component>
                                         <Component class="javax.swing.JTextField" name="jTextFieldOutputFolderPath">
                                           <Properties>
-                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output directory"/>
+                                            <Property name="toolTipText" type="java.lang.String" value="Choose the output folder"/>
                                           </Properties>
                                           <BindingProperties>
                                             <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath" targetPath="text" updateStrategy="0" immediately="false">

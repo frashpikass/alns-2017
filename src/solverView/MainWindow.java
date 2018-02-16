@@ -2649,7 +2649,6 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         String selectedText = jTextAreaOutput.getSelectedText();
         clipboard.setContents(new StringSelection(selectedText), null);
-        
     }//GEN-LAST:event_jMenuItemCopyFromConsoleActionPerformed
 
     private void openConsolePopup(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openConsolePopup

@@ -101,6 +101,7 @@ public class MainWindow extends javax.swing.JFrame {
         // Speeding up scrollers
         jScrollPaneALNS.getVerticalScrollBar().setUnitIncrement(16);
         jScrollPaneMIPS.getVerticalScrollBar().setUnitIncrement(16);
+        jScrollPaneRelaxParam.getVerticalScrollBar().setUnitIncrement(16);
         
         // Show Deprecated tools window
         jDialogDeprecatedOptions.setVisible(false);

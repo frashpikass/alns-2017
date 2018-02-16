@@ -10,6 +10,7 @@ import solverView.bindingInterfaces.ErrorBindingListener;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
@@ -159,6 +160,7 @@ public class MainWindow extends javax.swing.JFrame {
         longConverter1 = new solverView.bindingInterfaces.LongConverter();
         psibeanAdapter1 = new solverView.bindingInterfaces.PsibeanAdapter();
         positiveOrZeroIntegerValidator1 = new solverView.bindingInterfaces.PositiveOrZeroIntegerValidator();
+        folderPathValidator1 = new solverView.bindingInterfaces.FolderPathValidator();
         jPanelMain = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanelControls = new javax.swing.JPanel();
@@ -458,7 +460,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelMain.setPreferredSize(new java.awt.Dimension(1230, 600));
         jPanelMain.setLayout(new javax.swing.BoxLayout(jPanelMain, javax.swing.BoxLayout.LINE_AXIS));
 
-        jSplitPane2.setDividerLocation(300);
+        jSplitPane2.setDividerLocation(400);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jPanelControls.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
@@ -555,17 +557,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldOutputFolderPath1.setToolTipText("Choose the output folder");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: output folder");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"), "[MIPS] output folder");
+        binding.setValidator(folderPathValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldOutputFolderPath1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldOutputFolderPath1updatePsiBean(evt);
-            }
-        });
-        jTextFieldOutputFolderPath1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldOutputFolderPath1ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -752,17 +750,13 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldOutputFolderPath2.setToolTipText("Choose the output folder");
         jTextFieldOutputFolderPath2.setPreferredSize(new java.awt.Dimension(60, 24));
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath2, org.jdesktop.beansbinding.BeanProperty.create("text"), "ALNS output folder");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath2, org.jdesktop.beansbinding.BeanProperty.create("text"), "[ALNS] output folder");
+        binding.setValidator(folderPathValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldOutputFolderPath2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldOutputFolderPath2updatePsiBean(evt);
-            }
-        });
-        jTextFieldOutputFolderPath2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldOutputFolderPath2ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1800,17 +1794,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldOutputFolderPath.setToolTipText("Choose the output folder");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "outputFolderPath");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "[Relaxed] output folder");
+        binding.setValidator(folderPathValidator1);
         bindingGroup.addBinding(binding);
 
         jTextFieldOutputFolderPath.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 updatePsiBean(evt);
-            }
-        });
-        jTextFieldOutputFolderPath.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldOutputFolderPathActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2251,19 +2241,8 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldPsi0FocusLost
 
     private void jButtonOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPathActionPerformed
-        jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
-        int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelSolversEnvelope);
-        File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
-        if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
-            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
-            this.parametersBean.getOrienteeringProperties().setOutputFolderPath(outputFolderPath.getAbsolutePath());
-            updateWorkingDirectory(outputFolderPath);
-        }
+        selectOutputFolderWithDialog(evt);
     }//GEN-LAST:event_jButtonOutputFolderPathActionPerformed
-
-    private void jTextFieldOutputFolderPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPathActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldOutputFolderPathActionPerformed
 
     private void jRadioButtonRelaxedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonRelaxedActionPerformed
         // TODO add your handling code here:
@@ -2281,26 +2260,44 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldOutputFolderPath1updatePsiBean
 
-    private void jTextFieldOutputFolderPath1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPath1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldOutputFolderPath1ActionPerformed
-
     private void jCheckBoxForceHeuristicConstraints1updatePsiBeanC(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxForceHeuristicConstraints1updatePsiBeanC
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBoxForceHeuristicConstraints1updatePsiBeanC
 
     private void jButtonOutputFolderPath1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPath1ActionPerformed
+        selectOutputFolderWithDialog(evt);
+    }//GEN-LAST:event_jButtonOutputFolderPath1ActionPerformed
+
+    /**
+     * Selects the output folder using a jFileChooser
+     * @param evt the event which called this method
+     * @throws HeadlessException
+     */
+    private void selectOutputFolderWithDialog(java.awt.event.ActionEvent evt) throws HeadlessException {
         // TODO add your handling code here:
         jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
         int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelSolversEnvelope);
         File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
         if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
-            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
-            this.parametersBean.getOrienteeringProperties().setOutputFolderPath(outputFolderPath.getAbsolutePath());
-            updateWorkingDirectory(outputFolderPath);
+            
+            // Extract the correct binding
+            Binding outputFolderBinding = null;
+            for(Binding b : bindingGroup.getBindings()){
+                if(b.getName().contains("output folder")){
+                    outputFolderBinding = b;
+                    break;
+                }
+            }
+            
+            if(outputFolderBinding != null){
+                errorBindingListener.resetError(outputFolderBinding);
+                jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
+                this.parametersBean.getOrienteeringProperties().setOutputFolderPath(outputFolderPath.getAbsolutePath());
+                updateWorkingDirectory(outputFolderPath);
+            }
         }
-    }//GEN-LAST:event_jButtonOutputFolderPath1ActionPerformed
-
+    }
+    
     private void jButtonRunALNSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunALNSActionPerformed
         // TODO add your handling code here:
         if(validateFields()){
@@ -2395,20 +2392,9 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldOutputFolderPath2updatePsiBean
 
-    private void jTextFieldOutputFolderPath2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldOutputFolderPath2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldOutputFolderPath2ActionPerformed
-
     private void jButtonOutputFolderPath2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOutputFolderPath2ActionPerformed
         // TODO add your handling code here:
-        jFileChooserOutputFolderPath.setCurrentDirectory(pathCacheBean.getPathToLastDirectory());
-        int result = jFileChooserOutputFolderPath.showOpenDialog(jPanelSolversEnvelope);
-        File outputFolderPath = jFileChooserOutputFolderPath.getSelectedFile();
-        if (outputFolderPath != null && result == JFileChooser.APPROVE_OPTION) {
-            jTextFieldOutputFolderPath.setText(outputFolderPath.getAbsolutePath());
-            this.parametersBean.getOrienteeringProperties().setOutputFolderPath(outputFolderPath.getAbsolutePath());
-            updateWorkingDirectory(outputFolderPath);
-        }
+        selectOutputFolderWithDialog(evt);
     }//GEN-LAST:event_jButtonOutputFolderPath2ActionPerformed
 
     private void jButtonRunMIPSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunMIPSActionPerformed
@@ -3015,6 +3001,7 @@ public class MainWindow extends javax.swing.JFrame {
     private solverView.bindingInterfaces.DoubleConverter doubleConverter1;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler3;
+    private solverView.bindingInterfaces.FolderPathValidator folderPathValidator1;
     private solverView.bindingInterfaces.IntegerConverter integerConverter1;
     private javax.swing.JButton jButtonCloseAllReports;
     private javax.swing.JButton jButtonLoadParameters;

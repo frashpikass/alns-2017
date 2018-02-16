@@ -1001,6 +1001,8 @@
     </Component>
     <Component class="solverView.bindingInterfaces.PositiveOrZeroIntegerValidator" name="positiveOrZeroIntegerValidator1">
     </Component>
+    <Component class="solverView.bindingInterfaces.FolderPathValidator" name="folderPathValidator1">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -1043,7 +1045,7 @@
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="jSplitPane2">
           <Properties>
-            <Property name="dividerLocation" type="int" value="300"/>
+            <Property name="dividerLocation" type="int" value="400"/>
             <Property name="orientation" type="int" value="0"/>
           </Properties>
 
@@ -1304,12 +1306,14 @@
                                           <BindingProperties>
                                             <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath1" targetPath="text" updateStrategy="0" immediately="false">
                                               <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                              <Property name="name" type="java.lang.String" value="MIPS: output folder"/>
+                                              <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                <ComponentRef name="folderPathValidator1"/>
+                                              </Property>
+                                              <Property name="name" type="java.lang.String" value="[MIPS] output folder"/>
                                             </BindingProperty>
                                           </BindingProperties>
                                           <Events>
                                             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldOutputFolderPath1updatePsiBean"/>
-                                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldOutputFolderPath1ActionPerformed"/>
                                           </Events>
                                           <Constraints>
                                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -2395,12 +2399,14 @@
                                               <BindingProperties>
                                                 <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath2" targetPath="text" updateStrategy="0" immediately="false">
                                                   <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                                  <Property name="name" type="java.lang.String" value="ALNS output folder"/>
+                                                  <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                    <ComponentRef name="folderPathValidator1"/>
+                                                  </Property>
+                                                  <Property name="name" type="java.lang.String" value="[ALNS] output folder"/>
                                                 </BindingProperty>
                                               </BindingProperties>
                                               <Events>
                                                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldOutputFolderPath2updatePsiBean"/>
-                                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldOutputFolderPath2ActionPerformed"/>
                                               </Events>
                                               <Constraints>
                                                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -7996,12 +8002,14 @@
                                           <BindingProperties>
                                             <BindingProperty name="text" source="parametersBean" sourcePath="${orienteeringProperties.outputFolderPath}" target="jTextFieldOutputFolderPath" targetPath="text" updateStrategy="0" immediately="false">
                                               <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                                              <Property name="name" type="java.lang.String" value="outputFolderPath"/>
+                                              <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                                <ComponentRef name="folderPathValidator1"/>
+                                              </Property>
+                                              <Property name="name" type="java.lang.String" value="[Relaxed] output folder"/>
                                             </BindingProperty>
                                           </BindingProperties>
                                           <Events>
                                             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="updatePsiBean"/>
-                                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldOutputFolderPathActionPerformed"/>
                                           </Events>
                                           <Constraints>
                                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

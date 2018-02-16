@@ -1019,7 +1019,7 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCopyAllFromConsole">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Copy all text in console"/>
+            <Property name="text" type="java.lang.String" value="Copy all text from console"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCopyAllFromConsoleActionPerformed"/>
@@ -1333,7 +1333,7 @@
                                               <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
                                                 <ComponentRef name="folderPathValidator1"/>
                                               </Property>
-                                              <Property name="name" type="java.lang.String" value="[MIPS] output folder"/>
+                                              <Property name="name" type="java.lang.String" value="MIPS: output folder"/>
                                             </BindingProperty>
                                           </BindingProperties>
                                           <Events>
@@ -2426,7 +2426,7 @@
                                                   <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
                                                     <ComponentRef name="folderPathValidator1"/>
                                                   </Property>
-                                                  <Property name="name" type="java.lang.String" value="[ALNS] output folder"/>
+                                                  <Property name="name" type="java.lang.String" value="ALNS: output folder"/>
                                                 </BindingProperty>
                                               </BindingProperties>
                                               <Events>
@@ -8029,7 +8029,7 @@
                                               <Property name="validator" type="org.jdesktop.beansbinding.Validator" editor="org.netbeans.modules.form.ComponentChooserEditor">
                                                 <ComponentRef name="folderPathValidator1"/>
                                               </Property>
-                                              <Property name="name" type="java.lang.String" value="[Relaxed] output folder"/>
+                                              <Property name="name" type="java.lang.String" value="Relaxed: output folder"/>
                                             </BindingProperty>
                                           </BindingProperties>
                                           <Events>

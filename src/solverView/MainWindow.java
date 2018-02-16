@@ -474,7 +474,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jPopupMenuCopyFromConsole.add(jMenuItemCopyFromConsole);
 
-        jMenuItemCopyAllFromConsole.setText("Copy all text in console");
+        jMenuItemCopyAllFromConsole.setText("Copy all text from console");
         jMenuItemCopyAllFromConsole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemCopyAllFromConsoleActionPerformed(evt);
@@ -587,7 +587,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldOutputFolderPath1.setToolTipText("Choose the output folder");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"), "[MIPS] output folder");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath1, org.jdesktop.beansbinding.BeanProperty.create("text"), "MIPS: output folder");
         binding.setValidator(folderPathValidator1);
         bindingGroup.addBinding(binding);
 
@@ -780,7 +780,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldOutputFolderPath2.setToolTipText("Choose the output folder");
         jTextFieldOutputFolderPath2.setPreferredSize(new java.awt.Dimension(60, 24));
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath2, org.jdesktop.beansbinding.BeanProperty.create("text"), "[ALNS] output folder");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath2, org.jdesktop.beansbinding.BeanProperty.create("text"), "ALNS: output folder");
         binding.setValidator(folderPathValidator1);
         bindingGroup.addBinding(binding);
 
@@ -1824,7 +1824,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTextFieldOutputFolderPath.setToolTipText("Choose the output folder");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "[Relaxed] output folder");
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${orienteeringProperties.outputFolderPath}"), jTextFieldOutputFolderPath, org.jdesktop.beansbinding.BeanProperty.create("text"), "Relaxed: output folder");
         binding.setValidator(folderPathValidator1);
         bindingGroup.addBinding(binding);
 

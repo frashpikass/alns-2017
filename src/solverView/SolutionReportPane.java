@@ -12,6 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import solverController.Controller;
 import solverController.Solution;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 /**
  * Class to visually represent a solution report in the Swing GUI
@@ -41,6 +44,11 @@ public class SolutionReportPane extends javax.swing.JPanel {
     private MainWindow parentWindow;
     
     /**
+     * Clipboard for storing copied text
+     */
+    private Clipboard clipboard;
+    
+    /**
      * Creates new form SolutionReportPanel
      * @param solution the solution to display
      * @param outputFolderPath Path to the output folder
@@ -54,6 +62,9 @@ public class SolutionReportPane extends javax.swing.JPanel {
             MainWindow parentWindow
     ) {
         initComponents();
+        
+        // Initializing the clipboard
+        this.clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         
         updateSolution(solution);
         this.outputFolderPath = outputFolderPath;
@@ -110,6 +121,9 @@ public class SolutionReportPane extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jPopupMenuReport = new javax.swing.JPopupMenu();
+        jMenuItemCopySelectedText = new javax.swing.JMenuItem();
+        jMenuItemCopyAllText = new javax.swing.JMenuItem();
         jPanelHeader = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPaneReport = new javax.swing.JScrollPane();
@@ -128,6 +142,22 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jButtonCloseReport = new javax.swing.JButton();
         jButtonReloadParameters = new javax.swing.JButton();
 
+        jMenuItemCopySelectedText.setText("Copy selected text from report");
+        jMenuItemCopySelectedText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCopySelectedTextActionPerformed(evt);
+            }
+        });
+        jPopupMenuReport.add(jMenuItemCopySelectedText);
+
+        jMenuItemCopyAllText.setText("Copy all text from report");
+        jMenuItemCopyAllText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCopyAllTextActionPerformed(evt);
+            }
+        });
+        jPopupMenuReport.add(jMenuItemCopyAllText);
+
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setName("Report 1"); // NOI18N
         setLayout(new java.awt.BorderLayout());
@@ -141,6 +171,17 @@ public class SolutionReportPane extends javax.swing.JPanel {
         jTextAreaReport.setRows(11);
         jTextAreaReport.setTabSize(4);
         jTextAreaReport.setAutoscrolls(false);
+        jTextAreaReport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                openReportPopup(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                openReportPopup(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                openReportPopup(evt);
+            }
+        });
         jScrollPaneReport.setViewportView(jTextAreaReport);
 
         jSplitPane1.setLeftComponent(jScrollPaneReport);
@@ -286,6 +327,24 @@ public class SolutionReportPane extends javax.swing.JPanel {
         parentWindow.loadParametersBean(this.solution.getParameters());
     }//GEN-LAST:event_jButtonReloadParametersActionPerformed
 
+    private void openReportPopup(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openReportPopup
+        // TODO add your handling code here:
+        if(evt.isPopupTrigger()){
+            if(evt.getComponent() == jTextAreaReport)
+                jPopupMenuReport.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_openReportPopup
+
+    private void jMenuItemCopySelectedTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySelectedTextActionPerformed
+        // TODO add your handling code here:
+        clipboard.setContents(new StringSelection(jTextAreaReport.getSelectedText()), null);
+    }//GEN-LAST:event_jMenuItemCopySelectedTextActionPerformed
+
+    private void jMenuItemCopyAllTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopyAllTextActionPerformed
+        // TODO add your handling code here:
+        clipboard.setContents(new StringSelection(jTextAreaReport.getText()), null);
+    }//GEN-LAST:event_jMenuItemCopyAllTextActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCloseReport;
@@ -299,9 +358,12 @@ public class SolutionReportPane extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelInstancePath;
     private javax.swing.JLabel jLabelSolver;
     private javax.swing.JLabel jLabelTimestamp;
+    private javax.swing.JMenuItem jMenuItemCopyAllText;
+    private javax.swing.JMenuItem jMenuItemCopySelectedText;
     private javax.swing.JPanel jPanelButtons;
     private javax.swing.JPanel jPanelHeader;
     private javax.swing.JPanel jPanelLabels;
+    private javax.swing.JPopupMenu jPopupMenuReport;
     private javax.swing.JScrollPane jScrollPaneReport;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextArea jTextAreaReport;

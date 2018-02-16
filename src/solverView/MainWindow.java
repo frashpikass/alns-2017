@@ -505,6 +505,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jListInstances.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jListInstances.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListInstances.setDragEnabled(true);
         jScrollPaneInstances.setViewportView(jListInstances);
 
         jPanelnstances.add(jScrollPaneInstances);
@@ -1903,20 +1904,10 @@ public class MainWindow extends javax.swing.JFrame {
         jTextAreaOutput.setRows(4);
         jTextAreaOutput.setTabSize(4);
         jTextAreaOutput.setAutoscrolls(false);
+        jTextAreaOutput.setComponentPopupMenu(jPopupMenuCopyFromConsole);
         jTextAreaOutput.setMargin(new java.awt.Insets(5, 7, 5, 7));
         jTextAreaOutput.setSelectedTextColor(new java.awt.Color(255, 255, 153));
         jTextAreaOutput.setSelectionColor(new java.awt.Color(102, 0, 102));
-        jTextAreaOutput.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                openConsolePopup(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                openConsolePopup(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                openConsolePopup(evt);
-            }
-        });
         jScrollPaneTextAreaOutput.setViewportView(jTextAreaOutput);
 
         jPanelConsoleOutput.add(jScrollPaneTextAreaOutput);
@@ -2650,14 +2641,6 @@ public class MainWindow extends javax.swing.JFrame {
         String selectedText = jTextAreaOutput.getSelectedText();
         clipboard.setContents(new StringSelection(selectedText), null);
     }//GEN-LAST:event_jMenuItemCopyFromConsoleActionPerformed
-
-    private void openConsolePopup(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openConsolePopup
-        // TODO add your handling code here:
-        if(evt.isPopupTrigger()){
-            if(evt.getComponent() == jTextAreaOutput)
-                jPopupMenuCopyFromConsole.show(evt.getComponent(), evt.getX(), evt.getY());
-        }
-    }//GEN-LAST:event_openConsolePopup
 
     private void jMenuItemCopyAllFromConsoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopyAllFromConsoleActionPerformed
         // TODO add your handling code here:

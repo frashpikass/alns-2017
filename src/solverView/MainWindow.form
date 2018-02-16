@@ -1140,6 +1140,7 @@
                                   <StringArray count="0"/>
                                 </Property>
                                 <Property name="selectionMode" type="int" value="0"/>
+                                <Property name="dragEnabled" type="boolean" value="true"/>
                               </Properties>
                               <AuxValues>
                                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -8172,6 +8173,9 @@
                                 <Property name="rows" type="int" value="4"/>
                                 <Property name="tabSize" type="int" value="4"/>
                                 <Property name="autoscrolls" type="boolean" value="false"/>
+                                <Property name="componentPopupMenu" type="javax.swing.JPopupMenu" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                                  <ComponentRef name="jPopupMenuCopyFromConsole"/>
+                                </Property>
                                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                                   <Insets value="[5, 7, 5, 7]"/>
                                 </Property>
@@ -8182,11 +8186,6 @@
                                   <Color blue="66" green="0" red="66" type="rgb"/>
                                 </Property>
                               </Properties>
-                              <Events>
-                                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openConsolePopup"/>
-                                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openConsolePopup"/>
-                                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openConsolePopup"/>
-                              </Events>
                             </Component>
                           </SubComponents>
                         </Container>

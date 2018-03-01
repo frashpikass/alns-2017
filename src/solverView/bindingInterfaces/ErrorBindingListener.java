@@ -43,37 +43,46 @@ public class ErrorBindingListener extends AbstractBindingListener{
 
     @Override
     public void syncFailed(Binding binding, SyncFailure fail) {
+        if ((fail != null)) {
+            handleFailure(binding, fail.getType(), fail.getValidationResult().getDescription());
+        }
+    }
+    
+    /**
+     * This method handles vwerious type of failure by setting and displaying
+     * an error message in the stack
+     * @param binding the binding source
+     * @param failureType the failure type
+     * @param validationFailedDescription description to display in case the failure is "validation failed"
+     */
+    public void handleFailure(Binding binding, Binding.SyncFailureType failureType, String validationFailedDescription){
         Object source = binding.getTargetObject();
         
         String description = "";
-        if ((fail != null)) {
-            // error messages
             
-            if((fail.getType() == Binding.SyncFailureType.VALIDATION_FAILED)){
-                description = fail.getValidationResult().getDescription();
-            }
-            if((fail.getType() == Binding.SyncFailureType.CONVERSION_FAILED)){
-                description = "The inserted string is not a number.";
-            }
-            if((fail.getType() == Binding.SyncFailureType.SOURCE_UNREADABLE)){
-                description = "Source unreadable";
-            }
-            if((fail.getType() == Binding.SyncFailureType.SOURCE_UNWRITEABLE)){
-                description = "Source unwriteable";
-            }
-            if((fail.getType() == Binding.SyncFailureType.TARGET_UNREADABLE)){
-                description = "Target unreadable";
-            }
-            if((fail.getType() == Binding.SyncFailureType.TARGET_UNWRITEABLE)){
-                description = "Target unwriteable";
-            }
-            
-            // background colour change to display error
-            if(source instanceof JTextField){
-                JTextField jtf = (JTextField) source;
-                jtf.setBackground(Color.PINK);
-            }
-            
+        if((failureType == Binding.SyncFailureType.VALIDATION_FAILED)){
+            description = validationFailedDescription;
+        }
+        if((failureType == Binding.SyncFailureType.CONVERSION_FAILED)){
+            description = "The inserted string is not a number.";
+        }
+        if((failureType == Binding.SyncFailureType.SOURCE_UNREADABLE)){
+            description = "Source unreadable";
+        }
+        if((failureType == Binding.SyncFailureType.SOURCE_UNWRITEABLE)){
+            description = "Source unwriteable";
+        }
+        if((failureType == Binding.SyncFailureType.TARGET_UNREADABLE)){
+            description = "Target unreadable";
+        }
+        if((failureType == Binding.SyncFailureType.TARGET_UNWRITEABLE)){
+            description = "Target unwriteable";
+        }
+
+        // background colour change to display error
+        if(source instanceof JTextField){
+            JTextField jtf = (JTextField) source;
+            jtf.setBackground(Color.PINK);
         }
         
         String msg = "[" + binding.getName() + "] " + description;
@@ -84,6 +93,7 @@ public class ErrorBindingListener extends AbstractBindingListener{
         errorMap.put(binding, msg);
         
         System.out.println(msg);
+        
     }
 
     @Override

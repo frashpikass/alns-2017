@@ -2171,6 +2171,7 @@ public class MainWindow extends javax.swing.JFrame {
             try {
                 this.parametersBean.deserializeFromJSON(inputFile.getAbsolutePath());
                 this.errorBindingListener.resetAllErrors();
+                this.checkAllBindings();
                 System.out.println("Parameters loaded from '"+inputFile.getAbsolutePath()+"'");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
@@ -2416,6 +2417,45 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
         ret &= jcbValidDestroy;
+        
+        return ret;
+    }
+    
+    /**
+     * Checks all bindings to notify of validation/conversion errors
+     * @return <code>true</code> if all fields are valid, <code>false</code> otherwise
+     */
+    public boolean checkAllBindings(){
+        boolean ret = false;
+        
+        for(Binding b: bindingGroup.getBindings()){
+            Object source = b.getTargetObject();
+            Validator validator = b.getValidator();
+            Converter converter = b.getConverter();
+            
+            // Validate all JTextField bindings
+            if(source != null && validator != null && converter != null){
+                if(source instanceof JTextField){
+                    JTextField jtf = (JTextField) source;
+                    
+                    try{
+                        Result r = validator.validate(
+                                converter.convertReverse((jtf.getText()))
+                        );
+                        if(r != null){ //Validation error
+                            errorBindingListener.handleFailure(b, Binding.SyncFailureType.VALIDATION_FAILED, r.getDescription());
+                            ret = false;
+                        }
+                        else ret = true;
+                    }
+                    catch(Exception e){ //Conversion error
+                        errorBindingListener.handleFailure(b, Binding.SyncFailureType.VALIDATION_FAILED, null);
+                        ret = false;
+                    }
+                    
+                }
+            }       
+        }
         
         return ret;
     }

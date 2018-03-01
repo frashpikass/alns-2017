@@ -591,20 +591,8 @@ public class ALNSPropertiesBean {
      */
     public void setLambda(double lambda) {
         double oldLambda = this.lambda;
-        double newLambda;
-
-        // Lambda setup - values out of range [0,1] clip to values close to range boundaries
-        // we want the temperature to always decrease if not explicitly stated otherwise
-        if (lambda <= 0) {
-            newLambda = 0.0;
-        } else if (lambda >= 1) {
-            newLambda = 1;
-        } else {
-            newLambda = lambda;
-        }
-
         this.lambda = lambda;
-        propertyChangeSupport.firePropertyChange(PROP_LAMBDA, oldLambda, newLambda);
+        propertyChangeSupport.firePropertyChange(PROP_LAMBDA, oldLambda, lambda);
     }
 
     /**
@@ -633,19 +621,8 @@ public class ALNSPropertiesBean {
      */
     public void setAlpha(double alpha) {
         double oldAlpha = this.alpha;
-        double newAlpha;
-        // Alpha setup - values out of range [0,1] clip to values close to range boundaries
-        // we want the temperature to always decrease if not explicitly stated otherwise
-        if (alpha <= 0) {
-            newAlpha = 0.0;
-        } else if (alpha >= 1) {
-            newAlpha = 1;
-        } else {
-            newAlpha = alpha;
-        }
-
-        this.alpha = newAlpha;
-        propertyChangeSupport.firePropertyChange(PROP_ALPHA, oldAlpha, newAlpha);
+        this.alpha = alpha;
+        propertyChangeSupport.firePropertyChange(PROP_ALPHA, oldAlpha, alpha);
     }
 
     /**
@@ -668,20 +645,8 @@ public class ALNSPropertiesBean {
      */
     public void setPunishmentGamma(double punishmentGamma) {
         double oldGamma = this.punishmentGamma;
-        double newGamma;
-
-        // setup - values out of range [0,1] clip to values close to range boundaries
-        // we want the temperature to always decrease if not explicitly stated otherwise
-        if (punishmentGamma <= 0) {
-            newGamma = 0.0;
-        } else if (punishmentGamma >= 1) {
-            newGamma = 1;
-        } else {
-            newGamma = punishmentGamma;
-        }
-
-        this.punishmentGamma = newGamma;
-        propertyChangeSupport.firePropertyChange(PROP_PUNISHMENTGAMMA, oldGamma, newGamma);
+        this.punishmentGamma = punishmentGamma;
+        propertyChangeSupport.firePropertyChange(PROP_PUNISHMENTGAMMA, oldGamma, punishmentGamma);
     }
 
     /**
@@ -714,20 +679,8 @@ public class ALNSPropertiesBean {
      */
     public void setCooldownGamma(double cooldownGamma) {
         double oldCooldownGamma = this.cooldownGamma;
-        double newGamma;
-
-        // setup - values out of range [0,1] clip to values close to range boundaries
-        // we want the temperature to always decrease if not explicitly stated otherwise
-        if (cooldownGamma <= 0) {
-            newGamma = 0.0;
-        } else if (cooldownGamma >= 1) {
-            newGamma = 1;
-        } else {
-            newGamma = cooldownGamma;
-        }
-
-        this.cooldownGamma = newGamma;
-        propertyChangeSupport.firePropertyChange(PROP_COOLDOWNGAMMA, oldCooldownGamma, newGamma);
+        this.cooldownGamma = cooldownGamma;
+        propertyChangeSupport.firePropertyChange(PROP_COOLDOWNGAMMA, oldCooldownGamma, cooldownGamma);
     }
 
     /**
@@ -760,20 +713,8 @@ public class ALNSPropertiesBean {
      */
     public void setWarmupGamma(double warmupGamma) {
         double oldWarmupGamma = this.warmupGamma;
-        double newGamma;
-
-        // setup - values out of range [0,1] clip to values close to range boundaries
-        // we want the temperature to always decrease if not explicitly stated otherwise
-        if (warmupGamma <= 0) {
-            newGamma = 0.0;
-        } else if (warmupGamma >= 1) {
-            newGamma = 1;
-        } else {
-            newGamma = warmupGamma;
-        }
-
         this.warmupGamma = warmupGamma;
-        propertyChangeSupport.firePropertyChange(PROP_WARMUPGAMMA, oldWarmupGamma, newGamma);
+        propertyChangeSupport.firePropertyChange(PROP_WARMUPGAMMA, oldWarmupGamma, warmupGamma);
     }
 
     /**

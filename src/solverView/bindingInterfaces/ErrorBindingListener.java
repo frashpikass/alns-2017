@@ -44,7 +44,12 @@ public class ErrorBindingListener extends AbstractBindingListener{
     @Override
     public void syncFailed(Binding binding, SyncFailure fail) {
         if ((fail != null)) {
-            handleFailure(binding, fail.getType(), fail.getValidationResult().getDescription());
+            if(fail.getType() == Binding.SyncFailureType.VALIDATION_FAILED){
+                handleFailure(binding, fail.getType(), fail.getValidationResult().getDescription());
+            }
+            else {
+                handleFailure(binding, fail.getType(), null);
+            }
         }
     }
     

@@ -1131,7 +1131,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxRepairHighCostRemoval.setText("RepairHighCostRemoval");
-        jCheckBoxRepairHighCostRemoval.setToolTipText("Removes the first <tt>q</tt> clusters with the highest cost from the current solution.");
+        jCheckBoxRepairHighCostRemoval.setToolTipText("<html>Removes the first <tt>q</tt> clusters with the highest cost from the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairHighCostRemoval}"), jCheckBoxRepairHighCostRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairHighCostRemoval");
         bindingGroup.addBinding(binding);
@@ -1149,7 +1149,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.add(jCheckBoxRepairHighCostRemoval, gridBagConstraints);
 
         jCheckBoxRepairRandomRemoval.setText("RepairRandomRemoval");
-        jCheckBoxRepairRandomRemoval.setToolTipText("Removes at most <tt>q</tt> randomly picked clusters from the current solution.");
+        jCheckBoxRepairRandomRemoval.setToolTipText("<html>Removes at most <tt>q</tt> randomly picked clusters from the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairRandomRemoval}"), jCheckBoxRepairRandomRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairRandomRemoval");
         bindingGroup.addBinding(binding);
@@ -1203,7 +1203,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelRepairHeuristics.add(jCheckBoxRepairVehicleTime, gridBagConstraints);
 
         jCheckBoxRepairWorstRemoval.setText("RepairWorstRemoval");
-        jCheckBoxRepairWorstRemoval.setToolTipText("Removes the first <tt>q</tt> clusters with the least profit/cost ratio.");
+        jCheckBoxRepairWorstRemoval.setToolTipText("<html>Removes the first <tt>q</tt> clusters with the least profit/cost ratio.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useRepairWorstRemoval}"), jCheckBoxRepairWorstRemoval, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useRepairWorstRemoval");
         bindingGroup.addBinding(binding);
@@ -1230,7 +1230,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxDestroyGreedyCostInsertion.setText("DestroyGreedyCostInsertion");
-        jCheckBoxDestroyGreedyCostInsertion.setToolTipText("Inserts the <tt>q</tt> clusters with the least cost  into the current solution in a greedy way.");
+        jCheckBoxDestroyGreedyCostInsertion.setToolTipText("<html>Inserts the <tt>q</tt> clusters with the least cost  into the current solution in a greedy way.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyCostInsertion}"), jCheckBoxDestroyGreedyCostInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyCostInsertion");
         bindingGroup.addBinding(binding);
@@ -1248,7 +1248,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyCostInsertion, gridBagConstraints);
 
         jCheckBoxDestroyGreedyBestInsertion.setText("DestroyGreedyBestInsertion");
-        jCheckBoxDestroyGreedyBestInsertion.setToolTipText("Inserts the <tt>q</tt> clusters with the highest profit to cost ratio into the current solution in a greedy way.");
+        jCheckBoxDestroyGreedyBestInsertion.setToolTipText("<html>Inserts the <tt>q</tt> clusters with the highest profit to cost ratio into the current solution in a greedy way.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyBestInsertion}"), jCheckBoxDestroyGreedyBestInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyBestInsertion");
         bindingGroup.addBinding(binding);
@@ -1266,7 +1266,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyBestInsertion, gridBagConstraints);
 
         jCheckBoxDestroyGreedyProfitInsertion.setText("DestroyGreedyProfitInsertion");
-        jCheckBoxDestroyGreedyProfitInsertion.setToolTipText("Inserts the <tt>q</tt> clusters with the highest profit into the current solution in a greedy way.");
+        jCheckBoxDestroyGreedyProfitInsertion.setToolTipText("<html>Inserts the <tt>q</tt> clusters with the highest profit into the current solution in a greedy way.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyGreedyProfitInsertion}"), jCheckBoxDestroyGreedyProfitInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyGreedyProfitInsertion");
         bindingGroup.addBinding(binding);
@@ -1284,7 +1284,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyGreedyProfitInsertion, gridBagConstraints);
 
         jCheckBoxDestroyRandomInsertion.setText("DestroyRandomInsertion");
-        jCheckBoxDestroyRandomInsertion.setToolTipText("Inserts <tt>q</tt> randomly picked clusters into the current solution.");
+        jCheckBoxDestroyRandomInsertion.setToolTipText("<html>Inserts <tt>q</tt> randomly picked clusters into the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyRandomInsertion}"), jCheckBoxDestroyRandomInsertion, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyRandomInsertion");
         bindingGroup.addBinding(binding);
@@ -1307,7 +1307,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanelDestroyHeuristics.add(jCheckBoxDestroyRandomInsertion, gridBagConstraints);
 
         jCheckBoxDestroyCloseToBarycenter.setText("DestroyCloseToBarycenter");
-        jCheckBoxDestroyCloseToBarycenter.setToolTipText("Inserts the first <tt>q</tt> available clusters which are the closest\n<br>to the barycenter of the current solution.");
+        jCheckBoxDestroyCloseToBarycenter.setToolTipText("<html>Inserts the first <tt>q</tt> available clusters which are the closest\n<br>to the barycenter of the current solution.");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, parametersBean, org.jdesktop.beansbinding.ELProperty.create("${ALNSproperties.useDestroyCloseToBarycenter}"), jCheckBoxDestroyCloseToBarycenter, org.jdesktop.beansbinding.BeanProperty.create("selected"), "useDestroyCloseToBarycenter");
         bindingGroup.addBinding(binding);

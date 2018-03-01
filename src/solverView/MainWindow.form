@@ -4761,7 +4761,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairHighCostRemoval">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairHighCostRemoval"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Removes the first &lt;tt&gt;q&lt;/tt&gt; clusters with the highest cost from the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Removes the first &lt;tt&gt;q&lt;/tt&gt; clusters with the highest cost from the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairHighCostRemoval}" target="jCheckBoxRepairHighCostRemoval" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4780,7 +4780,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairRandomRemoval">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairRandomRemoval"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Removes at most &lt;tt&gt;q&lt;/tt&gt; randomly picked clusters from the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Removes at most &lt;tt&gt;q&lt;/tt&gt; randomly picked clusters from the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairRandomRemoval}" target="jCheckBoxRepairRandomRemoval" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4837,7 +4837,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxRepairWorstRemoval">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="RepairWorstRemoval"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Removes the first &lt;tt&gt;q&lt;/tt&gt; clusters with the least profit/cost ratio."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Removes the first &lt;tt&gt;q&lt;/tt&gt; clusters with the least profit/cost ratio."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useRepairWorstRemoval}" target="jCheckBoxRepairWorstRemoval" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4874,7 +4874,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyGreedyCostInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyGreedyCostInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the least cost  into the current solution in a greedy way."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the least cost  into the current solution in a greedy way."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyGreedyCostInsertion}" target="jCheckBoxDestroyGreedyCostInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4893,7 +4893,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyGreedyBestInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyGreedyBestInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the highest profit to cost ratio into the current solution in a greedy way."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the highest profit to cost ratio into the current solution in a greedy way."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyGreedyBestInsertion}" target="jCheckBoxDestroyGreedyBestInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4912,7 +4912,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyGreedyProfitInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyGreedyProfitInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the highest profit into the current solution in a greedy way."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Inserts the &lt;tt&gt;q&lt;/tt&gt; clusters with the highest profit into the current solution in a greedy way."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyGreedyProfitInsertion}" target="jCheckBoxDestroyGreedyProfitInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4931,7 +4931,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyRandomInsertion">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyRandomInsertion"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts &lt;tt&gt;q&lt;/tt&gt; randomly picked clusters into the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Inserts &lt;tt&gt;q&lt;/tt&gt; randomly picked clusters into the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyRandomInsertion}" target="jCheckBoxDestroyRandomInsertion" targetPath="selected" updateStrategy="0" immediately="false">
@@ -4951,7 +4951,7 @@
                                                 <Component class="javax.swing.JCheckBox" name="jCheckBoxDestroyCloseToBarycenter">
                                                   <Properties>
                                                     <Property name="text" type="java.lang.String" value="DestroyCloseToBarycenter"/>
-                                                    <Property name="toolTipText" type="java.lang.String" value="Inserts the first &lt;tt&gt;q&lt;/tt&gt; available clusters which are the closest&#xa;&lt;br&gt;to the barycenter of the current solution."/>
+                                                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Inserts the first &lt;tt&gt;q&lt;/tt&gt; available clusters which are the closest&#xa;&lt;br&gt;to the barycenter of the current solution."/>
                                                   </Properties>
                                                   <BindingProperties>
                                                     <BindingProperty name="selected" source="parametersBean" sourcePath="${ALNSproperties.useDestroyCloseToBarycenter}" target="jCheckBoxDestroyCloseToBarycenter" targetPath="selected" updateStrategy="0" immediately="false">

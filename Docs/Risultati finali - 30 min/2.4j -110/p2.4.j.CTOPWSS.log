@@ -1,0 +1,4424 @@
+
+Gurobi 7.5.1 (mac64, Java) logging started Fri Nov  3 09:51:09 2017
+
+Academic license - for non-commercial use only
+
+ALNSLOG: removed 11 infeasible clusters using constraint in Expression19
+
+ALNSLOG, 0: optimizeALNS starting.
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+
+Concurrent LP optimizer: dual simplex and barrier
+Showing barrier log only...
+
+Presolve removed 2571 rows and 9944 columns
+Presolve time: 0.03s
+Presolved: 681 rows, 1595 columns, 10374 nonzeros
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 1.560e+04
+ Factor NZ  : 2.276e+04 (roughly 1 MByte of memory)
+ Factor Ops : 1.892e+06 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   7.93773397e+02  3.62385091e+04  2.17e+02 6.16e-01  7.36e+01     0s
+   1   3.24621480e+02  2.04018867e+04  4.87e+01 1.78e-14  1.73e+01     0s
+   2   1.12234093e+02  7.50124847e+03  4.05e+00 8.53e-14  2.78e+00     0s
+   3   1.05686037e+02  1.22182875e+03  2.91e-01 2.13e-14  3.37e-01     0s
+   4   1.10331276e+02  2.93630328e+02  2.82e-14 1.67e-14  4.88e-02     0s
+   5   1.19108389e+02  1.40941022e+02  3.88e-13 9.53e-15  5.81e-03     0s
+   6   1.19999259e+02  1.20045239e+02  4.64e-13 1.78e-15  1.22e-05     0s
+   7   1.20000000e+02  1.20000000e+02  1.88e-13 3.55e-15  1.26e-11     0s
+
+Barrier solved model in 7 iterations and 0.06 seconds
+Optimal objective 1.20000000e+02
+
+Crossover log...
+
+       0 DPushes remaining with DInf 0.0000000e+00                 0s
+
+    1473 PPushes remaining with PInf 0.0000000e+00                 0s
+
+Solved with dual simplex
+Solved in 570 iterations and 0.09 seconds
+Optimal objective  1.200000000e+02
+
+ALNSConstructiveSolution log start, time 2017-11-03T09:51:11.682
+
+ALNSConstructiveSolution looking for the first cluster
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+Found heuristic solution: objective 20
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 1: 20 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.000000000000e+01, best bound 2.000000000000e+01, gap 0.0000%
+
+Testing solution with clusters: [8 ]: FEASIBLE integer solution found!
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 8: [21*3.289 ]
+End of the list. Visited clusters: 1
+
+Vehicle paths in solution: 
+v0: [0, 47]
+
+v1: [0, 47]
+
+v2: [0, 21, 47]
+
+v3: [0, 47]
+
+ALNSConstructiveSolution first cluster found, looking for others...
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+Presolve removed 3238 rows and 11526 columns
+Presolve time: 0.02s
+Presolved: 14 rows, 13 columns, 48 nonzeros
+Variable types: 4 continuous, 9 integer (9 binary)
+Found heuristic solution: objective 30.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.09 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 30 
+
+Solve interrupted
+Best objective 3.000000000000e+01, best bound 3.000000000000e+01, gap 0.0000%
+
+Testing solution with clusters: [8 10 ]: FEASIBLE integer solution found!
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 8: [21*3.289 ]
+Cluster 10: [26*6.388999999999993 ]
+End of the list. Visited clusters: 2
+
+Vehicle paths in solution: 
+v0: [0, 47]
+
+v1: [0, 47]
+
+v2: [0, 21, 26, 47]
+
+v3: [0, 47]
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+Presolve removed 3205 rows and 11478 columns
+Presolve time: 0.02s
+Presolved: 47 rows, 61 columns, 270 nonzeros
+Variable types: 15 continuous, 46 integer (46 binary)
+Found heuristic solution: objective 40.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.08 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 40 
+
+Solve interrupted
+Best objective 4.000000000000e+01, best bound 4.000000000000e+01, gap 0.0000%
+
+Testing solution with clusters: [8 10 5 ]: FEASIBLE integer solution found!
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 5: [15*1.315 16*7.395 ]
+Cluster 8: [21*3.289 ]
+Cluster 10: [26*2.434 ]
+End of the list. Visited clusters: 3
+
+Vehicle paths in solution: 
+v0: [0, 21, 16, 47]
+
+v1: [0, 47]
+
+v2: [0, 15, 26, 47]
+
+v3: [0, 47]
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+Presolve removed 3155 rows and 11374 columns
+Presolve time: 0.02s
+Presolved: 97 rows, 165 columns, 799 nonzeros
+Variable types: 44 continuous, 121 integer (121 binary)
+
+Root relaxation: objective 5.000000e+01, 48 iterations, 0.00 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   50.00000    0   12          -   50.00000      -     -    0s
+H    0     0                      50.0000000   50.00000  0.00%     -    0s
+
+Explored 1 nodes (171 simplex iterations) in 0.10 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 50 
+
+Solve interrupted
+Best objective 5.000000000000e+01, best bound 5.000000000000e+01, gap 0.0000%
+
+Testing solution with clusters: [8 10 5 11 ]: FEASIBLE integer solution found!
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 5: [15*1.315 16*5.867000000000297 ]
+Cluster 8: [21*3.289 ]
+Cluster 10: [26*1.36 ]
+Cluster 11: [27*3.115999999999872 28*3.541000000000516 29*3.6410000000003886 ]
+End of the list. Visited clusters: 4
+
+Vehicle paths in solution: 
+v0: [0, 15, 28, 29, 16, 47]
+
+v1: [0, 26, 27, 47]
+
+v2: [0, 21, 47]
+
+v3: [0, 47]
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+Presolve removed 3065 rows and 11165 columns
+Presolve time: 0.03s
+Presolved: 187 rows, 374 columns, 1888 nonzeros
+Variable types: 107 continuous, 267 integer (267 binary)
+
+Root relaxation: objective 7.500000e+01, 128 iterations, 0.00 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   75.00000    0   20          -   75.00000      -     -    0s
+     0     0   75.00000    0   37          -   75.00000      -     -    0s
+     0     0   75.00000    0   37          -   75.00000      -     -    0s
+     0     0   75.00000    0   24          -   75.00000      -     -    0s
+     0     0   75.00000    0   24          -   75.00000      -     -    0s
+     0     2   75.00000    0   24          -   75.00000      -     -    0s
+*   62     4              26      75.0000000   75.00000  0.00%  20.0    0s
+
+Cutting planes:
+  Implied bound: 9
+  MIR: 6
+  Flow cover: 2
+  GUB cover: 3
+
+Explored 109 nodes (3523 simplex iterations) in 0.32 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 75 
+
+Solve interrupted
+Best objective 7.500000000000e+01, best bound 7.500000000000e+01, gap 0.0000%
+
+Testing solution with clusters: [8 10 5 11 12 ]: FEASIBLE integer solution found!
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 5: [15*1.315 16*7.3950000000000005 ]
+Cluster 8: [21*3.289 ]
+Cluster 10: [26*2.8920000000000003 ]
+Cluster 11: [27*1.236 28*1.336 29*6.930999999999999 ]
+Cluster 12: [30*4.885999999999999 31*4.985999999999999 32*5.286 33*5.921 ]
+End of the list. Visited clusters: 5
+
+Vehicle paths in solution: 
+v0: [0, 15, 30, 31, 32, 29, 47]
+
+v1: [0, 27, 28, 26, 33, 47]
+
+v2: [0, 21, 16, 47]
+
+v3: [0, 47]
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+Presolve removed 2943 rows and 10857 columns
+Presolve time: 0.04s
+Presolved: 309 rows, 682 columns, 3531 nonzeros
+Variable types: 202 continuous, 480 integer (480 binary)
+
+Root relaxation: objective 9.000000e+01, 262 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   90.00000    0   71          -   90.00000      -     -    0s
+     0     0   90.00000    0   82          -   90.00000      -     -    0s
+     0     0   90.00000    0   82          -   90.00000      -     -    0s
+     0     2   90.00000    0   82          -   90.00000      -     -    0s
+  3917   106   90.00000   43   19          -   90.00000      -  53.3    5s
+  5880   140 infeasible   49               -   90.00000      -  16.1   10s
+
+Cutting planes:
+  Gomory: 1
+  Cover: 1
+  Implied bound: 35
+  MIR: 8
+  Flow cover: 3
+  GUB cover: 1
+
+Explored 10023 nodes (479469 simplex iterations) in 14.92 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 9.000000000000e+01, gap -
+
+Testing solution with clusters: [8 10 5 11 12 4 ]: INFEASIBLE.
+
+Optimize a model with 3252 rows, 11539 columns and 91082 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 2e+01]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 2e+00]
+Presolve removed 3065 rows and 11165 columns
+Presolve time: 0.03s
+Presolved: 187 rows, 374 columns, 1888 nonzeros
+Variable types: 107 continuous, 267 integer (267 binary)
+
+Root relaxation: objective 7.500000e+01, 128 iterations, 0.00 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   75.00000    0   20          -   75.00000      -     -    0s
+     0     0   75.00000    0   37          -   75.00000      -     -    0s
+     0     0   75.00000    0   37          -   75.00000      -     -    0s
+     0     0   75.00000    0   24          -   75.00000      -     -    0s
+     0     0   75.00000    0   24          -   75.00000      -     -    0s
+     0     2   75.00000    0   24          -   75.00000      -     -    0s
+*   62     4              26      75.0000000   75.00000  0.00%  20.0    0s
+
+Cutting planes:
+  Implied bound: 9
+  MIR: 6
+  Flow cover: 2
+  GUB cover: 3
+
+Explored 109 nodes (3523 simplex iterations) in 0.31 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 75 
+
+Solve interrupted
+Best objective 7.500000000000e+01, best bound 7.500000000000e+01, gap 0.0000%
+
+ALNSConstructiveSolution log end, time 2017-11-03T09:51:27.581
+
+ALNSLOG: saving the initial solution (generated by the constructive algorithm).
+
+Vehicle paths in solution: 
+v0: [0, 15, 30, 31, 32, 29, 47]
+
+v1: [0, 27, 28, 26, 33, 47]
+
+v2: [0, 21, 16, 47]
+
+v3: [0, 47]
+
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 5: [15*1.315 16*7.3950000000000005 ]
+Cluster 8: [21*3.289 ]
+Cluster 10: [26*2.8920000000000003 ]
+Cluster 11: [27*1.236 28*1.336 29*6.930999999999999 ]
+Cluster 12: [30*4.885999999999999 31*4.985999999999999 32*5.286 33*5.921 ]
+End of the list. Visited clusters: 5
+
+ALNSLOG, 16: trying to get a feasible set of h. constraints for the local search...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7927 rows and 11296 columns
+Presolve time: 0.03s
+Presolved: 243 rows, 243 columns, 1413 nonzeros
+Variable types: 81 continuous, 162 integer (162 binary)
+
+Root relaxation: objective 7.500000e+01, 174 iterations, 0.00 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   75.00000    0   13          -   75.00000      -     -    0s
+     0     0   75.00000    0   46          -   75.00000      -     -    0s
+     0     0   75.00000    0    6          -   75.00000      -     -    0s
+     0     0   75.00000    0    6          -   75.00000      -     -    0s
+     0     0   75.00000    0    6          -   75.00000      -     -    0s
+H    0     0                      75.0000000   75.00000  0.00%     -    0s
+     0     0   75.00000    0    6   75.00000   75.00000  0.00%     -    0s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 20
+  MIR: 6
+  Flow cover: 7
+
+Explored 1 nodes (1719 simplex iterations) in 0.26 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 75 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 7.500000000000e+01, best bound 7.500000000000e+01, gap 0.0000%
+
+ALNSLOG, 16: LS constr=[0, 1, 2, 3, 4]
+
+ALNSLOG, 16: segment 0 started. q = 1
+
+ALNSLOG, 16: segment 0, iteration 0, without improvement 0
+
+ALNSLOG, 16: segment 0, iteration 0, destroy: RandomInsertion
+
+ALNSLOG, xOld =[8, 10, 5, 11, 12], q=1
+
+ALNSLOG, xNewD=[8, 10, 5, 11, 12, 3], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7764 rows and 11123 columns
+Presolve time: 0.04s
+Presolved: 406 rows, 416 columns, 2484 nonzeros
+Variable types: 149 continuous, 267 integer (267 binary)
+
+Root relaxation: objective 9.000000e+01, 307 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   90.00000    0   37          -   90.00000      -     -    0s
+     0     0   90.00000    0   77          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     0   90.00000    0   54          -   90.00000      -     -    0s
+     0     0   90.00000    0   63          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     2   90.00000    0   26          -   90.00000      -     -    1s
+*  446     2               9      90.0000000   90.00000  0.00%  49.3    1s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 90
+  MIR: 21
+  Flow cover: 23
+  GUB cover: 1
+
+Explored 463 nodes (27468 simplex iterations) in 1.62 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 90 
+
+Solve interrupted
+Best objective 9.000000000000e+01, best bound 9.000000000000e+01, gap 0.0000%
+
+ALNSLOG, 16: segment 0, iteration 0, no repair method needed.
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7764 rows and 11123 columns
+Presolve time: 0.04s
+Presolved: 406 rows, 416 columns, 2484 nonzeros
+Variable types: 149 continuous, 267 integer (267 binary)
+
+Root relaxation: objective 9.000000e+01, 307 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   90.00000    0   37          -   90.00000      -     -    0s
+     0     0   90.00000    0   77          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     0   90.00000    0   54          -   90.00000      -     -    0s
+     0     0   90.00000    0   63          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     2   90.00000    0   26          -   90.00000      -     -    1s
+*  446     2               9      90.0000000   90.00000  0.00%  49.3    1s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 90
+  MIR: 21
+  Flow cover: 23
+  GUB cover: 1
+
+Explored 463 nodes (27468 simplex iterations) in 1.62 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 90 
+
+Solve interrupted
+Best objective 9.000000000000e+01, best bound 9.000000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 90.0
+Solution accepted!
+
+ALNSLOG: saving the new global best solution.
+
+Vehicle paths in solution: 
+v0: [0, 15, 16, 9, 10, 47]
+
+v1: [0, 7, 8, 26, 47]
+
+v2: [0, 27, 28, 29, 21, 30, 31, 32, 33, 47]
+
+v3: [0, 47]
+
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 3: [7*3.492000000000007 8*3.691999999999716 9*3.8619999999998402 10*4.061999999999701 ]
+Cluster 5: [15*1.3149999999997615 16*1.4149999999997616 ]
+Cluster 8: [21*6.035968391771008E-13 ]
+Cluster 10: [26*6.832999999999716 ]
+Cluster 11: [27*1.236 28*1.336 29*1.4360000000000002 ]
+Cluster 12: [30*7.295000000000616 31*7.395000000000616 32*7.695000000000616 33*7.995000000000616 ]
+End of the list. Visited clusters: 6
+
+ALNSLOG, 19: segment 0, iteration 0 end.
+
+ALNSLOG, 19: segment 0, iteration 0 solution accepted.
+
+ALNSLOG, 19: segment 0, iteration 1, without improvement 0
+
+ALNSLOG, 19: segment 0, iteration 1, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[8, 10, 5, 11, 12, 3], q=1
+
+ALNSLOG, xNewD=[8, 10, 5, 11, 12, 3, 9], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7603 rows and 10943 columns
+Presolve time: 0.04s
+Presolved: 567 rows, 596 columns, 3571 nonzeros
+Variable types: 220 continuous, 376 integer (376 binary)
+
+Root relaxation: objective 1.050000e+02, 324 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  105.00000    0   36          -  105.00000      -     -    0s
+     0     0  105.00000    0   70          -  105.00000      -     -    0s
+     0     0  105.00000    0   69          -  105.00000      -     -    0s
+     0     0  105.00000    0   25          -  105.00000      -     -    0s
+     0     0  105.00000    0   25          -  105.00000      -     -    0s
+     0     0  105.00000    0   32          -  105.00000      -     -    0s
+     0     0  105.00000    0   23          -  105.00000      -     -    0s
+     0     2  105.00000    0   23          -  105.00000      -     -    1s
+  2577    10  105.00000    9   45          -  105.00000      -  61.5    5s
+  5087    21  105.00000   11   49          -  105.00000      -  68.4   10s
+  6743    48  105.00000   13   33          -  105.00000      -  74.8   15s
+  7299    83  105.00000   20   27          -  105.00000      -   2.1   20s
+  8408    13  105.00000   22   65          -  105.00000      -  17.6   25s
+  9453    59 infeasible   47               -  105.00000      -  31.8   30s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 5
+
+Explored 10124 nodes (958627 simplex iterations) in 32.78 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.050000000000e+02, gap -
+
+ALNSLOG, 19: segment 0, iteration 1, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7662 rows and 11015 columns
+Presolve time: 0.05s
+Presolved: 508 rows, 524 columns, 3142 nonzeros
+Variable types: 193 continuous, 331 integer (331 binary)
+
+Root relaxation: objective 8.500000e+01, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   85.00000    0   25          -   85.00000      -     -    0s
+     0     0   85.00000    0   59          -   85.00000      -     -    0s
+     0     0   85.00000    0   58          -   85.00000      -     -    0s
+     0     0   85.00000    0   31          -   85.00000      -     -    0s
+     0     0   85.00000    0   36          -   85.00000      -     -    0s
+     0     0   85.00000    0   29          -   85.00000      -     -    0s
+     0     0   85.00000    0   29          -   85.00000      -     -    0s
+     0     2   85.00000    0   29          -   85.00000      -     -    0s
+*   94     6               9      85.0000000   85.00000  0.00%  72.4    0s
+
+Cutting planes:
+  Implied bound: 39
+  MIR: 9
+  Flow cover: 18
+
+Explored 96 nodes (12011 simplex iterations) in 0.96 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 85 
+
+Solve interrupted
+Best objective 8.500000000000e+01, best bound 8.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[12, 3, 9, 5, 11, 10], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7662 rows and 11015 columns
+Presolve time: 0.06s
+Presolved: 508 rows, 524 columns, 3142 nonzeros
+Variable types: 193 continuous, 331 integer (331 binary)
+
+Root relaxation: objective 8.500000e+01, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   85.00000    0   25          -   85.00000      -     -    0s
+     0     0   85.00000    0   59          -   85.00000      -     -    0s
+     0     0   85.00000    0   58          -   85.00000      -     -    0s
+     0     0   85.00000    0   31          -   85.00000      -     -    0s
+     0     0   85.00000    0   36          -   85.00000      -     -    0s
+     0     0   85.00000    0   29          -   85.00000      -     -    0s
+     0     0   85.00000    0   29          -   85.00000      -     -    0s
+     0     2   85.00000    0   29          -   85.00000      -     -    0s
+*   94     6               9      85.0000000   85.00000  0.00%  72.4    0s
+
+Cutting planes:
+  Implied bound: 39
+  MIR: 9
+  Flow cover: 18
+
+Explored 96 nodes (12011 simplex iterations) in 0.98 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 85 
+
+Solve interrupted
+Best objective 8.500000000000e+01, best bound 8.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 85.0
+Solution accepted!
+
+ALNSLOG, 54: segment 0, iteration 1 end.
+
+ALNSLOG, 54: segment 0, iteration 1 solution accepted.
+
+ALNSLOG, 54: segment 0, iteration 2, without improvement 1
+
+ALNSLOG, 54: segment 0, iteration 2, destroy: GreedyCostInsertion
+
+ALNSLOG, xOld =[12, 3, 9, 5, 11, 10], q=1
+
+ALNSLOG, xNewD=[12, 3, 9, 5, 11, 10, 4], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7489 rows and 10817 columns
+Presolve time: 0.06s
+Presolved: 681 rows, 722 columns, 4338 nonzeros
+Variable types: 270 continuous, 452 integer (452 binary)
+
+Root relaxation: objective 1.000000e+02, 533 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   96          -  100.00000      -     -    0s
+     0     0  100.00000    0   53          -  100.00000      -     -    0s
+     0     0  100.00000    0   53          -  100.00000      -     -    0s
+     0     0  100.00000    0   25          -  100.00000      -     -    0s
+     0     0  100.00000    0   25          -  100.00000      -     -    0s
+     0     2  100.00000    0   25          -  100.00000      -     -    1s
+*  120     7              21     100.0000000  100.00000  0.00%  91.0    1s
+
+Cutting planes:
+  Implied bound: 55
+  MIR: 1
+  Flow cover: 13
+  Zero half: 1
+
+Explored 141 nodes (19167 simplex iterations) in 1.51 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, 54: segment 0, iteration 2, no repair method needed.
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7489 rows and 10817 columns
+Presolve time: 0.06s
+Presolved: 681 rows, 722 columns, 4338 nonzeros
+Variable types: 270 continuous, 452 integer (452 binary)
+
+Root relaxation: objective 1.000000e+02, 533 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   96          -  100.00000      -     -    0s
+     0     0  100.00000    0   53          -  100.00000      -     -    0s
+     0     0  100.00000    0   53          -  100.00000      -     -    0s
+     0     0  100.00000    0   25          -  100.00000      -     -    0s
+     0     0  100.00000    0   25          -  100.00000      -     -    0s
+     0     2  100.00000    0   25          -  100.00000      -     -    1s
+*  120     7              21     100.0000000  100.00000  0.00%  91.0    1s
+
+Cutting planes:
+  Implied bound: 55
+  MIR: 1
+  Flow cover: 13
+  Zero half: 1
+
+Explored 141 nodes (19167 simplex iterations) in 1.39 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 100.0
+Solution accepted!
+
+ALNSLOG: saving the new global best solution.
+
+Vehicle paths in solution: 
+v0: [0, 22, 23, 24, 30, 31, 32, 29, 47]
+
+v1: [0, 27, 28, 25, 26, 33, 47]
+
+v2: [0, 15, 16, 7, 8, 9, 10, 11, 12, 13, 14, 47]
+
+v3: [0, 47]
+
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 3: [7*3.862 8*4.062 9*4.162 10*4.362 ]
+Cluster 4: [11*5.045 12*5.145 13*5.345 14*5.445 ]
+Cluster 5: [15*1.315 16*1.415 ]
+Cluster 9: [22*1.878 23*1.978 24*2.078 25*2.643999999999423 ]
+Cluster 10: [26*2.2434745033939055E-16 ]
+Cluster 11: [27*1.2359999999999998 28*1.335999999999423 29*6.46 ]
+Cluster 12: [30*4.415 31*4.515 32*4.8149999999999995 33*6.720999999999424 ]
+End of the list. Visited clusters: 7
+
+ALNSLOG, 57: segment 0, iteration 2 end.
+
+ALNSLOG, 57: segment 0, iteration 2 solution accepted.
+
+ALNSLOG, 57: segment 0, iteration 3, without improvement 0
+
+ALNSLOG, 57: segment 0, iteration 3, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[12, 3, 9, 5, 11, 10, 4], q=1
+
+ALNSLOG, xNewD=[12, 3, 9, 5, 11, 10, 4, 8], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.07s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2024    41  120.00000   15   33          -  120.00000      -  58.5    5s
+  6668    89  120.00000   19   28          -  120.00000      -  48.2   10s
+  7367   151  120.00000   17   53          -  120.00000      -   3.3   15s
+  7956    78  120.00000   41   51          -  120.00000      -  13.8   20s
+  9487   124 infeasible   42               -  120.00000      -  27.6   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 27.19 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 57: segment 0, iteration 3, repair: TravelTime
+
+ALNSLOG: trying to repair solution with TravelTime and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7556 rows and 10900 columns
+Presolve time: 0.04s
+Presolved: 614 rows, 639 columns, 3812 nonzeros
+Variable types: 241 continuous, 398 integer (398 binary)
+
+Root relaxation: objective 1.100000e+02, 456 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   55          -  110.00000      -     -    0s
+     0     0  110.00000    0   81          -  110.00000      -     -    0s
+     0     0  110.00000    0   58          -  110.00000      -     -    0s
+     0     0  110.00000    0   15          -  110.00000      -     -    0s
+     0     0  110.00000    0   67          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     2  110.00000    0   22          -  110.00000      -     -    1s
+* 1189     8              14     110.0000000  110.00000  0.00%  47.5    2s
+
+Cutting planes:
+  Cover: 6
+  Implied bound: 113
+  MIR: 26
+  Flow cover: 30
+  GUB cover: 1
+
+Explored 1198 nodes (66368 simplex iterations) in 2.45 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[11, 10, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7556 rows and 10900 columns
+Presolve time: 0.04s
+Presolved: 614 rows, 639 columns, 3812 nonzeros
+Variable types: 241 continuous, 398 integer (398 binary)
+
+Root relaxation: objective 1.100000e+02, 456 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   55          -  110.00000      -     -    0s
+     0     0  110.00000    0   81          -  110.00000      -     -    0s
+     0     0  110.00000    0   58          -  110.00000      -     -    0s
+     0     0  110.00000    0   15          -  110.00000      -     -    0s
+     0     0  110.00000    0   67          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     2  110.00000    0   22          -  110.00000      -     -    1s
+* 1189     8              14     110.0000000  110.00000  0.00%  47.5    2s
+
+Cutting planes:
+  Cover: 6
+  Implied bound: 113
+  MIR: 26
+  Flow cover: 30
+  GUB cover: 1
+
+Explored 1198 nodes (66368 simplex iterations) in 2.45 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG: saving the new global best solution.
+
+Vehicle paths in solution: 
+v0: [0, 11, 12, 13, 9, 10, 28, 29, 47]
+
+v1: [0, 7, 8, 14, 47]
+
+v2: [0, 22, 23, 24, 25, 21, 30, 31, 32, 33, 47]
+
+v3: [0, 27, 26, 47]
+
+List of visited clusters (a * indicates that the node has been visited):
+Cluster 3: [7*3.492 8*3.6919999999995663 9*3.898 10*4.098 ]
+Cluster 4: [11*2.915 12*3.015 13*3.2150000000000003 14*4.374999999999567 ]
+Cluster 8: [21*3.809 ]
+Cluster 9: [22*1.878 23*1.978 24*2.078 25*2.278 ]
+Cluster 10: [26*2.792 ]
+Cluster 11: [27*1.236 28*8.558 29*8.658 ]
+Cluster 12: [30*7.208 31*7.308 32*7.608 33*7.9079999999999995 ]
+End of the list. Visited clusters: 7
+
+ALNSLOG, 89: segment 0, iteration 3 end.
+
+ALNSLOG, 89: segment 0, iteration 3 solution accepted.
+
+ALNSLOG, 89: segment 0, iteration 4, without improvement 0
+
+ALNSLOG, 89: segment 0, iteration 4, destroy: GreedyCostInsertion
+
+ALNSLOG, xOld =[11, 10, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[11, 10, 3, 9, 4, 8, 12, 5], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2228    33  120.00000   11   43          -  120.00000      -  59.5    5s
+  6911    86 infeasible   22               -  120.00000      -  48.0   10s
+  7367   151  120.00000   17   53          -  120.00000      -   3.3   15s
+  7956    78  120.00000   41   51          -  120.00000      -  13.8   20s
+  9343   136  120.00000   34   48          -  120.00000      -  26.7   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 27.72 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 89: segment 0, iteration 4, repair: TravelTime
+
+ALNSLOG: trying to repair solution with TravelTime and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.04s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  3062    22 infeasible   16               -  110.00000      -  58.3    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    6s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 6.08 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[10, 5, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.04s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  3140    19 infeasible   16               -  110.00000      -  59.9    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    5s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 5.96 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG, 129: segment 0, iteration 4 end.
+
+ALNSLOG, 129: segment 0, iteration 4 solution accepted.
+
+ALNSLOG, 129: segment 0, iteration 5, without improvement 0
+
+ALNSLOG, 129: segment 0, iteration 5, destroy: RandomInsertion
+
+ALNSLOG, xOld =[10, 5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[10, 5, 3, 9, 4, 8, 12, 11], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2024    41  120.00000   15   33          -  120.00000      -  58.5    5s
+  5851   108 infeasible   27               -  120.00000      -  50.2   10s
+  7362   145  120.00000   14   29          -  120.00000      -  48.1   15s
+  7674    88  120.00000   36   51          -  120.00000      -  10.4   20s
+  9052   118 infeasible   51               -  120.00000      -  24.6   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 28.57 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 129: segment 0, iteration 5, repair: TravelTime
+
+ALNSLOG: trying to repair solution with TravelTime and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7500 rows and 10840 columns
+Presolve time: 0.06s
+Presolved: 670 rows, 699 columns, 4186 nonzeros
+Variable types: 265 continuous, 434 integer (434 binary)
+
+Root relaxation: objective 1.100000e+02, 416 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   75          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   31          -  110.00000      -     -    0s
+     0     2  110.00000    0   23          -  110.00000      -     -    1s
+  1744    24  110.00000   10   14          -  110.00000      -   100    5s
+  3624    33 infeasible   20               -  110.00000      -   110   10s
+  5406    36 infeasible   17               -  110.00000      -   111   15s
+  7260    36 infeasible   14               -  110.00000      -   110   20s
+  7598    93  110.00000   26   36          -  110.00000      -   3.5   25s
+  8425    73  110.00000   37   48          -  110.00000      -  17.8   30s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 2
+  MIR: 5
+  Flow cover: 3
+
+Explored 10158 nodes (1147876 simplex iterations) in 34.33 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.100000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with TravelTime and q=2...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7673 rows and 11041 columns
+Presolve time: 0.04s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.42 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[5, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7673 rows and 11041 columns
+Presolve time: 0.04s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.45 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 100.0
+Solution accepted!
+
+ALNSLOG, 199: segment 0, iteration 5 end.
+
+ALNSLOG, 199: segment 0, iteration 5 solution accepted.
+
+ALNSLOG, 199: segment 0, iteration 6, without improvement 1
+
+ALNSLOG, 199: segment 0, iteration 6, destroy: GreedyProfitInsertion
+
+ALNSLOG, xOld =[5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[5, 3, 9, 4, 8, 12, 10], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.05s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  3140    19 infeasible   16               -  110.00000      -  59.9    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    5s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 5.89 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, 199: segment 0, iteration 6, no repair method needed.
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.04s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  2974    24 infeasible   16               -  110.00000      -  57.4    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    6s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 6.39 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG, 211: segment 0, iteration 6 end.
+
+ALNSLOG, 211: segment 0, iteration 6 solution accepted.
+
+ALNSLOG, 211: segment 0, iteration 7, without improvement 0
+
+ALNSLOG, 211: segment 0, iteration 7, destroy: GreedyBestInsertion
+
+ALNSLOG, xOld =[5, 3, 9, 4, 8, 12, 10], q=1
+
+ALNSLOG, xNewD=[5, 3, 9, 4, 8, 12, 10, 11], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2228    33  120.00000   11   43          -  120.00000      -  59.5    5s
+  5049   101  120.00000   24   16          -  120.00000      -  51.9   10s
+  7345   133  120.00000    7   58          -  120.00000      -  48.2   15s
+  7409   148  120.00000   27   44          -  120.00000      -   4.9   20s
+  8081    75  120.00000   46   54          -  120.00000      -  14.9   25s
+  9052   118 infeasible   51               -  120.00000      -  24.6   30s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 34.53 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 211: segment 0, iteration 7, repair: WorstRemoval
+
+ALNSLOG: trying to repair solution with WorstRemoval and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7556 rows and 10900 columns
+Presolve time: 0.05s
+Presolved: 614 rows, 639 columns, 3812 nonzeros
+Variable types: 241 continuous, 398 integer (398 binary)
+
+Root relaxation: objective 1.100000e+02, 456 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   55          -  110.00000      -     -    0s
+     0     0  110.00000    0   81          -  110.00000      -     -    0s
+     0     0  110.00000    0   58          -  110.00000      -     -    0s
+     0     0  110.00000    0   15          -  110.00000      -     -    0s
+     0     0  110.00000    0   67          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     2  110.00000    0   22          -  110.00000      -     -    1s
+* 1189     8              14     110.0000000  110.00000  0.00%  47.5    3s
+
+Cutting planes:
+  Cover: 6
+  Implied bound: 113
+  MIR: 26
+  Flow cover: 30
+  GUB cover: 1
+
+Explored 1198 nodes (66368 simplex iterations) in 3.09 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[10, 11, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7556 rows and 10900 columns
+Presolve time: 0.05s
+Presolved: 614 rows, 639 columns, 3812 nonzeros
+Variable types: 241 continuous, 398 integer (398 binary)
+
+Root relaxation: objective 1.100000e+02, 456 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   55          -  110.00000      -     -    0s
+     0     0  110.00000    0   81          -  110.00000      -     -    0s
+     0     0  110.00000    0   58          -  110.00000      -     -    0s
+     0     0  110.00000    0   15          -  110.00000      -     -    0s
+     0     0  110.00000    0   67          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     2  110.00000    0   22          -  110.00000      -     -    1s
+* 1189     8              14     110.0000000  110.00000  0.00%  47.5    3s
+
+Cutting planes:
+  Cover: 6
+  Implied bound: 113
+  MIR: 26
+  Flow cover: 30
+  GUB cover: 1
+
+Explored 1198 nodes (66368 simplex iterations) in 3.06 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG, 252: segment 0, iteration 7 end.
+
+ALNSLOG, 252: segment 0, iteration 7 solution accepted.
+
+ALNSLOG, 252: segment 0, iteration 8, without improvement 0
+
+ALNSLOG, 252: segment 0, iteration 8, destroy: RandomInsertion
+
+ALNSLOG, xOld =[10, 11, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[10, 11, 3, 9, 4, 8, 12, 5], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.09s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.03 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    2s
+  1886    42  120.00000   15   38          -  120.00000      -  56.5    5s
+  5576    82  120.00000   18   34          -  120.00000      -  50.7   10s
+  7354   139  120.00000    9   44          -  120.00000      -  48.2   15s
+  7564   121 infeasible   35               -  120.00000      -   8.9   20s
+  8733    80 infeasible   42               -  120.00000      -  21.5   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 29.52 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 252: segment 0, iteration 8, repair: WorstRemoval
+
+ALNSLOG: trying to repair solution with WorstRemoval and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7500 rows and 10840 columns
+Presolve time: 0.07s
+Presolved: 670 rows, 699 columns, 4186 nonzeros
+Variable types: 265 continuous, 434 integer (434 binary)
+
+Root relaxation: objective 1.100000e+02, 416 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   75          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   31          -  110.00000      -     -    0s
+     0     2  110.00000    0   23          -  110.00000      -     -    1s
+  1908    22 infeasible   14               -  110.00000      -   103    5s
+  3919    24 infeasible   16               -  110.00000      -   113   10s
+  5869    40  110.00000   11   46          -  110.00000      -   109   15s
+  7521    69  110.00000   12   50          -  110.00000      -   111   20s
+  7707    81 infeasible   29               -  110.00000      -   6.5   25s
+  8922   100  110.00000   35   51          -  110.00000      -  23.4   30s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 2
+  MIR: 5
+  Flow cover: 3
+
+Explored 10158 nodes (1147876 simplex iterations) in 32.61 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.100000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with WorstRemoval and q=2...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7673 rows and 11041 columns
+Presolve time: 0.04s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.38 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[5, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7673 rows and 11041 columns
+Presolve time: 0.05s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.38 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 100.0
+Solution rejected!
+
+ALNSLOG, 321: segment 0, iteration 8 end.
+
+ALNSLOG, 321: segment 0, iteration 9, without improvement 1
+
+ALNSLOG, 321: segment 0, iteration 9, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[10, 11, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[10, 11, 3, 9, 4, 8, 12, 5], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.06s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2336    27  120.00000   14   31          -  120.00000      -  59.6    5s
+  7113    91  120.00000   12   37          -  120.00000      -  48.1   10s
+  7377   156  120.00000   19   55          -  120.00000      -   3.6   15s
+  8197    75  120.00000   37   35          -  120.00000      -  16.0   20s
+  9644   115 infeasible   53               -  120.00000      -  29.1   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 26.58 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 321: segment 0, iteration 9, repair: RandomRemoval
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7603 rows and 10943 columns
+Presolve time: 0.04s
+Presolved: 567 rows, 596 columns, 3571 nonzeros
+Variable types: 220 continuous, 376 integer (376 binary)
+
+Root relaxation: objective 1.050000e+02, 324 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  105.00000    0   36          -  105.00000      -     -    0s
+     0     0  105.00000    0   70          -  105.00000      -     -    0s
+     0     0  105.00000    0   69          -  105.00000      -     -    0s
+     0     0  105.00000    0   25          -  105.00000      -     -    0s
+     0     0  105.00000    0   25          -  105.00000      -     -    0s
+     0     0  105.00000    0   32          -  105.00000      -     -    0s
+     0     0  105.00000    0   23          -  105.00000      -     -    0s
+     0     2  105.00000    0   23          -  105.00000      -     -    1s
+  2738    32 infeasible   14               -  105.00000      -  63.5    5s
+  5681    36  105.00000   12   37          -  105.00000      -  72.2   10s
+  7279    80  105.00000   11   13          -  105.00000      -  75.9   15s
+  8184    21  105.00000   22   34          -  105.00000      -  14.8   20s
+  9215    76 infeasible   33               -  105.00000      -  28.8   25s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 5
+
+Explored 10124 nodes (958627 simplex iterations) in 28.37 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.050000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=2...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7762 rows and 11127 columns
+Presolve time: 0.03s
+Presolved: 408 rows, 412 columns, 2437 nonzeros
+Variable types: 151 continuous, 261 integer (261 binary)
+
+Root relaxation: objective 9.500000e+01, 241 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   16          -   95.00000      -     -    0s
+     0     0   95.00000    0   39          -   95.00000      -     -    0s
+     0     0   95.00000    0   20          -   95.00000      -     -    0s
+     0     0   95.00000    0   22          -   95.00000      -     -    0s
+     0     0   95.00000    0   16          -   95.00000      -     -    0s
+     0     0   95.00000    0   16          -   95.00000      -     -    0s
+     0     2   95.00000    0   16          -   95.00000      -     -    0s
+*  338     6              13      95.0000000   95.00000  0.00%  48.5    0s
+
+Cutting planes:
+  Implied bound: 58
+  MIR: 11
+  Flow cover: 10
+
+Explored 343 nodes (20160 simplex iterations) in 0.95 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[10, 3, 9, 8, 12, 5], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7762 rows and 11127 columns
+Presolve time: 0.04s
+Presolved: 408 rows, 412 columns, 2437 nonzeros
+Variable types: 151 continuous, 261 integer (261 binary)
+
+Root relaxation: objective 9.500000e+01, 241 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   16          -   95.00000      -     -    0s
+     0     0   95.00000    0   39          -   95.00000      -     -    0s
+     0     0   95.00000    0   20          -   95.00000      -     -    0s
+     0     0   95.00000    0   22          -   95.00000      -     -    0s
+     0     0   95.00000    0   16          -   95.00000      -     -    0s
+     0     0   95.00000    0   16          -   95.00000      -     -    0s
+     0     2   95.00000    0   16          -   95.00000      -     -    0s
+*  338     6              13      95.0000000   95.00000  0.00%  48.5    1s
+
+Cutting planes:
+  Implied bound: 58
+  MIR: 11
+  Flow cover: 10
+
+Explored 343 nodes (20160 simplex iterations) in 1.07 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 95.0
+Solution rejected!
+
+ALNSLOG, 378: segment 0, iteration 9 end.
+
+ALNSLOG, 378: segment 0, iteration 10, without improvement 2
+
+ALNSLOG, 378: segment 0, iteration 10, destroy: GreedyCostInsertion
+
+ALNSLOG, xOld =[10, 11, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[10, 11, 3, 9, 4, 8, 12, 5], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.07s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    2s
+  1833    42 infeasible   15               -  120.00000      -  54.4    5s
+  5851   108 infeasible   27               -  120.00000      -  50.2   10s
+  7363   145  120.00000   21   29          -  120.00000      -  48.1   15s
+  7864    73  120.00000   42   53          -  120.00000      -  12.7   20s
+  9158   131  120.00000   39   48          -  120.00000      -  25.8   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 27.98 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 378: segment 0, iteration 10, repair: TravelTime
+
+ALNSLOG: trying to repair solution with TravelTime and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7500 rows and 10840 columns
+Presolve time: 0.06s
+Presolved: 670 rows, 699 columns, 4186 nonzeros
+Variable types: 265 continuous, 434 integer (434 binary)
+
+Root relaxation: objective 1.100000e+02, 416 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   75          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   31          -  110.00000      -     -    0s
+     0     2  110.00000    0   23          -  110.00000      -     -    1s
+  1908    22 infeasible   14               -  110.00000      -   103    5s
+  3919    24 infeasible   16               -  110.00000      -   113   10s
+  5869    40  110.00000   11   46          -  110.00000      -   109   15s
+  7518    67  110.00000   12   31          -  110.00000      -   111   20s
+  7630    92 infeasible   29               -  110.00000      -   4.6   25s
+  8687    56  110.00000   27   32          -  110.00000      -  20.9   30s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 2
+  MIR: 5
+  Flow cover: 3
+
+Explored 10158 nodes (1147876 simplex iterations) in 33.68 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.100000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with TravelTime and q=2...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7673 rows and 11041 columns
+Presolve time: 0.07s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.52 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[5, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7673 rows and 11041 columns
+Presolve time: 0.04s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.39 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 100.0
+Solution accepted!
+
+ALNSLOG, 446: segment 0, iteration 10 end.
+
+ALNSLOG, 446: segment 0, iteration 10 solution accepted.
+
+ALNSLOG, 446: segment 0, iteration 11, without improvement 3
+
+ALNSLOG, 446: segment 0, iteration 11, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[5, 3, 9, 4, 8, 12, 10], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.04s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  3140    19 infeasible   16               -  110.00000      -  59.9    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    5s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 5.82 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, 446: segment 0, iteration 11, no repair method needed.
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.04s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  3140    19 infeasible   16               -  110.00000      -  59.9    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    5s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 5.85 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG, 458: segment 0, iteration 11 end.
+
+ALNSLOG, 458: segment 0, iteration 11 solution accepted.
+
+ALNSLOG, 458: segment 0, iteration 12, without improvement 0
+
+ALNSLOG, 458: segment 0, iteration 12, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[5, 3, 9, 4, 8, 12, 10], q=1
+
+ALNSLOG, xNewD=[5, 3, 9, 4, 8, 12, 10, 11], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2336    27  120.00000   14   31          -  120.00000      -  59.6    5s
+  7113    91  120.00000   12   37          -  120.00000      -  48.1   10s
+  7373   153  120.00000   18   39          -  120.00000      -   3.5   15s
+  8081    75  120.00000   46   54          -  120.00000      -  14.9   20s
+  9644   115 infeasible   53               -  120.00000      -  29.1   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 27.01 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 458: segment 0, iteration 12, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7556 rows and 10900 columns
+Presolve time: 0.05s
+Presolved: 614 rows, 639 columns, 3812 nonzeros
+Variable types: 241 continuous, 398 integer (398 binary)
+
+Root relaxation: objective 1.100000e+02, 456 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   55          -  110.00000      -     -    0s
+     0     0  110.00000    0   81          -  110.00000      -     -    0s
+     0     0  110.00000    0   58          -  110.00000      -     -    0s
+     0     0  110.00000    0   15          -  110.00000      -     -    0s
+     0     0  110.00000    0   67          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     2  110.00000    0   22          -  110.00000      -     -    1s
+* 1189     8              14     110.0000000  110.00000  0.00%  47.5    2s
+
+Cutting planes:
+  Cover: 6
+  Implied bound: 113
+  MIR: 26
+  Flow cover: 30
+  GUB cover: 1
+
+Explored 1198 nodes (66368 simplex iterations) in 2.64 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[12, 8, 3, 9, 4, 11, 10], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7556 rows and 10900 columns
+Presolve time: 0.04s
+Presolved: 614 rows, 639 columns, 3812 nonzeros
+Variable types: 241 continuous, 398 integer (398 binary)
+
+Root relaxation: objective 1.100000e+02, 456 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   55          -  110.00000      -     -    0s
+     0     0  110.00000    0   81          -  110.00000      -     -    0s
+     0     0  110.00000    0   58          -  110.00000      -     -    0s
+     0     0  110.00000    0   15          -  110.00000      -     -    0s
+     0     0  110.00000    0   67          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     2  110.00000    0   22          -  110.00000      -     -    1s
+* 1189     8              14     110.0000000  110.00000  0.00%  47.5    2s
+
+Cutting planes:
+  Cover: 6
+  Implied bound: 113
+  MIR: 26
+  Flow cover: 30
+  GUB cover: 1
+
+Explored 1198 nodes (66368 simplex iterations) in 2.48 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG, 490: segment 0, iteration 12 end.
+
+ALNSLOG, 490: segment 0, iteration 12 solution accepted.
+
+ALNSLOG, 490: segment 0, iteration 13, without improvement 0
+
+ALNSLOG, 490: segment 0, iteration 13, destroy: RandomInsertion
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 11, 10], q=1
+
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 11, 10, 5], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2024    41  120.00000   15   33          -  120.00000      -  58.5    5s
+  6432    86  120.00000   27   27          -  120.00000      -  48.3   10s
+  7365   150  120.00000   16   52          -  120.00000      -   3.2   15s
+  7864    73  120.00000   42   53          -  120.00000      -  12.7   20s
+  9158   131  120.00000   39   48          -  120.00000      -  25.8   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 27.98 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 490: segment 0, iteration 13, repair: VehicleTime
+
+ALNSLOG: trying to repair solution with VehicleTime and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.05s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  2863    29 infeasible   15               -  110.00000      -  56.3    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    6s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 6.46 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[10, 5, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7605 rows and 10951 columns
+Presolve time: 0.04s
+Presolved: 565 rows, 588 columns, 3492 nonzeros
+Variable types: 220 continuous, 368 integer (368 binary)
+
+Root relaxation: objective 1.100000e+02, 393 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   18          -  110.00000      -     -    0s
+     0     0  110.00000    0   52          -  110.00000      -     -    0s
+     0     0  110.00000    0   22          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   14          -  110.00000      -     -    0s
+     0     0  110.00000    0   20          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    0s
+  2974    24 infeasible   16               -  110.00000      -  57.4    5s
+* 3505     7              21     110.0000000  110.00000  0.00%  64.8    6s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 181
+  MIR: 10
+  Flow cover: 20
+
+Explored 3686 nodes (244694 simplex iterations) in 6.42 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG, 531: segment 0, iteration 13 end.
+
+ALNSLOG, 531: segment 0, iteration 13 solution accepted.
+
+ALNSLOG, 531: segment 0, iteration 14, without improvement 0
+
+ALNSLOG, 531: segment 0, iteration 14, destroy: GreedyProfitInsertion
+
+ALNSLOG, xOld =[10, 5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[10, 5, 3, 9, 4, 8, 12, 11], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2024    41  120.00000   15   33          -  120.00000      -  58.5    5s
+  6167   110 infeasible   26               -  120.00000      -  49.1   10s
+  7365   150  120.00000   16   52          -  120.00000      -   3.2   15s
+  7864    73  120.00000   42   53          -  120.00000      -  12.7   20s
+  9052   118 infeasible   51               -  120.00000      -  24.6   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 28.64 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 531: segment 0, iteration 14, repair: RandomRemoval
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7500 rows and 10840 columns
+Presolve time: 0.06s
+Presolved: 670 rows, 699 columns, 4186 nonzeros
+Variable types: 265 continuous, 434 integer (434 binary)
+
+Root relaxation: objective 1.100000e+02, 416 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   75          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   31          -  110.00000      -     -    0s
+     0     2  110.00000    0   23          -  110.00000      -     -    1s
+  1664    28 infeasible   21               -  110.00000      -  98.4    5s
+  3465    29 infeasible   11               -  110.00000      -   109   10s
+  5406    36 infeasible   17               -  110.00000      -   111   15s
+  7260    36 infeasible   14               -  110.00000      -   110   20s
+  7567    86  110.00000   23   37          -  110.00000      -   2.8   25s
+  8301    74  110.00000   37   26          -  110.00000      -  16.5   30s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 2
+  MIR: 5
+  Flow cover: 3
+
+Explored 10158 nodes (1147876 simplex iterations) in 34.83 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.100000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=2...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7764 rows and 11123 columns
+Presolve time: 0.04s
+Presolved: 406 rows, 416 columns, 2484 nonzeros
+Variable types: 149 continuous, 267 integer (267 binary)
+
+Root relaxation: objective 9.000000e+01, 307 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   90.00000    0   37          -   90.00000      -     -    0s
+     0     0   90.00000    0   77          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     0   90.00000    0   54          -   90.00000      -     -    0s
+     0     0   90.00000    0   63          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     2   90.00000    0   26          -   90.00000      -     -    1s
+*  446     2               9      90.0000000   90.00000  0.00%  49.3    1s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 90
+  MIR: 21
+  Flow cover: 23
+  GUB cover: 1
+
+Explored 463 nodes (27468 simplex iterations) in 1.71 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 90 
+
+Solve interrupted
+Best objective 9.000000000000e+01, best bound 9.000000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[10, 5, 3, 8, 12, 11], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7764 rows and 11123 columns
+Presolve time: 0.04s
+Presolved: 406 rows, 416 columns, 2484 nonzeros
+Variable types: 149 continuous, 267 integer (267 binary)
+
+Root relaxation: objective 9.000000e+01, 307 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   90.00000    0   37          -   90.00000      -     -    0s
+     0     0   90.00000    0   77          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     0   90.00000    0   54          -   90.00000      -     -    0s
+     0     0   90.00000    0   63          -   90.00000      -     -    0s
+     0     0   90.00000    0   26          -   90.00000      -     -    0s
+     0     2   90.00000    0   26          -   90.00000      -     -    1s
+*  446     2               9      90.0000000   90.00000  0.00%  49.3    1s
+
+Cutting planes:
+  Cover: 3
+  Implied bound: 90
+  MIR: 21
+  Flow cover: 23
+  GUB cover: 1
+
+Explored 463 nodes (27468 simplex iterations) in 1.64 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 90 
+
+Solve interrupted
+Best objective 9.000000000000e+01, best bound 9.000000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 90.0
+Solution rejected!
+
+ALNSLOG, 598: segment 0, iteration 14 end.
+
+ALNSLOG, 598: segment 0, iteration 15, without improvement 1
+
+ALNSLOG, 598: segment 0, iteration 15, destroy: GreedyBestInsertion
+
+ALNSLOG, xOld =[10, 5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[10, 5, 3, 9, 4, 8, 12, 11], q=1
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7420 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2131    35 infeasible   15               -  120.00000      -  58.8    5s
+  6668    89  120.00000   19   28          -  120.00000      -  48.2   10s
+  7369   152  120.00000   17   80          -  120.00000      -   3.3   15s
+  7956    78  120.00000   41   51          -  120.00000      -  13.8   20s
+  9158   131  120.00000   39   48          -  120.00000      -  25.8   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 28.20 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 598: segment 0, iteration 15, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7500 rows and 10840 columns
+Presolve time: 0.06s
+Presolved: 670 rows, 699 columns, 4186 nonzeros
+Variable types: 265 continuous, 434 integer (434 binary)
+
+Root relaxation: objective 1.100000e+02, 416 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   75          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   31          -  110.00000      -     -    0s
+     0     2  110.00000    0   23          -  110.00000      -     -    1s
+  1664    28 infeasible   21               -  110.00000      -  98.4    5s
+  3465    29 infeasible   11               -  110.00000      -   109   10s
+  5216    42 infeasible   12               -  110.00000      -   112   15s
+  7086    37 infeasible   16               -  110.00000      -   109   20s
+  7544    86  110.00000   19   66          -  110.00000      -   2.3   25s
+  8085    61  110.00000   36   58          -  110.00000      -  13.2   30s
+  9710   133 infeasible   40               -  110.00000      -  27.3   35s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 2
+  MIR: 5
+  Flow cover: 3
+
+Explored 10158 nodes (1147876 simplex iterations) in 36.14 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.100000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=2...
+Optimize a model with 8170 rows, 11539 columns and 105234 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 4e+00]
+Presolve removed 7628 rows and 10996 columns
+Presolve time: 0.04s
+Presolved: 542 rows, 543 columns, 3232 nonzeros
+Variable types: 208 continuous, 335 integer (335 binary)
+
+Root relaxation: objective 1.000000e+02, 332 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   31          -  100.00000      -     -    0s
+     0     0  100.00000    0   84          -  100.00000      -     -    0s
+     0     0  100.00000    0   26          -  100.00000      -     -    0s
+     0     0  100.00000    0   43          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   16          -  100.00000      -     -    0s
+     0     0  100.00000    0   16          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+  2017    15  100.00000    9   50          -  100.00000      -  82.3    5s
+  3534    14  100.00000    8   50          -  100.00000      -   108   10s
+  5462    25  100.00000   15   38          -  100.00000      -   115   15s
+
+Cutting planes:
+  Cover: 5
+  Implied bound: 226
+  MIR: 30
+  Flow cover: 43
+
+Explored 6384 nodes (792519 simplex iterations) in 18.83 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [12, 8, 3, 9, 4, 11]
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=3...
+Optimize a model with 8171 rows, 11539 columns and 105253 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7822 rows and 11200 columns
+Presolve time: 0.04s
+Presolved: 349 rows, 339 columns, 1976 nonzeros
+Variable types: 125 continuous, 214 integer (214 binary)
+
+Root relaxation: objective 8.500000e+01, 326 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   85.00000    0   28          -   85.00000      -     -    0s
+     0     0   85.00000    0   58          -   85.00000      -     -    0s
+     0     0   85.00000    0   58          -   85.00000      -     -    0s
+     0     0   85.00000    0   11          -   85.00000      -     -    0s
+     0     0   85.00000    0   27          -   85.00000      -     -    0s
+     0     0   85.00000    0   27          -   85.00000      -     -    0s
+     0     2   85.00000    0   27          -   85.00000      -     -    0s
+*   88     6              10      85.0000000   85.00000  0.00%  63.9    0s
+
+Cutting planes:
+  Implied bound: 26
+  MIR: 13
+  Flow cover: 14
+
+Explored 106 nodes (9803 simplex iterations) in 0.64 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 85 
+
+Solve interrupted
+Best objective 8.500000000000e+01, best bound 8.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[12, 8, 9, 4, 11], q=1
+Optimize a model with 8171 rows, 11539 columns and 105253 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7822 rows and 11200 columns
+Presolve time: 0.04s
+Presolved: 349 rows, 339 columns, 1976 nonzeros
+Variable types: 125 continuous, 214 integer (214 binary)
+
+Root relaxation: objective 8.500000e+01, 326 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   85.00000    0   28          -   85.00000      -     -    0s
+     0     0   85.00000    0   58          -   85.00000      -     -    0s
+     0     0   85.00000    0   58          -   85.00000      -     -    0s
+     0     0   85.00000    0   11          -   85.00000      -     -    0s
+     0     0   85.00000    0   27          -   85.00000      -     -    0s
+     0     0   85.00000    0   27          -   85.00000      -     -    0s
+     0     2   85.00000    0   27          -   85.00000      -     -    0s
+*   88     6              10      85.0000000   85.00000  0.00%  63.9    0s
+
+Cutting planes:
+  Implied bound: 26
+  MIR: 13
+  Flow cover: 14
+
+Explored 106 nodes (9803 simplex iterations) in 0.62 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 85 
+
+Solve interrupted
+Best objective 8.500000000000e+01, best bound 8.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 85.0
+Solution rejected!
+
+ALNSLOG, 682: segment 0, iteration 15 end.
+
+ALNSLOG, 682: segment 0, iteration 16, without improvement 2
+
+ALNSLOG, 682: segment 0, iteration 16, destroy: GreedyProfitInsertion
+
+ALNSLOG, xOld =[10, 5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG, xNewD=[10, 5, 3, 9, 4, 8, 12, 11], q=1
+Optimize a model with 8171 rows, 11539 columns and 105253 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7421 rows and 10733 columns
+Presolve time: 0.05s
+Presolved: 750 rows, 806 columns, 4838 nonzeros
+Variable types: 302 continuous, 504 integer (504 binary)
+
+Root relaxation: objective 1.200000e+02, 479 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   23          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   92          -  120.00000      -     -    0s
+     0     0  120.00000    0   99          -  120.00000      -     -    0s
+     0     0  120.00000    0   32          -  120.00000      -     -    0s
+     0     2  120.00000    0   32          -  120.00000      -     -    1s
+  2228    33  120.00000   11   43          -  120.00000      -  59.5    5s
+  6668    89  120.00000   19   28          -  120.00000      -  48.2   10s
+  7365   150  120.00000   16   52          -  120.00000      -   3.2   15s
+  7864    73  120.00000   42   53          -  120.00000      -  12.7   20s
+  9052   118 infeasible   51               -  120.00000      -  24.6   25s
+
+Cutting planes:
+  Implied bound: 5
+  Projected implied bound: 5
+  MIR: 5
+  Flow cover: 7
+
+Explored 10134 nodes (703548 simplex iterations) in 28.75 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 682: segment 0, iteration 16, repair: TravelTime
+
+ALNSLOG: trying to repair solution with TravelTime and q=1...
+Optimize a model with 8171 rows, 11539 columns and 105253 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7501 rows and 10840 columns
+Presolve time: 0.07s
+Presolved: 670 rows, 699 columns, 4186 nonzeros
+Variable types: 265 continuous, 434 integer (434 binary)
+
+Root relaxation: objective 1.100000e+02, 416 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   21          -  110.00000      -     -    0s
+     0     0  110.00000    0   75          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   31          -  110.00000      -     -    0s
+     0     2  110.00000    0   23          -  110.00000      -     -    1s
+  1744    24  110.00000   10   14          -  110.00000      -   100    5s
+  3624    33 infeasible   20               -  110.00000      -   110   10s
+  5406    36 infeasible   17               -  110.00000      -   111   15s
+  7518    67  110.00000   12   31          -  110.00000      -   111   21s
+  7598    93  110.00000   26   36          -  110.00000      -   3.5   25s
+  8425    73  110.00000   37   48          -  110.00000      -  17.8   30s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 2
+  MIR: 5
+  Flow cover: 3
+
+Explored 10158 nodes (1147876 simplex iterations) in 34.99 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.100000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with TravelTime and q=2...
+Optimize a model with 8171 rows, 11539 columns and 105253 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7674 rows and 11041 columns
+Presolve time: 0.04s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.54 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[5, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8171 rows, 11539 columns and 105253 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7674 rows and 11041 columns
+Presolve time: 0.04s
+Presolved: 497 rows, 498 columns, 2951 nonzeros
+Variable types: 189 continuous, 309 integer (309 binary)
+
+Root relaxation: objective 1.000000e+02, 358 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   32          -  100.00000      -     -    0s
+     0     0  100.00000    0   19          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   17          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     0  100.00000    0   47          -  100.00000      -     -    0s
+     0     2  100.00000    0   16          -  100.00000      -     -    0s
+* 1610     4              14     100.0000000  100.00000  0.00%  80.9    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 151
+  MIR: 20
+  Flow cover: 29
+
+Explored 1670 nodes (141702 simplex iterations) in 3.64 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 100.0
+Solution rejected!
+
+ALNSLOG, 753: segment 0, iteration 16 end.
+
+ALNSLOG, 753: segment 0, iteration 17, without improvement 3
+
+ALNSLOG, 753: segment 0, iteration 17, destroy: GreedyBestInsertion
+
+ALNSLOG, xOld =[10, 5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG: no clusters have been extracted! 
+Querying for clusters which have been above average more than the 38.0% of the time...
+
+ALNSLOG: no clusters have been extracted (again)!
+Querying for clusters above average in the current iteration...
+
+ALNSLOG: no clusters have been extracted (again)!
+Using all available clusters as a last resort...
+ALNSLOG, xNewD=[10, 5, 3, 9, 4, 8, 12, 17], q=1
+
+ALNSLOG, 753: segment 0, iteration 17, repair: RandomRemoval
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=1...
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=2...
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=3...
+Optimize a model with 8171 rows, 11539 columns and 105253 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7893 rows and 11278 columns
+Presolve time: 0.03s
+
+Explored 0 nodes (0 simplex iterations) in 0.13 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [10, 9, 4, 12, 17]
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=4...
+Optimize a model with 8172 rows, 11539 columns and 105272 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 8060 rows and 11470 columns
+Presolve time: 0.02s
+
+Explored 0 nodes (0 simplex iterations) in 0.12 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [10, 8, 12, 17]
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=5...
+Optimize a model with 8173 rows, 11539 columns and 105291 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 732 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.10 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [5, 3, 9]
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=6...
+Optimize a model with 8174 rows, 11539 columns and 105310 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 732 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.10 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [5, 3]
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=7...
+Optimize a model with 8175 rows, 11539 columns and 105329 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 732 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.11 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [4]
+
+ALNSLOG, xNewR=[4], q=1
+Optimize a model with 8176 rows, 11539 columns and 105348 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 732 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.09 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [4]
+
+ALNSLOG, xNew was infeasible (despite repairing).
+ALNSLOG, punishing clusters [4]
+
+ALNSLOG, 754: segment 0, iteration 17, repaired solution infeasible and discarded.
+
+ALNSLOG, 754: segment 0, iteration 18, without improvement 4
+
+ALNSLOG, 754: segment 0, iteration 18, destroy: GreedyCostInsertion
+
+ALNSLOG, xOld =[10, 5, 3, 9, 4, 8, 12], q=1
+
+ALNSLOG: no clusters have been extracted! 
+Querying for clusters which have been above average more than the 38.0% of the time...
+
+ALNSLOG: no clusters have been extracted (again)!
+Querying for clusters above average in the current iteration...
+
+ALNSLOG: no clusters have been extracted (again)!
+Using all available clusters as a last resort...
+ALNSLOG, xNewD=[10, 5, 3, 9, 4, 8, 12, 11], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7428 rows and 10735 columns
+Presolve time: 0.05s
+Presolved: 749 rows, 804 columns, 4833 nonzeros
+Variable types: 302 continuous, 502 integer (502 binary)
+
+Root relaxation: objective 1.200000e+02, 484 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   24          -  120.00000      -     -    0s
+     0     0  120.00000    0   86          -  120.00000      -     -    0s
+     0     0  120.00000    0   90          -  120.00000      -     -    0s
+     0     0  120.00000    0   93          -  120.00000      -     -    0s
+     0     0  120.00000    0   20          -  120.00000      -     -    0s
+     0     2  120.00000    0   20          -  120.00000      -     -    1s
+  2790    26  120.00000   18   26          -  120.00000      -  50.5    5s
+  6524    42 infeasible   21               -  120.00000      -  59.7   10s
+  7264   126  120.00000   15   63          -  120.00000      -   3.5   15s
+  7800    52  120.00000   39   39          -  120.00000      -  15.8   20s
+  9115    78 infeasible   44               -  120.00000      -  36.8   25s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 1
+  MIR: 3
+  Flow cover: 4
+
+Explored 10025 nodes (931715 simplex iterations) in 27.70 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 754: segment 0, iteration 18, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7508 rows and 10842 columns
+Presolve time: 0.05s
+Presolved: 669 rows, 697 columns, 4181 nonzeros
+Variable types: 265 continuous, 432 integer (432 binary)
+
+Root relaxation: objective 1.100000e+02, 403 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   19          -  110.00000      -     -    0s
+     0     0  110.00000    0   73          -  110.00000      -     -    0s
+     0     0  110.00000    0   72          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   32          -  110.00000      -     -    0s
+     0     0  110.00000    0   35          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    1s
+  2701    66 infeasible   18               -  110.00000      -  66.0    5s
+  3654   151  110.00000   15   29          -  110.00000      -   3.4   10s
+  4901    30 infeasible   38               -  110.00000      -  27.5   15s
+* 7185     0              75     110.0000000  110.00000  0.00%  39.8   19s
+
+Cutting planes:
+  Gomory: 1
+  Implied bound: 3
+  Projected implied bound: 1
+  MIR: 4
+  Flow cover: 4
+  Inf proof: 1
+
+Explored 7368 nodes (583255 simplex iterations) in 19.71 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[12, 8, 3, 9, 4, 5, 11], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7508 rows and 10842 columns
+Presolve time: 0.05s
+Presolved: 669 rows, 697 columns, 4181 nonzeros
+Variable types: 265 continuous, 432 integer (432 binary)
+
+Root relaxation: objective 1.100000e+02, 403 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0   19          -  110.00000      -     -    0s
+     0     0  110.00000    0   73          -  110.00000      -     -    0s
+     0     0  110.00000    0   72          -  110.00000      -     -    0s
+     0     0  110.00000    0   29          -  110.00000      -     -    0s
+     0     0  110.00000    0   32          -  110.00000      -     -    0s
+     0     0  110.00000    0   35          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     0  110.00000    0   84          -  110.00000      -     -    0s
+     0     2  110.00000    0   21          -  110.00000      -     -    1s
+  2457    58  110.00000   21   12          -  110.00000      -  64.0    5s
+  3646   150  110.00000   13   44          -  110.00000      -   3.0   10s
+  4698    47 infeasible   50               -  110.00000      -  23.9   15s
+  6875    34  110.00000   52   21          -  110.00000      -  39.1   20s
+* 7185     0              75     110.0000000  110.00000  0.00%  39.8   20s
+
+Cutting planes:
+  Gomory: 1
+  Implied bound: 3
+  Projected implied bound: 1
+  MIR: 4
+  Flow cover: 4
+  Inf proof: 1
+
+Explored 7368 nodes (583255 simplex iterations) in 20.75 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 110 
+
+Solve interrupted
+Best objective 1.100000000000e+02, best bound 1.100000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 110.0
+Solution accepted!
+
+ALNSLOG, 822: segment 0, iteration 18 end.
+
+ALNSLOG, 822: segment 0, iteration 18 solution accepted.
+
+ALNSLOG, 822: segment 0, iteration 19, without improvement 4
+
+ALNSLOG, 822: segment 0, iteration 19, destroy: GreedyBestInsertion
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 5, 11], q=1
+
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7428 rows and 10735 columns
+Presolve time: 0.07s
+Presolved: 749 rows, 804 columns, 4833 nonzeros
+Variable types: 302 continuous, 502 integer (502 binary)
+
+Root relaxation: objective 1.200000e+02, 484 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   24          -  120.00000      -     -    0s
+     0     0  120.00000    0   86          -  120.00000      -     -    0s
+     0     0  120.00000    0   90          -  120.00000      -     -    0s
+     0     0  120.00000    0   93          -  120.00000      -     -    0s
+     0     0  120.00000    0   20          -  120.00000      -     -    0s
+     0     2  120.00000    0   20          -  120.00000      -     -    1s
+  1954    38  120.00000   14   35          -  120.00000      -  53.0    5s
+  5429    60  120.00000   30   22          -  120.00000      -  57.0   10s
+  7246   111  120.00000   23   26          -  120.00000      -  60.7   15s
+  7438   100 infeasible   33               -  120.00000      -   8.7   20s
+  8899    77  120.00000   35   36          -  120.00000      -  32.5   25s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 1
+  MIR: 3
+  Flow cover: 4
+
+Explored 10025 nodes (931715 simplex iterations) in 29.46 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 822: segment 0, iteration 19, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.04s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  3050    19 infeasible   20               -   95.00000      -  65.5    5s
+  6110    42 infeasible   25               -   95.00000      -  80.3   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   12s
+
+Explored 7270 nodes (618912 simplex iterations) in 12.90 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.05s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  3050    19 infeasible   20               -   95.00000      -  65.5    5s
+  6110    42 infeasible   25               -   95.00000      -  80.3   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   12s
+
+Explored 7270 nodes (618912 simplex iterations) in 12.80 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 95.0
+Solution rejected!
+
+ALNSLOG, 878: segment 0, iteration 19 end.
+
+ALNSLOG, 878: segment 0, iteration 20, without improvement 5
+
+ALNSLOG, 878: segment 0, iteration 20, destroy: RandomInsertion
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 5, 11], q=1
+
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7428 rows and 10735 columns
+Presolve time: 0.05s
+Presolved: 749 rows, 804 columns, 4833 nonzeros
+Variable types: 302 continuous, 502 integer (502 binary)
+
+Root relaxation: objective 1.200000e+02, 484 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   24          -  120.00000      -     -    0s
+     0     0  120.00000    0   86          -  120.00000      -     -    0s
+     0     0  120.00000    0   90          -  120.00000      -     -    0s
+     0     0  120.00000    0   93          -  120.00000      -     -    0s
+     0     0  120.00000    0   20          -  120.00000      -     -    0s
+     0     2  120.00000    0   20          -  120.00000      -     -    1s
+  2790    26  120.00000   18   26          -  120.00000      -  50.5    5s
+  6315    38 infeasible   29               -  120.00000      -  59.2   10s
+  7264   126  120.00000   15   63          -  120.00000      -   3.5   15s
+  7899    63 infeasible   28               -  120.00000      -  18.1   20s
+  9229    77 infeasible   34               -  120.00000      -  39.2   25s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 1
+  MIR: 3
+  Flow cover: 4
+
+Explored 10025 nodes (931715 simplex iterations) in 27.32 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 878: segment 0, iteration 20, repair: WorstRemoval
+
+ALNSLOG: trying to repair solution with WorstRemoval and q=1...
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.04s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  3247    36 infeasible   16               -   95.00000      -  67.8    5s
+  6316    41 infeasible   16               -   95.00000      -  80.9   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   12s
+
+Explored 7270 nodes (618912 simplex iterations) in 12.51 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[5, 11, 10, 3, 9, 4, 8], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.04s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  3143    28 infeasible   16               -   95.00000      -  66.9    5s
+  6316    41 infeasible   16               -   95.00000      -  80.9   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   12s
+
+Explored 7270 nodes (618912 simplex iterations) in 12.47 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 95.0
+Solution rejected!
+
+ALNSLOG, 930: segment 0, iteration 20 end.
+
+ALNSLOG, 930: segment 0, iteration 21, without improvement 6
+
+ALNSLOG, 930: segment 0, iteration 21, destroy: GreedyProfitInsertion
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 5, 11], q=1
+
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7428 rows and 10735 columns
+Presolve time: 0.05s
+Presolved: 749 rows, 804 columns, 4833 nonzeros
+Variable types: 302 continuous, 502 integer (502 binary)
+
+Root relaxation: objective 1.200000e+02, 484 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   24          -  120.00000      -     -    0s
+     0     0  120.00000    0   86          -  120.00000      -     -    0s
+     0     0  120.00000    0   90          -  120.00000      -     -    0s
+     0     0  120.00000    0   93          -  120.00000      -     -    0s
+     0     0  120.00000    0   20          -  120.00000      -     -    0s
+     0     2  120.00000    0   20          -  120.00000      -     -    1s
+  2904    31 infeasible   24               -  120.00000      -  51.4    5s
+  6524    42 infeasible   21               -  120.00000      -  59.7   10s
+  7266   127  120.00000   16   74          -  120.00000      -   3.6   15s
+  7991    70 infeasible   38               -  120.00000      -  19.9   20s
+  9229    77 infeasible   34               -  120.00000      -  39.2   25s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 1
+  MIR: 3
+  Flow cover: 4
+
+Explored 10025 nodes (931715 simplex iterations) in 27.83 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 930: segment 0, iteration 21, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.04s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  2525    25   95.00000   13   33          -   95.00000      -  58.9    5s
+  5288    35   95.00000    9   41          -   95.00000      -  78.2   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   14s
+
+Explored 7270 nodes (618912 simplex iterations) in 14.28 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.05s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  3050    19 infeasible   20               -   95.00000      -  65.5    5s
+  6110    42 infeasible   25               -   95.00000      -  80.3   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   12s
+
+Explored 7270 nodes (618912 simplex iterations) in 12.80 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 95.0
+Solution rejected!
+
+ALNSLOG, 985: segment 0, iteration 21 end.
+
+ALNSLOG, 985: segment 0, iteration 22, without improvement 7
+
+ALNSLOG, 985: segment 0, iteration 22, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 5, 11], q=1
+
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7428 rows and 10735 columns
+Presolve time: 0.05s
+Presolved: 749 rows, 804 columns, 4833 nonzeros
+Variable types: 302 continuous, 502 integer (502 binary)
+
+Root relaxation: objective 1.200000e+02, 484 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   24          -  120.00000      -     -    0s
+     0     0  120.00000    0   86          -  120.00000      -     -    0s
+     0     0  120.00000    0   90          -  120.00000      -     -    0s
+     0     0  120.00000    0   93          -  120.00000      -     -    0s
+     0     0  120.00000    0   20          -  120.00000      -     -    0s
+     0     2  120.00000    0   20          -  120.00000      -     -    1s
+  2648    34 infeasible   15               -  120.00000      -  50.5    5s
+  6120    47  120.00000   25   32          -  120.00000      -  58.5   10s
+  7259   120  120.00000   12   19          -  120.00000      -  60.6   15s
+  7580    53  120.00000   31   28          -  120.00000      -  11.6   20s
+  9003    83  120.00000   32   46          -  120.00000      -  34.4   26s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 1
+  MIR: 3
+  Flow cover: 4
+
+Explored 10025 nodes (931715 simplex iterations) in 29.23 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 985: segment 0, iteration 22, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.04s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  2875    25 infeasible   22               -   95.00000      -  63.5    5s
+  5887    38 infeasible   15               -   95.00000      -  79.9   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   13s
+
+Explored 7270 nodes (618912 simplex iterations) in 13.47 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNewR=[8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7659 rows and 10993 columns
+Presolve time: 0.04s
+Presolved: 518 rows, 546 columns, 3237 nonzeros
+Variable types: 200 continuous, 346 integer (346 binary)
+
+Root relaxation: objective 9.500000e+01, 318 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   95.00000    0   18          -   95.00000      -     -    0s
+     0     0   95.00000    0   52          -   95.00000      -     -    0s
+     0     0   95.00000    0   50          -   95.00000      -     -    0s
+     0     0   95.00000    0   25          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     0   95.00000    0   51          -   95.00000      -     -    0s
+     0     2   95.00000    0   51          -   95.00000      -     -    0s
+  3143    28 infeasible   16               -   95.00000      -  66.9    5s
+  6110    42 infeasible   25               -   95.00000      -  80.3   10s
+H 7270    68                      95.0000000   95.00000  0.00%  84.1   12s
+
+Explored 7270 nodes (618912 simplex iterations) in 12.96 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 95 
+
+Solve interrupted
+Best objective 9.500000000000e+01, best bound 9.500000000000e+01, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 95.0
+Solution rejected!
+
+ALNSLOG, 1040: segment 0, iteration 22 end.
+
+ALNSLOG, 1040: segment 0, iteration 23, without improvement 8
+
+ALNSLOG, 1040: segment 0, iteration 23, destroy: GreedyBestInsertion
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 5, 11], q=1
+
+ALNSLOG: no clusters have been extracted! 
+Querying for clusters which have been above average more than the 38.0% of the time...
+
+ALNSLOG: no clusters have been extracted (again)!
+Querying for clusters above average in the current iteration...
+
+ALNSLOG: no clusters have been extracted (again)!
+Using all available clusters as a last resort...
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 5, 11, 17], q=1
+
+ALNSLOG, 1040: segment 0, iteration 23, repair: HighCostRemoval
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=1...
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=2...
+Optimize a model with 8177 rows, 11539 columns and 105367 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7718 rows and 11067 columns
+Presolve time: 0.03s
+
+Explored 0 nodes (0 simplex iterations) in 0.13 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [17, 3, 9, 4, 5, 11]
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=3...
+Optimize a model with 8178 rows, 11539 columns and 105386 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7894 rows and 11279 columns
+Presolve time: 0.03s
+
+Explored 0 nodes (0 simplex iterations) in 0.12 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [17, 9, 4, 5, 11]
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=4...
+Optimize a model with 8179 rows, 11539 columns and 105405 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 8004 rows and 11394 columns
+Presolve time: 0.03s
+
+Explored 0 nodes (0 simplex iterations) in 0.13 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [17, 4, 5, 11]
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=5...
+Optimize a model with 8180 rows, 11539 columns and 105424 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 760 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.10 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [17, 5, 11]
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=6...
+Optimize a model with 8181 rows, 11539 columns and 105443 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 760 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.10 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [17, 11]
+
+ALNSLOG: trying to repair solution with HighCostRemoval and q=7...
+Optimize a model with 8182 rows, 11539 columns and 105462 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 760 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.10 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [17]
+
+ALNSLOG, xNewR=[17], q=1
+Optimize a model with 8183 rows, 11539 columns and 105481 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 0 rows and 760 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.10 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+TESTSOLUTION LOG: excluded solution [17]
+
+ALNSLOG, xNew was infeasible (despite repairing).
+ALNSLOG, punishing clusters [17]
+
+ALNSLOG, 1041: segment 0, iteration 23, repaired solution infeasible and discarded.
+
+ALNSLOG, 1041: segment 0, iteration 24, without improvement 9
+
+ALNSLOG, 1041: segment 0, iteration 24, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 5, 11], q=1
+
+ALNSLOG: no clusters have been extracted! 
+Querying for clusters which have been above average more than the 38.0% of the time...
+
+ALNSLOG: no clusters have been extracted (again)!
+Querying for clusters above average in the current iteration...
+
+ALNSLOG: no clusters have been extracted (again)!
+Using all available clusters as a last resort...
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8184 rows, 11539 columns and 105500 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7435 rows and 10735 columns
+Presolve time: 0.05s
+Presolved: 749 rows, 804 columns, 4833 nonzeros
+Variable types: 302 continuous, 502 integer (502 binary)
+
+Root relaxation: objective 1.200000e+02, 484 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   24          -  120.00000      -     -    0s
+     0     0  120.00000    0   86          -  120.00000      -     -    0s
+     0     0  120.00000    0   90          -  120.00000      -     -    0s
+     0     0  120.00000    0   93          -  120.00000      -     -    0s
+     0     0  120.00000    0   20          -  120.00000      -     -    0s
+     0     2  120.00000    0   20          -  120.00000      -     -    1s
+  2648    34 infeasible   15               -  120.00000      -  50.5    5s
+  5626    49 infeasible   24               -  120.00000      -  57.8   10s
+  7255   117  120.00000   19    6          -  120.00000      -  60.6   15s
+  7580    53  120.00000   31   28          -  120.00000      -  11.6   20s
+  9003    83  120.00000   32   46          -  120.00000      -  34.4   25s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 1
+  MIR: 3
+  Flow cover: 4
+
+Explored 10025 nodes (931715 simplex iterations) in 29.14 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 1041: segment 0, iteration 24, repair: TravelTime
+
+ALNSLOG: trying to repair solution with TravelTime and q=1...
+Optimize a model with 8184 rows, 11539 columns and 105500 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7571 rows and 10902 columns
+Presolve time: 0.04s
+Presolved: 613 rows, 637 columns, 3807 nonzeros
+Variable types: 241 continuous, 396 integer (396 binary)
+
+Root relaxation: objective 1.100000e+02, 445 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  110.00000    0    6          -  110.00000      -     -    0s
+     0     0  110.00000    0   74          -  110.00000      -     -    0s
+     0     0  110.00000    0   26          -  110.00000      -     -    0s
+     0     0  110.00000    0   30          -  110.00000      -     -    0s
+     0     0  110.00000    0   30          -  110.00000      -     -    0s
+     0     2  110.00000    0   22          -  110.00000      -     -    1s
+  2952    58  110.00000   11   31          -  110.00000      -  56.3    5s
+  5795    30  110.00000   14   38          -  110.00000      -  75.7   10s
+  6687   117 infeasible   25               -  110.00000      -   3.6   15s
+  7488   125 infeasible   45               -  110.00000      -  20.1   20s
+  8363   110  110.00000   45   49          -  110.00000      -  33.2   25s
+  9345    69 infeasible   34               -  110.00000      -  44.5   30s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 4
+  Flow cover: 3
+
+Explored 10094 nodes (1043176 simplex iterations) in 33.59 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.100000000000e+02, gap -
+
+ALNSLOG: trying to repair solution with TravelTime and q=2...
+Optimize a model with 8184 rows, 11539 columns and 105500 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7738 rows and 11095 columns
+Presolve time: 0.03s
+Presolved: 446 rows, 444 columns, 2620 nonzeros
+Variable types: 168 continuous, 276 integer (276 binary)
+
+Root relaxation: objective 1.000000e+02, 406 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0    6          -  100.00000      -     -    0s
+     0     0  100.00000    0   60          -  100.00000      -     -    0s
+     0     0  100.00000    0   60          -  100.00000      -     -    0s
+     0     0  100.00000    0   35          -  100.00000      -     -    0s
+     0     0  100.00000    0   23          -  100.00000      -     -    0s
+     0     0  100.00000    0   22          -  100.00000      -     -    0s
+     0     2  100.00000    0   22          -  100.00000      -     -    0s
+*  101     6              16     100.0000000  100.00000  0.00%  44.7    0s
+
+Cutting planes:
+  Implied bound: 34
+  MIR: 17
+  Flow cover: 13
+
+Explored 129 nodes (10907 simplex iterations) in 0.81 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[10, 3, 9, 4, 8, 12], q=1
+Optimize a model with 8184 rows, 11539 columns and 105500 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7738 rows and 11095 columns
+Presolve time: 0.03s
+Presolved: 446 rows, 444 columns, 2620 nonzeros
+Variable types: 168 continuous, 276 integer (276 binary)
+
+Root relaxation: objective 1.000000e+02, 406 iterations, 0.01 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0    6          -  100.00000      -     -    0s
+     0     0  100.00000    0   60          -  100.00000      -     -    0s
+     0     0  100.00000    0   60          -  100.00000      -     -    0s
+     0     0  100.00000    0   35          -  100.00000      -     -    0s
+     0     0  100.00000    0   23          -  100.00000      -     -    0s
+     0     0  100.00000    0   22          -  100.00000      -     -    0s
+     0     2  100.00000    0   22          -  100.00000      -     -    0s
+*  101     6              16     100.0000000  100.00000  0.00%  44.7    0s
+
+Cutting planes:
+  Implied bound: 34
+  MIR: 17
+  Flow cover: 13
+
+Explored 129 nodes (10907 simplex iterations) in 0.80 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 100.0
+Solution rejected!
+
+ALNSLOG, 1106: segment 0, iteration 24 end.
+
+ALNSLOG, 1106: segment 0, iteration 25, without improvement 10
+
+ALNSLOG, 1106: segment 0, iteration 25, destroy: CloseToBarycenter
+
+ALNSLOG, xOld =[12, 8, 3, 9, 4, 5, 11], q=1
+
+ALNSLOG: no clusters have been extracted! 
+Querying for clusters which have been above average more than the 38.0% of the time...
+
+ALNSLOG: no clusters have been extracted (again)!
+Querying for clusters above average in the current iteration...
+
+ALNSLOG: no clusters have been extracted (again)!
+Using all available clusters as a last resort...
+ALNSLOG, xNewD=[12, 8, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8184 rows, 11539 columns and 105500 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7435 rows and 10735 columns
+Presolve time: 0.05s
+Presolved: 749 rows, 804 columns, 4833 nonzeros
+Variable types: 302 continuous, 502 integer (502 binary)
+
+Root relaxation: objective 1.200000e+02, 484 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  120.00000    0   24          -  120.00000      -     -    0s
+     0     0  120.00000    0   86          -  120.00000      -     -    0s
+     0     0  120.00000    0   90          -  120.00000      -     -    0s
+     0     0  120.00000    0   93          -  120.00000      -     -    0s
+     0     0  120.00000    0   20          -  120.00000      -     -    0s
+     0     2  120.00000    0   20          -  120.00000      -     -    1s
+  2648    34 infeasible   15               -  120.00000      -  50.5    5s
+  6315    38 infeasible   29               -  120.00000      -  59.2   10s
+  7260   123  120.00000   14   69          -  120.00000      -   3.5   15s
+  7692    48 infeasible   27               -  120.00000      -  13.9   20s
+  9003    83  120.00000   32   46          -  120.00000      -  34.4   25s
+
+Cutting planes:
+  Implied bound: 1
+  Projected implied bound: 1
+  MIR: 3
+  Flow cover: 4
+
+Explored 10025 nodes (931715 simplex iterations) in 28.56 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 1.200000000000e+02, gap -
+
+ALNSLOG, 1106: segment 0, iteration 25, repair: RandomRemoval
+
+ALNSLOG: trying to repair solution with RandomRemoval and q=1...
+Optimize a model with 8184 rows, 11539 columns and 105500 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7504 rows and 10819 columns
+Presolve time: 0.05s
+Presolved: 680 rows, 720 columns, 4333 nonzeros
+Variable types: 270 continuous, 450 integer (450 binary)
+
+Root relaxation: objective 1.000000e+02, 475 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   16          -  100.00000      -     -    0s
+     0     0  100.00000    0   62          -  100.00000      -     -    0s
+     0     0  100.00000    0   82          -  100.00000      -     -    0s
+     0     0  100.00000    0   82          -  100.00000      -     -    0s
+     0     0  100.00000    0   38          -  100.00000      -     -    0s
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     2  100.00000    0   21          -  100.00000      -     -    2s
+*   46     5              17     100.0000000  100.00000  0.00%   138    2s
+
+Cutting planes:
+  Implied bound: 44
+  MIR: 11
+  Flow cover: 16
+
+Explored 57 nodes (14321 simplex iterations) in 2.23 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNewR=[12, 3, 9, 4, 5, 11, 10], q=1
+Optimize a model with 8184 rows, 11539 columns and 105500 nonzeros
+Variable types: 2304 continuous, 9235 integer (9235 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+06]
+  Objective range  [1e+01, 5e+01]
+  Bounds range     [1e+00, 1e+01]
+  RHS range        [1e+00, 5e+00]
+Presolve removed 7504 rows and 10819 columns
+Presolve time: 0.04s
+Presolved: 680 rows, 720 columns, 4333 nonzeros
+Variable types: 270 continuous, 450 integer (450 binary)
+
+Root relaxation: objective 1.000000e+02, 475 iterations, 0.02 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  100.00000    0   16          -  100.00000      -     -    0s
+     0     0  100.00000    0   62          -  100.00000      -     -    0s
+     0     0  100.00000    0   82          -  100.00000      -     -    0s
+     0     0  100.00000    0   82          -  100.00000      -     -    0s
+     0     0  100.00000    0   38          -  100.00000      -     -    0s
+     0     0  100.00000    0   21          -  100.00000      -     -    0s
+     0     2  100.00000    0   21          -  100.00000      -     -    1s
+*   46     5              17     100.0000000  100.00000  0.00%   138    2s
+
+Cutting planes:
+  Implied bound: 44
+  MIR: 11
+  Flow cover: 16
+
+Explored 57 nodes (14321 simplex iterations) in 2.10 seconds
+Thread count was 2 (of 4 available processors)
+
+Solution count 1: 100 
+
+Solve interrupted
+Best objective 1.000000000000e+02, best bound 1.000000000000e+02, gap 0.0000%
+
+ALNSLOG, xNew was feasible. Objective value = 100.0
+Solution rejected!

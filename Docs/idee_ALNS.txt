@@ -1,0 +1,293 @@
+Nota sfusa:
+* How sorting streaks affects maximum number of vehicles involved
+* and maximum number of streaks:
+* 
+* Unsorted streaks
+*    0 1 2 3 4 5 6 7 8
+* v1  |- - - - -|
+* v2|- - -|
+* v2              |- -|
+* v3          |- - -|
+* v1              |- -|
+* v4|- -|
+* v5|-|
+* 
+* Sorted by decreasing size and precedence
+*    0 1 2 3 4 5 6 7 8
+* v2|- - -|
+* v4|x x|
+* v5|x|
+* v1  |x x - - -|
+* v3          |x - -|
+* v2              |x -|
+* v1              |x x|
+* max v = 3
+* (This is the minimum number of vehicles for the cluster)
+* max streak = 4
+* 
+* Sorted by increasing size and precedence
+*    0 1 2 3 4 5 6 7 8
+* v5|-|
+* v4|x -|
+* v2|x x -|
+* v1  |x x - - -|
+* v3          |x - -|
+* v2              |x -|
+* v1              |x x|
+* max v = 5
+* (This is the maximum number of vehicles for the cluster)
+* max streak = 6
+
+Vincoli possibili da aggiungere:
+- Se z=0 => x=0
+- Euristica di inserimento: introdurre cluster che richiedono due veicoli, vicini a cluster già presi dove i veicoli sono già presenti. Il raggio diminuisce alla fine di ogni iterazione ma aumenta all'inizio di ogni segmento.
+
+- Alla fine di ogni segmento facciamo local search.
+Abbiamo la soluzione migliore del segmento.
+Vogliamo sapere quando ogni veicolo è in ciascun nodo.
+Ordino i veicoli per zMax, ovvero dopo quanto tempo arrivano al deposito.
+Prendo il veicolo con zMax più prossimo a Tmax e lo chiamo vMax.
+Prendo il veicolo con zMax più lontando da Tmax e lo chiamo vMin.
+Per ogni cluster ci{
+	se ci è servito all'inizio da vMax
+		trovo quali servizi di ci sono soddisfatti da vMax
+		trovo quali sono i primi servizi richiesti dal cluster
+		metto ci nella lista DaSwappare
+}
+
+ordino DaSwappare in modo decrescente per numero di servizi inizialmente serviti da vMax
+
+trovato = False;
+per ogni veicolo v_i != vMax ordinati da vMin a vMax per tempo finale zMax crescente{
+	per ogni cluster c_i di DaSwappare (già ordinati) {
+		// trovo il primo cluster di DaSwappare che può essere servito all'inizio da vi
+		se c_i può essere servito inizialmente da v_i
+			trovato = True
+			// swappo (ovvero impongo un vincolo) c_a e c_b
+			imponi vincolo tale per cui il cluster DaSwappare[0] è servito solo dopo 
+			break
+	}
+	if (trovato = True) then break;
+}
+
+Altre idee:
+- Invertire nell'algoritmo l'euristica di repair con quella di destroy: siccome l'operazione che ci manda in infeasibility è quella di introduzione di nuovi cluster, noi prima aggiungiamo q clusters (rischiando di andare in infeasibility), poi ne rimuoviamo al massimo q (o come minimo fino a quando non ritorniamo ad una soluzione feasible). Se dal processo otteniamo una soluzione infeasible, penalizziamo i cluster coinvolti
+
+-* How sorting streaks affects maximum number of vehicles involved
+* and maximum number of streaks:
+* 
+* Unsorted streaks
+*    0 1 2 3 4 5 6 7 8
+* v1  |- - - - -|
+* v2|- - -|
+* v2              |- -|
+* v3          |- - -|
+* v1              |- -|
+* v4|- -|
+* v5|-|
+* 
+* Sorted by decreasing size and precedence
+*    0 1 2 3 4 5 6 7 8
+* v2|- - -|
+* v4|x x|
+* v5|x|
+* v1  |x x - - -|
+* v3          |x - -|
+* v2              |x -|
+* v1              |x x|
+* max v = 3
+* (This is the minimum number of vehicles for the cluster)
+* max streak = 4
+* 
+* Sorted by increasing size and precedence
+*    0 1 2 3 4 5 6 7 8
+* v5|-|
+* v4|x -|
+* v2|x x -|
+* v1  |x x - - -|
+* v3          |x - -|
+* v2              |x -|
+* v1              |x x|
+* max v = 5
+* (This is the maximum number of vehicles for the cluster)
+* max streak = 6
+
+----------------
+
+19/06/2017
+Ricerca locale ALNS
+
+// TODO:
+// 0. Check feasibility. If infeasible goto 1, else goto 9
+// 1. Compute the IIS model so that we can retrieve some information on z and Tmax
+// 2. Look at how much into infeasibility we are, so get the maxZ
+// 3. Compute costDifference = maxZ-Tmax
+// 4. Sort inputSolution clusters by increasing profit
+// 5. Sort inputSolution clusters by increasing service time (cost)
+// 6. Get the first cluster from sorted inputSolution with cost >= costDifference
+// 7. Remove the cluster found in 6.
+// 8. Goto 0
+// 9. Return the new feasible solution
+
+Problemi:
+- qual è il modo migliore per verificare l'infeasibility del sistema?
+- una volta che il sistema è stato determinato infeasible, come faccio a recuperare informazioni sulle violazioni? Esperienze con feasRelax? Esperienze con IIS?
+- Posso recuperare la variabile con valore massimo
+
+---------
+20/06
+IDEE ALNS
+- Forse è il caso di recuperare l'incumbent best bound al posto dell'ottimo, in modo da avere soluzioni feasible?
+
+- Introduci un'euristica per inserire i cluster col numero minimo di streaks in soluzione o per togliere i cluster col numero massimo di streaks
+ (quindi, scorpora da Cluster::updateMaxNumberOfVehicles la parte che fa la crosscomparison degli streaks, crea un metodo corrispondente per aggiornare il numero minimo e massimo di streaks, introduci due comparators, uno per il numero minimo e uno per il numero massimo)
+
+ - La variazione di q non mi piace, è troppo drastica e oltretutto il fatto che sia sempre crescente può essere deleterio. Il fatto che la maggior parte delle euristiche di inserimento siano di tipo greedy tenderà sempre a portarci verso soluzioni greedy tutte uguali verso la fine del segmento
+
+ ----------
+ 21/06
+ - problema: il rilassamento per andare in feasibility è infeasible. Devo capire perchè. Ipotizzo che le x rimangano nella funzione obiettivo, verificare il valore del coefficiente delle x nella f ob. ==> CI RINUNCIO
+
+
+ - problema: loggare le iterazioni dell'ALNS. Utilizzo il formato CSV in questo modo
+
+Segment; Iteration; Time; Destroy Heuristic; Repair Heuristic; Temperature; q; Visited Clusters; Solution; Vehicle Paths; Objective Value; Accepted;
+
+ - problema: le soluzioni tendono ad essere ripercorse => taboo search applicata ai clusters.
+ Creo una lista taboo, tengo dentro gli id di ogni cluster ed un valore di tenure intero >=0.
+ Quando introduco dei cluster che mi mandano in infeasibility li segno nella lista taboo con un certo valore di "tenure".
+ Quando riparando una soluzione tolgo dei cluster, potrei aumentare di un po' il valore di tenure di quei cluster. Però è rischioso. Forse è meglio di no.
+ Quando distruggendo una soluzione scelgo dei cluster, abbasso il valore di tenure, ma li aggiungo in soluzione solo se il valore di tenure è pari a 0.
+ DEVO LEGGERE LA TEORIA
+
+ 22/06
+ - introdotto il logging via CSV dell'ALNS
+
+ - idea: introdurre una local search a fine segmento: a partire dalla soluzione migliore del segmento, utilizza branch and bound un po' di volte al fine di trovare una possibile soluzione migliore per il segmento. Se la trova, aggiorna la soluzione migliore del segmento.
+ Alla fine del segmento, testo la soluzione migliore del segmento in modo da caricare nel modello tutte le variabili relative a quella soluzione.
+ Copio dal modello le variabili relative alla soluzione trovata, dunque resetto tutti i bound sulle variabili cosicché possano essere modificate liberamente dal risolutore.
+ Utilizzo l'attributo Start di ogni variabile per impostare la soluzione iniziale. A questo punto lancio l'ottimizzatore e lo faccio girare per un minuto.
+ La soluzione migliore prodotta dal risolutore è confrontata con la migliore del segmento in base alla funzione obiettivo. Se fobNew >= fobOld, sostituisco xBest del segmento con quella del risolutore
+ FATTO
+
+
+ - migliorata la parametrizzazione. Loggati anche i parametri di esecuzione nel csv.
+
+ - introdotto l'update del peso delle euristiche a inizio segmento
+ 
+ 23/06
+ - Introdurre un controllo sul numero di iterazioni senza miglioramento. Se queste superano un certo valore (es: dimensione segmento/4) passare al segmento successivo. -> FATTO
+
+ - Modificare la classe delle distribuzioni in modo da permettere l'introduzione di un'etichetta per ciascuno degli oggetti nella distribuzione. Quando è chiamato toString, l'etichetta sostituisce il toString dei singoli oggetti se non è null.
+
+ 25/06
+ - Parametrizzato anche il numero di nodes massimo da far risolvere al mips prima di dichiarare infeasible il modello double ALNSMaxMIPSNodesForFeasibilityCheck
+ - Parametrizzato anche outputFolderPath
+ - Parametrizzato anche maxIterationsWithoutImprovement
+
+ 26/06/2017
+ - Bisognerebbe parametrizzare anche le euristiche e permettere l'inserimento di labels anche in objectdistribution -> FATTO
+ - Parametrizzato anche heuristicScores, ovvero i valori della funzione psi
+ - Manca il parametro forceHeuristicConstraints -> fatto
+
+ 30/06/2017
+ - Ho ultimato la parametrizzazione. Ora tutti i parametri sono bene ordinati dentro a dei javabeans serializzati in json
+ - Ho ultimato il logging su file xlsx
+
+ TASK
+ - Ricordati di updatare il bean anche graficamente quando carichi i file di parametri!
+ - Se premi annulla sui file choosers, assicurati che non venga compiuta l'azione
+
+
+ 04/07/2017
+ - Problema sull'aggiornamento di q: se chiudo l'ALNS quando q>qMax, non sfrutto tutti i 30 minuti a mia disposizione!
+ IDEA: far variare dinamicamente q sulla basa del miglioramento: se resto costante <- FATTO, ora q cicla ripartendo daccapo
+ 
+ 05/07/2017
+ - Implementato q circolare: quando alla fine di un segmento q arriva a qMax, q dovrebbe ripartire da ((q + qDelta) mod qMax) con l'ultima soluzione migliore come soluzione di partenza feasible.
+
+ - Implementato un sistema di "cooldown dei clusters".
+ All'inizio di ogni euristica di inserimento/distruzione sulla soluzione vecchia xOld, viene stilata una lista di clusters disponibili per l'inserimento. Questa lista è fatta associando ad ogni cluster dell'istanza una probabilità (inizialmente 1.0), estraendo ogni cluster da questa lista secondo la sua specifica probabilità, dunque rimuovendo dalla lista estratta i cluster presenti nella soluzione xOld. Questi cluster saranno quelli disponibili per l'euristica di inserimento/distruzione.
+
+ Cooldown: un cluster che è stato appena scelto da un'euristica di distruzione (hot cluster) avrà in futuro una probabilità leggermente più bassa di essere selezionato nuovamente (il parametro cooldownGamma determina di quanti punti percentuali deve essere più piccola, esempio, 0.05 = 5% più piccola)
+ 
+ Warmup: i clusters non scelti da un'euristica di distruzione (cold clusters) avrnno in futuro una probabilità leggermente più alta di essere selezionati nuovamente (il parametro warmupGamma determina di quanti punti percentuali deve essere più grande, esempio, 0.05 = 5% più grande).
+
+ Punishment: i clusters che mi mandano in infeasibility avranno una probabilità molto molto bassa di essere scelti nuovamente. Il parametro punishmentGamma mi indica quale percentuale della probabilità precedente di estrazione va lasciato (es 0.01 = dopo la punizione resterà l'1% della probabilità precedente di estrazione per il cluster punito)
+
+ - IDEA: metti un warmup uguale e opposto al cooldown per ogni cluster che fa parte di una soluzione migliorativa <- FATTO
+ - IDEA: alla fine del segmento azzera la probabilità di estrazione (nerfing) di quei clusters che hanno probabilità sotto la metà della media per più della metà del segmento <- fatto
+ - IDEA: per la local search, fissa come soluzione di partenza la migliore del segmento, poi elimina dal modello passato alla local search tutti i clusters nerfati <- FATTO
+
+ 06/07/2017
+ Ho notato che la probabilità di selezione di un cluster tende a calare moltissimo durante lo svolgimento, al punto tale che verso la fine di un segmento diventa difficile avere degli insiemi di cluster selezionabili che siano pieni.
+ Per ovviare a ciò ho maturato diverse idee.
+ - Quando seleziono i clusters disponibili per l'inserimento, provo ad estrarre i clusters secondo la loro probabilità e li filtro togliendogli i clusters già in soluzione. Se ottengo un insieme vuoto, riprovo estraendo solo i clusters che sono stati sopra la media per più di nerfBarrier*100% delle iterazioni del segmento. Filtro il risultato. Se ottengo ancora un insieme vuoto, estraggo i clusters con probabilità sopra la media per l'iterazione corrente. Li filtro. Se ottengo ancora un insieme vuoto, ci riprovo fornendo tutti i clusters disponibili nell'istanza. Li filtro. Se ancora una volta ottengo un insieme vuoto, abbandono la ricerca.
+ - Alla fine di ogni segmento, voglio resettare a 1 la probabilità di tutti i clusters non nerfati, mentre voglio mettere a 0 la probabilità dei clusters nerfati.
+ - In realtà, potrei anche far sì che questa operazione di "riscalamento" avvenga ogni volta che la media della probabilità di estrazione scenda sotto il 50%. Questo però amplificherebbe il divario fra i clusters nerfati e quelli buoni, solo che potrebbero esserci degli errori di identificazione. Va provato.
+
+ - IDEA: calcolare i tempi in modo da far finire l'esecuzione con una bella run di local search potente
+
+ - IDEA: arricchire il modello per la local search e il feasibility test di vincoli che eliminino le soluzioni già dimostrate come infeasible
+ ad esempio, se scopro che y1 y2 y3 è infeasible, aggiungo il vincolo y1+y2+y3<3, così facendo posso prendere solo al massimo due delle 3 insieme ad ogni iterazione.
+ Questo velocizzerà futuri feasibility check nonché la local search <- FATTO
+
+ - IDEA: far sì che la local search sia eseguita alla fine di ogni segmento. Se il segmento è migliorativo, la faccio a partire dalla soluzione iniziale; se il segmento è costante, obbligo gurobi a tenere in soluzione almeno un po' della soluzione iniziale (per scegliere quale parte della soluzione, estraggo un'euristica di riparazione e la applico alla soluzione feasible con q pari al 50% arrotondato per eccesso della dimensione della soluzione) e dunque faccio partire una run di local search. <- FATTO
+
+ - IDEA: local search peggiorativa. Se il segmento precedente una local search è terminato senza miglioramento, facciamo una local search su un pezzo di soluzione, escludendo però dalla ricerca la possibilità di scegliere la soluzione prodotta dal segmento; questo ci permette di ottenere soluzioni feasible magari peggiorative, però nuove come punti di partenza per il nuovo segmento. <- FATTO
+
+ - IDEA: assicurarsi che il nerfing avvenga dopo la local search. Se la soluzione poi risulta essere accettabile, fare un warmup buono di tutti i clusters in soluzione della local search prima di fare un ultimo update della roulette e quindi nerfare <- FATTO, l'ultimo aggiornamento dei nerf candidates avviene dopo la local search, che aumenta un po' la temperatura dei clusters scelti
+ 
+ - IDEA: per evitare che la local search sia sprecata, devo verificare quali constraints euristici mi mandano in infeasibility. Per fare ciò uso un algoritmo che cerca la combinazione più grande di constraint euristici che mantenga feasible il modello. Nel caso peggiore, risolvo il modello senza usare constraints di tipo euristico. <- FATTO
+
+ - IDEA: se una soluzione ha un profitto >= della funzione obiettivo, dichiarala infeasible saltando il feasibility check di gurobi e risparmiando tempo <- FATTO
+
+07/07/2017
+
+ - IDEA: a volte può darsi che getClustersNotInSolution torni un valore molto più piccolo del q - numero di cluster da inserire - che avevamo richiesto. In quel caso potremmo considerarlo come se la soluzione ritornata fosse vuota e passare all'approccio successivo.
+
+ - Implementati tutti i vincoli propostimi dal mio gruppo
+
+ 10/07/2017
+ - Fixato il metodo isVisited, logVehiclePaths, 
+
+ 18/07/2017
+ - DA FARE IMPORTANTE: sistema l'euristica vehicletime in modo che faccia ciò che deve. <- fatto
+
+19/07/2017
+ - NOTA: le euristiche vanno provate sicuramente ad ogni inizio di local search
+ - Introdotta la nuova euristica di distruzione destroyCloseToBarycenter che introduce clusters vicini al baricentro della soluzione
+ - Ho il sospetto che l'aggiornamento di peso delle euristiche non stia funzionando come dovrebbe. Ho introdotto nel logging su excel informazioni sullo stato della distribuzione di probabilità delle euristiche. Ho anche cambiato i valori di psi. Stiamo a vedere. <- Fatto: funziona bene
+ - Patchata la local search, ora è chiamata a partire dalla xBest del segmento che la precede
+ - Potrei introdurre un metodo per escludere le soluzioni infeasible e tutti i loro supersets utilizzando il vincolo che avevo inventato in precedenza, distinguendola dalla funzione per escludere una sola soluzione (forse utile nella local search) <- fatto
+ - Potrei introdurre un metodo che elimina fisicamente tutti gli archi connessi ai clusters singoli che danno infeasibility, nonché i clusters stessi dal modello, in modo da evitare proprio che questi vengano selezionati nuovamente <- fatto
+ - Per risparmiare tempo, potrei calcolare quali constraints euristici utilizzare sull'istanza del problema all'inizio, dopo la soluzione costruttiva. Dunque, al momento di testare la local search, testo i constraints: se sono feasible per quel caso, allora li uso, altrimenti faccio la local search senza constraints euristici.
+ - Ipotizzando di avere tanti segmenti relativamente brevi, potremmo far scendere la temperatura parecchio, ma ad ogni segmento invece che ad ogni iterazione
+ 
+ - IDEA per un'euristica di inserimento: inserisce q clusters disponibili, ma con un rapporto profitto/costo medio
+ 
+ - IDEA per un'euristica di rimozione: rimuove i q clusters più lontani dal baricentro
+ 
+ - Correzione per euristica del baricentro: aggiorna il baricentro ad ogni nuovo inserimento <-- non fatto, molto costoso
+ 
+ - Per punire i clusters infeasible, oltre a disconnetterli fisicamente dal modello, posso toglierli anche dalla rispettiva objectdistribution. Idea: posso mettere il loro peso a -1, che significa che ogni qualvolta questo peso è recuperato, viene considerato come 0, non viene toccato da upscale/downscale/warmup/cooldown. Non sarà più riproposto in soluzione né concorrerà all'aggiornamento dei pesi/bins di clusterRoulette. <- fatto
+ - Questo vuol dire che il parametro di punizione dei clusters "nerfed" può essere più alto di 0, magari 0.01, e anche nerfBarrier può essere leggermente più alta (test con 0.38).
+ 
+ - IDEA per un'euristica di inserimento: introdurre i clusters più lontani dal baricentro in modo da far saltare fuori i clusters che sicuramente mandano in infeasibility il problema.
+
+ - IDEA per un vincolo preparatorio: trova tutti i clusters che hanno come (costo minimo per veicolo servente + distanza dal deposito di partenza + distanza dal deposito di arrivo) più di Tmax e disconnettili fisicamente dal problema. <-- fatto, risolve l'istanza di Caterina
+
+ - FATTO: Modifica dell'algoritmo costruttivo: ora sicuramente prende almeno un cluster, interrompe l'esecuzione del programma se non viene scelto nemmeno un cluster.
+
+ - FATTO: IDEA: punishmentGamma può assumere un nuovo significato, ovvero il "peso" che assume un cluster dopo essere stato nerfato. C'è da cambiare la documentazione nella GUI.
+
+ - IDEA: potrei considerare l'idea di una local search/sprint finale da mettere alla fine dei 30 minuti: quando il tempo mancante è pari al tempo della local search, esegui una local a partire dalla soluzione migliore globale, ma senza il vincolo del non trovare la soluzione finale né i vincoli euristici
+
+ - FATTO: SOLUZIONE AL PROBLEMA DELLA LOCAL SEARCH: a volte la local search tira fuori delle soluzioni che sono troppo difficili da dimostrare come feasible.
+ Allora, ci dobbiamo fidare dell'output della local search: contiamo le soluzioni trovate e prendiamo la migliore, con la sua funzione obiettivo.
+ Non facciamoci domande, piuttosto se dovessimo vedere che è infeasible, raddoppiamo il numero di mips nodes per il feasibility check al fine di poter lavorare con soluzioni di quell'entità.
+
+ - FATTO: cambiato il meccanismo del nerfing: adesso i clusters nerfati hanno una probabilità di estrazione che viene fissata ad un certo valore
+
+20/07/2017
+- IDEA: il raddoppiamento dei MAX mips nodes per il feasibility check dopo una local search potrebbe essere fatto dall'interno della callback (ma al massimo una volta!), mentre la soluzione della local search andrebbe accettata senza alcun dubbio, altrimenti sprechiamo un sacco di tempo a riverificare le stesse soluzioni! <-- il raddoppiamento è un'idea scartata perché fallata - tende a far perdere molto tempo senza garantire miglioramenti nella soluzione
